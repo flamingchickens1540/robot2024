@@ -19,7 +19,7 @@ public class GyroIONavx implements GyroIO{
         double lastTime = inputs.time;
         Rotation2d angle = navx.getRotation2d();
         inputs.time = Timer.getFPGATimestamp();
-        inputs.connected = true;
+        inputs.connected = navx.isConnected();
         inputs.yawPosition = angle;
         inputs.yawVelocityRadPerSec = (angle.minus(lastAngle).getRadians())/(inputs.time - lastTime);
         lastAngle = angle;
