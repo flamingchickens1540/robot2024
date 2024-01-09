@@ -1,16 +1,3 @@
-// Copyright 2021-2023 FRC 6328
-// http://github.com/Mechanical-Advantage
-//
-// This program is free software; you can redistribute it and/or
-// modify it under the terms of the GNU General Public License
-// version 3 as published by the Free Software Foundation or
-// available in the root directory of this project.
-//
-// This program is distributed in the hope that it will be useful,
-// but WITHOUT ANY WARRANTY; without even the implied warranty of
-// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
-// GNU General Public License for more details.
-
 package org.team1540.robot2024.commands;
 
 import edu.wpi.first.math.MathUtil;
@@ -45,7 +32,7 @@ public class DriveCommands {
             linearMagnitude = linearMagnitude * linearMagnitude;
             omega = Math.copySign(omega * omega, omega);
 
-            // Calcaulate new linear velocity
+            // Calculate new linear velocity
             Translation2d linearVelocity = new Pose2d(new Translation2d(), linearDirection).transformBy(new Transform2d(linearMagnitude, 0.0, new Rotation2d())).getTranslation();
 
             // Convert to field relative speeds & send command

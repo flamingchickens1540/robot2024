@@ -1,16 +1,3 @@
-// Copyright 2021-2023 FRC 6328
-// http://github.com/Mechanical-Advantage
-//
-// This program is free software; you can redistribute it and/or
-// modify it under the terms of the GNU General Public License
-// version 3 as published by the Free Software Foundation or
-// available in the root directory of this project.
-//
-// This program is distributed in the hope that it will be useful,
-// but WITHOUT ANY WARRANTY; without even the implied warranty of
-// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
-// GNU General Public License for more details.
-
 package org.team1540.robot2024;
 
 import edu.wpi.first.math.util.Units;
@@ -24,30 +11,36 @@ import edu.wpi.first.math.util.Units;
  * constants are needed, to reduce verbosity.
  */
 public final class Constants {
-  public static final Mode currentMode = Mode.SIM;
+    public static final Mode currentMode = Mode.SIM;
 
-  public static enum Mode {
-    /** Running on a real robot. */
-    REAL,
+    public static enum Mode {
+        /**
+         * Running on a real robot.
+         */
+        REAL,
 
-    /** Running a physics simulator. */
-    SIM,
+        /**
+         * Running a physics simulator.
+         */
+        SIM,
 
-    /** Replaying from a log file. */
-    REPLAY
-  }
+        /**
+         * Replaying from a log file.
+         */
+        REPLAY
+    }
 
-  public static class Drivetrain {
-    public static final String CAN_BUS = "";
-    public static final double DRIVE_GEAR_RATIO = (50.0 / 14.0) * (17.0 / 27.0) * (45.0 / 15.0);
-    public static final double TURN_GEAR_RATIO = 150.0 / 7.0;
-    public static final boolean IS_TURN_MOTOR_INVERTED = true;
-    public static final double WHEEL_RADIUS = Units.inchesToMeters(2.0);
+    public static class Drivetrain {
+        public static final String CAN_BUS = "";
+        public static final double DRIVE_GEAR_RATIO = (50.0 / 14.0) * (17.0 / 27.0) * (45.0 / 15.0);
+        public static final double TURN_GEAR_RATIO = 150.0 / 7.0;
+        public static final boolean IS_TURN_MOTOR_INVERTED = true;
+        public static final double WHEEL_RADIUS = Units.inchesToMeters(2.0);
 
-    public static final double MAX_LINEAR_SPEED = Units.feetToMeters(14.5);
-    public static final double TRACK_WIDTH_X = Units.inchesToMeters(25.0);
-    public static final double TRACK_WIDTH_Y = Units.inchesToMeters(25.0);
-    public static final double DRIVE_BASE_RADIUS = Math.hypot(TRACK_WIDTH_X / 2.0, TRACK_WIDTH_Y / 2.0);
-    public static final double MAX_ANGULAR_SPEED = MAX_LINEAR_SPEED / DRIVE_BASE_RADIUS;
-  }
+        public static final double MAX_LINEAR_SPEED = Units.feetToMeters(14.5);
+        public static final double TRACK_WIDTH_X = Units.inchesToMeters(25.0);
+        public static final double TRACK_WIDTH_Y = Units.inchesToMeters(25.0);
+        public static final double DRIVE_BASE_RADIUS = Math.hypot(TRACK_WIDTH_X / 2.0, TRACK_WIDTH_Y / 2.0);
+        public static final double MAX_ANGULAR_SPEED = MAX_LINEAR_SPEED / DRIVE_BASE_RADIUS;
+    }
 }

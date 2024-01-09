@@ -1,16 +1,3 @@
-// Copyright 2021-2023 FRC 6328
-// http://github.com/Mechanical-Advantage
-//
-// This program is free software; you can redistribute it and/or
-// modify it under the terms of the GNU General Public License
-// version 3 as published by the Free Software Foundation or
-// available in the root directory of this project.
-//
-// This program is distributed in the hope that it will be useful,
-// but WITHOUT ANY WARRANTY; without even the implied warranty of
-// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
-// GNU General Public License for more details.
-
 package org.team1540.robot2024;
 
 import com.pathplanner.lib.auto.AutoBuilder;
@@ -35,106 +22,114 @@ import org.littletonrobotics.junction.networktables.LoggedDashboardChooser;
  * subsystems, commands, and button mappings) should be declared here.
  */
 public class RobotContainer {
-  // Subsystems
-  private final Drive drive;
+    // Subsystems
+    private final Drive drive;
 
-  // Controller
-  private final CommandXboxController controller = new CommandXboxController(0);
-  private final CommandXboxController controllerCopilot = new CommandXboxController(1);
+    // Controller
+    private final CommandXboxController controller = new CommandXboxController(0);
+    private final CommandXboxController controllerCopilot = new CommandXboxController(1);
 
-  // Dashboard inputs
-  private final LoggedDashboardChooser<Command> autoChooser;
+    // Dashboard inputs
+    private final LoggedDashboardChooser<Command> autoChooser;
 
-  /** The container for the robot. Contains subsystems, OI devices, and commands. */
-  public RobotContainer() {
-    switch (Constants.currentMode) {
-      case REAL:
-        // Real robot, instantiate hardware IO implementations
-        drive =
-            new Drive(
-                new GyroIONavx(),
-                new ModuleIOTalonFX(SwerveFactory.getModuleMotors(1, SwerveFactory.SwerveCorner.FRONT_LEFT)),
-                new ModuleIOTalonFX(SwerveFactory.getModuleMotors(7, SwerveFactory.SwerveCorner.FRONT_RIGHT)),
-                new ModuleIOTalonFX(SwerveFactory.getModuleMotors(4, SwerveFactory.SwerveCorner.BACK_LEFT)),
-                new ModuleIOTalonFX(SwerveFactory.getModuleMotors(3, SwerveFactory.SwerveCorner.BACK_RIGHT)));
-        // drive = new Drive(
-        // new GyroIOPigeon2(),
-        // new ModuleIOTalonFX(0),
-        // new ModuleIOTalonFX(1),
-        // new ModuleIOTalonFX(2),
-        // new ModuleIOTalonFX(3));
-        // flywheel = new Flywheel(new FlywheelIOTalonFX());
-        break;
+    /**
+     * The container for the robot. Contains subsystems, OI devices, and commands.
+     */
+    public RobotContainer() {
+        switch (Constants.currentMode) {
+            case REAL:
+                // Real robot, instantiate hardware IO implementations
+                drive =
+                        new Drive(
+                                new GyroIONavx(),
+                                new ModuleIOTalonFX(SwerveFactory.getModuleMotors(1, SwerveFactory.SwerveCorner.FRONT_LEFT)),
+                                new ModuleIOTalonFX(SwerveFactory.getModuleMotors(7, SwerveFactory.SwerveCorner.FRONT_RIGHT)),
+                                new ModuleIOTalonFX(SwerveFactory.getModuleMotors(4, SwerveFactory.SwerveCorner.BACK_LEFT)),
+                                new ModuleIOTalonFX(SwerveFactory.getModuleMotors(3, SwerveFactory.SwerveCorner.BACK_RIGHT)));
+                // drive = new Drive(
+                // new GyroIOPigeon2(),
+                // new ModuleIOTalonFX(0),
+                // new ModuleIOTalonFX(1),
+                // new ModuleIOTalonFX(2),
+                // new ModuleIOTalonFX(3));
+                // flywheel = new Flywheel(new FlywheelIOTalonFX());
+                break;
 
-      case SIM:
-        // Sim robot, instantiate physics sim IO implementations
-        drive =
-            new Drive(
-                new GyroIO() {},
-                new ModuleIOSim(),
-                new ModuleIOSim(),
-                new ModuleIOSim(),
-                new ModuleIOSim());
-        break;
+            case SIM:
+                // Sim robot, instantiate physics sim IO implementations
+                drive =
+                        new Drive(
+                                new GyroIO() {
+                                },
+                                new ModuleIOSim(),
+                                new ModuleIOSim(),
+                                new ModuleIOSim(),
+                                new ModuleIOSim());
+                break;
 
-      default:
-        // Replayed robot, disable IO implementations
-        drive =
-            new Drive(
-                new GyroIO() {},
-                new ModuleIO() {},
-                new ModuleIO() {},
-                new ModuleIO() {},
-                new ModuleIO() {});
-        break;
+            default:
+                // Replayed robot, disable IO implementations
+                drive =
+                        new Drive(
+                                new GyroIO() {
+                                },
+                                new ModuleIO() {
+                                },
+                                new ModuleIO() {
+                                },
+                                new ModuleIO() {
+                                },
+                                new ModuleIO() {
+                                });
+                break;
+        }
+
+
+        // Set up auto routines
+        autoChooser = new LoggedDashboardChooser<>("Auto Choices", AutoBuilder.buildAutoChooser());
+
+        // Set up FF characterization routines
+        autoChooser.addOption(
+                "Drive FF Characterization",
+                new FeedForwardCharacterization(
+                        drive, drive::runCharacterizationVolts, drive::getCharacterizationVelocity));
+
+        // Configure the button bindings
+        configureButtonBindings();
     }
 
+    /**
+     * Use this method to define your button->command mappings. Buttons can be created by
+     * instantiating a {@link GenericHID} or one of its subclasses ({@link
+     * edu.wpi.first.wpilibj.Joystick} or {@link XboxController}), and then passing it to a {@link
+     * edu.wpi.first.wpilibj2.command.button.JoystickButton}.
+     */
+    private void configureButtonBindings() {
+        drive.setDefaultCommand(
+                DriveCommands.joystickDrive(
+                        drive,
+                        () -> -controller.getLeftY(),
+                        () -> -controller.getLeftX(),
+                        () -> -controller.getRightX()));
+        controller.x().onTrue(Commands.runOnce(drive::stopWithX, drive));
+        controller
+                .b()
+                .onTrue(
+                        Commands.runOnce(
+                                        () ->
+                                                drive.setPose(
+                                                        new Pose2d(drive.getPose().getTranslation(), new Rotation2d())),
+                                        drive)
+                                .ignoringDisable(true));
 
-    // Set up auto routines
-    autoChooser = new LoggedDashboardChooser<>("Auto Choices", AutoBuilder.buildAutoChooser());
+    }
 
-    // Set up FF characterization routines
-    autoChooser.addOption(
-        "Drive FF Characterization",
-        new FeedForwardCharacterization(
-            drive, drive::runCharacterizationVolts, drive::getCharacterizationVelocity));
-
-    // Configure the button bindings
-    configureButtonBindings();
-  }
-
-  /**
-   * Use this method to define your button->command mappings. Buttons can be created by
-   * instantiating a {@link GenericHID} or one of its subclasses ({@link
-   * edu.wpi.first.wpilibj.Joystick} or {@link XboxController}), and then passing it to a {@link
-   * edu.wpi.first.wpilibj2.command.button.JoystickButton}.
-   */
-  private void configureButtonBindings() {
-    drive.setDefaultCommand(
-        DriveCommands.joystickDrive(
-            drive,
-            () -> -controller.getLeftY(),
-            () -> -controller.getLeftX(),
-            () -> -controller.getRightX()));
-    controller.x().onTrue(Commands.runOnce(drive::stopWithX, drive));
-    controller
-        .b()
-        .onTrue(
-            Commands.runOnce(
-                    () ->
-                        drive.setPose(
-                            new Pose2d(drive.getPose().getTranslation(), new Rotation2d())),
-                    drive)
-                .ignoringDisable(true));
-
-  }
-
-  /**
-   * Use this to pass the autonomous command to the main {@link Robot} class.
-   *
-   * @return the command to run in autonomous
-   */
-  public Command getAutonomousCommand() {
-    return autoChooser.get();
-  }
+    /**
+     * Use this to pass the autonomous command to the main {@link Robot} class.
+     *
+     * @return the command to run in autonomous
+     */
+    public Command getAutonomousCommand() {
+        return autoChooser.get();
+    }
 }
