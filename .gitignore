@@ -178,4 +178,3 @@ ctre_sim/
 *.wpilog
 networktables.json
 .wpilib
-gradle
