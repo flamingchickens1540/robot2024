@@ -15,8 +15,8 @@ import edu.wpi.first.wpilibj.simulation.DCMotorSim;
 public class ModuleIOSim implements ModuleIO {
     private static final double LOOP_PERIOD_SECS = 0.02;
     private final Rotation2d turnAbsoluteInitPosition = new Rotation2d(Math.random() * 2.0 * Math.PI);
-    private final DCMotorSim driveSim = new DCMotorSim(DCMotor.getNEO(1), 6.75, 0.025);
-    private final DCMotorSim turnSim = new DCMotorSim(DCMotor.getNEO(1), 150.0 / 7.0, 0.004);
+    private final DCMotorSim driveSim = new DCMotorSim(DCMotor.getFalcon500Foc(1), 6.15, 0.025);
+    private final DCMotorSim turnSim = new DCMotorSim(DCMotor.getFalcon500Foc(1), 150.0 / 7.0, 0.004);
     private double driveAppliedVolts = 0.0;
     private double turnAppliedVolts = 0.0;
 
