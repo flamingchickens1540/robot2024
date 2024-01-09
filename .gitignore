@@ -177,4 +177,3 @@ src/main/java/frc/robot/BuildConstants.java
 ctre_sim/
 *.wpilog
 networktables.json
-.wpilib
