@@ -11,7 +11,7 @@
 // MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
 // GNU General Public License for more details.
 
-package frc.robot.subsystems.drive;
+package org.team1540.robot2024.subsystems.drive;
 
 import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.pathfinding.Pathfinding;
@@ -28,12 +28,10 @@ import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
-import frc.robot.util.LocalADStarAK;
+import org.team1540.robot2024.util.LocalADStarAK;
 import org.littletonrobotics.junction.AutoLogOutput;
 import org.littletonrobotics.junction.Logger;
-
-
-import static frc.robot.Constants.Drivetrain.*;
+import org.team1540.robot2024.Constants;
 
 public class Drive extends SubsystemBase {
 
@@ -65,7 +63,7 @@ public class Drive extends SubsystemBase {
                 this::setPose,
                 () -> kinematics.toChassisSpeeds(getModuleStates()),
                 this::runVelocity,
-                new HolonomicPathFollowerConfig(MAX_LINEAR_SPEED, DRIVE_BASE_RADIUS, new ReplanningConfig()),
+                new HolonomicPathFollowerConfig(Constants.Drivetrain.MAX_LINEAR_SPEED, Constants.Drivetrain.DRIVE_BASE_RADIUS, new ReplanningConfig()),
                 () -> DriverStation.getAlliance().isPresent() && DriverStation.getAlliance().get() == DriverStation.Alliance.Red,
                 this);
         Pathfinding.setPathfinder(new LocalADStarAK());
@@ -129,7 +127,7 @@ public class Drive extends SubsystemBase {
         // Calculate module setpoints
         ChassisSpeeds discreteSpeeds = ChassisSpeeds.discretize(speeds, 0.02);
         SwerveModuleState[] setpointStates = kinematics.toSwerveModuleStates(discreteSpeeds);
-        SwerveDriveKinematics.desaturateWheelSpeeds(setpointStates, MAX_LINEAR_SPEED);
+        SwerveDriveKinematics.desaturateWheelSpeeds(setpointStates, Constants.Drivetrain.MAX_LINEAR_SPEED);
 
         // Send setpoints to modules
         SwerveModuleState[] optimizedSetpointStates = new SwerveModuleState[4];
@@ -222,14 +220,14 @@ public class Drive extends SubsystemBase {
      * Returns the maximum linear speed in meters per sec.
      */
     public double getMaxLinearSpeedMetersPerSec() {
-        return MAX_LINEAR_SPEED;
+        return Constants.Drivetrain.MAX_LINEAR_SPEED;
     }
 
     /**
      * Returns the maximum angular speed in radians per sec.
      */
     public double getMaxAngularSpeedRadPerSec() {
-        return MAX_ANGULAR_SPEED;
+        return Constants.Drivetrain.MAX_ANGULAR_SPEED;
     }
 
     /**
@@ -237,10 +235,10 @@ public class Drive extends SubsystemBase {
      */
     public static Translation2d[] getModuleTranslations() {
         return new Translation2d[]{
-                new Translation2d(TRACK_WIDTH_X / 2.0, TRACK_WIDTH_Y / 2.0),
-                new Translation2d(TRACK_WIDTH_X / 2.0, -TRACK_WIDTH_Y / 2.0),
-                new Translation2d(-TRACK_WIDTH_X / 2.0, TRACK_WIDTH_Y / 2.0),
-                new Translation2d(-TRACK_WIDTH_X / 2.0, -TRACK_WIDTH_Y / 2.0)
+                new Translation2d(Constants.Drivetrain.TRACK_WIDTH_X / 2.0, Constants.Drivetrain.TRACK_WIDTH_Y / 2.0),
+                new Translation2d(Constants.Drivetrain.TRACK_WIDTH_X / 2.0, -Constants.Drivetrain.TRACK_WIDTH_Y / 2.0),
+                new Translation2d(-Constants.Drivetrain.TRACK_WIDTH_X / 2.0, Constants.Drivetrain.TRACK_WIDTH_Y / 2.0),
+                new Translation2d(-Constants.Drivetrain.TRACK_WIDTH_X / 2.0, -Constants.Drivetrain.TRACK_WIDTH_Y / 2.0)
         };
     }
 }

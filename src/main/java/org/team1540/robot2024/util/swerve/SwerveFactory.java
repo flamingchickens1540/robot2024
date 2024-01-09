@@ -1,7 +1,6 @@
-package frc.robot.util.swerve;
+package org.team1540.robot2024.util.swerve;
 
 import com.ctre.phoenix6.configs.CANcoderConfiguration;
-import com.ctre.phoenix6.configs.MagnetSensorConfigs;
 import com.ctre.phoenix6.configs.TalonFXConfiguration;
 import com.ctre.phoenix6.hardware.CANcoder;
 import com.ctre.phoenix6.hardware.TalonFX;
@@ -9,11 +8,7 @@ import com.ctre.phoenix6.signals.AbsoluteSensorRangeValue;
 import com.ctre.phoenix6.signals.InvertedValue;
 import com.ctre.phoenix6.signals.SensorDirectionValue;
 import edu.wpi.first.math.geometry.Rotation2d;
-
-import java.util.ArrayList;
-import java.util.List;
-
-import static frc.robot.Constants.Drivetrain.CAN_BUS;
+import org.team1540.robot2024.Constants;
 
 public class SwerveFactory {
     private static final double[] moduleOffsetsRots = new double[]{
@@ -28,7 +23,7 @@ public class SwerveFactory {
     };
 
     public static SwerveModuleHW getModuleMotors(int id, SwerveCorner corner) {
-        return new SwerveModuleHW(id, corner, CAN_BUS);
+        return new SwerveModuleHW(id, corner, Constants.Drivetrain.CAN_BUS);
     }
 
     public enum SwerveCorner {
