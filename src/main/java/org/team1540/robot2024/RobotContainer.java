@@ -112,16 +112,12 @@ public class RobotContainer {
                         () -> -controller.getLeftX(),
                         () -> -controller.getRightX()));
         controller.x().onTrue(Commands.runOnce(drive::stopWithX, drive));
-        controller
-                .b()
-                .onTrue(
-                        Commands.runOnce(
-                                        () ->
-                                                drive.setPose(
-                                                        new Pose2d(drive.getPose().getTranslation(), new Rotation2d())),
-                                        drive)
-                                .ignoringDisable(true));
-
+        controller.b().onTrue(
+                Commands.runOnce(
+                        () -> drive.setPose(new Pose2d(drive.getPose().getTranslation(), new Rotation2d())),
+                        drive
+                ).ignoringDisable(true)
+        );
     }
 
     /**

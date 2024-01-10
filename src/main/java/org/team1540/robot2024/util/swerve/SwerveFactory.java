@@ -12,13 +12,13 @@ import org.team1540.robot2024.Constants;
 
 public class SwerveFactory {
     private static final double[] moduleOffsetsRots = new double[]{
-            -0.417724609375, // Module 1
+            -0.4130859, // Module 1
             0.0, // Module 2
-            -0.216796875, // Module 3
-            -0.772705078125, // Module 4
+            -0.2197265, // Module 3
+            -0.7722, // Module 4
             0.0, // Module 5
             0.0, // Module 6
-            -0.825927734375, // Module 7
+            -0.826660, // Module 7
             0.0  // Module 8
     };
 
@@ -27,10 +27,10 @@ public class SwerveFactory {
     }
 
     public enum SwerveCorner {
-        FRONT_LEFT(0),
+        FRONT_LEFT(180),
         FRONT_RIGHT(90),
         BACK_LEFT(270),
-        BACK_RIGHT(180);
+        BACK_RIGHT(0);
 
         private final double offset;
         SwerveCorner(double offset) {
@@ -61,9 +61,9 @@ public class SwerveFactory {
             driveConfig.CurrentLimits.SupplyCurrentLimitEnable = true;
             driveConfig.MotorOutput.Inverted = InvertedValue.CounterClockwise_Positive;
 
-
             turnConfig.CurrentLimits.SupplyCurrentLimit = 30.0;
             turnConfig.CurrentLimits.SupplyCurrentLimitEnable = true;
+            turnConfig.MotorOutput.Inverted = InvertedValue.Clockwise_Positive;
 
             canCoderconfig.MagnetSensor.MagnetOffset = moduleOffsetsRots[id-1];
             canCoderconfig.MagnetSensor.SensorDirection = SensorDirectionValue.CounterClockwise_Positive;
