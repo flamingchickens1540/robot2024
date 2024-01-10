@@ -23,14 +23,14 @@ import org.littletonrobotics.junction.networktables.LoggedDashboardChooser;
  */
 public class RobotContainer {
     // Subsystems
-    private final Drive drive;
+    public final Drive drive;
 
     // Controller
-    private final CommandXboxController controller = new CommandXboxController(0);
-    private final CommandXboxController controllerCopilot = new CommandXboxController(1);
+    public final CommandXboxController controller = new CommandXboxController(0);
+    public final CommandXboxController controllerCopilot = new CommandXboxController(1);
 
     // Dashboard inputs
-    private final LoggedDashboardChooser<Command> autoChooser;
+    public final LoggedDashboardChooser<Command> autoChooser;
 
     /**
      * The container for the robot. Contains subsystems, OI devices, and commands.

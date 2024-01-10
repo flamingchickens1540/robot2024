@@ -32,7 +32,7 @@ public class Module {
         switch (Constants.currentMode) {
             case REAL:
             case REPLAY:
-                driveFeedforward = new SimpleMotorFeedforward(0.1, 0.13);
+                driveFeedforward = new SimpleMotorFeedforward(0.19585, 0.12214);
                 driveFeedback = new PIDController(0.05, 0.0, 0.0);
                 turnFeedback = new PIDController(7.0, 0.0, 0.0);
                 break;
@@ -49,10 +49,11 @@ public class Module {
         }
 
         turnFeedback.enableContinuousInput(-Math.PI, Math.PI);
-        setBrakeMode(false);
+        setBrakeMode(true);
     }
 
     public void periodic() {
+        System.out.println(driveFeedback.getP() + " " + driveFeedback.getI() + " " + driveFeedback.getD());
         io.updateInputs(inputs);
         Logger.processInputs("Drive/Module" + index, inputs);
 
