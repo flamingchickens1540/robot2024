@@ -113,7 +113,6 @@ public class Robot extends LoggedRobot {
     @Override
     public void autonomousInit() {
         autonomousCommand = robotContainer.getAutonomousCommand();
-        robotContainer.drive.setPose(PathPlannerAuto.getStaringPoseFromAutoFile("TestAuto"));
         // schedule the autonomous command (example)
         if (autonomousCommand != null) {
             autonomousCommand.schedule();

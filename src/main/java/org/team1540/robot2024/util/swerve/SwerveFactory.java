@@ -12,9 +12,9 @@ import org.team1540.robot2024.Constants;
 
 public class SwerveFactory {
     private static final double[] moduleOffsetsRots = new double[]{
-            -0.4130859, // Module 1
+            -0.9130859, // Module 1
             0.0, // Module 2
-            -0.2197265, // Module 3
+            -0.7197265, // Module 3
             -0.7722, // Module 4
             0.0, // Module 5
             0.0, // Module 6
@@ -27,10 +27,10 @@ public class SwerveFactory {
     }
 
     public enum SwerveCorner {
-        FRONT_LEFT(180),
+        FRONT_LEFT(0),
         FRONT_RIGHT(90),
         BACK_LEFT(270),
-        BACK_RIGHT(0);
+        BACK_RIGHT(180);
 
         private final double offset;
         SwerveCorner(double offset) {

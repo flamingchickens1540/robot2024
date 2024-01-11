@@ -42,10 +42,10 @@ public class RobotContainer {
                 drive =
                         new Drive(
                                 new GyroIONavx(),
-                                new ModuleIOTalonFX(SwerveFactory.getModuleMotors(1, SwerveFactory.SwerveCorner.FRONT_LEFT)),
-                                new ModuleIOTalonFX(SwerveFactory.getModuleMotors(7, SwerveFactory.SwerveCorner.FRONT_RIGHT)),
-                                new ModuleIOTalonFX(SwerveFactory.getModuleMotors(4, SwerveFactory.SwerveCorner.BACK_LEFT)),
-                                new ModuleIOTalonFX(SwerveFactory.getModuleMotors(3, SwerveFactory.SwerveCorner.BACK_RIGHT)));
+                                new ModuleIOTalonFX(SwerveFactory.getModuleMotors(3, SwerveFactory.SwerveCorner.FRONT_LEFT)),
+                                new ModuleIOTalonFX(SwerveFactory.getModuleMotors(4, SwerveFactory.SwerveCorner.FRONT_RIGHT)),
+                                new ModuleIOTalonFX(SwerveFactory.getModuleMotors(7, SwerveFactory.SwerveCorner.BACK_LEFT)),
+                                new ModuleIOTalonFX(SwerveFactory.getModuleMotors(1, SwerveFactory.SwerveCorner.BACK_RIGHT)));
                 // drive = new Drive(
                 // new GyroIOPigeon2(),
                 // new ModuleIOTalonFX(0),
@@ -59,8 +59,7 @@ public class RobotContainer {
                 // Sim robot, instantiate physics sim IO implementations
                 drive =
                         new Drive(
-                                new GyroIO() {
-                                },
+                                new GyroIO() {},
                                 new ModuleIOSim(),
                                 new ModuleIOSim(),
                                 new ModuleIOSim(),

@@ -53,7 +53,6 @@ public class Module {
     }
 
     public void periodic() {
-        System.out.println(driveFeedback.getP() + " " + driveFeedback.getI() + " " + driveFeedback.getD());
         io.updateInputs(inputs);
         Logger.processInputs("Drive/Module" + index, inputs);
 
