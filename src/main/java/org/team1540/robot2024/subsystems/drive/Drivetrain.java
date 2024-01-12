@@ -20,19 +20,17 @@ import org.littletonrobotics.junction.AutoLogOutput;
 import org.littletonrobotics.junction.Logger;
 import org.team1540.robot2024.Constants;
 
-public class Drive extends SubsystemBase {
-
-
+public class Drivetrain extends SubsystemBase {
     private final GyroIO gyroIO;
     private final GyroIOInputsAutoLogged gyroInputs = new GyroIOInputsAutoLogged();
     private final Module[] modules = new Module[4]; // FL, FR, BL, BR
 
-    private SwerveDriveKinematics kinematics = new SwerveDriveKinematics(getModuleTranslations());
+    private final SwerveDriveKinematics kinematics = new SwerveDriveKinematics(getModuleTranslations());
     private Pose2d pose = new Pose2d();
     private Rotation2d lastGyroRotation = new Rotation2d();
     private boolean forceModuleAngleChange = false;
 
-    public Drive(
+    public Drivetrain(
             GyroIO gyroIO,
             ModuleIO flModuleIO,
             ModuleIO frModuleIO,
@@ -55,26 +53,22 @@ public class Drive extends SubsystemBase {
                 this);
         Pathfinding.setPathfinder(new LocalADStarAK());
         PathPlannerLogging.setLogActivePathCallback(
-                (activePath) -> {
-                    Logger.recordOutput(
-                            "Odometry/Trajectory", activePath.toArray(new Pose2d[activePath.size()]));
-                });
+                (activePath) -> Logger.recordOutput(
+                        "Odometry/Trajectory", activePath.toArray(new Pose2d[activePath.size()])));
         PathPlannerLogging.setLogTargetPoseCallback(
-                (targetPose) -> {
-                    Logger.recordOutput("Odometry/TrajectorySetpoint", targetPose);
-                });
+                (targetPose) -> Logger.recordOutput("Odometry/TrajectorySetpoint", targetPose));
     }
 
     public void periodic() {
         gyroIO.updateInputs(gyroInputs);
-        Logger.processInputs("Drive/Gyro", gyroInputs);
-        for (var module : modules) {
+        Logger.processInputs("Drivetrain/Gyro", gyroInputs);
+        for (Module module : modules) {
             module.periodic();
         }
 
         // Stop moving when disabled
         if (DriverStation.isDisabled()) {
-            for (var module : modules) {
+            for (Module module : modules) {
                 module.stop();
             }
         }
@@ -92,7 +86,7 @@ public class Drive extends SubsystemBase {
         // The twist represents the motion of the robot since the last
         // loop cycle in x, y, and theta based only on the modules,
         // without the gyro. The gyro is always disconnected in simulation.
-        var twist = kinematics.toTwist2d(wheelDeltas);
+        Twist2d twist = kinematics.toTwist2d(wheelDeltas);
         if (gyroInputs.connected) {
             // If the gyro is connected, replace the theta component of the twist
             // with the change in angle since the last loop cycle.
@@ -163,14 +157,14 @@ public class Drive extends SubsystemBase {
      */
     public double getCharacterizationVelocity() {
         double driveVelocityAverage = 0.0;
-        for (var module : modules) {
+        for (Module module : modules) {
             driveVelocityAverage += module.getCharacterizationVelocity();
         }
         return driveVelocityAverage / 4.0;
     }
 
     /**
-     * Returns the module states (turn angles and drive velocities) for all of the modules.
+     * Returns the module states (turn angles and drive velocities) for all the modules.
      */
     @AutoLogOutput(key = "SwerveStates/Measured")
     private SwerveModuleState[] getModuleStates() {

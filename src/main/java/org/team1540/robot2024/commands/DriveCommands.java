@@ -8,7 +8,7 @@ import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
-import org.team1540.robot2024.subsystems.drive.Drive;
+import org.team1540.robot2024.subsystems.drive.Drivetrain;
 
 import java.util.function.DoubleSupplier;
 
@@ -21,7 +21,7 @@ public class DriveCommands {
     /**
      * Field relative drive command using two joysticks (controlling linear and angular velocities).
      */
-    public static Command joystickDrive(Drive drive, DoubleSupplier xSupplier, DoubleSupplier ySupplier, DoubleSupplier omegaSupplier) {
+    public static Command joystickDrive(Drivetrain drivetrain, DoubleSupplier xSupplier, DoubleSupplier ySupplier, DoubleSupplier omegaSupplier) {
         return Commands.run(() -> {
             // Apply deadband
             double linearMagnitude = MathUtil.applyDeadband(Math.hypot(xSupplier.getAsDouble(), ySupplier.getAsDouble()), DEADBAND);
@@ -36,14 +36,14 @@ public class DriveCommands {
             Translation2d linearVelocity = new Pose2d(new Translation2d(), linearDirection).transformBy(new Transform2d(linearMagnitude, 0.0, new Rotation2d())).getTranslation();
 
             // Convert to field relative speeds & send command
-            drive.runVelocity(
+            drivetrain.runVelocity(
                     ChassisSpeeds.fromFieldRelativeSpeeds(
-                            linearVelocity.getX() * drive.getMaxLinearSpeedMetersPerSec(),
-                            linearVelocity.getY() * drive.getMaxLinearSpeedMetersPerSec(),
-                            omega * drive.getMaxAngularSpeedRadPerSec(),
-                            drive.getRotation()
+                            linearVelocity.getX() * drivetrain.getMaxLinearSpeedMetersPerSec(),
+                            linearVelocity.getY() * drivetrain.getMaxLinearSpeedMetersPerSec(),
+                            omega * drivetrain.getMaxAngularSpeedRadPerSec(),
+                            drivetrain.getRotation()
                     )
             );
-        }, drive);
+        }, drivetrain);
     }
 }

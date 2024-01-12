@@ -41,9 +41,6 @@ public class ModuleIOTalonFX implements ModuleIO {
     private final StatusSignal<Double> turnAppliedVolts;
     private final StatusSignal<Double> turnCurrent;
 
-    // Gear ratios for SDS MK4i L2, adjust as necessary
-
-
     private final Rotation2d absoluteEncoderOffset;
 
     public ModuleIOTalonFX(SwerveFactory.SwerveModuleHW hw) {
@@ -53,10 +50,8 @@ public class ModuleIOTalonFX implements ModuleIO {
         cancoder = hw.cancoder;
         absoluteEncoderOffset = hw.cancoderOffset;
 
-
         setDriveBrakeMode(true);
         setTurnBrakeMode(true);
-
 
         drivePosition = driveTalon.getPosition();
         driveVelocity = driveTalon.getVelocity();
@@ -103,7 +98,7 @@ public class ModuleIOTalonFX implements ModuleIO {
 
     @Override
     public void setDriveBrakeMode(boolean enable) {
-        var config = new MotorOutputConfigs();
+        MotorOutputConfigs config = new MotorOutputConfigs();
         config.Inverted = InvertedValue.CounterClockwise_Positive;
         config.NeutralMode = enable ? NeutralModeValue.Brake : NeutralModeValue.Coast;
         driveTalon.getConfigurator().apply(config);
@@ -111,7 +106,7 @@ public class ModuleIOTalonFX implements ModuleIO {
 
     @Override
     public void setTurnBrakeMode(boolean enable) {
-        var config = new MotorOutputConfigs();
+        MotorOutputConfigs config = new MotorOutputConfigs();
         config.Inverted = Constants.Drivetrain.IS_TURN_MOTOR_INVERTED ? InvertedValue.Clockwise_Positive : InvertedValue.CounterClockwise_Positive;
         config.NeutralMode = enable ? NeutralModeValue.Brake : NeutralModeValue.Coast;
         turnTalon.getConfigurator().apply(config);

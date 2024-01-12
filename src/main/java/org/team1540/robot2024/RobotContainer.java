@@ -23,11 +23,11 @@ import org.littletonrobotics.junction.networktables.LoggedDashboardChooser;
  */
 public class RobotContainer {
     // Subsystems
-    public final Drive drive;
+    public final Drivetrain drivetrain;
 
     // Controller
-    public final CommandXboxController controller = new CommandXboxController(0);
-    public final CommandXboxController controllerCopilot = new CommandXboxController(1);
+    public final CommandXboxController driver = new CommandXboxController(0);
+    public final CommandXboxController copilot = new CommandXboxController(1);
 
     // Dashboard inputs
     public final LoggedDashboardChooser<Command> autoChooser;
@@ -39,8 +39,8 @@ public class RobotContainer {
         switch (Constants.currentMode) {
             case REAL:
                 // Real robot, instantiate hardware IO implementations
-                drive =
-                        new Drive(
+                drivetrain =
+                        new Drivetrain(
                                 new GyroIONavx(),
                                 new ModuleIOTalonFX(SwerveFactory.getModuleMotors(3, SwerveFactory.SwerveCorner.FRONT_LEFT)),
                                 new ModuleIOTalonFX(SwerveFactory.getModuleMotors(4, SwerveFactory.SwerveCorner.FRONT_RIGHT)),
@@ -57,8 +57,8 @@ public class RobotContainer {
 
             case SIM:
                 // Sim robot, instantiate physics sim IO implementations
-                drive =
-                        new Drive(
+                drivetrain =
+                        new Drivetrain(
                                 new GyroIO() {},
                                 new ModuleIOSim(),
                                 new ModuleIOSim(),
@@ -68,8 +68,8 @@ public class RobotContainer {
 
             default:
                 // Replayed robot, disable IO implementations
-                drive =
-                        new Drive(
+                drivetrain =
+                        new Drivetrain(
                                 new GyroIO() {
                                 },
                                 new ModuleIO() {
@@ -91,7 +91,7 @@ public class RobotContainer {
         autoChooser.addOption(
                 "Drive FF Characterization",
                 new FeedForwardCharacterization(
-                        drive, drive::runCharacterizationVolts, drive::getCharacterizationVelocity));
+                        drivetrain, drivetrain::runCharacterizationVolts, drivetrain::getCharacterizationVelocity));
 
         // Configure the button bindings
         configureButtonBindings();
@@ -104,17 +104,17 @@ public class RobotContainer {
      * edu.wpi.first.wpilibj2.command.button.JoystickButton}.
      */
     private void configureButtonBindings() {
-        drive.setDefaultCommand(
+        drivetrain.setDefaultCommand(
                 DriveCommands.joystickDrive(
-                        drive,
-                        () -> -controller.getLeftY(),
-                        () -> -controller.getLeftX(),
-                        () -> -controller.getRightX()));
-        controller.x().onTrue(Commands.runOnce(drive::stopWithX, drive));
-        controller.b().onTrue(
+                        drivetrain,
+                        () -> -driver.getLeftY(),
+                        () -> -driver.getLeftX(),
+                        () -> -driver.getRightX()));
+        driver.x().onTrue(Commands.runOnce(drivetrain::stopWithX, drivetrain));
+        driver.b().onTrue(
                 Commands.runOnce(
-                        () -> drive.setPose(new Pose2d(drive.getPose().getTranslation(), new Rotation2d())),
-                        drive
+                        () -> drivetrain.setPose(new Pose2d(drivetrain.getPose().getTranslation(), new Rotation2d())),
+                        drivetrain
                 ).ignoringDisable(true)
         );
     }

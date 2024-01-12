@@ -53,7 +53,7 @@ public class SwerveFactory {
             }
             TalonFXConfiguration driveConfig = new TalonFXConfiguration();
             TalonFXConfiguration turnConfig = new TalonFXConfiguration();
-            CANcoderConfiguration canCoderconfig = new CANcoderConfiguration();
+            CANcoderConfiguration canCoderConfig = new CANcoderConfiguration();
 
             driveConfig.CurrentLimits.SupplyCurrentLimit = 40.0;
             driveConfig.CurrentLimits.SupplyCurrentThreshold = 60.0;
@@ -65,9 +65,9 @@ public class SwerveFactory {
             turnConfig.CurrentLimits.SupplyCurrentLimitEnable = true;
             turnConfig.MotorOutput.Inverted = InvertedValue.Clockwise_Positive;
 
-            canCoderconfig.MagnetSensor.MagnetOffset = moduleOffsetsRots[id-1];
-            canCoderconfig.MagnetSensor.SensorDirection = SensorDirectionValue.CounterClockwise_Positive;
-            canCoderconfig.MagnetSensor.AbsoluteSensorRange = AbsoluteSensorRangeValue.Unsigned_0To1;
+            canCoderConfig.MagnetSensor.MagnetOffset = moduleOffsetsRots[id-1];
+            canCoderConfig.MagnetSensor.SensorDirection = SensorDirectionValue.CounterClockwise_Positive;
+            canCoderConfig.MagnetSensor.AbsoluteSensorRange = AbsoluteSensorRangeValue.Unsigned_0To1;
 
             this.driveMotor = new TalonFX(30 + id, canbus);
             this.driveMotor.getConfigurator().apply(driveConfig);
@@ -79,7 +79,7 @@ public class SwerveFactory {
             this.cancoder = new CANcoder(10 + id, canbus);
 
 
-            this.cancoder.getConfigurator().apply(canCoderconfig);
+            this.cancoder.getConfigurator().apply(canCoderConfig);
 
             this.cancoderOffset = Rotation2d.fromDegrees(corner.offset);
 

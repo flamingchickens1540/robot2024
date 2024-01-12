@@ -9,7 +9,6 @@ import org.team1540.robot2024.Constants;
 import org.littletonrobotics.junction.Logger;
 
 public class Module {
-
     private final ModuleIO io;
     private final ModuleIOInputsAutoLogged inputs = new ModuleIOInputsAutoLogged();
     private final int index;
@@ -97,7 +96,7 @@ public class Module {
     public SwerveModuleState runSetpoint(SwerveModuleState state, boolean forceTurn) {
         // Optimize state based on current angle
         // Controllers run in "periodic" when the setpoint is not null
-        var optimizedState = SwerveModuleState.optimize(state, getAngle());
+        SwerveModuleState optimizedState = SwerveModuleState.optimize(state, getAngle());
 
         // Update setpoints, controllers run in "periodic"
         angleSetpoint = ((Math.abs(optimizedState.speedMetersPerSecond) <= (Constants.Drivetrain.MAX_LINEAR_SPEED * 0.01)) && !forceTurn) ? angleSetpoint : optimizedState.angle; //Prevent rotating module if speed is less then 1%. Prevents Jittering.
@@ -174,7 +173,7 @@ public class Module {
      * Returns the module position delta since the last call to this method.
      */
     public SwerveModulePosition getPositionDelta() {
-        var delta = new SwerveModulePosition(getPositionMeters() - lastPositionMeters, getAngle());
+        SwerveModulePosition delta = new SwerveModulePosition(getPositionMeters() - lastPositionMeters, getAngle());
         lastPositionMeters = getPositionMeters();
         return delta;
     }
