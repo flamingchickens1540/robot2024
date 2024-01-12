@@ -8,8 +8,8 @@ import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
-import org.team1540.robot2024.commands.DriveCommands;
 import org.team1540.robot2024.commands.FeedForwardCharacterization;
+import org.team1540.robot2024.commands.SwerveDriveCommand;
 import org.team1540.robot2024.subsystems.drive.*;
 import org.team1540.robot2024.util.swerve.SwerveFactory;
 import org.littletonrobotics.junction.networktables.LoggedDashboardChooser;
@@ -46,13 +46,6 @@ public class RobotContainer {
                                 new ModuleIOTalonFX(SwerveFactory.getModuleMotors(4, SwerveFactory.SwerveCorner.FRONT_RIGHT)),
                                 new ModuleIOTalonFX(SwerveFactory.getModuleMotors(7, SwerveFactory.SwerveCorner.BACK_LEFT)),
                                 new ModuleIOTalonFX(SwerveFactory.getModuleMotors(1, SwerveFactory.SwerveCorner.BACK_RIGHT)));
-                // drive = new Drive(
-                // new GyroIOPigeon2(),
-                // new ModuleIOTalonFX(0),
-                // new ModuleIOTalonFX(1),
-                // new ModuleIOTalonFX(2),
-                // new ModuleIOTalonFX(3));
-                // flywheel = new Flywheel(new FlywheelIOTalonFX());
                 break;
 
             case SIM:
@@ -104,12 +97,7 @@ public class RobotContainer {
      * edu.wpi.first.wpilibj2.command.button.JoystickButton}.
      */
     private void configureButtonBindings() {
-        drivetrain.setDefaultCommand(
-                DriveCommands.joystickDrive(
-                        drivetrain,
-                        () -> -driver.getLeftY(),
-                        () -> -driver.getLeftX(),
-                        () -> -driver.getRightX()));
+        drivetrain.setDefaultCommand(new SwerveDriveCommand(drivetrain, driver));
         driver.x().onTrue(Commands.runOnce(drivetrain::stopWithX, drivetrain));
         driver.b().onTrue(
                 Commands.runOnce(
