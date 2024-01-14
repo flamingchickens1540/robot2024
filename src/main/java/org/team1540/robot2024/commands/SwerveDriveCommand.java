@@ -40,7 +40,6 @@ public class SwerveDriveCommand extends Command {
 
         // Apply deadband
         double linearMagnitude = MathUtil.applyDeadband(Math.hypot(xPercent, yPercent), 0.1);
-        System.out.println("x: " + xPercent + "  y: " + yPercent + "  mag: " + linearMagnitude);
         Rotation2d linearDirection = new Rotation2d(xPercent, yPercent);
         double omega = MathUtil.applyDeadband(rotPercent, 0.1);
 
