@@ -8,6 +8,8 @@ import edu.wpi.first.math.kinematics.SwerveModuleState;
 import org.team1540.robot2024.Constants;
 import org.littletonrobotics.junction.Logger;
 
+import static org.team1540.robot2024.Constants.Drivetrain.*;
+
 public class Module {
     private final ModuleIO io;
     private final ModuleIOInputsAutoLogged inputs = new ModuleIOInputsAutoLogged();
@@ -78,7 +80,7 @@ public class Module {
                 double adjustSpeedSetpoint = speedSetpoint * Math.cos(turnFeedback.getPositionError());
 
                 // Run drive controller
-                double velocityRadPerSec = adjustSpeedSetpoint / Constants.Drivetrain.WHEEL_RADIUS;
+                double velocityRadPerSec = adjustSpeedSetpoint / WHEEL_RADIUS;
                 io.setDriveVoltage(
                         driveFeedforward.calculate(velocityRadPerSec)
                                 + driveFeedback.calculate(inputs.driveVelocityRadPerSec, velocityRadPerSec));
@@ -99,7 +101,7 @@ public class Module {
         SwerveModuleState optimizedState = SwerveModuleState.optimize(state, getAngle());
 
         // Update setpoints, controllers run in "periodic"
-        angleSetpoint = ((Math.abs(optimizedState.speedMetersPerSecond) <= (Constants.Drivetrain.MAX_LINEAR_SPEED * 0.01)) && !forceTurn) ? angleSetpoint : optimizedState.angle; //Prevent rotating module if speed is less then 1%. Prevents Jittering.
+        angleSetpoint = ((Math.abs(optimizedState.speedMetersPerSecond) <= (MAX_LINEAR_SPEED * 0.01)) && !forceTurn) ? angleSetpoint : optimizedState.angle; //Prevent rotating module if speed is less then 1%. Prevents Jittering.
         speedSetpoint = optimizedState.speedMetersPerSecond;
 
         return optimizedState;
@@ -152,14 +154,14 @@ public class Module {
      * Returns the current drive position of the module in meters.
      */
     public double getPositionMeters() {
-        return inputs.drivePositionRad * Constants.Drivetrain.WHEEL_RADIUS;
+        return inputs.drivePositionRad * WHEEL_RADIUS;
     }
 
     /**
      * Returns the current drive velocity of the module in meters per second.
      */
     public double getVelocityMetersPerSec() {
-        return inputs.driveVelocityRadPerSec * Constants.Drivetrain.WHEEL_RADIUS;
+        return inputs.driveVelocityRadPerSec * WHEEL_RADIUS;
     }
 
     /**

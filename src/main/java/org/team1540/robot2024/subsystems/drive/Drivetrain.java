@@ -18,7 +18,8 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import org.team1540.robot2024.util.LocalADStarAK;
 import org.littletonrobotics.junction.AutoLogOutput;
 import org.littletonrobotics.junction.Logger;
-import org.team1540.robot2024.Constants;
+
+import static org.team1540.robot2024.Constants.Drivetrain.*;
 
 public class Drivetrain extends SubsystemBase {
     private final GyroIO gyroIO;
@@ -48,7 +49,7 @@ public class Drivetrain extends SubsystemBase {
                 this::setPose,
                 () -> kinematics.toChassisSpeeds(getModuleStates()),
                 this::runVelocity,
-                new HolonomicPathFollowerConfig(Constants.Drivetrain.MAX_LINEAR_SPEED, Constants.Drivetrain.DRIVE_BASE_RADIUS, new ReplanningConfig()),
+                new HolonomicPathFollowerConfig(MAX_LINEAR_SPEED, DRIVE_BASE_RADIUS, new ReplanningConfig()),
                 () -> DriverStation.getAlliance().isPresent() && DriverStation.getAlliance().get() == DriverStation.Alliance.Red,
                 this);
         Pathfinding.setPathfinder(new LocalADStarAK());
@@ -108,7 +109,7 @@ public class Drivetrain extends SubsystemBase {
         // Calculate module setpoints
         ChassisSpeeds discreteSpeeds = ChassisSpeeds.discretize(speeds, 0.02);
         SwerveModuleState[] setpointStates = kinematics.toSwerveModuleStates(discreteSpeeds);
-        SwerveDriveKinematics.desaturateWheelSpeeds(setpointStates, Constants.Drivetrain.MAX_LINEAR_SPEED);
+        SwerveDriveKinematics.desaturateWheelSpeeds(setpointStates, MAX_LINEAR_SPEED);
 
         // Send setpoints to modules
         SwerveModuleState[] optimizedSetpointStates = new SwerveModuleState[4];
@@ -201,14 +202,14 @@ public class Drivetrain extends SubsystemBase {
      * Returns the maximum linear speed in meters per sec.
      */
     public double getMaxLinearSpeedMetersPerSec() {
-        return Constants.Drivetrain.MAX_LINEAR_SPEED;
+        return MAX_LINEAR_SPEED;
     }
 
     /**
      * Returns the maximum angular speed in radians per sec.
      */
     public double getMaxAngularSpeedRadPerSec() {
-        return Constants.Drivetrain.MAX_ANGULAR_SPEED;
+        return MAX_ANGULAR_SPEED;
     }
 
     /**
@@ -216,10 +217,10 @@ public class Drivetrain extends SubsystemBase {
      */
     public static Translation2d[] getModuleTranslations() {
         return new Translation2d[]{
-                new Translation2d(Constants.Drivetrain.TRACK_WIDTH_X / 2.0, Constants.Drivetrain.TRACK_WIDTH_Y / 2.0),
-                new Translation2d(Constants.Drivetrain.TRACK_WIDTH_X / 2.0, -Constants.Drivetrain.TRACK_WIDTH_Y / 2.0),
-                new Translation2d(-Constants.Drivetrain.TRACK_WIDTH_X / 2.0, Constants.Drivetrain.TRACK_WIDTH_Y / 2.0),
-                new Translation2d(-Constants.Drivetrain.TRACK_WIDTH_X / 2.0, -Constants.Drivetrain.TRACK_WIDTH_Y / 2.0)
+                new Translation2d(TRACK_WIDTH_X / 2.0, TRACK_WIDTH_Y / 2.0),
+                new Translation2d(TRACK_WIDTH_X / 2.0, -TRACK_WIDTH_Y / 2.0),
+                new Translation2d(-TRACK_WIDTH_X / 2.0, TRACK_WIDTH_Y / 2.0),
+                new Translation2d(-TRACK_WIDTH_X / 2.0, -TRACK_WIDTH_Y / 2.0)
         };
     }
 }

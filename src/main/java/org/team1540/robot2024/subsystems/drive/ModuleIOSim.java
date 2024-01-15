@@ -4,9 +4,9 @@ import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.system.plant.DCMotor;
 import edu.wpi.first.wpilibj.simulation.DCMotorSim;
-import org.team1540.robot2024.Constants;
 
 import static org.team1540.robot2024.Constants.Drivetrain.*;
+import static org.team1540.robot2024.Constants.*;
 
 /**
  * Physics sim implementation of module IO.
@@ -24,8 +24,8 @@ public class ModuleIOSim implements ModuleIO {
 
     @Override
     public void updateInputs(ModuleIOInputs inputs) {
-        driveSim.update(Constants.LOOP_PERIOD_SECS);
-        turnSim.update(Constants.LOOP_PERIOD_SECS);
+        driveSim.update(LOOP_PERIOD_SECS);
+        turnSim.update(LOOP_PERIOD_SECS);
 
         inputs.drivePositionRad = driveSim.getAngularPositionRad();
         inputs.driveVelocityRadPerSec = driveSim.getAngularVelocityRadPerSec();

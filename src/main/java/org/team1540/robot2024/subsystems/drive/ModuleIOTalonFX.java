@@ -11,7 +11,8 @@ import com.ctre.phoenix6.signals.NeutralModeValue;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.util.Units;
 import org.team1540.robot2024.util.swerve.SwerveFactory;
-import org.team1540.robot2024.Constants;
+
+import static org.team1540.robot2024.Constants.Drivetrain.*;
 
 /**
  * Module IO implementation for Talon FX drive motor controller, Talon FX turn motor controller, and
@@ -74,14 +75,14 @@ public class ModuleIOTalonFX implements ModuleIO {
     public void updateInputs(ModuleIOInputs inputs) {
         BaseStatusSignal.refreshAll(drivePosition, driveVelocity, driveAppliedVolts, driveCurrent, turnAbsolutePosition, turnPosition, turnVelocity, turnAppliedVolts, turnCurrent);
 
-        inputs.drivePositionRad = Units.rotationsToRadians(drivePosition.getValueAsDouble()) / Constants.Drivetrain.DRIVE_GEAR_RATIO;
-        inputs.driveVelocityRadPerSec = Units.rotationsToRadians(driveVelocity.getValueAsDouble()) / Constants.Drivetrain.DRIVE_GEAR_RATIO;
+        inputs.drivePositionRad = Units.rotationsToRadians(drivePosition.getValueAsDouble()) / DRIVE_GEAR_RATIO;
+        inputs.driveVelocityRadPerSec = Units.rotationsToRadians(driveVelocity.getValueAsDouble()) / DRIVE_GEAR_RATIO;
         inputs.driveAppliedVolts = driveAppliedVolts.getValueAsDouble();
         inputs.driveCurrentAmps = driveCurrent.getValueAsDouble();
 
         inputs.turnAbsolutePosition = Rotation2d.fromRotations(turnAbsolutePosition.getValueAsDouble()).plus(absoluteEncoderOffset);
-        inputs.turnPosition = Rotation2d.fromRotations(turnPosition.getValueAsDouble() / Constants.Drivetrain.TURN_GEAR_RATIO);
-        inputs.turnVelocityRadPerSec = Units.rotationsToRadians(turnVelocity.getValueAsDouble()) / Constants.Drivetrain.TURN_GEAR_RATIO;
+        inputs.turnPosition = Rotation2d.fromRotations(turnPosition.getValueAsDouble() / TURN_GEAR_RATIO);
+        inputs.turnVelocityRadPerSec = Units.rotationsToRadians(turnVelocity.getValueAsDouble()) / TURN_GEAR_RATIO;
         inputs.turnAppliedVolts = turnAppliedVolts.getValueAsDouble();
         inputs.turnCurrentAmps = turnCurrent.getValueAsDouble();
     }
@@ -107,7 +108,7 @@ public class ModuleIOTalonFX implements ModuleIO {
     @Override
     public void setTurnBrakeMode(boolean enable) {
         MotorOutputConfigs config = new MotorOutputConfigs();
-        config.Inverted = Constants.Drivetrain.IS_TURN_MOTOR_INVERTED ? InvertedValue.Clockwise_Positive : InvertedValue.CounterClockwise_Positive;
+        config.Inverted = IS_TURN_MOTOR_INVERTED ? InvertedValue.Clockwise_Positive : InvertedValue.CounterClockwise_Positive;
         config.NeutralMode = enable ? NeutralModeValue.Brake : NeutralModeValue.Coast;
         turnTalon.getConfigurator().apply(config);
     }
