@@ -13,7 +13,6 @@ public class GyroIONavx implements GyroIO{
         lastAngle = navx.getRotation2d();
     }
 
-
     @Override
     public void updateInputs(GyroIOInputs inputs) {
         double lastTime = inputs.time;

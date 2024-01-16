@@ -5,6 +5,9 @@ import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.system.plant.DCMotor;
 import edu.wpi.first.wpilibj.simulation.DCMotorSim;
 
+import static org.team1540.robot2024.Constants.Drivetrain.*;
+import static org.team1540.robot2024.Constants.*;
+
 /**
  * Physics sim implementation of module IO.
  *
@@ -13,10 +16,9 @@ import edu.wpi.first.wpilibj.simulation.DCMotorSim;
  * approximation for the behavior of the module.
  */
 public class ModuleIOSim implements ModuleIO {
-    private static final double LOOP_PERIOD_SECS = 0.02;
     private final Rotation2d turnAbsoluteInitPosition = new Rotation2d(Math.random() * 2.0 * Math.PI);
-    private final DCMotorSim driveSim = new DCMotorSim(DCMotor.getFalcon500Foc(1), 6.15, 0.025);
-    private final DCMotorSim turnSim = new DCMotorSim(DCMotor.getFalcon500Foc(1), 150.0 / 7.0, 0.004);
+    private final DCMotorSim driveSim = new DCMotorSim(DCMotor.getFalcon500Foc(1), DRIVE_GEAR_RATIO, 0.025);
+    private final DCMotorSim turnSim = new DCMotorSim(DCMotor.getFalcon500Foc(1), TURN_GEAR_RATIO, 0.004);
     private double driveAppliedVolts = 0.0;
     private double turnAppliedVolts = 0.0;
 
@@ -28,13 +30,13 @@ public class ModuleIOSim implements ModuleIO {
         inputs.drivePositionRad = driveSim.getAngularPositionRad();
         inputs.driveVelocityRadPerSec = driveSim.getAngularVelocityRadPerSec();
         inputs.driveAppliedVolts = driveAppliedVolts;
-        inputs.driveCurrentAmps = new double[]{Math.abs(driveSim.getCurrentDrawAmps())};
+        inputs.driveCurrentAmps = Math.abs(driveSim.getCurrentDrawAmps());
 
         inputs.turnAbsolutePosition = new Rotation2d(turnSim.getAngularPositionRad()).plus(turnAbsoluteInitPosition);
         inputs.turnPosition = new Rotation2d(turnSim.getAngularPositionRad());
         inputs.turnVelocityRadPerSec = turnSim.getAngularVelocityRadPerSec();
         inputs.turnAppliedVolts = turnAppliedVolts;
-        inputs.turnCurrentAmps = new double[]{Math.abs(turnSim.getCurrentDrawAmps())};
+        inputs.turnCurrentAmps = Math.abs(turnSim.getCurrentDrawAmps());
     }
 
     @Override

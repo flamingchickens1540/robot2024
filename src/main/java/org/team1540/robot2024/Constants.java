@@ -30,6 +30,8 @@ public final class Constants {
         REPLAY
     }
 
+    public static final double LOOP_PERIOD_SECS = 0.02;
+
     public static class Drivetrain {
         public static final String CAN_BUS = "";
         public static final double DRIVE_GEAR_RATIO = (50.0 / 14.0) * (17.0 / 27.0) * (45.0 / 15.0);
