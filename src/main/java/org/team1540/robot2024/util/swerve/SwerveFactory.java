@@ -7,7 +7,6 @@ import com.ctre.phoenix6.hardware.TalonFX;
 import com.ctre.phoenix6.signals.AbsoluteSensorRangeValue;
 import com.ctre.phoenix6.signals.InvertedValue;
 import com.ctre.phoenix6.signals.SensorDirectionValue;
-import edu.wpi.first.math.geometry.Rotation2d;
 import org.team1540.robot2024.Constants;
 
 public class SwerveFactory {
@@ -28,13 +27,13 @@ public class SwerveFactory {
 
     public enum SwerveCorner {
         FRONT_LEFT(0),
-        FRONT_RIGHT(90),
-        BACK_LEFT(270),
-        BACK_RIGHT(180);
+        FRONT_RIGHT(0.25),
+        BACK_LEFT(0.75),
+        BACK_RIGHT(0.5);
 
-        private final double offset;
-        SwerveCorner(double offset) {
-            this.offset = offset;
+        private final double offsetRots;
+        SwerveCorner(double offsetRots) {
+            this.offsetRots = offsetRots;
         }
     }
 
@@ -42,7 +41,6 @@ public class SwerveFactory {
         public final TalonFX driveMotor;
         public final TalonFX turnMotor;
         public final CANcoder cancoder;
-        public final Rotation2d cancoderOffset;
 
         private SwerveModuleHW(int id, SwerveCorner corner, String canbus) {
             if (id < 1 || id > 8) {
@@ -65,7 +63,7 @@ public class SwerveFactory {
             turnConfig.CurrentLimits.SupplyCurrentLimitEnable = true;
             turnConfig.MotorOutput.Inverted = InvertedValue.Clockwise_Positive;
 
-            canCoderConfig.MagnetSensor.MagnetOffset = moduleOffsetsRots[id-1];
+            canCoderConfig.MagnetSensor.MagnetOffset = moduleOffsetsRots[id-1] + corner.offsetRots;
             canCoderConfig.MagnetSensor.SensorDirection = SensorDirectionValue.CounterClockwise_Positive;
             canCoderConfig.MagnetSensor.AbsoluteSensorRange = AbsoluteSensorRangeValue.Unsigned_0To1;
 
@@ -78,12 +76,7 @@ public class SwerveFactory {
 
             this.cancoder = new CANcoder(10 + id, canbus);
 
-
             this.cancoder.getConfigurator().apply(canCoderConfig);
-
-            this.cancoderOffset = Rotation2d.fromDegrees(corner.offset);
-
-
         }
     }
 }
