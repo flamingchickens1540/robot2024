@@ -1,6 +1,7 @@
 package org.team1540.robot2024.subsystems.drive;
 
 import com.ctre.phoenix6.BaseStatusSignal;
+import com.ctre.phoenix6.CANBus;
 import com.ctre.phoenix6.StatusSignal;
 import com.ctre.phoenix6.configs.MotorOutputConfigs;
 import com.ctre.phoenix6.controls.VoltageOut;
@@ -44,12 +45,15 @@ public class ModuleIOTalonFX implements ModuleIO {
 
     private final Rotation2d absoluteEncoderOffset;
 
-    public ModuleIOTalonFX(SwerveFactory.SwerveModuleHW hw) {
+    private final boolean isCANFD;
 
+    public ModuleIOTalonFX(SwerveFactory.SwerveModuleHW hw) {
         driveTalon = hw.driveMotor;
         turnTalon = hw.turnMotor;
         cancoder = hw.cancoder;
         absoluteEncoderOffset = hw.cancoderOffset;
+
+        isCANFD = CANBus.isNetworkFD(CAN_BUS);
 
         setDriveBrakeMode(true);
         setTurnBrakeMode(true);
@@ -66,14 +70,43 @@ public class ModuleIOTalonFX implements ModuleIO {
         turnCurrent = turnTalon.getStatorCurrent();
 
         BaseStatusSignal.setUpdateFrequencyForAll(100.0, drivePosition, turnPosition); // Required for odometry, use faster rate
-        BaseStatusSignal.setUpdateFrequencyForAll(50.0, driveVelocity, driveAppliedVolts, driveCurrent, turnAbsolutePosition, turnVelocity, turnAppliedVolts, turnCurrent);
+        BaseStatusSignal.setUpdateFrequencyForAll(
+                50.0,
+                driveVelocity,
+                driveAppliedVolts,
+                driveCurrent,
+                turnAbsolutePosition,
+                turnVelocity,
+                turnAppliedVolts,
+                turnCurrent);
         driveTalon.optimizeBusUtilization();
         turnTalon.optimizeBusUtilization();
     }
 
     @Override
     public void updateInputs(ModuleIOInputs inputs) {
-        BaseStatusSignal.refreshAll(drivePosition, driveVelocity, driveAppliedVolts, driveCurrent, turnAbsolutePosition, turnPosition, turnVelocity, turnAppliedVolts, turnCurrent);
+        if (isCANFD) {
+            BaseStatusSignal.waitForAll(0.01, drivePosition, turnPosition);
+            BaseStatusSignal.refreshAll(
+                    driveVelocity,
+                    driveAppliedVolts,
+                    driveCurrent,
+                    turnAbsolutePosition,
+                    turnVelocity,
+                    turnAppliedVolts,
+                    turnCurrent);
+        } else {
+            BaseStatusSignal.refreshAll(
+                    drivePosition,
+                    driveVelocity,
+                    driveAppliedVolts,
+                    driveCurrent,
+                    turnAbsolutePosition,
+                    turnPosition,
+                    turnVelocity,
+                    turnAppliedVolts,
+                    turnCurrent);
+        }
 
         inputs.drivePositionRad = Units.rotationsToRadians(drivePosition.getValueAsDouble()) / DRIVE_GEAR_RATIO;
         inputs.driveVelocityRadPerSec = Units.rotationsToRadians(driveVelocity.getValueAsDouble()) / DRIVE_GEAR_RATIO;
