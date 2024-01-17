@@ -11,7 +11,11 @@ import edu.wpi.first.math.util.Units;
  * constants are needed, to reduce verbosity.
  */
 public final class Constants {
-    public static final Mode currentMode = Robot.isReal() ? Mode.REAL : Mode.SIM;
+    public static final boolean IS_COMPETITION_ROBOT = true;
+    private static final Mode simMode = Mode.SIM; // Can also be Mode.REPLAY
+    
+    
+    public static final Mode currentMode = Robot.isReal() ? Mode.REAL : simMode;
 
     public enum Mode {
         /**
@@ -32,8 +36,14 @@ public final class Constants {
 
     public static final double LOOP_PERIOD_SECS = 0.02;
 
+    public static class SwerveConfig {
+        public static final String CAN_BUS = IS_COMPETITION_ROBOT ? "" : "";
+        public static final int FRONT_LEFT  = IS_COMPETITION_ROBOT ? 3 : 0;
+        public static final int FRONT_RIGHT = IS_COMPETITION_ROBOT ? 4 : 0;
+        public static final int BACK_LEFT   = IS_COMPETITION_ROBOT ? 7 : 0;
+        public static final int BACK_RIGHT  = IS_COMPETITION_ROBOT ? 1 : 0;
+    }
     public static class Drivetrain {
-        public static final String CAN_BUS = "";
         public static final double DRIVE_GEAR_RATIO = (50.0 / 14.0) * (17.0 / 27.0) * (45.0 / 15.0);
         public static final double TURN_GEAR_RATIO = 150.0 / 7.0;
         public static final boolean IS_TURN_MOTOR_INVERTED = true;

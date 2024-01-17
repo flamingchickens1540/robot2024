@@ -8,7 +8,7 @@ import com.ctre.phoenix6.signals.AbsoluteSensorRangeValue;
 import com.ctre.phoenix6.signals.InvertedValue;
 import com.ctre.phoenix6.signals.SensorDirectionValue;
 import edu.wpi.first.math.geometry.Rotation2d;
-import org.team1540.robot2024.Constants;
+import static org.team1540.robot2024.Constants.SwerveConfig.CAN_BUS;;
 
 public class SwerveFactory {
     private static final double[] moduleOffsetsRots = new double[]{
@@ -23,7 +23,7 @@ public class SwerveFactory {
     };
 
     public static SwerveModuleHW getModuleMotors(int id, SwerveCorner corner) {
-        return new SwerveModuleHW(id, corner, Constants.Drivetrain.CAN_BUS);
+        return new SwerveModuleHW(id, corner, CAN_BUS);
     }
 
     public enum SwerveCorner {
