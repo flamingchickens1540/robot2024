@@ -5,6 +5,7 @@ import com.ctre.phoenix6.configs.TalonFXConfiguration;
 import com.ctre.phoenix6.hardware.CANcoder;
 import com.ctre.phoenix6.hardware.TalonFX;
 import com.ctre.phoenix6.signals.AbsoluteSensorRangeValue;
+import com.ctre.phoenix6.signals.FeedbackSensorSourceValue;
 import com.ctre.phoenix6.signals.InvertedValue;
 import com.ctre.phoenix6.signals.SensorDirectionValue;
 import org.team1540.robot2024.Constants;
@@ -49,6 +50,11 @@ public class SwerveFactory {
             if (canbus == null) {
                 canbus = "";
             }
+
+            int driveID = 30 + id;
+            int turnID = 20 + id;
+            int canCoderID = 10 + id;
+
             TalonFXConfiguration driveConfig = new TalonFXConfiguration();
             TalonFXConfiguration turnConfig = new TalonFXConfiguration();
             CANcoderConfiguration canCoderConfig = new CANcoderConfiguration();
@@ -62,21 +68,23 @@ public class SwerveFactory {
             turnConfig.CurrentLimits.SupplyCurrentLimit = 30.0;
             turnConfig.CurrentLimits.SupplyCurrentLimitEnable = true;
             turnConfig.MotorOutput.Inverted = InvertedValue.Clockwise_Positive;
+            turnConfig.Feedback.FeedbackRemoteSensorID = canCoderID;
+            turnConfig.Feedback.FeedbackSensorSource = FeedbackSensorSourceValue.FusedCANcoder;
+            turnConfig.Feedback.SensorToMechanismRatio = 1.0;
+            turnConfig.Feedback.RotorToSensorRatio = Constants.Drivetrain.TURN_GEAR_RATIO;
 
             canCoderConfig.MagnetSensor.MagnetOffset = moduleOffsetsRots[id-1] + corner.offsetRots;
             canCoderConfig.MagnetSensor.SensorDirection = SensorDirectionValue.CounterClockwise_Positive;
             canCoderConfig.MagnetSensor.AbsoluteSensorRange = AbsoluteSensorRangeValue.Unsigned_0To1;
 
-            this.driveMotor = new TalonFX(30 + id, canbus);
+            this.driveMotor = new TalonFX(driveID, canbus);
             this.driveMotor.getConfigurator().apply(driveConfig);
 
-            this.turnMotor = new TalonFX(20 + id, canbus);
-
-            this.turnMotor.getConfigurator().apply(turnConfig);
-
-            this.cancoder = new CANcoder(10 + id, canbus);
-
+            this.cancoder = new CANcoder(canCoderID, canbus);
             this.cancoder.getConfigurator().apply(canCoderConfig);
+
+            this.turnMotor = new TalonFX(turnID, canbus);
+            this.turnMotor.getConfigurator().apply(turnConfig);
         }
     }
 }
