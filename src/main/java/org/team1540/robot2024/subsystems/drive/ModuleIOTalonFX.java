@@ -14,6 +14,7 @@ import edu.wpi.first.math.util.Units;
 import org.team1540.robot2024.util.swerve.SwerveFactory;
 
 import static org.team1540.robot2024.Constants.Drivetrain.*;
+import static org.team1540.robot2024.Constants.SwerveConfig.CAN_BUS;
 
 /**
  * Module IO implementation for Talon FX drive motor controller, Talon FX turn motor controller, and
