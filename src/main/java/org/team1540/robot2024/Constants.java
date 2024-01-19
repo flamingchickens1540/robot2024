@@ -1,5 +1,6 @@
 package org.team1540.robot2024;
 
+import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.util.Units;
 
 /**
@@ -43,6 +44,7 @@ public final class Constants {
         public static final int BACK_LEFT   = IS_COMPETITION_ROBOT ? 7 : 0;
         public static final int BACK_RIGHT  = IS_COMPETITION_ROBOT ? 1 : 0;
     }
+
     public static class Drivetrain {
         public static final double DRIVE_GEAR_RATIO = (50.0 / 14.0) * (17.0 / 27.0) * (45.0 / 15.0);
         public static final double TURN_GEAR_RATIO = 150.0 / 7.0;
@@ -54,5 +56,14 @@ public final class Constants {
         public static final double TRACK_WIDTH_Y = Units.inchesToMeters(25.0);
         public static final double DRIVE_BASE_RADIUS = Math.hypot(TRACK_WIDTH_X / 2.0, TRACK_WIDTH_Y / 2.0);
         public static final double MAX_ANGULAR_SPEED = MAX_LINEAR_SPEED / DRIVE_BASE_RADIUS;
+    }
+
+    public static class Elevator {
+        public static final double ELEVATOR_MAX_HEIGHT = Units.inchesToMeters(21.0);
+    }
+
+    public static class ShooterPivot {
+        public static final Rotation2d PIVOT_MIN_ANGLE = Rotation2d.fromDegrees(8.0);
+        public static final Rotation2d PIVOT_MAX_ANGLE = Rotation2d.fromDegrees(60.0);
     }
 }
