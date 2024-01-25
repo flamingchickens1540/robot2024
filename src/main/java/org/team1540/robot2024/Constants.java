@@ -55,4 +55,40 @@ public final class Constants {
         public static final double DRIVE_BASE_RADIUS = Math.hypot(TRACK_WIDTH_X / 2.0, TRACK_WIDTH_Y / 2.0);
         public static final double MAX_ANGULAR_SPEED = MAX_LINEAR_SPEED / DRIVE_BASE_RADIUS;
     }
+
+    public static class Elevator {
+        public static final double CHAIN_HEIGHT_METERS = Units.inchesToMeters(28.25);
+        public static final double ELEVATOR_MAX_HEIGHT = Units.inchesToMeters(48.0);
+        public static final double ELEVATOR_MINIMUM_HEIGHT = Units.inchesToMeters(27.0);
+        public static final double CLIMBING_HOOKS_MINIMUM_HEIGHT = Units.inchesToMeters(12.0);
+        public static final double CLIMBING_HOOKS_MAX_HEIGHT = CLIMBING_HOOKS_MINIMUM_HEIGHT + ELEVATOR_MAX_HEIGHT - ELEVATOR_MINIMUM_HEIGHT;
+
+        public enum ElevatorState {
+            /**
+             * At max height :D
+             */
+            TOP(ELEVATOR_MAX_HEIGHT),
+            /**
+             * At minimum height :D
+             */
+            BOTTOM(ELEVATOR_MINIMUM_HEIGHT),
+            /**
+             * At height for top of initial climb :D
+             */
+            CLIMB(254.0), //TODO: Find these values :D
+            /**
+             * At height for trap doing :D
+             */
+            TRAP(254.0), //TODO: Find these values :D
+            /**
+             * At height for top of initial climb :D
+             */
+            AMP(254.0); //TODO: Find these values :D
+
+            public final double heightMeters;
+            ElevatorState(double heightMeters) {
+                this.heightMeters = heightMeters;
+            }
+        }
+    }
 }
