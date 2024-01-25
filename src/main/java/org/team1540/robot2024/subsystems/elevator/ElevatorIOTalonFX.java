@@ -36,6 +36,23 @@ public class ElevatorIOTalonFX implements ElevatorIO {
             50.0, leaderPosition, leaderVelocity, leaderAppliedVolts, leaderCurrent, followerCurrent);
         leader.optimizeBusUtilization();
         follower.optimizeBusUtilization();
+
+        // setting slot 0 gains
+        var slot0Configs = config.Slot0;
+        slot0Configs.kS = Constants.Elevator.kS;
+        slot0Configs.kV = Constants.Elevator.kV;
+        slot0Configs.kA = Constants.Elevator.kA;
+        slot0Configs.kP = Constants.Elevator.kP;
+        slot0Configs.kI = Constants.Elevator.kI;
+        slot0Configs.kD = Constants.Elevator.kD;
+
+        // setting Motion Magic Settings
+        var motionMagicConfigs = config.MotionMagic;
+        motionMagicConfigs.MotionMagicCruiseVelocity = Constants.Elevator.motionMagicCruiseVelocity;
+        motionMagicConfigs.MotionMagicAcceleration = Constants.Elevator.motionMagicAcceleration;
+        motionMagicConfigs.MotionMagicJerk = Constants.Elevator.motionMagicJerk;
+
+        leader.getConfigurator().apply(config);
     }
 
 }

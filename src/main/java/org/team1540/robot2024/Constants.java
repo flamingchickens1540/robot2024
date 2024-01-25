@@ -57,9 +57,16 @@ public final class Constants {
     }
 
     public static class Elevator {
-
         public static int talonId1;
         public static int talonId2;
-
+        public static double kS = 0.25;
+        public static double kV = 0.12;
+        public static double kA = 0.01;
+        public static double kP = 4.8;
+        public static double kI = 0;
+        public static double kD = 0.1;
+        public static int motionMagicCruiseVelocity = 80;
+        public static int motionMagicAcceleration = 160;
+        public static int motionMagicJerk = 1600;
     }
 }
