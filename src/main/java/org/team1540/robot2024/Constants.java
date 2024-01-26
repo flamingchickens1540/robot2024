@@ -13,8 +13,9 @@ import edu.wpi.first.math.util.Units;
  */
 public final class Constants {
     public static final boolean IS_COMPETITION_ROBOT = true;
+    // Whether to pull PID constants from SmartDashboard
+    public static final boolean tuningMode = false; // TODO: DO NOT SET TO TRUE FOR COMP
     private static final Mode simMode = Mode.SIM; // Can also be Mode.REPLAY
-    
     
     public static final Mode currentMode = Robot.isReal() ? Mode.REAL : simMode;
 

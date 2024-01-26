@@ -81,18 +81,16 @@ public class FlywheelsIOTalonFX implements FlywheelsIO {
                 rightCurrent);
 
         inputs.leftVelocityRPM = leftVelocity.getValueAsDouble() * 60;
-        inputs.leftSetpointRPM = leftVelocityCtrlReq.Velocity * 60;
         inputs.leftAppliedVolts = leftAppliedVolts.getValueAsDouble();
         inputs.leftCurrentAmps = leftCurrent.getValueAsDouble();
 
         inputs.rightVelocityRPM = rightVelocity.getValueAsDouble() * 60;
-        inputs.rightSetpointRPM = rightVelocityCtrlReq.Velocity * 60;
         inputs.rightAppliedVolts = rightAppliedVolts.getValueAsDouble();
         inputs.rightCurrentAmps = rightCurrent.getValueAsDouble();
     }
 
     @Override
-    public void setVelocity(double leftRPM, double rightRPM) {
+    public void setSpeeds(double leftRPM, double rightRPM) {
         leftMotor.setControl(leftVelocityCtrlReq.withVelocity(leftRPM / 60));
         rightMotor.setControl(rightVelocityCtrlReq.withVelocity(rightRPM / 60));
     }

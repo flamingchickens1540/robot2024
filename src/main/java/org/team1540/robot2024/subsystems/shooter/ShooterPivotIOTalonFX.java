@@ -3,6 +3,7 @@ package org.team1540.robot2024.subsystems.shooter;
 import com.ctre.phoenix6.BaseStatusSignal;
 import com.ctre.phoenix6.StatusSignal;
 import com.ctre.phoenix6.configs.CANcoderConfiguration;
+import com.ctre.phoenix6.configs.Slot0Configs;
 import com.ctre.phoenix6.configs.TalonFXConfiguration;
 import com.ctre.phoenix6.controls.MotionMagicVoltage;
 import com.ctre.phoenix6.controls.VoltageOut;
@@ -37,6 +38,11 @@ public class ShooterPivotIOTalonFX implements ShooterPivotIO {
         motorConfig.Feedback.FeedbackRemoteSensorID = CANCODER_ID;
         motorConfig.Feedback.SensorToMechanismRatio = CANCODER_TO_PIVOT;
         motorConfig.Feedback.RotorToSensorRatio = MOTOR_TO_CANCODER;
+
+        motorConfig.SoftwareLimitSwitch.ForwardSoftLimitEnable = true;
+        motorConfig.SoftwareLimitSwitch.ForwardSoftLimitThreshold = MAX_ANGLE.getRotations();
+        motorConfig.SoftwareLimitSwitch.ReverseSoftLimitEnable = true;
+        motorConfig.SoftwareLimitSwitch.ReverseSoftLimitThreshold = MIN_ANGLE.getRotations();
 
         motorConfig.Slot0.kP = KP;
         motorConfig.Slot0.kI = KI;
@@ -88,5 +94,15 @@ public class ShooterPivotIOTalonFX implements ShooterPivotIO {
     @Override
     public void setVoltage(double volts) {
         motor.setControl(voltageCtrlReq.withOutput(volts));
+    }
+
+    @Override
+    public void configPID(double kP, double kI, double kD) {
+        Slot0Configs pidConfigs = new Slot0Configs();
+        motor.getConfigurator().refresh(pidConfigs);
+        pidConfigs.kP = kP;
+        pidConfigs.kI = kI;
+        pidConfigs.kD = kD;
+        motor.getConfigurator().apply(pidConfigs);
     }
 }
