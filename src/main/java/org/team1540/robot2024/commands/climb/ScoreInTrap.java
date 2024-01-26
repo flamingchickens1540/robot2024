@@ -1,8 +1,9 @@
-package org.team1540.robot2024.commands;
+package org.team1540.robot2024.commands.climb;
 
 import edu.wpi.first.wpilibj2.command.Command;
 import org.team1540.robot2024.subsystems.fakesubsystems.Tramp;
 
+//TODO: Write this command Tramp people :D
 public class ScoreInTrap extends Command {
     private final Tramp tramp;
     public ScoreInTrap(Tramp tramp) {
@@ -11,10 +12,11 @@ public class ScoreInTrap extends Command {
     }
     @Override
     public void initialize() {
-        tramp.scoreInTrap();
+        //TODO: Score in trap :D
     }
 
     @Override
     public void end(boolean interrupted) {
+
     }
 }

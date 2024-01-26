@@ -91,4 +91,10 @@ public final class Constants {
             }
         }
     }
+
+    public static class Tramp {
+        public static final double AMP_PERCENTAGE = 0.1540; //TODO: Find these values :D
+        public static final double TRAP_PERCENTAGE = 0.1678; //TODO: Find these values :D
+        public static final double TRAP_SCORING_TIME_SECONDS = 1.114; //TODO: Find these values :D
+    }
 }

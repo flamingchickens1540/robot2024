@@ -11,4 +11,8 @@ public class Elevator extends SubsystemBase {
     public void stop() {
 
     }
+
+    public boolean isAtSetpoint() {
+        return true;
+    }
 }
