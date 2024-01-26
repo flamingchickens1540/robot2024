@@ -125,6 +125,10 @@ public class Shooter extends SubsystemBase {
         setPivotVolts(0);
     }
 
+    public void setPivotBrakeMode(boolean isBrakeMode) {
+        pivotIO.setBrakeMode(isBrakeMode);
+    }
+
     /**
      * Gets the speed of the left flywheel in RPM
      */

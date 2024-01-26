@@ -13,6 +13,7 @@ import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import org.team1540.robot2024.commands.FeedForwardCharacterization;
 import org.team1540.robot2024.commands.SwerveDriveCommand;
 import org.team1540.robot2024.subsystems.drive.*;
+import org.team1540.robot2024.subsystems.shooter.*;
 import org.team1540.robot2024.util.swerve.SwerveFactory;
 import org.littletonrobotics.junction.networktables.LoggedDashboardChooser;
 
@@ -27,6 +28,7 @@ import static org.team1540.robot2024.Constants.SwerveConfig;
 public class RobotContainer {
     // Subsystems
     public final Drivetrain drivetrain;
+    public final Shooter shooter;
 
     // Controller
     public final CommandXboxController driver = new CommandXboxController(0);
@@ -49,6 +51,7 @@ public class RobotContainer {
                                 new ModuleIOTalonFX(SwerveFactory.getModuleMotors(SwerveConfig.FRONT_RIGHT, SwerveFactory.SwerveCorner.FRONT_RIGHT)),
                                 new ModuleIOTalonFX(SwerveFactory.getModuleMotors(SwerveConfig.BACK_LEFT, SwerveFactory.SwerveCorner.BACK_LEFT)),
                                 new ModuleIOTalonFX(SwerveFactory.getModuleMotors(SwerveConfig.BACK_RIGHT, SwerveFactory.SwerveCorner.BACK_RIGHT)));
+                shooter = new Shooter(new ShooterPivotIOTalonFX(), new FlywheelsIOTalonFX());
                 break;
 
             case SIM:
@@ -60,22 +63,19 @@ public class RobotContainer {
                                 new ModuleIOSim(),
                                 new ModuleIOSim(),
                                 new ModuleIOSim());
+                shooter = new Shooter(new ShooterPivotIOSim(), new FlywheelsIOSim());
                 break;
 
             default:
                 // Replayed robot, disable IO implementations
                 drivetrain =
                         new Drivetrain(
-                                new GyroIO() {
-                                },
-                                new ModuleIO() {
-                                },
-                                new ModuleIO() {
-                                },
-                                new ModuleIO() {
-                                },
-                                new ModuleIO() {
-                                });
+                                new GyroIO() {},
+                                new ModuleIO() {},
+                                new ModuleIO() {},
+                                new ModuleIO() {},
+                                new ModuleIO() {});
+                shooter = new Shooter(new ShooterPivotIO() {}, new FlywheelsIO() {});
                 break;
         }
 

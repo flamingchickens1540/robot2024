@@ -64,15 +64,15 @@ public final class Constants {
             public static final int LEFT_ID = 0;
             public static final int RIGHT_ID = 0;
 
-            public static final double WHEEL_RADIUS_METERS = Units.inchesToMeters(2.0);
             public static final double GEAR_RATIO = 24.0 / 36.0;
+            public static final double MOI = 4.08232288e-4;
 
             // TODO: tune pid
             public static final double KP = 0.1;
             public static final double KI = 0.0;
             public static final double KD = 0.0;
             public static final double KS = 0.0;
-            public static final double KV = 0.038; // TODO: this is what recalc says, may have to tune
+            public static final double KV = 0.0742; // TODO: this is what recalc says, may have to tune
         }
 
         public static class Pivot {
@@ -85,6 +85,10 @@ public final class Constants {
             // TODO: determine ratios
             public static final double CANCODER_TO_PIVOT = 60.0 / 20.0;
             public static final double MOTOR_TO_CANCODER = 33.0;
+            public static final double TOTAL_GEAR_RATIO = MOTOR_TO_CANCODER * CANCODER_TO_PIVOT;
+            public static final double LENGTH_METERS = Units.inchesToMeters(12.910);
+            // TODO: find the moi
+            public static final double MOI = 0.22552744227754662;
 
             public static final Rotation2d MAX_ANGLE = Rotation2d.fromDegrees(60.0);
             public static final Rotation2d MIN_ANGLE = Rotation2d.fromDegrees(8.0);

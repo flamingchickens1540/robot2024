@@ -80,7 +80,6 @@ public class ShooterPivotIOTalonFX implements ShooterPivotIO {
     public void updateInputs(ShooterPivotIOInputs inputs) {
         inputs.position = Rotation2d.fromRotations(position.getValueAsDouble());
         inputs.absolutePosition = Rotation2d.fromRotations(absolutePosition.getValueAsDouble() / CANCODER_TO_PIVOT);
-        inputs.setpoint = Rotation2d.fromRotations(positionCtrlReq.Position);
         inputs.velocityRPS = velocity.getValueAsDouble();
         inputs.appliedVolts = appliedVoltage.getValueAsDouble();
         inputs.currentAmps = current.getValueAsDouble();
@@ -94,6 +93,11 @@ public class ShooterPivotIOTalonFX implements ShooterPivotIO {
     @Override
     public void setVoltage(double volts) {
         motor.setControl(voltageCtrlReq.withOutput(volts));
+    }
+
+    @Override
+    public void setBrakeMode(boolean isBrakeMode) {
+        motor.setNeutralMode(isBrakeMode ? NeutralModeValue.Brake : NeutralModeValue.Coast);
     }
 
     @Override

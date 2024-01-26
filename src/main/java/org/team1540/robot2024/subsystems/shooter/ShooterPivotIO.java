@@ -8,7 +8,6 @@ public interface ShooterPivotIO {
     class ShooterPivotIOInputs {
         public Rotation2d position = new Rotation2d();
         public Rotation2d absolutePosition = new Rotation2d();
-        public Rotation2d setpoint = new Rotation2d();
         public double velocityRPS = 0.0;
         public double appliedVolts = 0.0;
         public double currentAmps = 0.0;
@@ -29,7 +28,10 @@ public interface ShooterPivotIO {
      */
     default void setVoltage(double volts) {}
 
-    default void configBrakeMode(boolean isBrakeMode) {}
+    /**
+     * Sets the neutral output mode
+     */
+    default void setBrakeMode(boolean isBrakeMode) {}
 
     /**
      * Configures the PID controller
