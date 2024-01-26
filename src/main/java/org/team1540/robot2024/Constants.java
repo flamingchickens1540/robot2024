@@ -57,6 +57,12 @@ public final class Constants {
     }
 
     public static class Elevator {
+        public static final double CHAIN_HEIGHT_METERS = Units.inchesToMeters(28.25);
+        public static final double ELEVATOR_MAX_HEIGHT = Units.inchesToMeters(48.0);
+        public static final double ELEVATOR_MINIMUM_HEIGHT = Units.inchesToMeters(27.0);
+        public static final double CLIMBING_HOOKS_MINIMUM_HEIGHT = Units.inchesToMeters(12.0);
+        public static final double CLIMBING_HOOKS_MAX_HEIGHT = CLIMBING_HOOKS_MINIMUM_HEIGHT + ELEVATOR_MAX_HEIGHT - ELEVATOR_MINIMUM_HEIGHT;
+
         public static int talonId1;
         public static int talonId2;
         public static double kS = 0.25;
@@ -68,5 +74,39 @@ public final class Constants {
         public static int motionMagicCruiseVelocity = 80;
         public static int motionMagicAcceleration = 160;
         public static int motionMagicJerk = 1600;
+        
+        public enum ElevatorState {
+            /**
+             * At max height :D
+             */
+            TOP(ELEVATOR_MAX_HEIGHT),
+            /**
+             * At minimum height :D
+             */
+            BOTTOM(ELEVATOR_MINIMUM_HEIGHT),
+            /**
+             * At height for top of initial climb :D
+             */
+            CLIMB(254.0), //TODO: Find these values :D
+            /**
+             * At height for trap doing :D
+             */
+            TRAP(254.0), //TODO: Find these values :D
+            /**
+             * At height for top of initial climb :D
+             */
+            AMP(254.0); //TODO: Find these values :D
+
+            public final double heightMeters;
+            ElevatorState(double heightMeters) {
+                this.heightMeters = heightMeters;
+            }
+        }
+    }
+
+    public static class Tramp {
+        public static final double AMP_PERCENTAGE = 0.1540; //TODO: Find these values :D
+        public static final double TRAP_PERCENTAGE = 0.1678; //TODO: Find these values :D
+        public static final double TRAP_SCORING_TIME_SECONDS = 1.114; //TODO: Find these values :D
     }
 }
