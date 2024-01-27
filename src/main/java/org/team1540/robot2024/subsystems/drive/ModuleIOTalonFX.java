@@ -80,6 +80,7 @@ public class ModuleIOTalonFX implements ModuleIO {
 
     @Override
     public void updateInputs(ModuleIOInputs inputs) {
+        PhoenixTimeSyncSignalRefresher.refreshSignals();
         BaseStatusSignal.refreshAll(
                 driveVelocity,
                 driveAppliedVolts,

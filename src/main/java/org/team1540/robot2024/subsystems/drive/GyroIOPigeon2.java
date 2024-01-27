@@ -30,6 +30,7 @@ public class GyroIOPigeon2 implements GyroIO {
 
     @Override
     public void updateInputs(GyroIOInputs inputs) {
+        PhoenixTimeSyncSignalRefresher.refreshSignals();
         inputs.connected = BaseStatusSignal.isAllGood(yaw, yawVelocity);
         inputs.yawPosition = Rotation2d.fromDegrees(yaw.getValueAsDouble());
         inputs.yawVelocityRadPerSec = Units.degreesToRadians(yawVelocity.getValueAsDouble());
