@@ -1,12 +1,12 @@
 package org.team1540.robot2024.subsystems.drive;
 
 import com.ctre.phoenix6.BaseStatusSignal;
-import com.ctre.phoenix6.StatusCode;
 import com.ctre.phoenix6.StatusSignal;
 import com.ctre.phoenix6.configs.Pigeon2Configuration;
 import com.ctre.phoenix6.hardware.Pigeon2;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.util.Units;
+import org.team1540.robot2024.util.PhoenixTimeSyncSignalRefresher;
 
 /**
  * IO implementation for Pigeon2
@@ -22,11 +22,13 @@ public class GyroIOPigeon2 implements GyroIO {
         yaw.setUpdateFrequency(100.0);
         yawVelocity.setUpdateFrequency(100.0);
         pigeon.optimizeBusUtilization();
+
+        PhoenixTimeSyncSignalRefresher.registerSignals(yaw, yawVelocity);
     }
 
     @Override
     public void updateInputs(GyroIOInputs inputs) {
-        inputs.connected = BaseStatusSignal.refreshAll(yaw, yawVelocity).equals(StatusCode.OK);
+        inputs.connected = BaseStatusSignal.isAllGood(yaw, yawVelocity);
         inputs.yawPosition = Rotation2d.fromDegrees(yaw.getValueAsDouble());
         inputs.yawVelocityRadPerSec = Units.degreesToRadians(yawVelocity.getValueAsDouble());
     }
