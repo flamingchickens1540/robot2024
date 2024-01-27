@@ -14,13 +14,11 @@ import com.ctre.phoenix6.signals.ForwardLimitValue;
 import com.ctre.phoenix6.signals.NeutralModeValue;
 import com.ctre.phoenix6.signals.ReverseLimitValue;
 
-import edu.wpi.first.wpilibj.DigitalInput;
-
 public class ElevatorIOTalonFX implements ElevatorIO {
 
     private final MotionMagicVoltage motionMagicOut = new MotionMagicVoltage(0).withEnableFOC(true);
-    private final TalonFX leader = new TalonFX(Constants.Elevator.talonId1);
-    private final TalonFX follower = new TalonFX(Constants.Elevator.talonId2);
+    private final TalonFX leader = new TalonFX(Constants.Elevator.TALON_ID_1);
+    private final TalonFX follower = new TalonFX(Constants.Elevator.TALON_ID_2);
 
     private final StatusSignal<Double> leaderPosition = leader.getPosition();
     private final StatusSignal<Double> leaderVelocity = leader.getVelocity();
@@ -38,7 +36,7 @@ public class ElevatorIOTalonFX implements ElevatorIO {
         config.CurrentLimits.SupplyCurrentThreshold = 60.0;
         config.CurrentLimits.SupplyTimeThreshold = 0.1;
         config.MotorOutput.NeutralMode = NeutralModeValue.Coast;
-        config.Feedback.SensorToMechanismRatio = Constants.Elevator.GEAR_RATIO;
+        config.Feedback.SensorToMechanismRatio = Constants.Elevator.ELEVATOR_GEAR_RATIO;
         // TODO: this might not actually be inverted, so fix it if neccesary
         follower.setControl(new Follower(leader.getDeviceID(), true));
 
@@ -59,9 +57,9 @@ public class ElevatorIOTalonFX implements ElevatorIO {
 
         // setting Motion Magic Settings
         MotionMagicConfigs motionMagicConfigs = config.MotionMagic;
-        motionMagicConfigs.MotionMagicCruiseVelocity = Constants.Elevator.motionMagicCruiseVelocity;
-        motionMagicConfigs.MotionMagicAcceleration = Constants.Elevator.motionMagicAcceleration;
-        motionMagicConfigs.MotionMagicJerk = Constants.Elevator.motionMagicJerk;
+        motionMagicConfigs.MotionMagicCruiseVelocity = Constants.Elevator.MOTION_MAGIC_CRUISE_VELOCITY;
+        motionMagicConfigs.MotionMagicAcceleration = Constants.Elevator.MOTION_MAGIC_ACCELERATION;
+        motionMagicConfigs.MotionMagicJerk = Constants.Elevator.MOTION_MAGIC_JERK;
 
         config.HardwareLimitSwitch.ForwardLimitEnable = true;
         config.HardwareLimitSwitch.ReverseLimitEnable = true;
@@ -74,7 +72,7 @@ public class ElevatorIOTalonFX implements ElevatorIO {
     public void updateInputs(ElevatorIOInputs inputs) {
         BaseStatusSignal.refreshAll(leaderPosition, leaderVelocity, leaderAppliedVolts, leaderCurrent, followerCurrent, topLimitStatus, bottomLimitStatus);
 
-        inputs.positionRots = leaderPosition.getValue();
+        inputs.positionMeters = leaderPosition.getValue();
         inputs.velocityRPM = leaderVelocity.getValue();
         inputs.voltage = leaderAppliedVolts.getValue();
         inputs.current = new double[] {leaderCurrent.getValue(), followerCurrent.getValue()};

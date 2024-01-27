@@ -29,7 +29,7 @@ public class Elevator extends SubsystemBase {
     }
 
     public boolean isAtSetpoint() {
-        return elevatorInputs.positionRots == setpointRots;
+        return elevatorInputs.positionMeters == setpointRots;
     }
 
     public void stop() {

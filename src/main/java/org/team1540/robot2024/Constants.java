@@ -62,10 +62,10 @@ public final class Constants {
         public static final double ELEVATOR_MINIMUM_HEIGHT = Units.inchesToMeters(27.0);
         public static final double CLIMBING_HOOKS_MINIMUM_HEIGHT = Units.inchesToMeters(12.0);
         public static final double CLIMBING_HOOKS_MAX_HEIGHT = CLIMBING_HOOKS_MINIMUM_HEIGHT + ELEVATOR_MAX_HEIGHT - ELEVATOR_MINIMUM_HEIGHT;
-        
-        public static final double GEAR_RATIO = -1;
-        public static final int talonId1 = -1;
-        public static final int talonId2 = -1;
+
+        public static final double ELEVATOR_GEAR_RATIO = -1;
+        public static final int TALON_ID_1 = -1;
+        public static final int TALON_ID_2 = -1;
         public static final double KS = 0.25;
         public static final double KV = 0.12;
         public static final double KA = 0.01;
@@ -73,10 +73,12 @@ public final class Constants {
         public static final double KI = 0;
         public static final double KD = 0.1;
         public static final double KG = 0;
-        public static final int motionMagicCruiseVelocity = 80;
-        public static final int motionMagicAcceleration = 160;
-        public static final int motionMagicJerk = 1600;
-        public static final double SOCKET_DIAMETER = -1;       
+        public static final int MOTION_MAGIC_CRUISE_VELOCITY = 80;
+        public static final int MOTION_MAGIC_ACCELERATION = 160;
+        public static final int MOTION_MAGIC_JERK = 1600;
+        public static final double SOCKET_DIAMETER = -1;
+        public static final double SIM_CARRIAGE_MASS_KG = 1.55; //TODO: check this number :)
+        public static final double SIM_DRUM_RADIUS_METERS = Units.inchesToMeters(1.1715); //TODO: check this number too
 
         public enum ElevatorState {
             /**
