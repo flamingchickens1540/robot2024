@@ -62,19 +62,22 @@ public final class Constants {
         public static final double ELEVATOR_MINIMUM_HEIGHT = Units.inchesToMeters(27.0);
         public static final double CLIMBING_HOOKS_MINIMUM_HEIGHT = Units.inchesToMeters(12.0);
         public static final double CLIMBING_HOOKS_MAX_HEIGHT = CLIMBING_HOOKS_MINIMUM_HEIGHT + ELEVATOR_MAX_HEIGHT - ELEVATOR_MINIMUM_HEIGHT;
-
-        public static int talonId1;
-        public static int talonId2;
-        public static double kS = 0.25;
-        public static double kV = 0.12;
-        public static double kA = 0.01;
-        public static double kP = 4.8;
-        public static double kI = 0;
-        public static double kD = 0.1;
-        public static int motionMagicCruiseVelocity = 80;
-        public static int motionMagicAcceleration = 160;
-        public static int motionMagicJerk = 1600;
         
+        public static final double GEAR_RATIO = -1;
+        public static final int talonId1 = -1;
+        public static final int talonId2 = -1;
+        public static final double KS = 0.25;
+        public static final double KV = 0.12;
+        public static final double KA = 0.01;
+        public static final double KP = 4.8;
+        public static final double KI = 0;
+        public static final double KD = 0.1;
+        public static final double KG = 0;
+        public static final int motionMagicCruiseVelocity = 80;
+        public static final int motionMagicAcceleration = 160;
+        public static final int motionMagicJerk = 1600;
+        public static final double SOCKET_DIAMETER = -1;       
+
         public enum ElevatorState {
             /**
              * At max height :D
