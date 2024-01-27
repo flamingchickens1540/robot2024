@@ -7,7 +7,7 @@ import edu.wpi.first.wpilibj2.command.WaitCommand;
 import org.team1540.robot2024.Constants;
 import org.team1540.robot2024.Constants.Elevator.ElevatorState;
 import org.team1540.robot2024.commands.ElevatorSetpointCommand;
-import org.team1540.robot2024.subsystems.fakesubsystems.Elevator;
+import org.team1540.robot2024.subsystems.elevator.Elevator;
 import org.team1540.robot2024.subsystems.fakesubsystems.Hooks;
 import org.team1540.robot2024.subsystems.fakesubsystems.Tramp;
 
