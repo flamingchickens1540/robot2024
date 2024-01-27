@@ -44,6 +44,9 @@ public final class Constants {
         public static final int FRONT_RIGHT = IS_COMPETITION_ROBOT ? 4 : 0;
         public static final int BACK_LEFT   = IS_COMPETITION_ROBOT ? 7 : 0;
         public static final int BACK_RIGHT  = IS_COMPETITION_ROBOT ? 1 : 0;
+
+        // TODO: set this id
+        public static final int PIGEON_ID = 0;
     }
     public static class Drivetrain {
         public static final double DRIVE_GEAR_RATIO = (50.0 / 14.0) * (17.0 / 27.0) * (45.0 / 15.0);

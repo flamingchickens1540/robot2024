@@ -50,7 +50,7 @@ public class RobotContainer {
                 // Real robot, instantiate hardware IO implementations
                 drivetrain =
                         new Drivetrain(
-                                new GyroIONavx(),
+                                new GyroIOPigeon2(),
                                 new ModuleIOTalonFX(SwerveFactory.getModuleMotors(SwerveConfig.FRONT_LEFT, SwerveFactory.SwerveCorner.FRONT_LEFT)),
                                 new ModuleIOTalonFX(SwerveFactory.getModuleMotors(SwerveConfig.FRONT_RIGHT, SwerveFactory.SwerveCorner.FRONT_RIGHT)),
                                 new ModuleIOTalonFX(SwerveFactory.getModuleMotors(SwerveConfig.BACK_LEFT, SwerveFactory.SwerveCorner.BACK_LEFT)),
