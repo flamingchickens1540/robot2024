@@ -10,9 +10,9 @@ import static org.team1540.robot2024.Constants.Shooter.Flywheels.*;
 
 public class FlywheelsIOSim implements FlywheelsIO{
     private final FlywheelSim leftSim =
-            new FlywheelSim(DCMotor.getFalcon500(1), GEAR_RATIO, MOI);
+            new FlywheelSim(DCMotor.getFalcon500(1), GEAR_RATIO, SIM_MOI);
     private final FlywheelSim rightSim =
-            new FlywheelSim(DCMotor.getFalcon500(1), GEAR_RATIO, MOI);
+            new FlywheelSim(DCMotor.getFalcon500(1), GEAR_RATIO, SIM_MOI);
 
     private final PIDController rightController = new PIDController(KP, KI, KD);
     private final PIDController leftController = new PIDController(KP, KI, KD);

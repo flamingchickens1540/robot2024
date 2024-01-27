@@ -146,15 +146,16 @@ public class Shooter extends SubsystemBase {
      */
     public boolean areFlywheelsSpunUp() {
         return
-                MathUtil.isNear(leftFlywheelSetpointRPM, leftSpeedFilter.getAverage(), 50) &&
-                MathUtil.isNear(rightFlywheelSetpointRPM, rightSpeedFilter.getAverage(), 50);
+                MathUtil.isNear(leftFlywheelSetpointRPM, leftSpeedFilter.getAverage(), Flywheels.ERROR_TOLERANCE_RPM) &&
+                MathUtil.isNear(rightFlywheelSetpointRPM, rightSpeedFilter.getAverage(), Flywheels.ERROR_TOLERANCE_RPM);
     }
 
     /**
      * Gets whether the pivot is at its setpoint
      */
     public boolean isPivotAtSetpoint() {
-        return MathUtil.isNear(pivotSetpoint.getRotations(), pivotPositionFilter.getAverage(), 0.2/360);
+        return MathUtil.isNear(
+                pivotSetpoint.getRotations(), pivotPositionFilter.getAverage(), Pivot.ERROR_TOLERANCE.getRotations());
     }
 
     public Command spinUpCommand(double leftSetpoint, double rightSetpoint) {

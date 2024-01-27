@@ -16,8 +16,8 @@ public class ShooterPivotIOSim implements ShooterPivotIO {
             new SingleJointedArmSim(
                     DCMotor.getFalcon500Foc(1),
                     TOTAL_GEAR_RATIO,
-                    MOI,
-                    LENGTH_METERS,
+                    SIM_MOI,
+                    SIM_LENGTH_METERS,
                     MIN_ANGLE.getRadians(),
                     MAX_ANGLE.getRadians(),
                     true,

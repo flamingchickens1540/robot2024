@@ -65,7 +65,7 @@ public final class Constants {
             public static final int RIGHT_ID = 0;
 
             public static final double GEAR_RATIO = 24.0 / 36.0;
-            public static final double MOI = 4.08232288e-4;
+            public static final double SIM_MOI = 4.08232288e-4;
 
             // TODO: if it's tuned in simulation, it's tuned in real life
             public static final double KP = 0.4;
@@ -73,6 +73,8 @@ public final class Constants {
             public static final double KD = 0.0;
             public static final double KS = 0.01146;
             public static final double KV = 0.07485; // TODO: this is what recalc says, may have to tune
+
+            public static final double ERROR_TOLERANCE_RPM = 50;
         }
 
         public static class Pivot {
@@ -86,9 +88,9 @@ public final class Constants {
             public static final double CANCODER_TO_PIVOT = 60.0 / 20.0;
             public static final double MOTOR_TO_CANCODER = 33.0;
             public static final double TOTAL_GEAR_RATIO = MOTOR_TO_CANCODER * CANCODER_TO_PIVOT;
-            public static final double LENGTH_METERS = Units.inchesToMeters(12.910);
+            public static final double SIM_LENGTH_METERS = Units.inchesToMeters(12.910);
             // TODO: find the moi
-            public static final double MOI = 0.22552744227754662;
+            public static final double SIM_MOI = 0.22552744227754662;
 
             public static final Rotation2d MAX_ANGLE = Rotation2d.fromDegrees(60.0);
             public static final Rotation2d MIN_ANGLE = Rotation2d.fromDegrees(8.0);
@@ -104,6 +106,8 @@ public final class Constants {
             public static final double CRUISE_VELOCITY_RPS = 4.0;
             public static final double MAX_ACCEL_RPS2 = 40.0;
             public static final double JERK_RPS3 = 2000;
+
+            public static final Rotation2d ERROR_TOLERANCE = Rotation2d.fromDegrees(0.2);
         }
     }
 }
