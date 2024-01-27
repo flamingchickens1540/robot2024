@@ -1,5 +1,6 @@
 package org.team1540.robot2024;
 
+import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.util.Units;
 
 /**
@@ -12,8 +13,9 @@ import edu.wpi.first.math.util.Units;
  */
 public final class Constants {
     public static final boolean IS_COMPETITION_ROBOT = true;
+    // Whether to pull PID constants from SmartDashboard
+    public static final boolean tuningMode = true; // TODO: DO NOT SET TO TRUE FOR COMP
     private static final Mode simMode = Mode.SIM; // Can also be Mode.REPLAY
-    
     
     public static final Mode currentMode = Robot.isReal() ? Mode.REAL : simMode;
 
@@ -54,6 +56,59 @@ public final class Constants {
         public static final double TRACK_WIDTH_Y = Units.inchesToMeters(25.0);
         public static final double DRIVE_BASE_RADIUS = Math.hypot(TRACK_WIDTH_X / 2.0, TRACK_WIDTH_Y / 2.0);
         public static final double MAX_ANGULAR_SPEED = MAX_LINEAR_SPEED / DRIVE_BASE_RADIUS;
+    }
+
+    public static class Shooter {
+        public static class Flywheels {
+            // TODO: determine ids
+            public static final int LEFT_ID = 0;
+            public static final int RIGHT_ID = 0;
+
+            public static final double GEAR_RATIO = 24.0 / 36.0;
+            public static final double SIM_MOI = 4.08232288e-4;
+
+            // TODO: if it's tuned in simulation, it's tuned in real life
+            public static final double KP = 0.4;
+            public static final double KI = 0.0;
+            public static final double KD = 0.0;
+            public static final double KS = 0.01146;
+            public static final double KV = 0.07485; // TODO: this is what recalc says, may have to tune
+
+            public static final double ERROR_TOLERANCE_RPM = 50;
+        }
+
+        public static class Pivot {
+            // TODO: determine ids
+            public static final int MOTOR_ID = 0;
+            public static final int CANCODER_ID = 0;
+
+            // TODO: figure this out
+            public static final double CANCODER_OFFSET_ROTS = 0;
+            // TODO: determine ratios
+            public static final double CANCODER_TO_PIVOT = 60.0 / 20.0;
+            public static final double MOTOR_TO_CANCODER = 33.0;
+            public static final double TOTAL_GEAR_RATIO = MOTOR_TO_CANCODER * CANCODER_TO_PIVOT;
+            public static final double SIM_LENGTH_METERS = Units.inchesToMeters(12.910);
+            // TODO: find the moi
+            public static final double SIM_MOI = 0.22552744227754662;
+
+            public static final Rotation2d MAX_ANGLE = Rotation2d.fromDegrees(60.0);
+            public static final Rotation2d MIN_ANGLE = Rotation2d.fromDegrees(8.0);
+
+            // TODO: tune pid
+            public static final double KP = 0.1;
+            public static final double KI = 0.0;
+            public static final double KD = 0.0;
+            public static final double KS = 0.0;
+            public static final double KG = 0.1;
+            public static final double KV = 0.1;
+
+            public static final double CRUISE_VELOCITY_RPS = 4.0;
+            public static final double MAX_ACCEL_RPS2 = 40.0;
+            public static final double JERK_RPS3 = 2000;
+
+            public static final Rotation2d ERROR_TOLERANCE = Rotation2d.fromDegrees(0.2);
+        }
     }
 
     public static class Elevator {
