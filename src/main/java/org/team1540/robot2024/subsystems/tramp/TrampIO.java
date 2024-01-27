@@ -6,10 +6,11 @@ import org.littletonrobotics.junction.AutoLog;
 public interface TrampIO {
     @AutoLog
     class TrampIOInputs {
-        boolean beamBreak = false;
-        double motorVelocity;
+        public boolean breamBreakTripped = false;
+        public double velocityRPM = 0.0;
+        public double appliedVolts = 0.0;
+        public double currentAmps = 0.0;
     }
-
-    default void updateInputs(TrampIOInputs inputs) {
-    }
+    void setVoltage(double volts);
+    void updateInputs(TrampIOInputs inputs);
 }
