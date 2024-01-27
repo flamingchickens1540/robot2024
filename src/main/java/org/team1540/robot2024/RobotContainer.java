@@ -15,6 +15,7 @@ import org.team1540.robot2024.commands.SwerveDriveCommand;
 import org.team1540.robot2024.subsystems.drive.*;
 import org.team1540.robot2024.subsystems.tramp.Tramp;
 import org.team1540.robot2024.subsystems.tramp.TrampIO;
+import org.team1540.robot2024.subsystems.tramp.TrampIOSim;
 import org.team1540.robot2024.subsystems.tramp.TrampIOSparkMax;
 import org.team1540.robot2024.util.swerve.SwerveFactory;
 import org.littletonrobotics.junction.networktables.LoggedDashboardChooser;
@@ -64,7 +65,7 @@ public class RobotContainer {
                                 new ModuleIOSim(),
                                 new ModuleIOSim(),
                                 new ModuleIOSim());
-                tramp = null; //FIXME: rewrite in rust and use option, alternatively write the sim
+                tramp = new Tramp(new TrampIOSim());
                 break;
 
             default:
