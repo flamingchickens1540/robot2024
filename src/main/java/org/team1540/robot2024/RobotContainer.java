@@ -13,6 +13,9 @@ import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import org.team1540.robot2024.commands.FeedForwardCharacterization;
 import org.team1540.robot2024.commands.SwerveDriveCommand;
 import org.team1540.robot2024.subsystems.drive.*;
+import org.team1540.robot2024.subsystems.tramp.Tramp;
+import org.team1540.robot2024.subsystems.tramp.TrampIO;
+import org.team1540.robot2024.subsystems.tramp.TrampIOSparkMax;
 import org.team1540.robot2024.util.swerve.SwerveFactory;
 import org.littletonrobotics.junction.networktables.LoggedDashboardChooser;
 
@@ -27,6 +30,7 @@ import static org.team1540.robot2024.Constants.SwerveConfig;
 public class RobotContainer {
     // Subsystems
     public final Drivetrain drivetrain;
+    public final Tramp tramp;
 
     // Controller
     public final CommandXboxController driver = new CommandXboxController(0);
@@ -49,8 +53,8 @@ public class RobotContainer {
                                 new ModuleIOTalonFX(SwerveFactory.getModuleMotors(SwerveConfig.FRONT_RIGHT, SwerveFactory.SwerveCorner.FRONT_RIGHT)),
                                 new ModuleIOTalonFX(SwerveFactory.getModuleMotors(SwerveConfig.BACK_LEFT, SwerveFactory.SwerveCorner.BACK_LEFT)),
                                 new ModuleIOTalonFX(SwerveFactory.getModuleMotors(SwerveConfig.BACK_RIGHT, SwerveFactory.SwerveCorner.BACK_RIGHT)));
+                tramp = new Tramp(new TrampIOSparkMax());
                 break;
-
             case SIM:
                 // Sim robot, instantiate physics sim IO implementations
                 drivetrain =
@@ -60,6 +64,7 @@ public class RobotContainer {
                                 new ModuleIOSim(),
                                 new ModuleIOSim(),
                                 new ModuleIOSim());
+                tramp = null; //FIXME: rewrite in rust and use option, alternatively write the sim
                 break;
 
             default:
@@ -76,6 +81,7 @@ public class RobotContainer {
                                 },
                                 new ModuleIO() {
                                 });
+                tramp = new Tramp(new TrampIO() {});
                 break;
         }
 

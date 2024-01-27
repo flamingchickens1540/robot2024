@@ -11,6 +11,6 @@ public interface TrampIO {
         public double appliedVolts = 0.0;
         public double currentAmps = 0.0;
     }
-    void setVoltage(double volts);
-    void updateInputs(TrampIOInputs inputs);
+    default void setVoltage(double volts) {}
+    default void updateInputs(TrampIOInputs inputs) {}
 }
