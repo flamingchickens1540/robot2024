@@ -57,6 +57,13 @@ public final class Constants {
     }
     public static class Indexer {
         public static final int INTAKE_ID = 0;
+        public static final int FEEDER_ID = 0;
+        public static final double FEEDER_KP = 0.0;
+        public static final double FEEDER_KI = 0.0;
+        public static final double FEEDER_KD = 0.0;
+        public static final double FEEDER_KS = 0.0;
+        public static final double FEEDER_KV = 0.0;
+        public static final double GEAR_RATIO = 0.0;
 
     }
 }

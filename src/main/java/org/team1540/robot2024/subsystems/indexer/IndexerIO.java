@@ -6,9 +6,13 @@ public interface IndexerIO {
 
     @AutoLog
     class IndexerIOInputs {
-        public double intakeVoltage = 0.0;
-        public double intakeCurrent = 0.0;
-        public double intakeVelocityRPM = 0.0;
+        public double intakeVoltage;
+        public double intakeCurrent;
+        public double intakeVelocityRPM;
+        public double feederVoltage;
+        public double feederCurrentAmps;
+        public double feederVelocityRPM;
+        public boolean noteInIntake;
     }
 
     /**
@@ -18,8 +22,8 @@ public interface IndexerIO {
 
     default void setIntakeVoltage(double volts) {}
 
-    default void setIntakeSpeed(double speed) {}
+    default void setFeederVoltage(double volts) {}
 
-
+    default void setFeederVelocity(double velocity) {}
 
 }
