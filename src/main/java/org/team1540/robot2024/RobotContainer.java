@@ -9,7 +9,7 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 
-
+import org.littletonrobotics.junction.networktables.LoggedDashboardNumber;
 import org.team1540.robot2024.commands.FeedForwardCharacterization;
 import org.team1540.robot2024.commands.SwerveDriveCommand;
 import org.team1540.robot2024.subsystems.drive.*;
@@ -36,6 +36,10 @@ public class RobotContainer {
 
     // Dashboard inputs
     public final LoggedDashboardChooser<Command> autoChooser;
+
+    // TODO: testing dashboard inputs, remove for comp
+    public final LoggedDashboardNumber leftFlywheelSetpoint = new LoggedDashboardNumber("Shooter/Flywheels/leftSetpoint", 6000);
+    public final LoggedDashboardNumber rightFlywheelSetpoint = new LoggedDashboardNumber("Shooter/Flywheels/rightSetpoint", 6000);
 
     /**
      * The container for the robot. Contains subsystems, OI devices, and commands.
@@ -88,6 +92,10 @@ public class RobotContainer {
                 "Drive FF Characterization",
                 new FeedForwardCharacterization(
                         drivetrain, drivetrain::runCharacterizationVolts, drivetrain::getCharacterizationVelocity));
+        autoChooser.addOption(
+                "Flywheels FF Characterization",
+                new FeedForwardCharacterization(
+                        shooter, volts -> shooter.setFlywheelVolts(volts, volts), () -> shooter.getLeftFlywheelSpeed() / 60));
 
         // Configure the button bindings
         configureButtonBindings();
@@ -108,6 +116,9 @@ public class RobotContainer {
                         drivetrain
                 ).ignoringDisable(true)
         );
+
+        copilot.a().onTrue(shooter.spinUpCommand(leftFlywheelSetpoint.get(), rightFlywheelSetpoint.get()))
+                .onFalse(Commands.runOnce(shooter::stopFlywheels, shooter));
     }
 
     /**

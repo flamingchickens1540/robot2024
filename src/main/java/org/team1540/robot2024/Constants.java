@@ -14,7 +14,7 @@ import edu.wpi.first.math.util.Units;
 public final class Constants {
     public static final boolean IS_COMPETITION_ROBOT = true;
     // Whether to pull PID constants from SmartDashboard
-    public static final boolean tuningMode = false; // TODO: DO NOT SET TO TRUE FOR COMP
+    public static final boolean tuningMode = true; // TODO: DO NOT SET TO TRUE FOR COMP
     private static final Mode simMode = Mode.SIM; // Can also be Mode.REPLAY
     
     public static final Mode currentMode = Robot.isReal() ? Mode.REAL : simMode;
@@ -67,12 +67,12 @@ public final class Constants {
             public static final double GEAR_RATIO = 24.0 / 36.0;
             public static final double MOI = 4.08232288e-4;
 
-            // TODO: tune pid
-            public static final double KP = 0.1;
+            // TODO: if it's tuned in simulation, it's tuned in real life
+            public static final double KP = 0.4;
             public static final double KI = 0.0;
             public static final double KD = 0.0;
-            public static final double KS = 0.0;
-            public static final double KV = 0.0742; // TODO: this is what recalc says, may have to tune
+            public static final double KS = 0.01146;
+            public static final double KV = 0.07485; // TODO: this is what recalc says, may have to tune
         }
 
         public static class Pivot {
