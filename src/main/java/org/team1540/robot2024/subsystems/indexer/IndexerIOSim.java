@@ -14,7 +14,7 @@ public class IndexerIOSim implements IndexerIO {
 
     private final DCMotorSim intakeSim = new DCMotorSim(DCMotor.getNEO(1), INTAKE_GEAR_RATIO,0.025);
     private final DCMotorSim feederSim = new DCMotorSim(DCMotor.getNEO(1), FEEDER_GEAR_RATIO,0.025);
-    private final SimDeviceSim beamBreakSim = new SimDeviceSim("Indexer Beam Break");
+//    private final SimDeviceSim beamBreakSim = new SimDeviceSim("Indexer Beam Break");
     private final PIDController feederSimPID = new PIDController(FEEDER_KP, FEEDER_KI,FEEDER_KD);
 
     @Override
@@ -27,10 +27,10 @@ public class IndexerIOSim implements IndexerIO {
         inputs.feederCurrentAmps = feederSim.getCurrentDrawAmps();
 //        inputs.feederVoltage = feederSim.getBusVoltage() * feederSim.getAppliedOutput();
         inputs.feederVelocityRPM = feederSim.getAngularVelocityRPM();
-        inputs.noteInIntake = beamBreakSim.getBoolean("Indexer Beam Break").get();
+//        inputs.noteInIntake = beamBreakSim.getBoolean("Indexer Beam Break").get();
 
         // this is a very funny line of code, and absolutely does not belong here, but I don't know how to do this otherwise
-        feederSim.setState(feederSim.getAngularPositionRad(), feederSimPID.calculate(feederSim.getAngularVelocityRadPerSec()));
+        feederSim.setState(feederSim.getAngularPositionRad(),  feederSimPID.calculate(feederSim.getAngularVelocityRadPerSec()));
 
     }
 

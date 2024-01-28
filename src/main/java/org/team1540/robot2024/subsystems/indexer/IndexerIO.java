@@ -12,7 +12,7 @@ public interface IndexerIO {
         public double feederVoltage;
         public double feederCurrentAmps;
         public double feederVelocityRPM;
-        public boolean noteInIntake;
+        public boolean noteInIntake = false;
     }
 
     /**
