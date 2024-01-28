@@ -7,7 +7,7 @@ public interface IndexerIO {
     @AutoLog
     class IndexerIOInputs {
         public double intakeVoltage;
-        public double intakeCurrent;
+        public double intakeCurrentAmps;
         public double intakeVelocityRPM;
         public double feederVoltage;
         public double feederCurrentAmps;

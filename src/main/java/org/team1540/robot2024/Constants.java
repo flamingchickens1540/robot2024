@@ -63,7 +63,8 @@ public final class Constants {
         public static final double FEEDER_KD = 0.0;
         public static final double FEEDER_KS = 0.0;
         public static final double FEEDER_KV = 0.0;
-        public static final double GEAR_RATIO = 0.0;
+        public static final double FEEDER_GEAR_RATIO = 0.0;
+        public static final double INTAKE_GEAR_RATIO = 0.0;
 
     }
 }

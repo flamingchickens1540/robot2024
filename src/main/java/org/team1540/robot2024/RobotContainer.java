@@ -12,7 +12,12 @@ import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 
 import org.team1540.robot2024.commands.FeedForwardCharacterization;
 import org.team1540.robot2024.commands.SwerveDriveCommand;
+import org.team1540.robot2024.commands.indexer.IntakeCommand;
 import org.team1540.robot2024.subsystems.drive.*;
+import org.team1540.robot2024.subsystems.indexer.Indexer;
+import org.team1540.robot2024.subsystems.indexer.IndexerIO;
+import org.team1540.robot2024.subsystems.indexer.IndexerIOSim;
+import org.team1540.robot2024.subsystems.indexer.IndexerIOSparkMax;
 import org.team1540.robot2024.util.swerve.SwerveFactory;
 import org.littletonrobotics.junction.networktables.LoggedDashboardChooser;
 
@@ -31,6 +36,7 @@ public class RobotContainer {
     // Controller
     public final CommandXboxController driver = new CommandXboxController(0);
     public final CommandXboxController copilot = new CommandXboxController(1);
+    public final Indexer indexer;
 
     // Dashboard inputs
     public final LoggedDashboardChooser<Command> autoChooser;
@@ -49,6 +55,11 @@ public class RobotContainer {
                                 new ModuleIOTalonFX(SwerveFactory.getModuleMotors(SwerveConfig.FRONT_RIGHT, SwerveFactory.SwerveCorner.FRONT_RIGHT)),
                                 new ModuleIOTalonFX(SwerveFactory.getModuleMotors(SwerveConfig.BACK_LEFT, SwerveFactory.SwerveCorner.BACK_LEFT)),
                                 new ModuleIOTalonFX(SwerveFactory.getModuleMotors(SwerveConfig.BACK_RIGHT, SwerveFactory.SwerveCorner.BACK_RIGHT)));
+
+                indexer =
+                        new Indexer(
+                                new IndexerIOSparkMax()
+                        );
                 break;
 
             case SIM:
@@ -60,6 +71,10 @@ public class RobotContainer {
                                 new ModuleIOSim(),
                                 new ModuleIOSim(),
                                 new ModuleIOSim());
+                indexer =
+                        new Indexer(
+                                new IndexerIOSim()
+                        );
                 break;
 
             default:
@@ -76,6 +91,10 @@ public class RobotContainer {
                                 },
                                 new ModuleIO() {
                                 });
+                indexer =
+                        new Indexer(
+                                new IndexerIO() {}
+                        );
                 break;
         }
 
@@ -108,6 +127,10 @@ public class RobotContainer {
                         drivetrain
                 ).ignoringDisable(true)
         );
+
+        copilot.x().onTrue(indexer.feedToAmp());
+        copilot.y().onTrue(indexer.feedToShooter());
+        driver.a().onTrue(new IntakeCommand(indexer));
     }
 
     /**
