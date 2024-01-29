@@ -43,9 +43,9 @@ public class ModuleIOTalonFX implements ModuleIO {
     private final StatusSignal<Double> turnAppliedVolts;
     private final StatusSignal<Double> turnCurrent;
 
-    private final PhoenixTimeSyncSignalRefresher timeSyncSignalRefresher;
+    private final PhoenixTimeSyncSignalRefresher odometrySignalRefresher;
 
-    public ModuleIOTalonFX(SwerveFactory.SwerveModuleHW hw, PhoenixTimeSyncSignalRefresher timeSyncSignalRefresher) {
+    public ModuleIOTalonFX(SwerveFactory.SwerveModuleHW hw, PhoenixTimeSyncSignalRefresher odometrySignalRefresher) {
         driveTalon = hw.driveMotor;
         turnTalon = hw.turnMotor;
         cancoder = hw.cancoder;
@@ -77,14 +77,14 @@ public class ModuleIOTalonFX implements ModuleIO {
         driveTalon.optimizeBusUtilization();
         turnTalon.optimizeBusUtilization();
 
-        this.timeSyncSignalRefresher = timeSyncSignalRefresher;
+        this.odometrySignalRefresher = odometrySignalRefresher;
 
-        timeSyncSignalRefresher.registerSignals(drivePosition, turnPosition);
+        odometrySignalRefresher.registerSignals(drivePosition, turnPosition);
     }
 
     @Override
     public void updateInputs(ModuleIOInputs inputs) {
-        timeSyncSignalRefresher.refreshSignals();
+        odometrySignalRefresher.refreshSignals();
         BaseStatusSignal.refreshAll(
                 driveVelocity,
                 driveAppliedVolts,

@@ -4,12 +4,8 @@ import com.ctre.phoenix6.BaseStatusSignal;
 import com.ctre.phoenix6.CANBus;
 import com.ctre.phoenix6.StatusCode;
 import edu.wpi.first.wpilibj.DriverStation;
-import edu.wpi.first.wpilibj.Timer;
-import org.team1540.robot2024.Constants;
 
 import java.util.Arrays;
-
-import static org.team1540.robot2024.Constants.SwerveConfig.*;
 
 /**
  * Helper class for refreshing CANivore TimeSynced status signals.
