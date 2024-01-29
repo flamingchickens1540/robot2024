@@ -28,9 +28,12 @@ public class IndexerIOSim implements IndexerIO {
 //        inputs.feederVoltage = feederSim.getBusVoltage() * feederSim.getAppliedOutput();
         inputs.feederVelocityRPM = feederSim.getAngularVelocityRPM();
 //        inputs.noteInIntake = beamBreakSim.getBoolean("Indexer Beam Break").get();
+        inputs.setpoint = feederSimPID.getSetpoint();
+        inputs.feederVelocityRadPerSec = feederSim.getAngularVelocityRadPerSec();
+        inputs.feederPositionError = feederSimPID.getPositionError();
 
         // this is a very funny line of code, and absolutely does not belong here, but I don't know how to do this otherwise
-        feederSim.setState(feederSim.getAngularPositionRad(),  feederSimPID.calculate(feederSim.getAngularVelocityRadPerSec()));
+        feederSim.setState(feederSim.getAngularPositionRad(), feederSim.getAngularVelocityRadPerSec() + feederSimPID.calculate(feederSim.getAngularVelocityRadPerSec()));
 
     }
 
@@ -42,6 +45,11 @@ public class IndexerIOSim implements IndexerIO {
     @Override
     public void setFeederVelocity(double velocity) {
         feederSimPID.setSetpoint(velocity);
+    }
+
+    @Override
+    public void configurePID(double p, double i, double d) {
+        feederSimPID.setPID(p, i, d);
     }
 
     @Override
