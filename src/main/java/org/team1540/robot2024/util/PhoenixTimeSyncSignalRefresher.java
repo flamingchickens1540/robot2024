@@ -38,7 +38,7 @@ public class PhoenixTimeSyncSignalRefresher {
                 useTimeSync = false;
                 DriverStation.reportWarning(
                         "Status signals received have varying update rates, TimeSynced updates are now unavailable",
-                        true);
+                        false);
             }
             signals[signals.length - 1 - i] = newSignals[i];
         }
@@ -57,9 +57,9 @@ public class PhoenixTimeSyncSignalRefresher {
 
         // Check errors
         if (status == StatusCode.InvalidNetwork)
-            DriverStation.reportError("One or more status signals passed to signal refresher has a different CAN bus, unable to refresh", true);
+            DriverStation.reportError("One or more status signals passed to signal refresher has a different CAN bus, unable to refresh", false);
         if (status == StatusCode.RxTimeout)
-            DriverStation.reportWarning("Refreshing signals timed out, check CAN bus wiring", true);
+            DriverStation.reportWarning("Refreshing signals timed out, check CAN bus wiring", false);
 
         isRefreshed = true;
     }
