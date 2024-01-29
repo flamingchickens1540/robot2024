@@ -3,6 +3,7 @@ package org.team1540.robot2024.subsystems.vision;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Pose3d;
 import edu.wpi.first.math.geometry.Rotation3d;
+import edu.wpi.first.wpilibj.Timer;
 import org.team1540.robot2024.util.vision.LimelightHelpers;
 
 public class AprilTagVisionIOLimelight implements AprilTagVisionIO {
@@ -36,13 +37,17 @@ public class AprilTagVisionIOLimelight implements AprilTagVisionIO {
                 )
         ).toPose2d();
         inputs.hasTarget = results.valid;
-        inputs.seenTargetIDs = new int[fiducialTargets.length];
-        for (int i = 0; i < fiducialTargets.length; i++) inputs.seenTargetIDs[i] = (int) fiducialTargets[i].fiducialID; // fiducial tag ids had better be ints
-        inputs.targetPosesMeters = new Pose2d[fiducialTargets.length];
-        for (int i = 0; i < fiducialTargets.length; i++) inputs.targetPosesMeters[i] = fiducialTargets[i].getTargetPose_RobotSpace2D();
 
-        inputs.captureLatency = results.latency_capture;
-        inputs.pipelineLatency = results.latency_pipeline;
+        inputs.seenTagIDs = new int[fiducialTargets.length];
+        for (int i = 0; i < fiducialTargets.length; i++)
+            inputs.seenTagIDs[i] = (int) fiducialTargets[i].fiducialID; // fiducial tag ids had better be ints
+
+        inputs.tagPosesMeters = new Pose2d[fiducialTargets.length];
+        for (int i = 0; i < fiducialTargets.length; i++)
+            inputs.tagPosesMeters[i] = fiducialTargets[i].getTargetPose_RobotSpace2D();
+
+        inputs.lastMeasurementTimestampSecs =
+                Timer.getFPGATimestamp() - (results.latency_capture + results.latency_pipeline) / 1000.0;
     }
 
     @Override

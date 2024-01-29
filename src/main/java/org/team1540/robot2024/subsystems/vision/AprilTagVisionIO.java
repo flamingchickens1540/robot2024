@@ -8,11 +8,9 @@ public interface AprilTagVisionIO {
     class AprilTagVisionIOInputs {
         public Pose2d estimatedPoseMeters = new Pose2d();
         public boolean hasTarget = false;
-        public int[] seenTargetIDs = {};
-        public Pose2d[] targetPosesMeters = {};
-
-        public double pipelineLatency = 0.0;
-        public double captureLatency = 0.0;
+        public int[] seenTagIDs = {};
+        public Pose2d[] tagPosesMeters = {};
+        public double lastMeasurementTimestampSecs = 0.0;
     }
 
     default void updateInputs(AprilTagVisionIOInputs inputs) {}
