@@ -18,19 +18,22 @@ public class GyroIOPigeon2 implements GyroIO {
     private final StatusSignal<Double> yaw = pigeon.getYaw();
     private final StatusSignal<Double> yawVelocity = pigeon.getAngularVelocityZDevice();
 
-    public GyroIOPigeon2() {
+    private final PhoenixTimeSyncSignalRefresher odometrySignalRefresher;
+
+    public GyroIOPigeon2(PhoenixTimeSyncSignalRefresher odometrySignalRefresher) {
         pigeon.getConfigurator().apply(new Pigeon2Configuration());
         pigeon.getConfigurator().setYaw(0.0);
         yaw.setUpdateFrequency(100.0);
         yawVelocity.setUpdateFrequency(100.0);
         pigeon.optimizeBusUtilization();
 
-        PhoenixTimeSyncSignalRefresher.registerSignals(yaw, yawVelocity);
+        this.odometrySignalRefresher = odometrySignalRefresher;
+        odometrySignalRefresher.registerSignals(yaw, yawVelocity);
     }
 
     @Override
     public void updateInputs(GyroIOInputs inputs) {
-        PhoenixTimeSyncSignalRefresher.refreshSignals();
+        odometrySignalRefresher.refreshSignals();
         inputs.connected = BaseStatusSignal.isAllGood(yaw, yawVelocity);
         inputs.yawPosition = Rotation2d.fromDegrees(yaw.getValueAsDouble());
         inputs.yawVelocityRadPerSec = Units.degreesToRadians(yawVelocity.getValueAsDouble());
