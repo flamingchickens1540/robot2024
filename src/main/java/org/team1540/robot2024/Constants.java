@@ -1,5 +1,6 @@
 package org.team1540.robot2024;
 
+import edu.wpi.first.math.geometry.Pose3d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.util.Units;
 
@@ -60,6 +61,21 @@ public final class Constants {
         public static final double TRACK_WIDTH_Y = Units.inchesToMeters(25.0);
         public static final double DRIVE_BASE_RADIUS = Math.hypot(TRACK_WIDTH_X / 2.0, TRACK_WIDTH_Y / 2.0);
         public static final double MAX_ANGULAR_SPEED = MAX_LINEAR_SPEED / DRIVE_BASE_RADIUS;
+    }
+
+    public static class Vision {
+        public static final String FRONT_CAMERA_NAME = "limelight-front";
+        public static final String REAR_CAMERA_NAME = "limelight-rear";
+
+        // TODO: measure these offsets
+        public static final Pose3d FRONT_CAMERA_POSE = new Pose3d();
+        public static final Pose3d REAR_CAMERA_POSE = new Pose3d();
+
+        public static final double MAX_VISION_DELAY_SECS = 0.08;
+        public static final double MAX_ACCEPTED_ROT_SPEED_RAD_PER_SEC = 1.0;
+        public static final double MAX_ACCEPTED_LINEAR_SPEED_MPS = 4.0;
+        public static final double MIN_ACCEPTED_NUM_TAGS = 1;
+        public static final double MAX_ACCEPTED_AVG_TAG_DIST_METERS = 8.0;
     }
 
     public static class Shooter {

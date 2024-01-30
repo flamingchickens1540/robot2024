@@ -19,6 +19,8 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import org.team1540.robot2024.util.LocalADStarAK;
 import org.littletonrobotics.junction.AutoLogOutput;
 import org.littletonrobotics.junction.Logger;
+import org.team1540.robot2024.util.vision.TimestampedVisionPose;
+import org.team1540.robot2024.util.vision.VisionPoseAcceptor;
 
 import static org.team1540.robot2024.Constants.Drivetrain.*;
 
@@ -52,7 +54,7 @@ public class Drivetrain extends SubsystemBase {
                 new Pose2d(),
                 // TODO: tune std devs (scale vision by distance?)
                 VecBuilder.fill(0.1, 0.1, 0.1),
-                VecBuilder.fill(0.5, 0.5, 0.5));
+                VecBuilder.fill(0.5, 0.5, 5.0)); // Trust the gyro more than the AprilTags
 
         // Configure AutoBuilder for PathPlanner
         AutoBuilder.configureHolonomic(
@@ -200,8 +202,11 @@ public class Drivetrain extends SubsystemBase {
         poseEstimator.resetPosition(rawGyroRotation, getModulePositions(), pose);
     }
 
-    public void addVisionMeasurement(Pose2d visionPose, double timestampSeconds) {
-        poseEstimator.addVisionMeasurement(visionPose, timestampSeconds);
+    public void addVisionMeasurement(TimestampedVisionPose visionPose) {
+        if (visionPose == null) return;
+        if (VisionPoseAcceptor.shouldAcceptVision(visionPose, kinematics.toChassisSpeeds(getModuleStates()))) {
+            poseEstimator.addVisionMeasurement(visionPose.poseMeters(), visionPose.timestampSecs());
+        }
     }
 
     public SwerveModulePosition[] getModulePositions() {

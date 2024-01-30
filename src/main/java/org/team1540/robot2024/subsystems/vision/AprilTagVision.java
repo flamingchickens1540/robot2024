@@ -7,6 +7,7 @@ import org.team1540.robot2024.Constants;
 import org.team1540.robot2024.util.vision.TimestampedVisionPose;
 
 import java.util.Arrays;
+import java.util.function.Consumer;
 
 public class AprilTagVision extends SubsystemBase {
     private final AprilTagVisionIO frontCameraIO;
@@ -15,12 +16,18 @@ public class AprilTagVision extends SubsystemBase {
     private final AprilTagVisionIO rearCameraIO;
     private final AprilTagVisionIOInputsAutoLogged rearCameraInputs = new AprilTagVisionIOInputsAutoLogged();
 
+    private final Consumer<TimestampedVisionPose> visionPoseConsumer;
+
     private TimestampedVisionPose frontPose;
     private TimestampedVisionPose rearPose;
 
-    public AprilTagVision(AprilTagVisionIO frontCameraIO, AprilTagVisionIO rearCameraIO) {
+    public AprilTagVision(
+            AprilTagVisionIO frontCameraIO,
+            AprilTagVisionIO rearCameraIO,
+            Consumer<TimestampedVisionPose> visionPoseConsumer) {
         this.frontCameraIO = frontCameraIO;
         this.rearCameraIO = rearCameraIO;
+        this.visionPoseConsumer = visionPoseConsumer;
     }
 
     @Override
@@ -44,10 +51,15 @@ public class AprilTagVision extends SubsystemBase {
                     rearCameraInputs.seenTagIDs,
                     rearPose.tagPosesMeters());
         }
+
+        TimestampedVisionPose latestPose = getEstimatedPose();
+        Logger.recordOutput("Vision/EstimatedPose", latestPose.poseMeters());
+        visionPoseConsumer.accept(latestPose);
     }
 
     /**
-     * Gets the estimated pose by fusing individual computed poses from each camera
+     * Gets the estimated pose by fusing individual computed poses from each camera.
+     * Returns null if no tags seen or in simulation
      */
     public TimestampedVisionPose getEstimatedPose() {
         if (Constants.currentMode == Constants.Mode.SIM) return null;
