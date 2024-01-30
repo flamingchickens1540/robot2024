@@ -9,6 +9,7 @@ import org.littletonrobotics.junction.Logger;
 import org.littletonrobotics.junction.networktables.NT4Publisher;
 import org.littletonrobotics.junction.wpilog.WPILOGReader;
 import org.littletonrobotics.junction.wpilog.WPILOGWriter;
+import org.team1540.robot2024.util.MechanismVisualiser;
 
 /**
  * The VM is configured to automatically run this class, and to call the functions corresponding to
@@ -90,6 +91,9 @@ public class Robot extends LoggedRobot {
         // the Command-based framework to work.
         CommandScheduler.getInstance().run();
         if (Constants.currentMode == Constants.Mode.REAL) robotContainer.odometrySignalRefresher.periodic();
+
+        // Update mechanism visualiser in sim
+        if (Robot.isSimulation()) MechanismVisualiser.periodic();
     }
 
     /**
