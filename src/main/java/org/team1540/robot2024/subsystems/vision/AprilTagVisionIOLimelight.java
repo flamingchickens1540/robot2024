@@ -11,14 +11,7 @@ public class AprilTagVisionIOLimelight implements AprilTagVisionIO {
 
     public AprilTagVisionIOLimelight(String name, Pose3d cameraOffsetMeters) {
         this.name = name;
-        LimelightHelpers.setCameraPose_RobotSpace(
-                name,
-                cameraOffsetMeters.getX(),
-                cameraOffsetMeters.getY(),
-                cameraOffsetMeters.getZ(),
-                Math.toDegrees(cameraOffsetMeters.getRotation().getX()),
-                Math.toDegrees(cameraOffsetMeters.getRotation().getY()),
-                Math.toDegrees(cameraOffsetMeters.getRotation().getZ()));
+        setPoseOffset(cameraOffsetMeters);
     }
 
     @Override
@@ -48,6 +41,18 @@ public class AprilTagVisionIOLimelight implements AprilTagVisionIO {
 
         inputs.lastMeasurementTimestampSecs =
                 Timer.getFPGATimestamp() - (results.latency_capture + results.latency_pipeline) / 1000.0;
+    }
+
+    @Override
+    public void setPoseOffset(Pose3d poseOffsetMeters) {
+        LimelightHelpers.setCameraPose_RobotSpace(
+                name,
+                poseOffsetMeters.getX(),
+                poseOffsetMeters.getY(),
+                poseOffsetMeters.getZ(),
+                Math.toDegrees(poseOffsetMeters.getRotation().getX()),
+                Math.toDegrees(poseOffsetMeters.getRotation().getY()),
+                Math.toDegrees(poseOffsetMeters.getRotation().getZ()));
     }
 
     @Override

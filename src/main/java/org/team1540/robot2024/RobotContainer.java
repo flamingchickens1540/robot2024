@@ -66,7 +66,8 @@ public class RobotContainer {
                 aprilTagVision = new AprilTagVision(
                         new AprilTagVisionIOLimelight(Constants.Vision.FRONT_CAMERA_NAME, Constants.Vision.FRONT_CAMERA_POSE),
                         new AprilTagVisionIOLimelight(Constants.Vision.REAR_CAMERA_NAME, Constants.Vision.REAR_CAMERA_POSE),
-                        drivetrain::addVisionMeasurement);
+                        drivetrain::addVisionMeasurement,
+                        () -> 0.0); // TODO: ACTUALLY GET ELEVATOR HEIGHT HERE
                 break;
 
             case SIM:
@@ -79,7 +80,8 @@ public class RobotContainer {
                                 new ModuleIOSim(),
                                 new ModuleIOSim());
                 shooter = new Shooter(new ShooterPivotIOSim(), new FlywheelsIOSim());
-                aprilTagVision = new AprilTagVision(new AprilTagVisionIO() {}, new AprilTagVisionIO() {}, (ignored) -> {});
+                aprilTagVision =
+                        new AprilTagVision(new AprilTagVisionIO() {}, new AprilTagVisionIO() {}, (ignored) -> {}, () -> 0.0);
                 break;
 
             default:
@@ -92,7 +94,8 @@ public class RobotContainer {
                                 new ModuleIO() {},
                                 new ModuleIO() {});
                 shooter = new Shooter(new ShooterPivotIO() {}, new FlywheelsIO() {});
-                aprilTagVision = new AprilTagVision(new AprilTagVisionIO() {}, new AprilTagVisionIO() {}, (ignored) -> {});
+                aprilTagVision =
+                        new AprilTagVision(new AprilTagVisionIO() {}, new AprilTagVisionIO() {}, (ignored) -> {}, () -> 0.0);
                 break;
         }
 

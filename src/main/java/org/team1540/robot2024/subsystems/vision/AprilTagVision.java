@@ -1,6 +1,7 @@
 package org.team1540.robot2024.subsystems.vision;
 
 import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.geometry.Pose3d;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import org.littletonrobotics.junction.Logger;
 import org.team1540.robot2024.Constants;
@@ -8,6 +9,9 @@ import org.team1540.robot2024.util.vision.TimestampedVisionPose;
 
 import java.util.Arrays;
 import java.util.function.Consumer;
+import java.util.function.Supplier;
+
+import static org.team1540.robot2024.Constants.Vision.*;
 
 public class AprilTagVision extends SubsystemBase {
     private final AprilTagVisionIO frontCameraIO;
@@ -17,6 +21,7 @@ public class AprilTagVision extends SubsystemBase {
     private final AprilTagVisionIOInputsAutoLogged rearCameraInputs = new AprilTagVisionIOInputsAutoLogged();
 
     private final Consumer<TimestampedVisionPose> visionPoseConsumer;
+    private final Supplier<Double> elevatorHeightSupplierMeters;
 
     private TimestampedVisionPose frontPose =
             new TimestampedVisionPose(-1, new Pose2d(), new int[0], new Pose2d[0]);
@@ -26,14 +31,31 @@ public class AprilTagVision extends SubsystemBase {
     public AprilTagVision(
             AprilTagVisionIO frontCameraIO,
             AprilTagVisionIO rearCameraIO,
-            Consumer<TimestampedVisionPose> visionPoseConsumer) {
+            Consumer<TimestampedVisionPose> visionPoseConsumer,
+            Supplier<Double> elevatorHeightSupplierMeters) {
         this.frontCameraIO = frontCameraIO;
         this.rearCameraIO = rearCameraIO;
         this.visionPoseConsumer = visionPoseConsumer;
+        this.elevatorHeightSupplierMeters = elevatorHeightSupplierMeters;
     }
 
     @Override
     public void periodic() {
+        frontCameraIO.setPoseOffset(
+                new Pose3d(
+                        FRONT_CAMERA_POSE.getX(),
+                        FRONT_CAMERA_POSE.getY(),
+                        FRONT_CAMERA_POSE.getZ() + elevatorHeightSupplierMeters.get(),
+                        FRONT_CAMERA_POSE.getRotation())
+        );
+        rearCameraIO.setPoseOffset(
+                new Pose3d(
+                        REAR_CAMERA_POSE.getX(),
+                        REAR_CAMERA_POSE.getY(),
+                        REAR_CAMERA_POSE.getZ() + elevatorHeightSupplierMeters.get(),
+                        REAR_CAMERA_POSE.getRotation())
+        );
+
         frontCameraIO.updateInputs(frontCameraInputs);
         rearCameraIO.updateInputs(rearCameraInputs);
         Logger.processInputs("Vision/FrontCamera", frontCameraInputs);
