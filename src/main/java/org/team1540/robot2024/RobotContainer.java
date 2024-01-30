@@ -9,11 +9,12 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 
-
+import org.littletonrobotics.junction.networktables.LoggedDashboardNumber;
 import org.team1540.robot2024.commands.FeedForwardCharacterization;
 import org.team1540.robot2024.commands.SwerveDriveCommand;
 import org.team1540.robot2024.commands.indexer.IntakeCommand;
 import org.team1540.robot2024.subsystems.drive.*;
+import org.team1540.robot2024.subsystems.shooter.*;
 import org.team1540.robot2024.subsystems.indexer.Indexer;
 import org.team1540.robot2024.subsystems.indexer.IndexerIO;
 import org.team1540.robot2024.subsystems.indexer.IndexerIOSim;
@@ -32,6 +33,7 @@ import static org.team1540.robot2024.Constants.SwerveConfig;
 public class RobotContainer {
     // Subsystems
     public final Drivetrain drivetrain;
+    public final Shooter shooter;
 
     // Controller
     public final CommandXboxController driver = new CommandXboxController(0);
@@ -40,6 +42,10 @@ public class RobotContainer {
 
     // Dashboard inputs
     public final LoggedDashboardChooser<Command> autoChooser;
+
+    // TODO: testing dashboard inputs, remove for comp
+    public final LoggedDashboardNumber leftFlywheelSetpoint = new LoggedDashboardNumber("Shooter/Flywheels/leftSetpoint", 6000);
+    public final LoggedDashboardNumber rightFlywheelSetpoint = new LoggedDashboardNumber("Shooter/Flywheels/rightSetpoint", 6000);
 
     /**
      * The container for the robot. Contains subsystems, OI devices, and commands.
@@ -55,6 +61,7 @@ public class RobotContainer {
                                 new ModuleIOTalonFX(SwerveFactory.getModuleMotors(SwerveConfig.FRONT_RIGHT, SwerveFactory.SwerveCorner.FRONT_RIGHT)),
                                 new ModuleIOTalonFX(SwerveFactory.getModuleMotors(SwerveConfig.BACK_LEFT, SwerveFactory.SwerveCorner.BACK_LEFT)),
                                 new ModuleIOTalonFX(SwerveFactory.getModuleMotors(SwerveConfig.BACK_RIGHT, SwerveFactory.SwerveCorner.BACK_RIGHT)));
+                shooter = new Shooter(new ShooterPivotIOTalonFX(), new FlywheelsIOTalonFX());
 
                 indexer =
                         new Indexer(
@@ -71,6 +78,7 @@ public class RobotContainer {
                                 new ModuleIOSim(),
                                 new ModuleIOSim(),
                                 new ModuleIOSim());
+                shooter = new Shooter(new ShooterPivotIOSim(), new FlywheelsIOSim());
                 indexer =
                         new Indexer(
                                 new IndexerIOSim()
@@ -81,16 +89,12 @@ public class RobotContainer {
                 // Replayed robot, disable IO implementations
                 drivetrain =
                         new Drivetrain(
-                                new GyroIO() {
-                                },
-                                new ModuleIO() {
-                                },
-                                new ModuleIO() {
-                                },
-                                new ModuleIO() {
-                                },
-                                new ModuleIO() {
-                                });
+                                new GyroIO() {},
+                                new ModuleIO() {},
+                                new ModuleIO() {},
+                                new ModuleIO() {},
+                                new ModuleIO() {});
+                shooter = new Shooter(new ShooterPivotIO() {}, new FlywheelsIO() {});
                 indexer =
                         new Indexer(
                                 new IndexerIO() {}
@@ -107,6 +111,10 @@ public class RobotContainer {
                 "Drive FF Characterization",
                 new FeedForwardCharacterization(
                         drivetrain, drivetrain::runCharacterizationVolts, drivetrain::getCharacterizationVelocity));
+        autoChooser.addOption(
+                "Flywheels FF Characterization",
+                new FeedForwardCharacterization(
+                        shooter, volts -> shooter.setFlywheelVolts(volts, volts), () -> shooter.getLeftFlywheelSpeed() / 60));
 
         // Configure the button bindings
         configureButtonBindings();
@@ -127,6 +135,9 @@ public class RobotContainer {
                         drivetrain
                 ).ignoringDisable(true)
         );
+
+        copilot.a().onTrue(shooter.spinUpCommand(leftFlywheelSetpoint.get(), rightFlywheelSetpoint.get()))
+                .onFalse(Commands.runOnce(shooter::stopFlywheels, shooter));
 
         copilot.x().onTrue(indexer.feedToAmp());
         copilot.y().onTrue(indexer.feedToShooter());
