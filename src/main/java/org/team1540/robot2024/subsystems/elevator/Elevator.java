@@ -21,7 +21,6 @@ public class Elevator extends SubsystemBase {
         Logger.processInputs("Elevator", elevatorInputs);
 
     }
-    // do positional control stuff here
     
     public void goToSetpoint(double setpointMeters) {
         this.setpointRots = setpointMeters / Constants.Elevator.SOCKET_DIAMETER;
@@ -30,6 +29,10 @@ public class Elevator extends SubsystemBase {
 
     public boolean isAtSetpoint() {
         return elevatorInputs.positionMeters == setpointRots;
+    }
+
+    public void setVoltage(double voltage) {
+        elevatorIO.setVoltage(voltage);
     }
 
     public void stop() {

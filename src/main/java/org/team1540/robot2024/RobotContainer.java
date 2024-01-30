@@ -12,7 +12,12 @@ import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import org.littletonrobotics.junction.networktables.LoggedDashboardNumber;
 import org.team1540.robot2024.commands.FeedForwardCharacterization;
 import org.team1540.robot2024.commands.SwerveDriveCommand;
+import org.team1540.robot2024.commands.elevator.ElevatorAnalog;
 import org.team1540.robot2024.subsystems.drive.*;
+import org.team1540.robot2024.subsystems.elevator.Elevator;
+import org.team1540.robot2024.subsystems.elevator.ElevatorIO;
+import org.team1540.robot2024.subsystems.elevator.ElevatorIOSim;
+import org.team1540.robot2024.subsystems.elevator.ElevatorIOTalonFX;
 import org.team1540.robot2024.subsystems.shooter.*;
 import org.team1540.robot2024.util.swerve.SwerveFactory;
 import org.littletonrobotics.junction.networktables.LoggedDashboardChooser;
@@ -29,6 +34,7 @@ public class RobotContainer {
     // Subsystems
     public final Drivetrain drivetrain;
     public final Shooter shooter;
+    public final Elevator elevator;
 
     // Controller
     public final CommandXboxController driver = new CommandXboxController(0);
@@ -56,6 +62,7 @@ public class RobotContainer {
                                 new ModuleIOTalonFX(SwerveFactory.getModuleMotors(SwerveConfig.BACK_LEFT, SwerveFactory.SwerveCorner.BACK_LEFT)),
                                 new ModuleIOTalonFX(SwerveFactory.getModuleMotors(SwerveConfig.BACK_RIGHT, SwerveFactory.SwerveCorner.BACK_RIGHT)));
                 shooter = new Shooter(new ShooterPivotIOTalonFX(), new FlywheelsIOTalonFX());
+                elevator = new Elevator(new ElevatorIOTalonFX());
                 break;
 
             case SIM:
@@ -68,6 +75,7 @@ public class RobotContainer {
                                 new ModuleIOSim(),
                                 new ModuleIOSim());
                 shooter = new Shooter(new ShooterPivotIOSim(), new FlywheelsIOSim());
+                elevator = new Elevator(new ElevatorIOSim());
                 break;
 
             default:
@@ -80,6 +88,7 @@ public class RobotContainer {
                                 new ModuleIO() {},
                                 new ModuleIO() {});
                 shooter = new Shooter(new ShooterPivotIO() {}, new FlywheelsIO() {});
+                elevator = new Elevator(new ElevatorIO() {});
                 break;
         }
 
@@ -109,6 +118,7 @@ public class RobotContainer {
      */
     private void configureButtonBindings() {
         drivetrain.setDefaultCommand(new SwerveDriveCommand(drivetrain, driver));
+        elevator.setDefaultCommand(new ElevatorAnalog(copilot, elevator));
         driver.x().onTrue(Commands.runOnce(drivetrain::stopWithX, drivetrain));
         driver.b().onTrue(
                 Commands.runOnce(

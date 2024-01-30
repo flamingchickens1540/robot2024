@@ -86,6 +86,11 @@ public class ElevatorIOTalonFX implements ElevatorIO {
     }
 
     @Override
+    public void setVoltage(double voltage) {
+        leader.set(voltage*12);
+    }
+
+    @Override
     public void stop() {
         leader.set(0);
     }

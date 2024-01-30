@@ -17,6 +17,8 @@ public interface ElevatorIO {
 
     default void setSetpoint(double position) {}
 
+    default void setVoltage(double voltage) {}
+
     default void stop() {}
 
 
