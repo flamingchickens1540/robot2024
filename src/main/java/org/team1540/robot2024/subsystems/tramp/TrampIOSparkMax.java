@@ -23,7 +23,7 @@ public class TrampIOSparkMax implements TrampIO {
     }
 
     public void updateInputs(TrampIOInputs inputs) {
-        inputs.breamBreakTripped = beamBreak.get(); //TODO: Check if it needs to be negated
+        inputs.breamBreakTripped = !(beamBreak.get()); //I think returns false when broken...
         inputs.velocityRPM = neorEncoder.getVelocity();
         inputs.appliedVolts = neor.getAppliedOutput() * neor.getBusVoltage();
         inputs.currentAmps = neor.getOutputCurrent();
