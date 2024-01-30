@@ -53,7 +53,7 @@ public class AprilTagVision extends SubsystemBase {
         }
 
         TimestampedVisionPose latestPose = getEstimatedPose();
-        Logger.recordOutput("Vision/EstimatedPose", latestPose.poseMeters());
+        Logger.recordOutput("Vision/EstimatedPose", latestPose == null ? new Pose2d() : latestPose.poseMeters());
         visionPoseConsumer.accept(latestPose);
     }
 
