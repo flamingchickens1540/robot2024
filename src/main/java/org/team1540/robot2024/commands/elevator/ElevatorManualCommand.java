@@ -21,4 +21,9 @@ public class ElevatorManualCommand extends Command {
     public void execute() {
         elevator.setVoltage(copilot.getRightTriggerAxis() - copilot.getLeftTriggerAxis() + Constants.Elevator.KG);
     }
+
+    @Override
+    public void end(boolean interrupted) {
+        elevator.stop();
+    }
 }
