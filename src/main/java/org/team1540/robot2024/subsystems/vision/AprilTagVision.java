@@ -73,7 +73,7 @@ public class AprilTagVision extends SubsystemBase {
                     rearCameraInputs.lastMeasurementTimestampSecs,
                     rearCameraInputs.estimatedPoseMeters,
                     rearCameraInputs.seenTagIDs,
-                    rearPose.tagPosesMeters());
+                    rearCameraInputs.tagPosesMeters);
         }
 
         TimestampedVisionPose latestPose = getEstimatedPose();
