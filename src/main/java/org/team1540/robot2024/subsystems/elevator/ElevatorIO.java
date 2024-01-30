@@ -15,13 +15,9 @@ public interface ElevatorIO {
 
     default void updateInputs(ElevatorIOInputs inputs) {}
 
-    default void setSetpoint(double position) {}
+    default void setPositionMeters(double position) {}
 
     default void setVoltage(double voltage) {}
-
-    default void stop() {}
-
-
 }
 
 

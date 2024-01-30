@@ -118,7 +118,7 @@ public class RobotContainer {
      */
     private void configureButtonBindings() {
         drivetrain.setDefaultCommand(new SwerveDriveCommand(drivetrain, driver));
-        elevator.setDefaultCommand(new ElevatorManualCommand(driver, elevator)); // TODO: change back to copilot
+        elevator.setDefaultCommand(new ElevatorManualCommand(elevator, driver));
         driver.x().onTrue(Commands.runOnce(drivetrain::stopWithX, drivetrain));
         driver.b().onTrue(
                 Commands.runOnce(

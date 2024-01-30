@@ -1,14 +1,19 @@
 package org.team1540.robot2024.subsystems.elevator;
 
+import edu.wpi.first.math.MathUtil;
 import org.littletonrobotics.junction.Logger;
-import org.team1540.robot2024.Constants;
 
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import org.team1540.robot2024.util.MechanismVisualiser;
+import org.team1540.robot2024.util.math.AverageFilter;
+
+import static org.team1540.robot2024.Constants.Elevator.*;
 
 public class Elevator extends SubsystemBase {
     private final ElevatorIO elevatorIO;
     private final ElevatorIOInputsAutoLogged elevatorInputs = new ElevatorIOInputsAutoLogged();
-    private double setpointRots;
+    private final AverageFilter elevatorPositionFilter = new AverageFilter(10);
+    private double setpointMeters;
 
 
     public Elevator(ElevatorIO elevatorIO) {
@@ -20,16 +25,20 @@ public class Elevator extends SubsystemBase {
     public void periodic(){
         elevatorIO.updateInputs(elevatorInputs);
         Logger.processInputs("Elevator", elevatorInputs);
+        MechanismVisualiser.setElevatorPosition(elevatorInputs.positionMeters);
 
+        elevatorPositionFilter.add(elevatorInputs.positionMeters);
     }
     
-    public void goToSetpoint(double setpointMeters) {
-        this.setpointRots = setpointMeters / Constants.Elevator.SOCKET_DIAMETER;
-        elevatorIO.setSetpoint(setpointRots);
+    public void goToSetpoint(double newSetpointMeters) {
+        setpointMeters = newSetpointMeters;
+        elevatorIO.setPositionMeters(setpointMeters);
+
+        elevatorPositionFilter.clear();
     }
 
     public boolean isAtSetpoint() {
-        return elevatorInputs.positionMeters == setpointRots;
+        return MathUtil.isNear(setpointMeters, elevatorPositionFilter.getAverage(), ERROR_TOLERANCE);
     }
 
     public void setVoltage(double voltage) {
@@ -37,6 +46,6 @@ public class Elevator extends SubsystemBase {
     }
 
     public void stop() {
-        elevatorIO.stop();
+        elevatorIO.setVoltage(0.0);
     }
 }

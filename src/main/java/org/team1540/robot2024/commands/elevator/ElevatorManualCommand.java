@@ -11,7 +11,7 @@ public class ElevatorManualCommand extends Command {
     private final Elevator elevator;
     private final CommandXboxController copilot;
 
-    public ElevatorManualCommand(CommandXboxController copilot, Elevator elevator) {
+    public ElevatorManualCommand(Elevator elevator, CommandXboxController copilot) {
         this.elevator = elevator;
         this.copilot = copilot;
         addRequirements(elevator);

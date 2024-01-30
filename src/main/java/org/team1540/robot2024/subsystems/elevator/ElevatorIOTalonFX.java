@@ -36,7 +36,7 @@ public class ElevatorIOTalonFX implements ElevatorIO {
         config.CurrentLimits.SupplyCurrentThreshold = 60.0;
         config.CurrentLimits.SupplyTimeThreshold = 0.1;
         config.MotorOutput.NeutralMode = NeutralModeValue.Coast;
-        config.Feedback.SensorToMechanismRatio = Constants.Elevator.ELEVATOR_GEAR_RATIO;
+        config.Feedback.SensorToMechanismRatio = Constants.Elevator.MOTOR_ROTS_TO_METERS;
         // TODO: this might not actually be inverted, so fix it if neccesary
         follower.setControl(new Follower(leader.getDeviceID(), true));
 
@@ -57,9 +57,9 @@ public class ElevatorIOTalonFX implements ElevatorIO {
 
         // setting Motion Magic Settings
         MotionMagicConfigs motionMagicConfigs = config.MotionMagic;
-        motionMagicConfigs.MotionMagicCruiseVelocity = Constants.Elevator.MOTION_MAGIC_CRUISE_VELOCITY;
-        motionMagicConfigs.MotionMagicAcceleration = Constants.Elevator.MOTION_MAGIC_ACCELERATION;
-        motionMagicConfigs.MotionMagicJerk = Constants.Elevator.MOTION_MAGIC_JERK;
+        motionMagicConfigs.MotionMagicCruiseVelocity = Constants.Elevator.CRUISE_VELOCITY_MPS;
+        motionMagicConfigs.MotionMagicAcceleration = Constants.Elevator.MAXIMUM_ACCELERATION_MPS2;
+        motionMagicConfigs.MotionMagicJerk = Constants.Elevator.JERK_MP3;
 
         config.HardwareLimitSwitch.ForwardLimitEnable = true;
         config.HardwareLimitSwitch.ReverseLimitEnable = true;
@@ -70,7 +70,14 @@ public class ElevatorIOTalonFX implements ElevatorIO {
 
     @Override
     public void updateInputs(ElevatorIOInputs inputs) {
-        BaseStatusSignal.refreshAll(leaderPosition, leaderVelocity, leaderAppliedVolts, leaderCurrent, followerCurrent, topLimitStatus, bottomLimitStatus);
+        BaseStatusSignal.refreshAll(
+                leaderPosition,
+                leaderVelocity,
+                leaderAppliedVolts,
+                leaderCurrent,
+                followerCurrent,
+                topLimitStatus,
+                bottomLimitStatus);
 
         inputs.positionMeters = leaderPosition.getValue();
         inputs.velocityRPM = leaderVelocity.getValue();
@@ -81,17 +88,12 @@ public class ElevatorIOTalonFX implements ElevatorIO {
     }
 
     @Override
-    public void setSetpoint(double position) {
-        leader.setControl(motionMagicOut.withPosition(position));
+    public void setPositionMeters(double positionMeters) {
+        leader.setControl(motionMagicOut.withPosition(positionMeters));
     }
 
     @Override
     public void setVoltage(double voltage) {
         leader.set(voltage*12);
-    }
-
-    @Override
-    public void stop() {
-        leader.set(0);
     }
 }
