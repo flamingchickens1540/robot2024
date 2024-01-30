@@ -22,6 +22,7 @@ public class AprilTagVision extends SubsystemBase {
 
     private final Consumer<TimestampedVisionPose> visionPoseConsumer;
     private final Supplier<Double> elevatorHeightSupplierMeters;
+    private final Supplier<Double> elevatorVelocitySupplierMPS;
 
     private TimestampedVisionPose frontPose =
             new TimestampedVisionPose(-1, new Pose2d(), new int[0], new Pose2d[0]);
@@ -32,15 +33,18 @@ public class AprilTagVision extends SubsystemBase {
             AprilTagVisionIO frontCameraIO,
             AprilTagVisionIO rearCameraIO,
             Consumer<TimestampedVisionPose> visionPoseConsumer,
-            Supplier<Double> elevatorHeightSupplierMeters) {
+            Supplier<Double> elevatorHeightSupplierMeters,
+            Supplier<Double> elevatorVelocitySupplierMPS) {
         this.frontCameraIO = frontCameraIO;
         this.rearCameraIO = rearCameraIO;
         this.visionPoseConsumer = visionPoseConsumer;
         this.elevatorHeightSupplierMeters = elevatorHeightSupplierMeters;
+        this.elevatorVelocitySupplierMPS = elevatorVelocitySupplierMPS;
     }
 
     @Override
     public void periodic() {
+        // TODO: need to change if one camera is stationary
         frontCameraIO.setPoseOffset(
                 new Pose3d(
                         FRONT_CAMERA_POSE.getX(),
@@ -83,11 +87,13 @@ public class AprilTagVision extends SubsystemBase {
 
     /**
      * Gets the estimated pose by fusing individual computed poses from each camera.
-     * Returns null if no tags seen or in simulation
+     * Returns null if no tags seen, in simulation, or if the elevator is moving
+     * too fast
      */
     public TimestampedVisionPose getEstimatedPose() {
         if (Constants.currentMode == Constants.Mode.SIM) return null;
         if (frontPose.getNumTagsSeen() < 1 && rearPose.getNumTagsSeen() < 1) return null;
+        if (Math.abs(elevatorVelocitySupplierMPS.get()) > MAX_ACCEPTED_ELEVATOR_SPEED_MPS) return null; // TODO: need to change if one camera is stationary
         else if (frontPose.getNumTagsSeen() < 1) return rearPose;
         else if (rearPose.getNumTagsSeen() < 1) return frontPose;
 

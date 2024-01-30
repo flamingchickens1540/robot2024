@@ -76,6 +76,7 @@ public final class Constants {
         public static final double MAX_ACCEPTED_LINEAR_SPEED_MPS = 4.0;
         public static final double MIN_ACCEPTED_NUM_TAGS = 1;
         public static final double MAX_ACCEPTED_AVG_TAG_DIST_METERS = 8.0;
+        public static final double MAX_ACCEPTED_ELEVATOR_SPEED_MPS = 0.05;
     }
 
     public static class Elevator {
