@@ -18,8 +18,10 @@ public class AprilTagVision extends SubsystemBase {
 
     private final Consumer<TimestampedVisionPose> visionPoseConsumer;
 
-    private TimestampedVisionPose frontPose;
-    private TimestampedVisionPose rearPose;
+    private TimestampedVisionPose frontPose =
+            new TimestampedVisionPose(-1, new Pose2d(), new int[0], new Pose2d[0]);
+    private TimestampedVisionPose rearPose =
+            new TimestampedVisionPose(-1, new Pose2d(), new int[0], new Pose2d[0]);
 
     public AprilTagVision(
             AprilTagVisionIO frontCameraIO,
