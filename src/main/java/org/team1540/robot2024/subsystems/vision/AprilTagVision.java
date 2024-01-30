@@ -8,6 +8,7 @@ import org.team1540.robot2024.Constants;
 import org.team1540.robot2024.util.vision.TimestampedVisionPose;
 
 import java.util.Arrays;
+import java.util.Optional;
 import java.util.function.Consumer;
 import java.util.function.Supplier;
 
@@ -80,9 +81,9 @@ public class AprilTagVision extends SubsystemBase {
                     rearCameraInputs.tagPosesMeters);
         }
 
-        TimestampedVisionPose latestPose = getEstimatedPose();
-        Logger.recordOutput("Vision/EstimatedPose", latestPose == null ? new Pose2d() : latestPose.poseMeters());
-        visionPoseConsumer.accept(latestPose);
+        Optional<TimestampedVisionPose> latestPose = getEstimatedPose();
+        latestPose.ifPresent(visionPose -> Logger.recordOutput("Vision/EstimatedPose", visionPose.poseMeters()));
+        latestPose.ifPresent(visionPoseConsumer);
     }
 
     /**
@@ -90,12 +91,12 @@ public class AprilTagVision extends SubsystemBase {
      * Returns null if no tags seen, in simulation, or if the elevator is moving
      * too fast
      */
-    public TimestampedVisionPose getEstimatedPose() {
-        if (Constants.currentMode == Constants.Mode.SIM) return null;
-        if (frontPose.getNumTagsSeen() < 1 && rearPose.getNumTagsSeen() < 1) return null;
-        if (Math.abs(elevatorVelocitySupplierMPS.get()) > MAX_ACCEPTED_ELEVATOR_SPEED_MPS) return null; // TODO: need to change if one camera is stationary
-        else if (frontPose.getNumTagsSeen() < 1) return rearPose;
-        else if (rearPose.getNumTagsSeen() < 1) return frontPose;
+    public Optional<TimestampedVisionPose> getEstimatedPose() {
+        if (Constants.currentMode == Constants.Mode.SIM) return Optional.empty();
+        if (frontPose.getNumTagsSeen() < 1 && rearPose.getNumTagsSeen() < 1) return Optional.empty();
+        if (Math.abs(elevatorVelocitySupplierMPS.get()) > MAX_ACCEPTED_ELEVATOR_SPEED_MPS) return Optional.empty(); // TODO: need to change if one camera is stationary
+        else if (frontPose.getNumTagsSeen() < 1) return Optional.of(rearPose);
+        else if (rearPose.getNumTagsSeen() < 1) return Optional.of(frontPose);
 
         // This just takes the average of the measurements, we could change this to something more advanced if necessary
         int[] allTagIDs = Arrays.copyOf(frontPose.seenTagIDs(), frontPose.getNumTagsSeen() + rearPose.getNumTagsSeen());
@@ -103,10 +104,10 @@ public class AprilTagVision extends SubsystemBase {
         Pose2d[] allTagPoses = Arrays.copyOf(frontPose.tagPosesMeters(), frontPose.getNumTagsSeen() + rearPose.getNumTagsSeen());
         System.arraycopy(rearPose.tagPosesMeters(), 0, allTagPoses, frontPose.getNumTagsSeen(), rearPose.getNumTagsSeen());
 
-        return new TimestampedVisionPose(
+        return Optional.of(new TimestampedVisionPose(
                 (frontPose.timestampSecs() + rearPose.timestampSecs()) / 2,
                 frontPose.poseMeters().interpolate(rearPose.poseMeters(), 0.5),
                 allTagIDs,
-                allTagPoses);
+                allTagPoses));
     }
 }

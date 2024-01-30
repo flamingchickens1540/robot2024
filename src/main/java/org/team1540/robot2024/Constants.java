@@ -71,6 +71,7 @@ public final class Constants {
         public static final Pose3d FRONT_CAMERA_POSE = new Pose3d();
         public static final Pose3d REAR_CAMERA_POSE = new Pose3d();
 
+        // TODO: find these values
         public static final double MAX_VISION_DELAY_SECS = 0.08;
         public static final double MAX_ACCEPTED_ROT_SPEED_RAD_PER_SEC = 1.0;
         public static final double MAX_ACCEPTED_LINEAR_SPEED_MPS = 4.0;

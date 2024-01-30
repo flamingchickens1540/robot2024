@@ -203,7 +203,6 @@ public class Drivetrain extends SubsystemBase {
     }
 
     public void addVisionMeasurement(TimestampedVisionPose visionPose) {
-        if (visionPose == null) return;
         if (VisionPoseAcceptor.shouldAcceptVision(visionPose, kinematics.toChassisSpeeds(getModuleStates()))) {
             poseEstimator.addVisionMeasurement(visionPose.poseMeters(), visionPose.timestampSecs());
         }
