@@ -23,7 +23,7 @@ public class ElevatorIOSim implements ElevatorIO{
         inputs.lowerLimit = elevatorSim.hasHitLowerLimit();
     }
 
-    public void setElevatorAppliedVolts(double volts){
+    public void setVoltage(double volts){
         elevatorAppliedVolts = MathUtil.clamp(volts, -12.0, 12.0); //TODO: check this range
         elevatorSim.setInputVoltage(elevatorAppliedVolts);
     }

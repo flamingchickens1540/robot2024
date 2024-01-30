@@ -6,12 +6,12 @@ import org.team1540.robot2024.subsystems.elevator.Elevator;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 
-public class ElevatorAnalog extends Command {
+public class ElevatorManualCommand extends Command {
 
     private final Elevator elevator;
     private final CommandXboxController copilot;
 
-    public ElevatorAnalog(CommandXboxController copilot, Elevator elevator) {
+    public ElevatorManualCommand(CommandXboxController copilot, Elevator elevator) {
         this.elevator = elevator;
         this.copilot = copilot;
         addRequirements(elevator);
@@ -19,6 +19,6 @@ public class ElevatorAnalog extends Command {
 
     @Override
     public void execute() {
-        elevator.setVoltage(copilot.getRightTriggerAxis() + Constants.Elevator.KG);
+        elevator.setVoltage(copilot.getRightTriggerAxis() - copilot.getLeftTriggerAxis() + Constants.Elevator.KG);
     }
 }

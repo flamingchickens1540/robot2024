@@ -119,7 +119,7 @@ public final class Constants {
         public static final double CLIMBING_HOOKS_MINIMUM_HEIGHT = Units.inchesToMeters(12.0);
         public static final double CLIMBING_HOOKS_MAX_HEIGHT = CLIMBING_HOOKS_MINIMUM_HEIGHT + ELEVATOR_MAX_HEIGHT - ELEVATOR_MINIMUM_HEIGHT;
 
-        public static final double ELEVATOR_GEAR_RATIO = -1;
+        public static final double ELEVATOR_GEAR_RATIO = 1.0;
         public static final int TALON_ID_1 = -1;
         public static final int TALON_ID_2 = -1;
         public static final double KS = 0.25;

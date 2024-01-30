@@ -7,10 +7,12 @@ import org.team1540.robot2024.subsystems.elevator.Elevator;
 public class ElevatorSetpointCommand extends Command {
     private final Elevator elevator;
     private final ElevatorState state;
+
     public ElevatorSetpointCommand(Elevator elevator, ElevatorState state) {
         this.elevator = elevator;
         this.state = state;
         addRequirements(elevator);
+        System.out.println("Setting point, get rekt");
     }
     @Override
     public void initialize() {

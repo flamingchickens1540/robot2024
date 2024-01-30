@@ -13,6 +13,7 @@ public class Elevator extends SubsystemBase {
 
     public Elevator(ElevatorIO elevatorIO) {
         this.elevatorIO = elevatorIO;
+        setVoltage(10);
     }
 
     // periodic
