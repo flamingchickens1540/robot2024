@@ -78,6 +78,10 @@ public final class Constants {
         public static final double MAX_ACCEPTED_AVG_TAG_DIST_METERS = 8.0;
     }
 
+    public static class Elevator {
+        public static final double ELEVATOR_MAX_HEIGHT = Units.inchesToMeters(21.0);
+    }
+
     public static class Shooter {
         public static class Flywheels {
             // TODO: determine ids
