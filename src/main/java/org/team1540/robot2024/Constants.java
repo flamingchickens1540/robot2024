@@ -129,10 +129,10 @@ public final class Constants {
         public static final double KI = 0;
         public static final double KD = 0.1;
         public static final double KG = 0;
-        public static final int CRUISE_VELOCITY_MPS = 80;
-        public static final int MAXIMUM_ACCELERATION_MPS2 = 160;
-        public static final int JERK_MP3 = 1600;
-        public static final double SPROCKET_CIRCUMFERENCE = .0508 * Math.PI;
+        public static final int CRUISE_VELOCITY_MPS = 2;
+        public static final int MAXIMUM_ACCELERATION_MPS2 = 20;
+        public static final int JERK_MP3 = 40;
+        public static final double SPROCKET_CIRCUMFERENCE = .044 * Math.PI;
         public static final double MOTOR_ROTS_TO_METERS = GEAR_RATIO * SPROCKET_CIRCUMFERENCE;
         public static final double ERROR_TOLERANCE = 0.03;
         public static final double SIM_CARRIAGE_MASS_KG = 1.55; //TODO: check this number :)

@@ -18,7 +18,6 @@ public class Elevator extends SubsystemBase {
 
     public Elevator(ElevatorIO elevatorIO) {
         this.elevatorIO = elevatorIO;
-        setVoltage(10);
     }
 
     // periodic
@@ -47,5 +46,9 @@ public class Elevator extends SubsystemBase {
 
     public void stop() {
         elevatorIO.setVoltage(0.0);
+    }
+
+    public double getSetpoint() {
+        return setpointMeters;
     }
 }
