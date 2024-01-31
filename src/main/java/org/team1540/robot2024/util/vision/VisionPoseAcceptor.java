@@ -3,10 +3,24 @@ package org.team1540.robot2024.util.vision;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.wpilibj.Timer;
 
+import java.util.function.Supplier;
+
 import static org.team1540.robot2024.Constants.Vision.*;
 
 public class VisionPoseAcceptor {
-    public static boolean shouldAcceptVision(TimestampedVisionPose visionPose, ChassisSpeeds robotVelocity) {
+    private final Supplier<ChassisSpeeds> robotVelocitySupplier;
+    private final Supplier<Double> elevatorVelocitySupplier;
+
+    public VisionPoseAcceptor(
+            Supplier<ChassisSpeeds> robotVelocitySupplier,
+            Supplier<Double> elevatorVelocitySupplier) {
+        this.robotVelocitySupplier = robotVelocitySupplier;
+        this.elevatorVelocitySupplier = elevatorVelocitySupplier;
+    }
+
+    public boolean shouldAcceptVision(TimestampedVisionPose visionPose) {
+        ChassisSpeeds robotVelocity = robotVelocitySupplier.get();
+        double elevatorVelocity = elevatorVelocitySupplier.get();
         // Do not accept poses that have too much delay
         if (Timer.getFPGATimestamp() - visionPose.timestampSecs() >= MAX_VISION_DELAY_SECS) return false;
 
@@ -21,6 +35,7 @@ public class VisionPoseAcceptor {
         boolean translatingTooFast =
                 Math.hypot(robotVelocity.vxMetersPerSecond, robotVelocity.vyMetersPerSecond)
                         > MAX_ACCEPTED_LINEAR_SPEED_MPS;
-        return !rotatingTooFast && !translatingTooFast;
+        boolean elevatorTooFast = Math.abs(elevatorVelocity) > MAX_ACCEPTED_ELEVATOR_SPEED_MPS;
+        return !rotatingTooFast && !translatingTooFast && !elevatorTooFast;
     }
 }

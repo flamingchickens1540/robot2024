@@ -10,12 +10,16 @@ import java.util.Objects;
  * @param poseMeters     Measured, blue alliance-origin pose from vision
  * @param seenTagIDs     Array of all tags used to compute this measurement
  * @param tagPosesMeters Pose in robot-space of all tags used to compute this measurement
+ * @param hasFrontCamera Whether this pose contains measurements from the front camera
+ * @param hasRearCamera  Whether this pose contains measurements from the rear camera
  */
 public record TimestampedVisionPose(
         double timestampSecs,
         Pose2d poseMeters,
         int[] seenTagIDs,
-        Pose2d[] tagPosesMeters) {
+        Pose2d[] tagPosesMeters,
+        boolean hasFrontCamera,
+        boolean hasRearCamera) {
 
     public int getNumTagsSeen() {
         return seenTagIDs.length;

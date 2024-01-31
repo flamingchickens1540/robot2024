@@ -20,6 +20,7 @@ import org.team1540.robot2024.subsystems.vision.AprilTagVisionIOLimelight;
 import org.team1540.robot2024.util.PhoenixTimeSyncSignalRefresher;
 import org.team1540.robot2024.util.swerve.SwerveFactory;
 import org.littletonrobotics.junction.networktables.LoggedDashboardChooser;
+import org.team1540.robot2024.util.vision.VisionPoseAcceptor;
 
 import static org.team1540.robot2024.Constants.SwerveConfig;
 
@@ -68,7 +69,7 @@ public class RobotContainer {
                         new AprilTagVisionIOLimelight(Constants.Vision.REAR_CAMERA_NAME, Constants.Vision.REAR_CAMERA_POSE),
                         drivetrain::addVisionMeasurement,
                         () -> 0.0, // TODO: ACTUALLY GET ELEVATOR HEIGHT HERE
-                        () -> 0.0); // TODO: ACTUALLY GET ELEVATOR VELOCITY HERE
+                        new VisionPoseAcceptor(drivetrain::getChassisSpeeds, () -> 0.0)); // TODO: ACTUALLY GET ELEVATOR VELOCITY HERE
                 break;
 
             case SIM:
@@ -82,7 +83,12 @@ public class RobotContainer {
                                 new ModuleIOSim());
                 shooter = new Shooter(new ShooterPivotIOSim(), new FlywheelsIOSim());
                 aprilTagVision =
-                        new AprilTagVision(new AprilTagVisionIO() {}, new AprilTagVisionIO() {}, (ignored) -> {}, () -> 0.0, () -> 0.0);
+                        new AprilTagVision(
+                                new AprilTagVisionIO() {},
+                                new AprilTagVisionIO() {},
+                                (ignored) -> {},
+                                () -> 0.0,
+                                new VisionPoseAcceptor(drivetrain::getChassisSpeeds, () -> 0.0));
                 break;
 
             default:
@@ -96,7 +102,12 @@ public class RobotContainer {
                                 new ModuleIO() {});
                 shooter = new Shooter(new ShooterPivotIO() {}, new FlywheelsIO() {});
                 aprilTagVision =
-                        new AprilTagVision(new AprilTagVisionIO() {}, new AprilTagVisionIO() {}, (ignored) -> {}, () -> 0.0, () -> 0.0);
+                        new AprilTagVision(
+                                new AprilTagVisionIO() {},
+                                new AprilTagVisionIO() {},
+                                (ignored) -> {},
+                                () -> 0.0,
+                                new VisionPoseAcceptor(drivetrain::getChassisSpeeds, () -> 0.0));
                 break;
         }
 

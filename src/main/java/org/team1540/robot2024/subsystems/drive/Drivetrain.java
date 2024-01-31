@@ -20,7 +20,6 @@ import org.team1540.robot2024.util.LocalADStarAK;
 import org.littletonrobotics.junction.AutoLogOutput;
 import org.littletonrobotics.junction.Logger;
 import org.team1540.robot2024.util.vision.TimestampedVisionPose;
-import org.team1540.robot2024.util.vision.VisionPoseAcceptor;
 
 import static org.team1540.robot2024.Constants.Drivetrain.*;
 
@@ -168,6 +167,10 @@ public class Drivetrain extends SubsystemBase {
         return driveVelocityAverage / 4.0;
     }
 
+    public ChassisSpeeds getChassisSpeeds() {
+        return kinematics.toChassisSpeeds(getModuleStates());
+    }
+
     /**
      * Returns the module states (turn angles and drive velocities) for all the modules.
      */
@@ -203,9 +206,7 @@ public class Drivetrain extends SubsystemBase {
     }
 
     public void addVisionMeasurement(TimestampedVisionPose visionPose) {
-        if (VisionPoseAcceptor.shouldAcceptVision(visionPose, kinematics.toChassisSpeeds(getModuleStates()))) {
-            poseEstimator.addVisionMeasurement(visionPose.poseMeters(), visionPose.timestampSecs());
-        }
+        poseEstimator.addVisionMeasurement(visionPose.poseMeters(), visionPose.timestampSecs());
     }
 
     public SwerveModulePosition[] getModulePositions() {

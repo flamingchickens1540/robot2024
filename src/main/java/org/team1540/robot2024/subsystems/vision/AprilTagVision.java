@@ -6,6 +6,7 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import org.littletonrobotics.junction.Logger;
 import org.team1540.robot2024.Constants;
 import org.team1540.robot2024.util.vision.TimestampedVisionPose;
+import org.team1540.robot2024.util.vision.VisionPoseAcceptor;
 
 import java.util.Arrays;
 import java.util.Optional;
@@ -23,24 +24,24 @@ public class AprilTagVision extends SubsystemBase {
 
     private final Consumer<TimestampedVisionPose> visionPoseConsumer;
     private final Supplier<Double> elevatorHeightSupplierMeters;
-    private final Supplier<Double> elevatorVelocitySupplierMPS;
+    private final VisionPoseAcceptor poseAcceptor;
 
     private TimestampedVisionPose frontPose =
-            new TimestampedVisionPose(-1, new Pose2d(), new int[0], new Pose2d[0]);
+            new TimestampedVisionPose(-1, new Pose2d(), new int[0], new Pose2d[0], true, false);
     private TimestampedVisionPose rearPose =
-            new TimestampedVisionPose(-1, new Pose2d(), new int[0], new Pose2d[0]);
+            new TimestampedVisionPose(-1, new Pose2d(), new int[0], new Pose2d[0], false, true);
 
     public AprilTagVision(
             AprilTagVisionIO frontCameraIO,
             AprilTagVisionIO rearCameraIO,
             Consumer<TimestampedVisionPose> visionPoseConsumer,
             Supplier<Double> elevatorHeightSupplierMeters,
-            Supplier<Double> elevatorVelocitySupplierMPS) {
+            VisionPoseAcceptor poseAcceptor) {
         this.frontCameraIO = frontCameraIO;
         this.rearCameraIO = rearCameraIO;
         this.visionPoseConsumer = visionPoseConsumer;
         this.elevatorHeightSupplierMeters = elevatorHeightSupplierMeters;
-        this.elevatorVelocitySupplierMPS = elevatorVelocitySupplierMPS;
+        this.poseAcceptor = poseAcceptor;
     }
 
     @Override
@@ -71,14 +72,18 @@ public class AprilTagVision extends SubsystemBase {
                     frontCameraInputs.lastMeasurementTimestampSecs,
                     frontCameraInputs.estimatedPoseMeters,
                     frontCameraInputs.seenTagIDs,
-                    frontCameraInputs.tagPosesMeters);
+                    frontCameraInputs.tagPosesMeters,
+                    true,
+                    false);
         }
         if (rearCameraInputs.lastMeasurementTimestampSecs > rearPose.timestampSecs()) {
             rearPose = new TimestampedVisionPose(
                     rearCameraInputs.lastMeasurementTimestampSecs,
                     rearCameraInputs.estimatedPoseMeters,
                     rearCameraInputs.seenTagIDs,
-                    rearCameraInputs.tagPosesMeters);
+                    rearCameraInputs.tagPosesMeters,
+                    false,
+                    true);
         }
 
         Optional<TimestampedVisionPose> latestPose = getEstimatedPose();
@@ -93,21 +98,25 @@ public class AprilTagVision extends SubsystemBase {
      */
     public Optional<TimestampedVisionPose> getEstimatedPose() {
         if (Constants.currentMode == Constants.Mode.SIM) return Optional.empty();
-        if (frontPose.getNumTagsSeen() < 1 && rearPose.getNumTagsSeen() < 1) return Optional.empty();
-        if (Math.abs(elevatorVelocitySupplierMPS.get()) > MAX_ACCEPTED_ELEVATOR_SPEED_MPS) return Optional.empty(); // TODO: need to change if one camera is stationary
-        else if (frontPose.getNumTagsSeen() < 1) return Optional.of(rearPose);
-        else if (rearPose.getNumTagsSeen() < 1) return Optional.of(frontPose);
 
-        // This just takes the average of the measurements, we could change this to something more advanced if necessary
-        int[] allTagIDs = Arrays.copyOf(frontPose.seenTagIDs(), frontPose.getNumTagsSeen() + rearPose.getNumTagsSeen());
-        System.arraycopy(rearPose.seenTagIDs(), 0, allTagIDs, frontPose.getNumTagsSeen(), rearPose.getNumTagsSeen());
-        Pose2d[] allTagPoses = Arrays.copyOf(frontPose.tagPosesMeters(), frontPose.getNumTagsSeen() + rearPose.getNumTagsSeen());
-        System.arraycopy(rearPose.tagPosesMeters(), 0, allTagPoses, frontPose.getNumTagsSeen(), rearPose.getNumTagsSeen());
+        boolean useFrontPose = poseAcceptor.shouldAcceptVision(frontPose);
+        boolean useRearPose = poseAcceptor.shouldAcceptVision(rearPose);
 
-        return Optional.of(new TimestampedVisionPose(
-                (frontPose.timestampSecs() + rearPose.timestampSecs()) / 2,
-                frontPose.poseMeters().interpolate(rearPose.poseMeters(), 0.5),
-                allTagIDs,
-                allTagPoses));
+        if (useFrontPose && useRearPose) {
+            int[] allTagIDs = Arrays.copyOf(frontPose.seenTagIDs(), frontPose.getNumTagsSeen() + rearPose.getNumTagsSeen());
+            System.arraycopy(rearPose.seenTagIDs(), 0, allTagIDs, frontPose.getNumTagsSeen(), rearPose.getNumTagsSeen());
+            Pose2d[] allTagPoses = Arrays.copyOf(frontPose.tagPosesMeters(), frontPose.getNumTagsSeen() + rearPose.getNumTagsSeen());
+            System.arraycopy(rearPose.tagPosesMeters(), 0, allTagPoses, frontPose.getNumTagsSeen(), rearPose.getNumTagsSeen());
+
+            return Optional.of(new TimestampedVisionPose(
+                    (frontPose.timestampSecs() + rearPose.timestampSecs()) / 2,
+                    frontPose.poseMeters().interpolate(rearPose.poseMeters(), 0.5),
+                    allTagIDs,
+                    allTagPoses,
+                    true,
+                    true));
+        } else if (useFrontPose) return Optional.of(frontPose);
+        else if (useRearPose) return Optional.of(rearPose);
+        else return Optional.empty();
     }
 }
