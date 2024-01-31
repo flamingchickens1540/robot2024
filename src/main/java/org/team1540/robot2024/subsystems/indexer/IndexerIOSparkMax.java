@@ -2,7 +2,6 @@ package org.team1540.robot2024.subsystems.indexer;
 
 import com.revrobotics.*;
 import edu.wpi.first.math.controller.SimpleMotorFeedforward;
-import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.DigitalInput;
 
 import static org.team1540.robot2024.Constants.Indexer.*;
@@ -14,6 +13,7 @@ public class IndexerIOSparkMax implements IndexerIO {
     private final DigitalInput indexerBeamBreak = new DigitalInput(0);
     private final SparkPIDController feederPID;
     private final SimpleMotorFeedforward feederFF = new SimpleMotorFeedforward(FEEDER_KS, FEEDER_KV);
+    private double setpointRPM;
 
 
     public IndexerIOSparkMax() {
@@ -29,9 +29,6 @@ public class IndexerIOSparkMax implements IndexerIO {
         feederPID.setP(FEEDER_KP, 0);
         feederPID.setI(FEEDER_KI, 0);
         feederPID.setD(FEEDER_KD, 0);
-
-
-
     }
 
     @Override
@@ -43,6 +40,8 @@ public class IndexerIOSparkMax implements IndexerIO {
         inputs.feederVoltage = feederMotor.getBusVoltage() * feederMotor.getAppliedOutput();
         inputs.feederVelocityRPM = feederMotor.getEncoder().getVelocity();
         inputs.noteInIntake = indexerBeamBreak.get();
+        inputs.setpointRPM = setpointRPM;
+        inputs.feederPositionError = setpointRPM - feederMotor.getEncoder().getVelocity();
     }
 
     @Override
@@ -57,8 +56,9 @@ public class IndexerIOSparkMax implements IndexerIO {
 
     @Override
     public void setFeederVelocity(double velocity) {
+        setpointRPM = velocity;
         feederPID.setReference(
-                Units.radiansPerSecondToRotationsPerMinute(velocity) * FEEDER_GEAR_RATIO,
+                velocity / FEEDER_GEAR_RATIO, // Should this be multiplied?
                 CANSparkBase.ControlType.kVelocity,
                 0,
                 feederFF.calculate(velocity),

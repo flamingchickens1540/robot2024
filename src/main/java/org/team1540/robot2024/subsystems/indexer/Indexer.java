@@ -26,7 +26,7 @@ public class Indexer extends SubsystemBase {
         indexerIO.updateInputs(indexerInputs);
         Logger.processInputs("Indexer", indexerInputs);
         if (TUNING) {
-            if (kP.hasChanged() || kI.hasChanged() || kD.hasChanged()) {
+            if (kP.hasChanged(hashCode()) || kI.hasChanged(hashCode()) || kD.hasChanged(hashCode())) {
                 indexerIO.configurePID(kP.get(), kI.get(), kD.get());
             }
         }

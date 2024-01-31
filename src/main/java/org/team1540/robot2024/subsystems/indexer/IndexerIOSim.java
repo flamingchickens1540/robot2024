@@ -16,35 +16,34 @@ public class IndexerIOSim implements IndexerIO {
     private final DCMotorSim feederSim = new DCMotorSim(DCMotor.getNEO(1), FEEDER_GEAR_RATIO,0.025);
 //    private final SimDeviceSim beamBreakSim = new SimDeviceSim("Indexer Beam Break");
     private final PIDController feederSimPID = new PIDController(FEEDER_KP, FEEDER_KI,FEEDER_KD);
+    private boolean isClosedLoop = true;
+    private double intakeVoltage = 0.0;
+    private double feederVoltage = 0.0;
+    private double feederVelocityRPS = 0.0;
 
     @Override
     public void updateInputs(IndexerIOInputs inputs) {
+        if (isClosedLoop) {
+            feederVoltage = MathUtil.clamp(feederSimPID.calculate(feederSim.getAngularVelocityRPM() / 60, feederVelocityRPS), -12.0, 12.0);
+        }
+        intakeSim.setInputVoltage(intakeVoltage);
+        feederSim.setInputVoltage(feederVoltage);
         intakeSim.update(Constants.LOOP_PERIOD_SECS);
         feederSim.update(Constants.LOOP_PERIOD_SECS);
         inputs.intakeCurrentAmps = intakeSim.getCurrentDrawAmps();
-//        inputs.intakeVoltage = intakeSim.getBusVoltage() * intakeSim.getAppliedOutput();
+        inputs.intakeVoltage = intakeVoltage;
         inputs.intakeVelocityRPM = intakeSim.getAngularVelocityRPM();
         inputs.feederCurrentAmps = feederSim.getCurrentDrawAmps();
-//        inputs.feederVoltage = feederSim.getBusVoltage() * feederSim.getAppliedOutput();
+        inputs.feederVoltage = feederVoltage;
         inputs.feederVelocityRPM = feederSim.getAngularVelocityRPM();
 //        inputs.noteInIntake = beamBreakSim.getBoolean("Indexer Beam Break").get();
-        inputs.setpoint = feederSimPID.getSetpoint();
-        inputs.feederVelocityRadPerSec = feederSim.getAngularVelocityRadPerSec();
+        inputs.setpointRPM = feederSimPID.getSetpoint() * 60;
         inputs.feederPositionError = feederSimPID.getPositionError();
-
-        // this is a very funny line of code, and absolutely does not belong here, but I don't know how to do this otherwise
-        feederSim.setState(feederSim.getAngularPositionRad(), feederSim.getAngularVelocityRadPerSec() + feederSimPID.calculate(feederSim.getAngularVelocityRadPerSec()));
-
     }
 
     @Override
     public void setIntakeVoltage(double volts) {
-        intakeSim.setInputVoltage(MathUtil.clamp(volts, -12, 12));
-    }
-
-    @Override
-    public void setFeederVelocity(double velocity) {
-        feederSimPID.setSetpoint(velocity);
+        intakeVoltage = MathUtil.clamp(volts, -12.0, 12.0);
     }
 
     @Override
@@ -52,8 +51,16 @@ public class IndexerIOSim implements IndexerIO {
         feederSimPID.setPID(p, i, d);
     }
 
-    @Override
     public void setFeederVoltage(double volts) {
-        feederSim.setInputVoltage(MathUtil.clamp(volts, -12, 12));
+        isClosedLoop = false;
+        feederVoltage = MathUtil.clamp(volts, -12.0, 12.0);
     }
+
+
+    public void setFeederVelocity(double velocity) {
+        isClosedLoop = true;
+        feederSimPID.reset();
+        feederVelocityRPS = velocity / 60;
+    }
+
 }

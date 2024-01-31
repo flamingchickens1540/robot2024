@@ -13,8 +13,7 @@ public interface IndexerIO {
         public double feederCurrentAmps;
         public double feederVelocityRPM;
         public boolean noteInIntake = false;
-        public double setpoint;
-        public double feederVelocityRadPerSec;
+        public double setpointRPM;
         public double feederPositionError;
     }
 
