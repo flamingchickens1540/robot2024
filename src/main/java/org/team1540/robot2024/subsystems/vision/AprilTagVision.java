@@ -4,7 +4,6 @@ import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Pose3d;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import org.littletonrobotics.junction.Logger;
-import org.team1540.robot2024.Constants;
 import org.team1540.robot2024.util.vision.TimestampedVisionPose;
 import org.team1540.robot2024.util.vision.VisionPoseAcceptor;
 
@@ -97,8 +96,6 @@ public class AprilTagVision extends SubsystemBase {
      * too fast
      */
     public Optional<TimestampedVisionPose> getEstimatedPose() {
-        if (Constants.currentMode == Constants.Mode.SIM) return Optional.empty();
-
         boolean useFrontPose = poseAcceptor.shouldAcceptVision(frontPose);
         boolean useRearPose = poseAcceptor.shouldAcceptVision(rearPose);
 

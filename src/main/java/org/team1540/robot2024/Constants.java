@@ -4,6 +4,7 @@ import edu.wpi.first.apriltag.AprilTagFieldLayout;
 import edu.wpi.first.apriltag.AprilTagFields;
 import edu.wpi.first.math.geometry.Pose3d;
 import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.geometry.Rotation3d;
 import edu.wpi.first.math.util.Units;
 
 import java.io.IOException;
@@ -72,8 +73,8 @@ public final class Constants {
         public static final String REAR_CAMERA_NAME = "limelight-rear";
 
         // TODO: measure these offsets
-        public static final Pose3d FRONT_CAMERA_POSE = new Pose3d();
-        public static final Pose3d REAR_CAMERA_POSE = new Pose3d();
+        public static final Pose3d FRONT_CAMERA_POSE = new Pose3d(0, 0, 0.5, new Rotation3d());
+        public static final Pose3d REAR_CAMERA_POSE = new Pose3d(0, 0, 0.5, new Rotation3d(0, 0, Math.PI));
 
         // TODO: find these values
         public static final double MAX_VISION_DELAY_SECS = 0.08;
