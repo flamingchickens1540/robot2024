@@ -1,8 +1,12 @@
 package org.team1540.robot2024;
 
+import edu.wpi.first.apriltag.AprilTagFieldLayout;
+import edu.wpi.first.apriltag.AprilTagFields;
 import edu.wpi.first.math.geometry.Pose3d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.util.Units;
+
+import java.io.IOException;
 
 /**
  * The Constants class provides a convenient place for teams to hold robot-wide numerical or boolean
@@ -78,6 +82,15 @@ public final class Constants {
         public static final double MIN_ACCEPTED_NUM_TAGS = 1;
         public static final double MAX_ACCEPTED_AVG_TAG_DIST_METERS = 8.0;
         public static final double MAX_ACCEPTED_ELEVATOR_SPEED_MPS = 0.05;
+
+        public static final AprilTagFieldLayout SIM_APRILTAG_LAYOUT;
+        static {
+            try {
+                SIM_APRILTAG_LAYOUT = AprilTagFieldLayout.loadFromResource(AprilTagFields.k2024Crescendo.m_resourceFile);
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
+        }
     }
 
     public static class Elevator {

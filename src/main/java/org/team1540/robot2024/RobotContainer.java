@@ -17,6 +17,7 @@ import org.team1540.robot2024.subsystems.shooter.*;
 import org.team1540.robot2024.subsystems.vision.AprilTagVision;
 import org.team1540.robot2024.subsystems.vision.AprilTagVisionIO;
 import org.team1540.robot2024.subsystems.vision.AprilTagVisionIOLimelight;
+import org.team1540.robot2024.subsystems.vision.AprilTagVisionIOSim;
 import org.team1540.robot2024.util.PhoenixTimeSyncSignalRefresher;
 import org.team1540.robot2024.util.swerve.SwerveFactory;
 import org.littletonrobotics.junction.networktables.LoggedDashboardChooser;
@@ -84,11 +85,11 @@ public class RobotContainer {
                 shooter = new Shooter(new ShooterPivotIOSim(), new FlywheelsIOSim());
                 aprilTagVision =
                         new AprilTagVision(
-                                new AprilTagVisionIO() {},
-                                new AprilTagVisionIO() {},
-                                (ignored) -> {},
-                                () -> 0.0,
-                                new VisionPoseAcceptor(drivetrain::getChassisSpeeds, () -> 0.0));
+                                new AprilTagVisionIOSim(Constants.Vision.FRONT_CAMERA_NAME, Constants.Vision.FRONT_CAMERA_POSE, drivetrain::getPose),
+                                new AprilTagVisionIOSim(Constants.Vision.REAR_CAMERA_NAME, Constants.Vision.REAR_CAMERA_POSE, drivetrain::getPose),
+                                ignored -> {},
+                                () -> 0.0, // TODO: ACTUALLY GET ELEVATOR HEIGHT HERE
+                                new VisionPoseAcceptor(drivetrain::getChassisSpeeds, () -> 0.0)); // TODO: ACTUALLY GET ELEVATOR VELOCITY HERE
                 break;
 
             default:
