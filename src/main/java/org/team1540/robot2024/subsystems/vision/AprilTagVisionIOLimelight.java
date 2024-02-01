@@ -29,7 +29,6 @@ public class AprilTagVisionIOLimelight implements AprilTagVisionIO {
                         Math.toRadians(results.botpose_wpiblue[5])
                 )
         ).toPose2d();
-        inputs.hasTarget = results.valid;
 
         inputs.seenTagIDs = new int[fiducialTargets.length];
         for (int i = 0; i < fiducialTargets.length; i++)

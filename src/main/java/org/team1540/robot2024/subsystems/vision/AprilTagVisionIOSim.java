@@ -65,7 +65,6 @@ public class AprilTagVisionIOSim implements AprilTagVisionIO {
             inputs.estimatedPoseMeters = lastEstimatedPose;
             inputs.lastMeasurementTimestampSecs = estimatedPose.get().timestampSeconds;
         }
-        inputs.hasTarget = !trackedTargets.isEmpty();
         inputs.seenTagIDs = new int[trackedTargets.size()];
         inputs.tagPosesMeters = new Pose2d[trackedTargets.size()];
         for (int i = 0; i < trackedTargets.size(); i++) {
