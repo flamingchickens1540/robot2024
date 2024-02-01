@@ -92,6 +92,11 @@ public final class Constants {
                 throw new RuntimeException(e);
             }
         }
+        public static final int SIM_RES_WIDTH = 1280;
+        public static final int SIM_RES_HEIGHT = 960;
+        public static final Rotation2d SIM_DIAGONAL_FOV = Rotation2d.fromDegrees(100);
+        public static final double SIM_FPS = 14.5;
+        public static final double SIM_AVG_LATENCY_MS = 67.0;
     }
 
     public static class Elevator {

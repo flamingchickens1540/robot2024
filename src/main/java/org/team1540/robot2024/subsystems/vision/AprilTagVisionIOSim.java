@@ -2,7 +2,6 @@ package org.team1540.robot2024.subsystems.vision;
 
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Pose3d;
-import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Transform3d;
 import org.photonvision.EstimatedRobotPose;
 import org.photonvision.PhotonCamera;
@@ -35,9 +34,9 @@ public class AprilTagVisionIOSim implements AprilTagVisionIO {
         visionSystemSim.addAprilTags(SIM_APRILTAG_LAYOUT);
 
         SimCameraProperties cameraProps = new SimCameraProperties();
-        cameraProps.setCalibration(1280, 960, Rotation2d.fromDegrees(100));
-        cameraProps.setFPS(14.5);
-        cameraProps.setAvgLatencyMs(67.0);
+        cameraProps.setCalibration(SIM_RES_WIDTH, SIM_RES_HEIGHT, SIM_DIAGONAL_FOV);
+        cameraProps.setFPS(SIM_FPS);
+        cameraProps.setAvgLatencyMs(SIM_AVG_LATENCY_MS);
         camera = new PhotonCamera(name);
         cameraSim = new PhotonCameraSim(camera, cameraProps);
 
