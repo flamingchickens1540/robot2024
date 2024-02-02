@@ -14,17 +14,15 @@ public class TrampCommand extends Command {
     }
 
     @Override
-    public void initialize() {
+    public void initialize() {}
+
+    @Override
+    public void execute() {
         if (tramp.isBeamBreakBlocked()) {
             tramp.stopTramp();
         } else {
             tramp.scoreTrampCommand();
         }
-    }
-
-    @Override
-    public void execute() {
-        tramp.scoreTrampCommand();
     }
 
     @Override
