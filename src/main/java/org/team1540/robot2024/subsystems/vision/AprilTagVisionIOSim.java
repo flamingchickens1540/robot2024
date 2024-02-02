@@ -1,5 +1,7 @@
 package org.team1540.robot2024.subsystems.vision;
 
+import edu.wpi.first.apriltag.AprilTagFieldLayout;
+import edu.wpi.first.apriltag.AprilTagFields;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Pose3d;
 import edu.wpi.first.math.geometry.Transform3d;
@@ -11,6 +13,7 @@ import org.photonvision.simulation.SimCameraProperties;
 import org.photonvision.simulation.VisionSystemSim;
 import org.photonvision.targeting.PhotonTrackedTarget;
 
+import java.io.IOException;
 import java.util.List;
 import java.util.Optional;
 import java.util.function.Supplier;
@@ -31,7 +34,14 @@ public class AprilTagVisionIOSim implements AprilTagVisionIO {
     public AprilTagVisionIOSim(String name, Pose3d cameraOffsetMeters, Supplier<Pose2d> poseSupplier) {
         this.visionSystemSim = new VisionSystemSim(name);
         this.poseSupplier = poseSupplier;
-        visionSystemSim.addAprilTags(SIM_APRILTAG_LAYOUT);
+
+        AprilTagFieldLayout aprilTagLayout;
+        try {
+            aprilTagLayout = AprilTagFieldLayout.loadFromResource(AprilTagFields.k2024Crescendo.m_resourceFile);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+        visionSystemSim.addAprilTags(aprilTagLayout);
 
         SimCameraProperties cameraProps = new SimCameraProperties();
         cameraProps.setCalibration(SIM_RES_WIDTH, SIM_RES_HEIGHT, SIM_DIAGONAL_FOV);
@@ -44,7 +54,7 @@ public class AprilTagVisionIOSim implements AprilTagVisionIO {
         visionSystemSim.addCamera(cameraSim, cameraTransform);
 
         photonEstimator = new PhotonPoseEstimator(
-                SIM_APRILTAG_LAYOUT,
+                aprilTagLayout,
                 PhotonPoseEstimator.PoseStrategy.MULTI_TAG_PNP_ON_COPROCESSOR,
                 camera,
                 cameraTransform);
