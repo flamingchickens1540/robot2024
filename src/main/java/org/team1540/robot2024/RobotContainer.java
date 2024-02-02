@@ -139,6 +139,7 @@ public class RobotContainer {
         copilot.a().onTrue(shooter.spinUpCommand(leftFlywheelSetpoint.get(), rightFlywheelSetpoint.get()))
                 .onFalse(Commands.runOnce(shooter::stopFlywheels, shooter));
 
+        // these are just for testing the feeder
         copilot.x().onTrue(indexer.feedToAmp());
         copilot.y().onTrue(indexer.feedToShooter());
         driver.a().onTrue(new IntakeCommand(indexer));

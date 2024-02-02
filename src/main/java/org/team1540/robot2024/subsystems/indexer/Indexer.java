@@ -40,19 +40,11 @@ public class Indexer extends SubsystemBase {
     }
 
     public Command feedToAmp() {
-        return Commands.sequence(
-                Commands.runOnce(() -> indexerIO.setFeederVelocity(-600), this),
-                Commands.waitSeconds(5),
-                Commands.runOnce(() -> indexerIO.setFeederVelocity(0), this)
-        );
+        return Commands.runOnce(() -> indexerIO.setFeederVelocity(-600), this);
     }
 
     public Command feedToShooter() {
-        return Commands.sequence(
-                Commands.runOnce(() -> indexerIO.setFeederVelocity(1200), this),
-                Commands.waitSeconds(1),
-                Commands.runOnce(() -> indexerIO.setFeederVelocity(0), this)
-        );
+        return Commands.runOnce(() -> indexerIO.setFeederVelocity(1200), this);
     }
 
 
