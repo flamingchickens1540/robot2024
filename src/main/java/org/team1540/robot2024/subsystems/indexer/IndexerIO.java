@@ -14,7 +14,7 @@ public interface IndexerIO {
         public double feederVelocityRPM;
         public boolean noteInIntake = false;
         public double setpointRPM;
-        public double feederPositionError;
+        public double feederVelocityError;
     }
 
     /**
@@ -28,6 +28,6 @@ public interface IndexerIO {
 
     default void setFeederVelocity(double velocity) {}
 
-    default void configurePID(double p, double i, double d) {}
+    default void configureFeederPID(double p, double i, double d) {}
 
 }

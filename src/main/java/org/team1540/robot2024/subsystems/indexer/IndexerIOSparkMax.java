@@ -10,7 +10,7 @@ import static org.team1540.robot2024.Constants.Indexer.*;
 public class IndexerIOSparkMax implements IndexerIO {
     private final CANSparkMax intakeMotor = new CANSparkMax(INTAKE_ID, CANSparkLowLevel.MotorType.kBrushless);
     private final CANSparkMax feederMotor = new CANSparkMax(FEEDER_ID, CANSparkLowLevel.MotorType.kBrushless);
-    private final DigitalInput indexerBeamBreak = new DigitalInput(0);
+    private final DigitalInput indexerBeamBreak = new DigitalInput(BEAM_BREAK_ID);
     private final SparkPIDController feederPID;
     private final SimpleMotorFeedforward feederFF = new SimpleMotorFeedforward(FEEDER_KS, FEEDER_KV);
     private double setpointRPM;
@@ -41,7 +41,7 @@ public class IndexerIOSparkMax implements IndexerIO {
         inputs.feederVelocityRPM = feederMotor.getEncoder().getVelocity();
         inputs.noteInIntake = indexerBeamBreak.get();
         inputs.setpointRPM = setpointRPM;
-        inputs.feederPositionError = setpointRPM - feederMotor.getEncoder().getVelocity();
+        inputs.feederVelocityError = setpointRPM - feederMotor.getEncoder().getVelocity();
     }
 
     @Override
@@ -64,5 +64,12 @@ public class IndexerIOSparkMax implements IndexerIO {
                 feederFF.calculate(velocity),
                 SparkPIDController.ArbFFUnits.kVoltage
         );
+    }
+
+    @Override
+    public void configureFeederPID(double p, double i, double d) {
+        feederPID.setP(p);
+        feederPID.setI(i);
+        feederPID.setD(d);
     }
 }

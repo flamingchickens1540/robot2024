@@ -12,19 +12,19 @@ import static org.team1540.robot2024.Constants.Indexer.*;
 public class IndexerIOSim implements IndexerIO {
 
 
-    private final DCMotorSim intakeSim = new DCMotorSim(DCMotor.getNEO(1), INTAKE_GEAR_RATIO,0.025);
-    private final DCMotorSim feederSim = new DCMotorSim(DCMotor.getNEO(1), FEEDER_GEAR_RATIO,0.025);
+    private final DCMotorSim intakeSim = new DCMotorSim(DCMotor.getNEO(1), INTAKE_GEAR_RATIO, INTAKE_MOI);
+    private final DCMotorSim feederSim = new DCMotorSim(DCMotor.getNEO(1), FEEDER_GEAR_RATIO, FEEDER_MOI);
 //    private final SimDeviceSim beamBreakSim = new SimDeviceSim("Indexer Beam Break");
     private final PIDController feederSimPID = new PIDController(FEEDER_KP, FEEDER_KI,FEEDER_KD);
     private boolean isClosedLoop = true;
     private double intakeVoltage = 0.0;
     private double feederVoltage = 0.0;
-    private double feederVelocityRPS = 0.0;
+    private double feederSetpointRPS = 0.0;
 
     @Override
     public void updateInputs(IndexerIOInputs inputs) {
         if (isClosedLoop) {
-            feederVoltage = MathUtil.clamp(feederSimPID.calculate(feederSim.getAngularVelocityRPM() / 60, feederVelocityRPS), -12.0, 12.0);
+            feederVoltage = MathUtil.clamp(feederSimPID.calculate(feederSim.getAngularVelocityRPM() / 60, feederSetpointRPS), -12.0, 12.0);
         }
         intakeSim.setInputVoltage(intakeVoltage);
         feederSim.setInputVoltage(feederVoltage);
@@ -38,7 +38,7 @@ public class IndexerIOSim implements IndexerIO {
         inputs.feederVelocityRPM = feederSim.getAngularVelocityRPM();
 //        inputs.noteInIntake = beamBreakSim.getBoolean("Indexer Beam Break").get();
         inputs.setpointRPM = feederSimPID.getSetpoint() * 60;
-        inputs.feederPositionError = feederSimPID.getPositionError();
+        inputs.feederVelocityError = feederSimPID.getPositionError();
     }
 
     @Override
@@ -47,7 +47,7 @@ public class IndexerIOSim implements IndexerIO {
     }
 
     @Override
-    public void configurePID(double p, double i, double d) {
+    public void configureFeederPID(double p, double i, double d) {
         feederSimPID.setPID(p, i, d);
     }
 
@@ -60,7 +60,7 @@ public class IndexerIOSim implements IndexerIO {
     public void setFeederVelocity(double velocity) {
         isClosedLoop = true;
         feederSimPID.reset();
-        feederVelocityRPS = velocity / 60;
+        feederSetpointRPS = velocity / 60;
     }
 
 }

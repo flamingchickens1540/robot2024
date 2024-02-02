@@ -20,7 +20,7 @@ public class IntakeCommand extends Command {
 
     @Override
     public boolean isFinished() {
-        return indexer.noteInIndexer();
+        return indexer.isNotePresent();
     }
 
     @Override
