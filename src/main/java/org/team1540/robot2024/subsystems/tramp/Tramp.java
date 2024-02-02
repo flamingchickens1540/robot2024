@@ -20,19 +20,20 @@ public class Tramp extends SubsystemBase {
     public boolean isBeamBreakBlocked() {
         return inputs.breamBreakTripped;
     }
+
     @Override
     public void periodic() {
         io.updateInputs(inputs);
         Logger.processInputs("Tramp", inputs);
     }
 
-    public Command scoreInAmpCommand() {
-        //TODO: Tune the percentage
+    public Command scoreTrampCommand() {
+        // TODO: Tune the percentage
         return Commands.runOnce(() -> setPercent(0.5), this);
     }
-    public Command scoreInTrapCommand() {
-        //TODO: Tune the percentage
-        return Commands.runOnce(() -> setPercent(0.5), this);
+    
+    public void end() {
+        io.setVoltage(0);
     }
 
 }
