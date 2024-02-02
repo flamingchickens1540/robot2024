@@ -31,8 +31,8 @@ public class Tramp extends SubsystemBase {
         // TODO: Tune the percentage
         return Commands.runOnce(() -> setPercent(0.5), this);
     }
-    
-    public void end() {
+
+    public void stopTramp() {
         io.setVoltage(0);
     }
 

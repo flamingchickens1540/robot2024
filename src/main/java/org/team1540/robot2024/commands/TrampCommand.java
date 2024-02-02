@@ -13,16 +13,22 @@ public class TrampCommand extends Command {
         addRequirements(tramp);
     }
 
-    public void getNote(Tramp tramp) {
+    @Override
+    public void initialize() {
         if (tramp.isBeamBreakBlocked()) {
-            tramp.end();
+            tramp.stopTramp();
         } else {
             tramp.scoreTrampCommand();
         }
     }
 
-    public void shootTramp(Tramp tramp) {
+    @Override
+    public void execute() {
         tramp.scoreTrampCommand();
     }
 
+    @Override
+    public void end(boolean interrupted) {
+        tramp.stopTramp();
+    }
 }
