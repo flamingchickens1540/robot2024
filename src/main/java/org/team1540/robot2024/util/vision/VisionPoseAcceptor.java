@@ -31,7 +31,7 @@ public class VisionPoseAcceptor {
         if (visionPose.getAverageTagDistance() > MAX_ACCEPTED_AVG_TAG_DIST_METERS) return false;
 
         // Do not accept poses taken when the robot has too much rotational or translational velocity
-        boolean rotatingTooFast = robotVelocity.omegaRadiansPerSecond > MAX_ACCEPTED_ROT_SPEED_RAD_PER_SEC;
+        boolean rotatingTooFast = Math.abs(robotVelocity.omegaRadiansPerSecond) > MAX_ACCEPTED_ROT_SPEED_RAD_PER_SEC;
         boolean translatingTooFast =
                 Math.hypot(robotVelocity.vxMetersPerSecond, robotVelocity.vyMetersPerSecond)
                         > MAX_ACCEPTED_LINEAR_SPEED_MPS;
