@@ -34,11 +34,12 @@ public class RobotContainer {
     // Subsystems
     public final Drivetrain drivetrain;
     public final Shooter shooter;
+    public final Indexer indexer;
 
     // Controller
     public final CommandXboxController driver = new CommandXboxController(0);
     public final CommandXboxController copilot = new CommandXboxController(1);
-    public final Indexer indexer;
+
 
     // Dashboard inputs
     public final LoggedDashboardChooser<Command> autoChooser;
