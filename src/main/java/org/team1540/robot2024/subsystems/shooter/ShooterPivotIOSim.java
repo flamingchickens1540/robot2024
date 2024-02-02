@@ -28,7 +28,7 @@ public class ShooterPivotIOSim implements ShooterPivotIO {
     private final ArmFeedforward feedforward = new ArmFeedforward(KS, KG, KV);
 
     private boolean isClosedLoop;
-    private TrapezoidProfile.State setpoint;
+    private TrapezoidProfile.State goalState;
 
     private double appliedVolts;
 
@@ -36,7 +36,7 @@ public class ShooterPivotIOSim implements ShooterPivotIO {
     public void updateInputs(ShooterPivotIOInputs inputs) {
         if (isClosedLoop) {
             appliedVolts =
-                    controller.calculate(Units.radiansToRotations(sim.getAngleRads()), setpoint)
+                    controller.calculate(Units.radiansToRotations(sim.getAngleRads()), goalState)
                     + feedforward.calculate(
                             Units.rotationsToRadians(controller.getSetpoint().position),
                             controller.getSetpoint().velocity);
@@ -58,7 +58,7 @@ public class ShooterPivotIOSim implements ShooterPivotIO {
                 Units.radiansToRotations(sim.getVelocityRadPerSec())
         );
         isClosedLoop = true;
-        setpoint = new TrapezoidProfile.State(position.getRadians(), 0);
+        goalState = new TrapezoidProfile.State(position.getRadians(), 0);
     }
 
     @Override
