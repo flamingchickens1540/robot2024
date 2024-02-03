@@ -3,7 +3,7 @@ package org.team1540.robot2024.commands;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Subsystem;
-import org.team1540.robot2024.util.PolynomialRegression;
+import org.team1540.robot2024.util.math.PolynomialRegression;
 
 import java.util.LinkedList;
 import java.util.List;
