@@ -13,6 +13,10 @@ import org.littletonrobotics.junction.networktables.LoggedDashboardNumber;
 import org.team1540.robot2024.commands.FeedForwardCharacterization;
 import org.team1540.robot2024.commands.SwerveDriveCommand;
 import org.team1540.robot2024.subsystems.drive.*;
+import org.team1540.robot2024.subsystems.tramp.Tramp;
+import org.team1540.robot2024.subsystems.tramp.TrampIO;
+import org.team1540.robot2024.subsystems.tramp.TrampIOSim;
+import org.team1540.robot2024.subsystems.tramp.TrampIOSparkMax;
 import org.team1540.robot2024.subsystems.shooter.*;
 import org.team1540.robot2024.subsystems.vision.AprilTagVision;
 import org.team1540.robot2024.subsystems.vision.AprilTagVisionIO;
@@ -34,6 +38,7 @@ import static org.team1540.robot2024.Constants.SwerveConfig;
 public class RobotContainer {
     // Subsystems
     public final Drivetrain drivetrain;
+    public final Tramp tramp;
     public final Shooter shooter;
     public final AprilTagVision aprilTagVision;
 
@@ -64,6 +69,7 @@ public class RobotContainer {
                                 new ModuleIOTalonFX(SwerveFactory.getModuleMotors(SwerveConfig.FRONT_RIGHT, SwerveFactory.SwerveCorner.FRONT_RIGHT), odometrySignalRefresher),
                                 new ModuleIOTalonFX(SwerveFactory.getModuleMotors(SwerveConfig.BACK_LEFT, SwerveFactory.SwerveCorner.BACK_LEFT), odometrySignalRefresher),
                                 new ModuleIOTalonFX(SwerveFactory.getModuleMotors(SwerveConfig.BACK_RIGHT, SwerveFactory.SwerveCorner.BACK_RIGHT), odometrySignalRefresher));
+                tramp = new Tramp(new TrampIOSparkMax());
                 shooter = new Shooter(new ShooterPivotIOTalonFX(), new FlywheelsIOTalonFX());
                 aprilTagVision = new AprilTagVision(
                         new AprilTagVisionIOLimelight(Constants.Vision.FRONT_CAMERA_NAME, Constants.Vision.FRONT_CAMERA_POSE),
@@ -72,7 +78,6 @@ public class RobotContainer {
                         () -> 0.0, // TODO: ACTUALLY GET ELEVATOR HEIGHT HERE
                         new VisionPoseAcceptor(drivetrain::getChassisSpeeds, () -> 0.0)); // TODO: ACTUALLY GET ELEVATOR VELOCITY HERE
                 break;
-
             case SIM:
                 // Sim robot, instantiate physics sim IO implementations
                 drivetrain =
@@ -82,6 +87,7 @@ public class RobotContainer {
                                 new ModuleIOSim(),
                                 new ModuleIOSim(),
                                 new ModuleIOSim());
+                tramp = new Tramp(new TrampIOSim());
                 shooter = new Shooter(new ShooterPivotIOSim(), new FlywheelsIOSim());
                 aprilTagVision =
                         new AprilTagVision(
@@ -91,7 +97,6 @@ public class RobotContainer {
                                 () -> 0.0, // TODO: ACTUALLY GET ELEVATOR HEIGHT HERE
                                 new VisionPoseAcceptor(drivetrain::getChassisSpeeds, () -> 0.0)); // TODO: ACTUALLY GET ELEVATOR VELOCITY HERE
                 break;
-
             default:
                 // Replayed robot, disable IO implementations
                 drivetrain =
@@ -109,6 +114,7 @@ public class RobotContainer {
                                 (ignored) -> {},
                                 () -> 0.0,
                                 new VisionPoseAcceptor(drivetrain::getChassisSpeeds, () -> 0.0));
+                tramp = new Tramp(new TrampIO() {});
                 break;
         }
 
