@@ -14,9 +14,14 @@ import org.team1540.robot2024.commands.FeedForwardCharacterization;
 import org.team1540.robot2024.commands.SwerveDriveCommand;
 import org.team1540.robot2024.subsystems.drive.*;
 import org.team1540.robot2024.subsystems.shooter.*;
+import org.team1540.robot2024.subsystems.vision.AprilTagVision;
+import org.team1540.robot2024.subsystems.vision.AprilTagVisionIO;
+import org.team1540.robot2024.subsystems.vision.AprilTagVisionIOLimelight;
+import org.team1540.robot2024.subsystems.vision.AprilTagVisionIOSim;
 import org.team1540.robot2024.util.PhoenixTimeSyncSignalRefresher;
 import org.team1540.robot2024.util.swerve.SwerveFactory;
 import org.littletonrobotics.junction.networktables.LoggedDashboardChooser;
+import org.team1540.robot2024.util.vision.VisionPoseAcceptor;
 
 import static org.team1540.robot2024.Constants.SwerveConfig;
 
@@ -30,6 +35,7 @@ public class RobotContainer {
     // Subsystems
     public final Drivetrain drivetrain;
     public final Shooter shooter;
+    public final AprilTagVision aprilTagVision;
 
     // Controller
     public final CommandXboxController driver = new CommandXboxController(0);
@@ -59,6 +65,12 @@ public class RobotContainer {
                                 new ModuleIOTalonFX(SwerveFactory.getModuleMotors(SwerveConfig.BACK_LEFT, SwerveFactory.SwerveCorner.BACK_LEFT), odometrySignalRefresher),
                                 new ModuleIOTalonFX(SwerveFactory.getModuleMotors(SwerveConfig.BACK_RIGHT, SwerveFactory.SwerveCorner.BACK_RIGHT), odometrySignalRefresher));
                 shooter = new Shooter(new ShooterPivotIOTalonFX(), new FlywheelsIOTalonFX());
+                aprilTagVision = new AprilTagVision(
+                        new AprilTagVisionIOLimelight(Constants.Vision.FRONT_CAMERA_NAME, Constants.Vision.FRONT_CAMERA_POSE),
+                        new AprilTagVisionIOLimelight(Constants.Vision.REAR_CAMERA_NAME, Constants.Vision.REAR_CAMERA_POSE),
+                        drivetrain::addVisionMeasurement,
+                        () -> 0.0, // TODO: ACTUALLY GET ELEVATOR HEIGHT HERE
+                        new VisionPoseAcceptor(drivetrain::getChassisSpeeds, () -> 0.0)); // TODO: ACTUALLY GET ELEVATOR VELOCITY HERE
                 break;
 
             case SIM:
@@ -71,6 +83,13 @@ public class RobotContainer {
                                 new ModuleIOSim(),
                                 new ModuleIOSim());
                 shooter = new Shooter(new ShooterPivotIOSim(), new FlywheelsIOSim());
+                aprilTagVision =
+                        new AprilTagVision(
+                                new AprilTagVisionIOSim(Constants.Vision.FRONT_CAMERA_NAME, Constants.Vision.FRONT_CAMERA_POSE, drivetrain::getPose),
+                                new AprilTagVisionIOSim(Constants.Vision.REAR_CAMERA_NAME, Constants.Vision.REAR_CAMERA_POSE, drivetrain::getPose),
+                                ignored -> {},
+                                () -> 0.0, // TODO: ACTUALLY GET ELEVATOR HEIGHT HERE
+                                new VisionPoseAcceptor(drivetrain::getChassisSpeeds, () -> 0.0)); // TODO: ACTUALLY GET ELEVATOR VELOCITY HERE
                 break;
 
             default:
@@ -83,6 +102,13 @@ public class RobotContainer {
                                 new ModuleIO() {},
                                 new ModuleIO() {});
                 shooter = new Shooter(new ShooterPivotIO() {}, new FlywheelsIO() {});
+                aprilTagVision =
+                        new AprilTagVision(
+                                new AprilTagVisionIO() {},
+                                new AprilTagVisionIO() {},
+                                (ignored) -> {},
+                                () -> 0.0,
+                                new VisionPoseAcceptor(drivetrain::getChassisSpeeds, () -> 0.0));
                 break;
         }
 
