@@ -1,7 +1,8 @@
 package org.team1540.robot2024.commands.climb;
 
+import org.team1540.robot2024.subsystems.tramp.Tramp;
+
 import edu.wpi.first.wpilibj2.command.Command;
-import org.team1540.robot2024.subsystems.fakesubsystems.Tramp;
 
 //TODO: Write this command Tramp people :D
 public class ScoreInTrap extends Command {

@@ -8,7 +8,7 @@ import org.team1540.robot2024.Constants.Elevator.ElevatorState;
 import org.team1540.robot2024.commands.elevator.ElevatorSetpointCommand;
 import org.team1540.robot2024.subsystems.elevator.Elevator;
 import org.team1540.robot2024.subsystems.fakesubsystems.Hooks;
-import org.team1540.robot2024.subsystems.fakesubsystems.Tramp;
+import org.team1540.robot2024.subsystems.tramp.Tramp;
 
 public class TrapAndClimbSequence extends SequentialCommandGroup {
 

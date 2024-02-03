@@ -15,7 +15,7 @@ public class ElevatorIOSim implements ElevatorIO{
             new ElevatorSim(
                 DCMotor.getFalcon500Foc(2),
                     GEAR_RATIO, SIM_CARRIAGE_MASS_KG,
-                    SIM_DRUM_RADIUS_METERS,ELEVATOR_MINIMUM_HEIGHT,
+                    SPROCKET_RADIUS_M,ELEVATOR_MINIMUM_HEIGHT,
                     ELEVATOR_MAX_HEIGHT,
                     true,
                     ELEVATOR_MINIMUM_HEIGHT);
@@ -43,17 +43,17 @@ public class ElevatorIOSim implements ElevatorIO{
         elevatorSim.update(LOOP_PERIOD_SECS);
 
         inputs.positionMeters = elevatorSim.getPositionMeters();
-        inputs.velocityRPM = elevatorSim.getVelocityMetersPerSecond();
+        inputs.velocityMPS = elevatorSim.getVelocityMetersPerSecond();
         inputs.voltage = elevatorAppliedVolts;
         inputs.current = new double[]{elevatorSim.getCurrentDrawAmps()};
-        inputs.upperLimit = elevatorSim.hasHitUpperLimit();
-        inputs.lowerLimit = elevatorSim.hasHitLowerLimit();
+        inputs.atUpperLimit = elevatorSim.hasHitUpperLimit();
+        inputs.atLowerLimit = elevatorSim.hasHitLowerLimit();
     }
 
     @Override
     public void setVoltage(double volts) {
         isClosedLoop = false;
-        elevatorAppliedVolts = MathUtil.clamp(volts, -12.0, 12.0); //TODO: check this range
+        elevatorAppliedVolts = MathUtil.clamp(volts, -12.0, 12.0);
     }
     @Override
     public void setPositionMeters(double position) {

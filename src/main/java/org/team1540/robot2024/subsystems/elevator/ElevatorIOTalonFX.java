@@ -11,14 +11,15 @@ import com.ctre.phoenix6.controls.Follower;
 import com.ctre.phoenix6.controls.MotionMagicVoltage;
 import com.ctre.phoenix6.hardware.TalonFX;
 import com.ctre.phoenix6.signals.ForwardLimitValue;
+import com.ctre.phoenix6.signals.GravityTypeValue;
 import com.ctre.phoenix6.signals.NeutralModeValue;
 import com.ctre.phoenix6.signals.ReverseLimitValue;
 
 public class ElevatorIOTalonFX implements ElevatorIO {
 
     private final MotionMagicVoltage motionMagicOut = new MotionMagicVoltage(0).withEnableFOC(true);
-    private final TalonFX leader = new TalonFX(Constants.Elevator.TALON_ID_1);
-    private final TalonFX follower = new TalonFX(Constants.Elevator.TALON_ID_2);
+    private final TalonFX leader = new TalonFX(Constants.Elevator.LEADER_ID);
+    private final TalonFX follower = new TalonFX(Constants.Elevator.FOLLOWER_ID);
 
     private final StatusSignal<Double> leaderPosition = leader.getPosition();
     private final StatusSignal<Double> leaderVelocity = leader.getVelocity();
@@ -54,12 +55,13 @@ public class ElevatorIOTalonFX implements ElevatorIO {
         slot0Configs.kI = Constants.Elevator.KI;
         slot0Configs.kD = Constants.Elevator.KD;
         slot0Configs.kG = Constants.Elevator.KG;
+        slot0Configs.GravityType = GravityTypeValue.Elevator_Static;
 
         // setting Motion Magic Settings
         MotionMagicConfigs motionMagicConfigs = config.MotionMagic;
         motionMagicConfigs.MotionMagicCruiseVelocity = Constants.Elevator.CRUISE_VELOCITY_MPS;
         motionMagicConfigs.MotionMagicAcceleration = Constants.Elevator.MAXIMUM_ACCELERATION_MPS2;
-        motionMagicConfigs.MotionMagicJerk = Constants.Elevator.JERK_MP3;
+        motionMagicConfigs.MotionMagicJerk = Constants.Elevator.JERK_MPS3;
 
         config.HardwareLimitSwitch.ForwardLimitEnable = true;
         config.HardwareLimitSwitch.ReverseLimitEnable = true;
@@ -80,11 +82,11 @@ public class ElevatorIOTalonFX implements ElevatorIO {
                 bottomLimitStatus);
 
         inputs.positionMeters = leaderPosition.getValue();
-        inputs.velocityRPM = leaderVelocity.getValue();
+        inputs.velocityMPS = leaderVelocity.getValue();
         inputs.voltage = leaderAppliedVolts.getValue();
         inputs.current = new double[] {leaderCurrent.getValue(), followerCurrent.getValue()};
-        inputs.upperLimit = topLimitStatus.getValue() == ForwardLimitValue.Open;
-        inputs.lowerLimit = bottomLimitStatus.getValue() == ReverseLimitValue.Open;
+        inputs.atUpperLimit = topLimitStatus.getValue() == ForwardLimitValue.ClosedToGround;
+        inputs.atLowerLimit = bottomLimitStatus.getValue() == ReverseLimitValue.ClosedToGround;
     }
 
     @Override
@@ -94,6 +96,6 @@ public class ElevatorIOTalonFX implements ElevatorIO {
 
     @Override
     public void setVoltage(double voltage) {
-        leader.set(voltage*12);
+        leader.set(voltage);
     }
 }

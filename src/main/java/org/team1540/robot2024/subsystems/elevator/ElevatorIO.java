@@ -6,11 +6,11 @@ public interface ElevatorIO {
     @AutoLog
     class ElevatorIOInputs {
         public double positionMeters = 0.0;
-        public double velocityRPM = 0.0;
+        public double velocityMPS = 0.0;
         public double voltage = 0.0;
         public double[] current = new double[] {};
-        public boolean upperLimit = false;
-        public boolean lowerLimit = false;
+        public boolean atUpperLimit = false;
+        public boolean atLowerLimit = false;
     }
 
     default void updateInputs(ElevatorIOInputs inputs) {}

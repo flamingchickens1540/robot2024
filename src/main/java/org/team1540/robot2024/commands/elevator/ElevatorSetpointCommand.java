@@ -12,11 +12,10 @@ public class ElevatorSetpointCommand extends Command {
         this.elevator = elevator;
         this.state = state;
         addRequirements(elevator);
-        System.out.println("Setting point, get rekt");
     }
     @Override
     public void initialize() {
-        elevator.goToSetpoint(state.heightMeters);
+        elevator.setElevatorPosition(state.heightMeters);
     }
 
     @Override

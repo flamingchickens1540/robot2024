@@ -16,50 +16,43 @@ import com.ctre.phoenix6.Utils;
 import static org.team1540.robot2024.Constants.Elevator.*;
 
 public class Elevator extends SubsystemBase {
-    private final ElevatorIO elevatorIO;
-    private final ElevatorIOInputsAutoLogged elevatorInputs = new ElevatorIOInputsAutoLogged();
-    private final AverageFilter elevatorPositionFilter = new AverageFilter(10);
+    private final ElevatorIO io;
+    private final ElevatorIOInputsAutoLogged inputs = new ElevatorIOInputsAutoLogged();
+    private final AverageFilter positionFilter = new AverageFilter(10);
     private double setpointMeters;
 
 
     public Elevator(ElevatorIO elevatorIO) {
-        this.elevatorIO = elevatorIO;
+        this.io = elevatorIO;
     }
 
     // periodic
     public void periodic(){
-        elevatorIO.updateInputs(elevatorInputs);
-        Logger.processInputs("Elevator", elevatorInputs);
-        MechanismVisualiser.setElevatorPosition(elevatorInputs.positionMeters);
+        io.updateInputs(inputs);
+        Logger.processInputs("Elevator", inputs);
+        MechanismVisualiser.setElevatorPosition(inputs.positionMeters);
 
-        elevatorPositionFilter.add(elevatorInputs.positionMeters);
-
-        // if (elevatorInputs.lowerLimit) {
-        //     setpointMeters = Constants.Elevator.ELEVATOR_MINIMUM_HEIGHT;
-        // }
-        // else if (elevatorInputs.upperLimit) {
-        //     setpointMeters = Constants.Elevator.ELEVATOR_MAX_HEIGHT;
-        // }
+        positionFilter.add(inputs.positionMeters);
     }
     
-    public void goToSetpoint(double newSetpointMeters) {
-        newSetpointMeters = MathUtil.clamp(newSetpointMeters, Constants.Elevator.ELEVATOR_MINIMUM_HEIGHT, Constants.Elevator.ELEVATOR_MAX_HEIGHT);
-        setpointMeters = newSetpointMeters;
-        elevatorIO.setPositionMeters(setpointMeters);
+    public void setElevatorPosition(double positionMeters) {
+        positionMeters = MathUtil.clamp(positionMeters, Constants.Elevator.ELEVATOR_MINIMUM_HEIGHT, Constants.Elevator.ELEVATOR_MAX_HEIGHT);
+        setpointMeters = positionMeters;
+        io.setPositionMeters(setpointMeters);
 
-        elevatorPositionFilter.clear();
+        positionFilter.clear();
     }
 
     public boolean isAtSetpoint() {
-        return MathUtil.isNear(setpointMeters, elevatorPositionFilter.getAverage(), ERROR_TOLERANCE);
+        return MathUtil.isNear(setpointMeters, positionFilter.getAverage(), ERROR_TOLERANCE);
     }
 
     public void setVoltage(double voltage) {
-        elevatorIO.setVoltage(voltage);
+        io.setVoltage(voltage);
     }
 
     public void stop() {
-        elevatorIO.setVoltage(0.0);
+        io.setVoltage(0.0);
     }
 
     @AutoLogOutput

@@ -20,7 +20,7 @@ public class ElevatorManualCommand extends Command {
     @Override
     public void execute() {
         // elevator.setVoltage(copilot.getRightTriggerAxis() - copilot.getLeftTriggerAxis() + Constants.Elevator.KG);
-        elevator.goToSetpoint(elevator.getSetpoint() + Constants.Elevator.CRUISE_VELOCITY_MPS/50.0*(copilot.getRightTriggerAxis()-copilot.getLeftTriggerAxis()));
+        elevator.setElevatorPosition(elevator.getSetpoint() + Constants.Elevator.CRUISE_VELOCITY_MPS*Constants.LOOP_PERIOD_SECS*(copilot.getRightTriggerAxis()-copilot.getLeftTriggerAxis()));
     }
 
     @Override
