@@ -59,10 +59,6 @@ public final class Constants {
         public static final double MAX_ANGULAR_SPEED = MAX_LINEAR_SPEED / DRIVE_BASE_RADIUS;
     }
 
-    public static class Elevator {
-        public static final double ELEVATOR_MAX_HEIGHT = Units.inchesToMeters(21.0);
-    }
-
     public static class Shooter {
         public static class Flywheels {
             // TODO: determine ids
@@ -114,5 +110,48 @@ public final class Constants {
 
             public static final Rotation2d ERROR_TOLERANCE = Rotation2d.fromDegrees(0.2);
         }
+    }
+
+    public static class Elevator {
+        public static final double CHAIN_HEIGHT_METERS = Units.inchesToMeters(28.25);
+        public static final double ELEVATOR_MAX_HEIGHT = Units.inchesToMeters(48.0);
+        public static final double ELEVATOR_MINIMUM_HEIGHT = Units.inchesToMeters(27.0);
+        public static final double CLIMBING_HOOKS_MINIMUM_HEIGHT = Units.inchesToMeters(12.0);
+        public static final double CLIMBING_HOOKS_MAX_HEIGHT = CLIMBING_HOOKS_MINIMUM_HEIGHT + ELEVATOR_MAX_HEIGHT - ELEVATOR_MINIMUM_HEIGHT;
+
+        public enum ElevatorState {
+            /**
+             * At max height :D
+             */
+            TOP(ELEVATOR_MAX_HEIGHT),
+            /**
+             * At minimum height :D
+             */
+            BOTTOM(ELEVATOR_MINIMUM_HEIGHT),
+            /**
+             * At height for top of initial climb :D
+             */
+            CLIMB(254.0), //TODO: Find these values :D
+            /**
+             * At height for trap doing :D
+             */
+            TRAP(254.0), //TODO: Find these values :D
+            /**
+             * At height for top of initial climb :D
+             */
+            AMP(254.0); //TODO: Find these values :D
+
+            public final double heightMeters;
+            ElevatorState(double heightMeters) {
+                this.heightMeters = heightMeters;
+            }
+        }
+    }
+
+    public static class Tramp {
+        public static final double GEAR_RATIO = 3.0 / 1.0;
+        public static final double TRAP_SCORING_TIME_SECONDS = 1.114; //TODO: Find these values :D
+        public static final int TRAMP_MOTOR_ID = -1; //TODO: Configure this later
+        public static final int TRAMP_BEAM_BREAK_CHANNEL = -1; //TODO: Configure this later
     }
 }
