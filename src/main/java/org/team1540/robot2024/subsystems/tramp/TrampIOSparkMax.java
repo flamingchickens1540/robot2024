@@ -9,23 +9,23 @@ import org.team1540.robot2024.Constants.Tramp;
 public class TrampIOSparkMax implements TrampIO {
     private final DigitalInput beamBreak = new DigitalInput(0);
     //TODO: Potentially change name :D
-    private final CANSparkMax neor = new CANSparkMax(Tramp.TRAMP_MOTOR_ID, MotorType.kBrushless);
-    private final RelativeEncoder neorEncoder = neor.getEncoder();
+    private final CANSparkMax motor = new CANSparkMax(Tramp.TRAMP_MOTOR_ID, MotorType.kBrushless);
+    private final RelativeEncoder motorEncoder = motor.getEncoder();
     public TrampIOSparkMax() {
-        neor.setIdleMode(CANSparkMax.IdleMode.kBrake);
+        motor.setIdleMode(CANSparkMax.IdleMode.kBrake);
         //Potentially invert motor
-        neor.setSmartCurrentLimit(40);
-        neor.enableVoltageCompensation(12);
+        motor.setSmartCurrentLimit(40);
+        motor.enableVoltageCompensation(12);
     }
     @Override
     public void setVoltage(double volts) {
-        neor.setVoltage(volts);
+        motor.setVoltage(volts);
     }
 
     public void updateInputs(TrampIOInputs inputs) {
         inputs.breamBreakTripped = !(beamBreak.get()); //I think returns false when broken... Returns true when broken now.
-        inputs.velocityRPM = neorEncoder.getVelocity();
-        inputs.appliedVolts = neor.getAppliedOutput() * neor.getBusVoltage();
-        inputs.currentAmps = neor.getOutputCurrent();
+        inputs.velocityRPM = motorEncoder.getVelocity();
+        inputs.appliedVolts = motor.getAppliedOutput() * motor.getBusVoltage();
+        inputs.currentAmps = motor.getOutputCurrent();
     }
 }
