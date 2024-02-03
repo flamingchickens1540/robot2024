@@ -14,6 +14,10 @@ import org.team1540.robot2024.commands.FeedForwardCharacterization;
 import org.team1540.robot2024.commands.SwerveDriveCommand;
 import org.team1540.robot2024.commands.indexer.IntakeCommand;
 import org.team1540.robot2024.subsystems.drive.*;
+import org.team1540.robot2024.subsystems.tramp.Tramp;
+import org.team1540.robot2024.subsystems.tramp.TrampIO;
+import org.team1540.robot2024.subsystems.tramp.TrampIOSim;
+import org.team1540.robot2024.subsystems.tramp.TrampIOSparkMax;
 import org.team1540.robot2024.subsystems.shooter.*;
 import org.team1540.robot2024.subsystems.indexer.Indexer;
 import org.team1540.robot2024.subsystems.indexer.IndexerIO;
@@ -33,6 +37,7 @@ import static org.team1540.robot2024.Constants.SwerveConfig;
 public class RobotContainer {
     // Subsystems
     public final Drivetrain drivetrain;
+    public final Tramp tramp;
     public final Shooter shooter;
     public final Indexer indexer;
 
@@ -62,14 +67,13 @@ public class RobotContainer {
                                 new ModuleIOTalonFX(SwerveFactory.getModuleMotors(SwerveConfig.FRONT_RIGHT, SwerveFactory.SwerveCorner.FRONT_RIGHT)),
                                 new ModuleIOTalonFX(SwerveFactory.getModuleMotors(SwerveConfig.BACK_LEFT, SwerveFactory.SwerveCorner.BACK_LEFT)),
                                 new ModuleIOTalonFX(SwerveFactory.getModuleMotors(SwerveConfig.BACK_RIGHT, SwerveFactory.SwerveCorner.BACK_RIGHT)));
+                tramp = new Tramp(new TrampIOSparkMax());
                 shooter = new Shooter(new ShooterPivotIOTalonFX(), new FlywheelsIOTalonFX());
-
                 indexer =
                         new Indexer(
                                 new IndexerIOSparkMax()
                         );
                 break;
-
             case SIM:
                 // Sim robot, instantiate physics sim IO implementations
                 drivetrain =
@@ -79,6 +83,7 @@ public class RobotContainer {
                                 new ModuleIOSim(),
                                 new ModuleIOSim(),
                                 new ModuleIOSim());
+                tramp = new Tramp(new TrampIOSim());
                 shooter = new Shooter(new ShooterPivotIOSim(), new FlywheelsIOSim());
                 indexer =
                         new Indexer(
@@ -96,10 +101,14 @@ public class RobotContainer {
                                 new ModuleIO() {},
                                 new ModuleIO() {});
                 shooter = new Shooter(new ShooterPivotIO() {}, new FlywheelsIO() {});
+
                 indexer =
                         new Indexer(
                                 new IndexerIO() {}
                         );
+
+                tramp = new Tramp(new TrampIO() {});
+
                 break;
         }
 
