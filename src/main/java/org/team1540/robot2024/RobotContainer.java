@@ -19,12 +19,18 @@ import org.team1540.robot2024.subsystems.tramp.TrampIO;
 import org.team1540.robot2024.subsystems.tramp.TrampIOSim;
 import org.team1540.robot2024.subsystems.tramp.TrampIOSparkMax;
 import org.team1540.robot2024.subsystems.shooter.*;
+import org.team1540.robot2024.subsystems.vision.AprilTagVision;
+import org.team1540.robot2024.subsystems.vision.AprilTagVisionIO;
+import org.team1540.robot2024.subsystems.vision.AprilTagVisionIOLimelight;
+import org.team1540.robot2024.subsystems.vision.AprilTagVisionIOSim;
+import org.team1540.robot2024.util.PhoenixTimeSyncSignalRefresher;
 import org.team1540.robot2024.subsystems.indexer.Indexer;
 import org.team1540.robot2024.subsystems.indexer.IndexerIO;
 import org.team1540.robot2024.subsystems.indexer.IndexerIOSim;
 import org.team1540.robot2024.subsystems.indexer.IndexerIOSparkMax;
 import org.team1540.robot2024.util.swerve.SwerveFactory;
 import org.littletonrobotics.junction.networktables.LoggedDashboardChooser;
+import org.team1540.robot2024.util.vision.VisionPoseAcceptor;
 
 import static org.team1540.robot2024.Constants.SwerveConfig;
 
@@ -40,6 +46,7 @@ public class RobotContainer {
     public final Tramp tramp;
     public final Shooter shooter;
     public final Indexer indexer;
+    public final AprilTagVision aprilTagVision;
 
     // Controller
     public final CommandXboxController driver = new CommandXboxController(0);
@@ -48,6 +55,8 @@ public class RobotContainer {
 
     // Dashboard inputs
     public final LoggedDashboardChooser<Command> autoChooser;
+
+    public final PhoenixTimeSyncSignalRefresher odometrySignalRefresher = new PhoenixTimeSyncSignalRefresher(SwerveConfig.CAN_BUS);
 
     // TODO: testing dashboard inputs, remove for comp
     public final LoggedDashboardNumber leftFlywheelSetpoint = new LoggedDashboardNumber("Shooter/Flywheels/leftSetpoint", 6000);
@@ -62,17 +71,23 @@ public class RobotContainer {
                 // Real robot, instantiate hardware IO implementations
                 drivetrain =
                         new Drivetrain(
-                                new GyroIONavx(),
-                                new ModuleIOTalonFX(SwerveFactory.getModuleMotors(SwerveConfig.FRONT_LEFT, SwerveFactory.SwerveCorner.FRONT_LEFT)),
-                                new ModuleIOTalonFX(SwerveFactory.getModuleMotors(SwerveConfig.FRONT_RIGHT, SwerveFactory.SwerveCorner.FRONT_RIGHT)),
-                                new ModuleIOTalonFX(SwerveFactory.getModuleMotors(SwerveConfig.BACK_LEFT, SwerveFactory.SwerveCorner.BACK_LEFT)),
-                                new ModuleIOTalonFX(SwerveFactory.getModuleMotors(SwerveConfig.BACK_RIGHT, SwerveFactory.SwerveCorner.BACK_RIGHT)));
+                                new GyroIOPigeon2(odometrySignalRefresher),
+                                new ModuleIOTalonFX(SwerveFactory.getModuleMotors(SwerveConfig.FRONT_LEFT, SwerveFactory.SwerveCorner.FRONT_LEFT), odometrySignalRefresher),
+                                new ModuleIOTalonFX(SwerveFactory.getModuleMotors(SwerveConfig.FRONT_RIGHT, SwerveFactory.SwerveCorner.FRONT_RIGHT), odometrySignalRefresher),
+                                new ModuleIOTalonFX(SwerveFactory.getModuleMotors(SwerveConfig.BACK_LEFT, SwerveFactory.SwerveCorner.BACK_LEFT), odometrySignalRefresher),
+                                new ModuleIOTalonFX(SwerveFactory.getModuleMotors(SwerveConfig.BACK_RIGHT, SwerveFactory.SwerveCorner.BACK_RIGHT), odometrySignalRefresher));
                 tramp = new Tramp(new TrampIOSparkMax());
                 shooter = new Shooter(new ShooterPivotIOTalonFX(), new FlywheelsIOTalonFX());
                 indexer =
                         new Indexer(
                                 new IndexerIOSparkMax()
                         );
+                aprilTagVision = new AprilTagVision(
+                        new AprilTagVisionIOLimelight(Constants.Vision.FRONT_CAMERA_NAME, Constants.Vision.FRONT_CAMERA_POSE),
+                        new AprilTagVisionIOLimelight(Constants.Vision.REAR_CAMERA_NAME, Constants.Vision.REAR_CAMERA_POSE),
+                        drivetrain::addVisionMeasurement,
+                        () -> 0.0, // TODO: ACTUALLY GET ELEVATOR HEIGHT HERE
+                        new VisionPoseAcceptor(drivetrain::getChassisSpeeds, () -> 0.0)); // TODO: ACTUALLY GET ELEVATOR VELOCITY HERE
                 break;
             case SIM:
                 // Sim robot, instantiate physics sim IO implementations
@@ -85,12 +100,18 @@ public class RobotContainer {
                                 new ModuleIOSim());
                 tramp = new Tramp(new TrampIOSim());
                 shooter = new Shooter(new ShooterPivotIOSim(), new FlywheelsIOSim());
+                aprilTagVision =
+                        new AprilTagVision(
+                                new AprilTagVisionIOSim(Constants.Vision.FRONT_CAMERA_NAME, Constants.Vision.FRONT_CAMERA_POSE, drivetrain::getPose),
+                                new AprilTagVisionIOSim(Constants.Vision.REAR_CAMERA_NAME, Constants.Vision.REAR_CAMERA_POSE, drivetrain::getPose),
+                                ignored -> {},
+                                () -> 0.0, // TODO: ACTUALLY GET ELEVATOR HEIGHT HERE
+                                new VisionPoseAcceptor(drivetrain::getChassisSpeeds, () -> 0.0)); // TODO: ACTUALLY GET ELEVATOR VELOCITY HERE
                 indexer =
                         new Indexer(
                                 new IndexerIOSim()
                         );
                 break;
-
             default:
                 // Replayed robot, disable IO implementations
                 drivetrain =
@@ -101,6 +122,13 @@ public class RobotContainer {
                                 new ModuleIO() {},
                                 new ModuleIO() {});
                 shooter = new Shooter(new ShooterPivotIO() {}, new FlywheelsIO() {});
+                aprilTagVision =
+                        new AprilTagVision(
+                                new AprilTagVisionIO() {},
+                                new AprilTagVisionIO() {},
+                                (ignored) -> {},
+                                () -> 0.0,
+                                new VisionPoseAcceptor(drivetrain::getChassisSpeeds, () -> 0.0));
 
                 indexer =
                         new Indexer(

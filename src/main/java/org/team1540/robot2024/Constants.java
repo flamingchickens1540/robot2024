@@ -1,6 +1,8 @@
 package org.team1540.robot2024;
 
+import edu.wpi.first.math.geometry.Pose3d;
 import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.geometry.Rotation3d;
 import edu.wpi.first.math.util.Units;
 
 /**
@@ -44,6 +46,9 @@ public final class Constants {
         public static final int FRONT_RIGHT = IS_COMPETITION_ROBOT ? 4 : 0;
         public static final int BACK_LEFT   = IS_COMPETITION_ROBOT ? 7 : 0;
         public static final int BACK_RIGHT  = IS_COMPETITION_ROBOT ? 1 : 0;
+
+        // TODO: set this id
+        public static final int PIGEON_ID = 0;
     }
 
     public static class Drivetrain {
@@ -74,6 +79,30 @@ public final class Constants {
         public static final int BEAM_BREAK_ID = 0;
 
 
+    }
+
+
+    public static class Vision {
+        public static final String FRONT_CAMERA_NAME = "limelight-front";
+        public static final String REAR_CAMERA_NAME = "limelight-rear";
+
+        // TODO: measure these offsets
+        public static final Pose3d FRONT_CAMERA_POSE = new Pose3d(0, 0, 0.5, new Rotation3d());
+        public static final Pose3d REAR_CAMERA_POSE = new Pose3d(0, 0, 0.5, new Rotation3d(0, 0, Math.PI));
+
+        // TODO: find these values
+        public static final double MAX_VISION_DELAY_SECS = 0.08;
+        public static final double MAX_ACCEPTED_ROT_SPEED_RAD_PER_SEC = 1.0;
+        public static final double MAX_ACCEPTED_LINEAR_SPEED_MPS = 4.0;
+        public static final double MIN_ACCEPTED_NUM_TAGS = 1;
+        public static final double MAX_ACCEPTED_AVG_TAG_DIST_METERS = 8.0;
+        public static final double MAX_ACCEPTED_ELEVATOR_SPEED_MPS = 0.05;
+
+        public static final int SIM_RES_WIDTH = 1280;
+        public static final int SIM_RES_HEIGHT = 960;
+        public static final Rotation2d SIM_DIAGONAL_FOV = Rotation2d.fromDegrees(100);
+        public static final double SIM_FPS = 14.5;
+        public static final double SIM_AVG_LATENCY_MS = 67.0;
     }
 
     public static class Shooter {
