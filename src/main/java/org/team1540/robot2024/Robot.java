@@ -90,6 +90,7 @@ public class Robot extends LoggedRobot {
         // This must be called from the robot's periodic block in order for anything in
         // the Command-based framework to work.
         CommandScheduler.getInstance().run();
+        if (Constants.currentMode == Constants.Mode.REAL) robotContainer.odometrySignalRefresher.periodic();
 
         // Update mechanism visualiser in sim
         if (Robot.isSimulation()) MechanismVisualiser.periodic();
