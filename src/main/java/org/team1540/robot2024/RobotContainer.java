@@ -15,6 +15,7 @@ import org.team1540.robot2024.commands.FeedForwardCharacterization;
 import org.team1540.robot2024.commands.SwerveDriveCommand;
 import org.team1540.robot2024.commands.elevator.ElevatorManualCommand;
 import org.team1540.robot2024.commands.elevator.ElevatorSetpointCommand;
+import org.team1540.robot2024.commands.indexer.IntakeCommand;
 import org.team1540.robot2024.subsystems.drive.*;
 import org.team1540.robot2024.subsystems.elevator.Elevator;
 import org.team1540.robot2024.subsystems.elevator.ElevatorIO;
@@ -30,6 +31,10 @@ import org.team1540.robot2024.subsystems.vision.AprilTagVisionIO;
 import org.team1540.robot2024.subsystems.vision.AprilTagVisionIOLimelight;
 import org.team1540.robot2024.subsystems.vision.AprilTagVisionIOSim;
 import org.team1540.robot2024.util.PhoenixTimeSyncSignalRefresher;
+import org.team1540.robot2024.subsystems.indexer.Indexer;
+import org.team1540.robot2024.subsystems.indexer.IndexerIO;
+import org.team1540.robot2024.subsystems.indexer.IndexerIOSim;
+import org.team1540.robot2024.subsystems.indexer.IndexerIOSparkMax;
 import org.team1540.robot2024.util.swerve.SwerveFactory;
 import org.littletonrobotics.junction.networktables.LoggedDashboardChooser;
 import org.team1540.robot2024.util.vision.VisionPoseAcceptor;
@@ -48,6 +53,7 @@ public class RobotContainer {
     public final Tramp tramp;
     public final Shooter shooter;
     public final Elevator elevator;
+    public final Indexer indexer;
     public final AprilTagVision aprilTagVision;
 
     // Controller
@@ -80,6 +86,10 @@ public class RobotContainer {
                 tramp = new Tramp(new TrampIOSparkMax());
                 shooter = new Shooter(new ShooterPivotIOTalonFX(), new FlywheelsIOTalonFX());
                 elevator = new Elevator(new ElevatorIOTalonFX());
+                indexer =
+                        new Indexer(
+                                new IndexerIOSparkMax()
+                        );
                 aprilTagVision = new AprilTagVision(
                         new AprilTagVisionIOLimelight(Constants.Vision.FRONT_CAMERA_NAME, Constants.Vision.FRONT_CAMERA_POSE),
                         new AprilTagVisionIOLimelight(Constants.Vision.REAR_CAMERA_NAME, Constants.Vision.REAR_CAMERA_POSE),
@@ -106,6 +116,10 @@ public class RobotContainer {
                                 ignored -> {},
                                 () -> 0.0, // TODO: ACTUALLY GET ELEVATOR HEIGHT HERE
                                 new VisionPoseAcceptor(drivetrain::getChassisSpeeds, () -> 0.0)); // TODO: ACTUALLY GET ELEVATOR VELOCITY HERE
+                indexer =
+                        new Indexer(
+                                new IndexerIOSim()
+                        );
                 break;
             default:
                 // Replayed robot, disable IO implementations
@@ -125,7 +139,14 @@ public class RobotContainer {
                                 (ignored) -> {},
                                 () -> 0.0,
                                 new VisionPoseAcceptor(drivetrain::getChassisSpeeds, () -> 0.0));
+
+                indexer =
+                        new Indexer(
+                                new IndexerIO() {}
+                        );
+
                 tramp = new Tramp(new TrampIO() {});
+
                 break;
         }
 
@@ -168,6 +189,8 @@ public class RobotContainer {
 
         copilot.a().onTrue(shooter.spinUpCommand(leftFlywheelSetpoint.get(), rightFlywheelSetpoint.get()))
                 .onFalse(Commands.runOnce(shooter::stopFlywheels, shooter));
+
+        driver.a().onTrue(new IntakeCommand(indexer));
     }
 
     /**

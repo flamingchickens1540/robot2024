@@ -18,7 +18,7 @@ public final class Constants {
     // Whether to pull PID constants from SmartDashboard
     public static final boolean tuningMode = true; // TODO: DO NOT SET TO TRUE FOR COMP
     private static final Mode simMode = Mode.SIM; // Can also be Mode.REPLAY
-    
+
     public static final Mode currentMode = Robot.isReal() ? Mode.REAL : simMode;
 
     public enum Mode {
@@ -62,6 +62,23 @@ public final class Constants {
         public static final double TRACK_WIDTH_Y = Units.inchesToMeters(25.0);
         public static final double DRIVE_BASE_RADIUS = Math.hypot(TRACK_WIDTH_X / 2.0, TRACK_WIDTH_Y / 2.0);
         public static final double MAX_ANGULAR_SPEED = MAX_LINEAR_SPEED / DRIVE_BASE_RADIUS;
+    }
+    public static class Indexer {
+        // TODO: fix these constants
+        public static final int INTAKE_ID = 11;
+        public static final int FEEDER_ID = 12;
+        public static final double FEEDER_KP = 0.5;
+        public static final double FEEDER_KI = 0.1;
+        public static final double FEEDER_KD = 0.001;
+        public static final double FEEDER_KS = 0.0;
+        public static final double FEEDER_KV = 0.0;
+        public static final double FEEDER_GEAR_RATIO = 1.0;
+        public static final double INTAKE_GEAR_RATIO = 1.0;
+        public static final double INTAKE_MOI = 0.025;
+        public static final double FEEDER_MOI = 0.025;
+        public static final int BEAM_BREAK_ID = 0;
+
+
     }
 
 
