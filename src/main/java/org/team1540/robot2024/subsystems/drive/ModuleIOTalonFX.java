@@ -10,6 +10,7 @@ import com.ctre.phoenix6.signals.InvertedValue;
 import com.ctre.phoenix6.signals.NeutralModeValue;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.util.Units;
+import org.team1540.robot2024.util.PhoenixTimeSyncSignalRefresher;
 import org.team1540.robot2024.util.swerve.SwerveFactory;
 
 import static org.team1540.robot2024.Constants.Drivetrain.*;
@@ -42,14 +43,12 @@ public class ModuleIOTalonFX implements ModuleIO {
     private final StatusSignal<Double> turnAppliedVolts;
     private final StatusSignal<Double> turnCurrent;
 
-    private final Rotation2d absoluteEncoderOffset;
+    private final PhoenixTimeSyncSignalRefresher odometrySignalRefresher;
 
-    public ModuleIOTalonFX(SwerveFactory.SwerveModuleHW hw) {
-
+    public ModuleIOTalonFX(SwerveFactory.SwerveModuleHW hw, PhoenixTimeSyncSignalRefresher odometrySignalRefresher) {
         driveTalon = hw.driveMotor;
         turnTalon = hw.turnMotor;
         cancoder = hw.cancoder;
-        absoluteEncoderOffset = hw.cancoderOffset;
 
         setDriveBrakeMode(true);
         setTurnBrakeMode(true);
@@ -57,32 +56,52 @@ public class ModuleIOTalonFX implements ModuleIO {
         drivePosition = driveTalon.getPosition();
         driveVelocity = driveTalon.getVelocity();
         driveAppliedVolts = driveTalon.getMotorVoltage();
-        driveCurrent = driveTalon.getStatorCurrent();
+        driveCurrent = driveTalon.getSupplyCurrent();
 
         turnAbsolutePosition = cancoder.getAbsolutePosition();
         turnPosition = turnTalon.getPosition();
         turnVelocity = turnTalon.getVelocity();
         turnAppliedVolts = turnTalon.getMotorVoltage();
-        turnCurrent = turnTalon.getStatorCurrent();
+        turnCurrent = turnTalon.getSupplyCurrent();
 
         BaseStatusSignal.setUpdateFrequencyForAll(100.0, drivePosition, turnPosition); // Required for odometry, use faster rate
-        BaseStatusSignal.setUpdateFrequencyForAll(50.0, driveVelocity, driveAppliedVolts, driveCurrent, turnAbsolutePosition, turnVelocity, turnAppliedVolts, turnCurrent);
+        BaseStatusSignal.setUpdateFrequencyForAll(
+                50.0,
+                driveVelocity,
+                driveAppliedVolts,
+                driveCurrent,
+                turnAbsolutePosition,
+                turnVelocity,
+                turnAppliedVolts,
+                turnCurrent);
         driveTalon.optimizeBusUtilization();
         turnTalon.optimizeBusUtilization();
+
+        this.odometrySignalRefresher = odometrySignalRefresher;
+
+        odometrySignalRefresher.registerSignals(drivePosition, turnPosition);
     }
 
     @Override
     public void updateInputs(ModuleIOInputs inputs) {
-        BaseStatusSignal.refreshAll(drivePosition, driveVelocity, driveAppliedVolts, driveCurrent, turnAbsolutePosition, turnPosition, turnVelocity, turnAppliedVolts, turnCurrent);
+        odometrySignalRefresher.refreshSignals();
+        BaseStatusSignal.refreshAll(
+                driveVelocity,
+                driveAppliedVolts,
+                driveCurrent,
+                turnAbsolutePosition,
+                turnVelocity,
+                turnAppliedVolts,
+                turnCurrent);
 
         inputs.drivePositionRad = Units.rotationsToRadians(drivePosition.getValueAsDouble()) / DRIVE_GEAR_RATIO;
         inputs.driveVelocityRadPerSec = Units.rotationsToRadians(driveVelocity.getValueAsDouble()) / DRIVE_GEAR_RATIO;
         inputs.driveAppliedVolts = driveAppliedVolts.getValueAsDouble();
         inputs.driveCurrentAmps = driveCurrent.getValueAsDouble();
 
-        inputs.turnAbsolutePosition = Rotation2d.fromRotations(turnAbsolutePosition.getValueAsDouble()).plus(absoluteEncoderOffset);
-        inputs.turnPosition = Rotation2d.fromRotations(turnPosition.getValueAsDouble() / TURN_GEAR_RATIO);
-        inputs.turnVelocityRadPerSec = Units.rotationsToRadians(turnVelocity.getValueAsDouble()) / TURN_GEAR_RATIO;
+        inputs.turnAbsolutePosition = Rotation2d.fromRotations(turnAbsolutePosition.getValueAsDouble());
+        inputs.turnPosition = Rotation2d.fromRotations(turnPosition.getValueAsDouble());
+        inputs.turnVelocityRadPerSec = Units.rotationsToRadians(turnVelocity.getValueAsDouble());
         inputs.turnAppliedVolts = turnAppliedVolts.getValueAsDouble();
         inputs.turnCurrentAmps = turnCurrent.getValueAsDouble();
     }

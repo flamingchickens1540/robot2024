@@ -50,6 +50,7 @@ public class ShooterPivotIOTalonFX implements ShooterPivotIO {
         motorConfig.Slot0.kS = KS;
         motorConfig.Slot0.kG = KG;
         motorConfig.Slot0.kV = KV;
+        motorConfig.Slot0.GravityType = GravityTypeValue.Arm_Cosine;
 
         motorConfig.MotionMagic.MotionMagicCruiseVelocity = CRUISE_VELOCITY_RPS;
         motorConfig.MotionMagic.MotionMagicAcceleration = MAX_ACCEL_RPS2;
