@@ -88,11 +88,6 @@ public final class Constants {
         public static final double SIM_AVG_LATENCY_MS = 67.0;
     }
 
-    public static class Elevator {
-        public static final double ELEVATOR_MAX_HEIGHT = Units.inchesToMeters(21.0);
-    }
-
-
     public static class Shooter {
         public static class Flywheels {
             // TODO: determine ids
