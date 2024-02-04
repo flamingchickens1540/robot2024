@@ -90,7 +90,7 @@ public class ElevatorIOTalonFX implements ElevatorIO {
     }
 
     @Override
-    public void setPositionMeters(double positionMeters) {
+    public void setSetpointMeters(double positionMeters) {
         leader.setControl(motionMagicOut.withPosition(positionMeters));
     }
 

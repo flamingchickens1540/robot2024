@@ -20,8 +20,7 @@ public class TrapAndClimbSequence extends SequentialCommandGroup {
                 new ParallelDeadlineGroup(
                         new WaitCommand(Constants.Tramp.TRAP_SCORING_TIME_SECONDS),
                         new ScoreInTrap(tramp) //TODO: Do whatever to this but not my job
-                ),
-                new ElevatorSetpointCommand(elevator, ElevatorState.BOTTOM)
+                )
         );
     }
 }

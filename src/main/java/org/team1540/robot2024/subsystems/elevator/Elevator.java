@@ -38,7 +38,7 @@ public class Elevator extends SubsystemBase {
     public void setElevatorPosition(double positionMeters) {
         positionMeters = MathUtil.clamp(positionMeters, Constants.Elevator.ELEVATOR_MINIMUM_HEIGHT, Constants.Elevator.ELEVATOR_MAX_HEIGHT);
         setpointMeters = positionMeters;
-        io.setPositionMeters(setpointMeters);
+        io.setSetpointMeters(setpointMeters);
 
         positionFilter.clear();
     }

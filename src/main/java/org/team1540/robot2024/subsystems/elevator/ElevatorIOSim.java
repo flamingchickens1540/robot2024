@@ -56,7 +56,7 @@ public class ElevatorIOSim implements ElevatorIO{
         elevatorAppliedVolts = MathUtil.clamp(volts, -12.0, 12.0);
     }
     @Override
-    public void setPositionMeters(double position) {
+    public void setSetpointMeters(double position) {
         isClosedLoop = true;
         setpoint = new TrapezoidProfile.State(position, 0.0);
     }
