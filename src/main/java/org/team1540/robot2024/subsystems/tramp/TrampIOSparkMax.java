@@ -11,12 +11,14 @@ public class TrampIOSparkMax implements TrampIO {
     //TODO: Potentially change name :D
     private final CANSparkMax motor = new CANSparkMax(Tramp.TRAMP_MOTOR_ID, MotorType.kBrushless);
     private final RelativeEncoder motorEncoder = motor.getEncoder();
+
     public TrampIOSparkMax() {
         motor.setIdleMode(CANSparkMax.IdleMode.kBrake);
         //Potentially invert motor
         motor.setSmartCurrentLimit(40);
         motor.enableVoltageCompensation(12);
     }
+
     @Override
     public void setVoltage(double volts) {
         motor.setVoltage(volts);

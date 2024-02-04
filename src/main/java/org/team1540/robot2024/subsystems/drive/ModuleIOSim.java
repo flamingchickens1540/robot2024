@@ -5,8 +5,9 @@ import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.system.plant.DCMotor;
 import edu.wpi.first.wpilibj.simulation.DCMotorSim;
 
-import static org.team1540.robot2024.Constants.Drivetrain.*;
-import static org.team1540.robot2024.Constants.*;
+import static org.team1540.robot2024.Constants.Drivetrain.DRIVE_GEAR_RATIO;
+import static org.team1540.robot2024.Constants.Drivetrain.TURN_GEAR_RATIO;
+import static org.team1540.robot2024.Constants.LOOP_PERIOD_SECS;
 
 /**
  * Physics sim implementation of module IO.

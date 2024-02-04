@@ -13,6 +13,7 @@ public class ElevatorSetpointCommand extends Command {
         this.state = state;
         addRequirements(elevator);
     }
+
     @Override
     public void initialize() {
         elevator.setElevatorPosition(state.heightMeters);
@@ -22,6 +23,7 @@ public class ElevatorSetpointCommand extends Command {
     public void end(boolean interrupted) {
         elevator.stop();
     }
+
     @Override
     public boolean isFinished() {
         return elevator.isAtSetpoint();

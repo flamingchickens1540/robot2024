@@ -1,7 +1,5 @@
 package org.team1540.robot2024.subsystems.elevator;
 
-import org.team1540.robot2024.Constants;
-
 import com.ctre.phoenix6.BaseStatusSignal;
 import com.ctre.phoenix6.StatusSignal;
 import com.ctre.phoenix6.configs.MotionMagicConfigs;
@@ -14,6 +12,7 @@ import com.ctre.phoenix6.signals.ForwardLimitValue;
 import com.ctre.phoenix6.signals.GravityTypeValue;
 import com.ctre.phoenix6.signals.NeutralModeValue;
 import com.ctre.phoenix6.signals.ReverseLimitValue;
+import org.team1540.robot2024.Constants;
 
 public class ElevatorIOTalonFX implements ElevatorIO {
 
@@ -41,8 +40,14 @@ public class ElevatorIOTalonFX implements ElevatorIO {
         // TODO: this might not actually be inverted, so fix it if neccesary
         follower.setControl(new Follower(leader.getDeviceID(), true));
 
-        BaseStatusSignal.setUpdateFrequencyForAll(
-            50.0, leaderPosition, leaderVelocity, leaderAppliedVolts, leaderCurrent, followerCurrent, topLimitStatus, bottomLimitStatus);
+        BaseStatusSignal.setUpdateFrequencyForAll(50.0,
+                leaderPosition,
+                leaderVelocity,
+                leaderAppliedVolts,
+                leaderCurrent,
+                followerCurrent,
+                topLimitStatus,
+                bottomLimitStatus);
         leader.optimizeBusUtilization();
         follower.optimizeBusUtilization();
 
@@ -84,7 +89,7 @@ public class ElevatorIOTalonFX implements ElevatorIO {
         inputs.positionMeters = leaderPosition.getValue();
         inputs.velocityMPS = leaderVelocity.getValue();
         inputs.voltage = leaderAppliedVolts.getValue();
-        inputs.current = new double[] {leaderCurrent.getValue(), followerCurrent.getValue()};
+        inputs.current = new double[]{leaderCurrent.getValue(), followerCurrent.getValue()};
         inputs.atUpperLimit = topLimitStatus.getValue() == ForwardLimitValue.ClosedToGround;
         inputs.atLowerLimit = bottomLimitStatus.getValue() == ReverseLimitValue.ClosedToGround;
     }

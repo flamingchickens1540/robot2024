@@ -1,8 +1,7 @@
 package org.team1540.robot2024.commands;
 
-import org.team1540.robot2024.subsystems.tramp.Tramp;
-
 import edu.wpi.first.wpilibj2.command.Command;
+import org.team1540.robot2024.subsystems.tramp.Tramp;
 
 public class TrampCommand extends Command {
 
@@ -23,7 +22,7 @@ public class TrampCommand extends Command {
 
     @Override
     public boolean isFinished() {
-return tramp.isBeamBreakBlocked();
+        return tramp.isBeamBreakBlocked();
     }
 
     @Override

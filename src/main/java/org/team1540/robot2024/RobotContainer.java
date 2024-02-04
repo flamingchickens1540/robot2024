@@ -8,7 +8,7 @@ import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
-
+import org.littletonrobotics.junction.networktables.LoggedDashboardChooser;
 import org.littletonrobotics.junction.networktables.LoggedDashboardNumber;
 import org.team1540.robot2024.Constants.Elevator.ElevatorState;
 import org.team1540.robot2024.commands.FeedForwardCharacterization;
@@ -21,22 +21,21 @@ import org.team1540.robot2024.subsystems.elevator.Elevator;
 import org.team1540.robot2024.subsystems.elevator.ElevatorIO;
 import org.team1540.robot2024.subsystems.elevator.ElevatorIOSim;
 import org.team1540.robot2024.subsystems.elevator.ElevatorIOTalonFX;
+import org.team1540.robot2024.subsystems.indexer.Indexer;
+import org.team1540.robot2024.subsystems.indexer.IndexerIO;
+import org.team1540.robot2024.subsystems.indexer.IndexerIOSim;
+import org.team1540.robot2024.subsystems.indexer.IndexerIOSparkMax;
+import org.team1540.robot2024.subsystems.shooter.*;
 import org.team1540.robot2024.subsystems.tramp.Tramp;
 import org.team1540.robot2024.subsystems.tramp.TrampIO;
 import org.team1540.robot2024.subsystems.tramp.TrampIOSim;
 import org.team1540.robot2024.subsystems.tramp.TrampIOSparkMax;
-import org.team1540.robot2024.subsystems.shooter.*;
 import org.team1540.robot2024.subsystems.vision.AprilTagVision;
 import org.team1540.robot2024.subsystems.vision.AprilTagVisionIO;
 import org.team1540.robot2024.subsystems.vision.AprilTagVisionIOLimelight;
 import org.team1540.robot2024.subsystems.vision.AprilTagVisionIOSim;
 import org.team1540.robot2024.util.PhoenixTimeSyncSignalRefresher;
-import org.team1540.robot2024.subsystems.indexer.Indexer;
-import org.team1540.robot2024.subsystems.indexer.IndexerIO;
-import org.team1540.robot2024.subsystems.indexer.IndexerIOSim;
-import org.team1540.robot2024.subsystems.indexer.IndexerIOSparkMax;
 import org.team1540.robot2024.util.swerve.SwerveFactory;
-import org.littletonrobotics.junction.networktables.LoggedDashboardChooser;
 import org.team1540.robot2024.util.vision.VisionPoseAcceptor;
 
 import static org.team1540.robot2024.Constants.SwerveConfig;
@@ -138,13 +137,10 @@ public class RobotContainer {
                                 new AprilTagVisionIO() {},
                                 (ignored) -> {},
                                 () -> 0.0,
-                                new VisionPoseAcceptor(drivetrain::getChassisSpeeds, () -> 0.0));
-
-                indexer =
-                        new Indexer(
-                                new IndexerIO() {}
+                                new VisionPoseAcceptor(drivetrain::getChassisSpeeds, () -> 0.0)
                         );
 
+                indexer = new Indexer(new IndexerIO() {});
                 tramp = new Tramp(new TrampIO() {});
 
                 break;

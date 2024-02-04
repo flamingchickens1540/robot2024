@@ -4,7 +4,6 @@ import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.system.plant.DCMotor;
 import edu.wpi.first.wpilibj.simulation.DCMotorSim;
-import edu.wpi.first.wpilibj.simulation.SimDeviceSim;
 import org.team1540.robot2024.Constants;
 
 import static org.team1540.robot2024.Constants.Indexer.*;
@@ -14,8 +13,8 @@ public class IndexerIOSim implements IndexerIO {
 
     private final DCMotorSim intakeSim = new DCMotorSim(DCMotor.getNEO(1), INTAKE_GEAR_RATIO, INTAKE_MOI);
     private final DCMotorSim feederSim = new DCMotorSim(DCMotor.getNEO(1), FEEDER_GEAR_RATIO, FEEDER_MOI);
-//    private final SimDeviceSim beamBreakSim = new SimDeviceSim("Indexer Beam Break");
-    private final PIDController feederSimPID = new PIDController(FEEDER_KP, FEEDER_KI,FEEDER_KD);
+    //    private final SimDeviceSim beamBreakSim = new SimDeviceSim("Indexer Beam Break");
+    private final PIDController feederSimPID = new PIDController(FEEDER_KP, FEEDER_KI, FEEDER_KD);
     private boolean isClosedLoop = true;
     private double intakeVoltage = 0.0;
     private double feederVoltage = 0.0;

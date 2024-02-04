@@ -5,10 +5,11 @@ import edu.wpi.first.math.controller.SimpleMotorFeedforward;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
-import org.team1540.robot2024.Constants;
 import org.littletonrobotics.junction.Logger;
+import org.team1540.robot2024.Constants;
 
-import static org.team1540.robot2024.Constants.Drivetrain.*;
+import static org.team1540.robot2024.Constants.Drivetrain.MAX_LINEAR_SPEED;
+import static org.team1540.robot2024.Constants.Drivetrain.WHEEL_RADIUS;
 
 public class Module {
     private final ModuleIO io;

@@ -8,7 +8,7 @@ import org.team1540.robot2024.Constants;
 
 import static org.team1540.robot2024.Constants.Shooter.Flywheels.*;
 
-public class FlywheelsIOSim implements FlywheelsIO{
+public class FlywheelsIOSim implements FlywheelsIO {
     private final FlywheelSim leftSim =
             new FlywheelSim(DCMotor.getFalcon500(1), GEAR_RATIO, SIM_MOI);
     private final FlywheelSim rightSim =
@@ -30,10 +30,10 @@ public class FlywheelsIOSim implements FlywheelsIO{
         if (isClosedLoop) {
             leftVolts =
                     leftController.calculate(leftSim.getAngularVelocityRPM() / 60, leftSetpointRPS)
-                    + feedforward.calculate(leftSetpointRPS);
+                            + feedforward.calculate(leftSetpointRPS);
             rightVolts =
                     rightController.calculate(rightSim.getAngularVelocityRPM() / 60, rightSetpointRPS)
-                    + feedforward.calculate(rightSetpointRPS);
+                            + feedforward.calculate(rightSetpointRPS);
         }
 
         leftSim.setInputVoltage(leftVolts);

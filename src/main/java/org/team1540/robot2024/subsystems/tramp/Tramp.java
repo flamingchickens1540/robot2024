@@ -1,6 +1,5 @@
 package org.team1540.robot2024.subsystems.tramp;
 
-import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import org.littletonrobotics.junction.Logger;
 

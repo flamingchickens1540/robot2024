@@ -1,19 +1,14 @@
 package org.team1540.robot2024.subsystems.elevator;
 
 import edu.wpi.first.math.MathUtil;
-
+import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import org.littletonrobotics.junction.AutoLogOutput;
 import org.littletonrobotics.junction.Logger;
-
-import edu.wpi.first.wpilibj2.command.SubsystemBase;
-
 import org.team1540.robot2024.Constants;
 import org.team1540.robot2024.util.MechanismVisualiser;
 import org.team1540.robot2024.util.math.AverageFilter;
 
-import com.ctre.phoenix6.Utils;
-
-import static org.team1540.robot2024.Constants.Elevator.*;
+import static org.team1540.robot2024.Constants.Elevator.POS_ERR_TOLERANCE_METERS;
 
 public class Elevator extends SubsystemBase {
     private final ElevatorIO io;
@@ -27,14 +22,14 @@ public class Elevator extends SubsystemBase {
     }
 
     // periodic
-    public void periodic(){
+    public void periodic() {
         io.updateInputs(inputs);
         Logger.processInputs("Elevator", inputs);
         MechanismVisualiser.setElevatorPosition(inputs.positionMeters);
 
         positionFilter.add(inputs.positionMeters);
     }
-    
+
     public void setElevatorPosition(double positionMeters) {
         positionMeters = MathUtil.clamp(positionMeters, Constants.Elevator.ELEVATOR_MINIMUM_HEIGHT, Constants.Elevator.ELEVATOR_MAX_HEIGHT);
         setpointMeters = positionMeters;
@@ -44,7 +39,7 @@ public class Elevator extends SubsystemBase {
     }
 
     public boolean isAtSetpoint() {
-        return MathUtil.isNear(setpointMeters, positionFilter.getAverage(), ERROR_TOLERANCE);
+        return MathUtil.isNear(setpointMeters, positionFilter.getAverage(), POS_ERR_TOLERANCE_METERS);
     }
 
     public void setVoltage(double voltage) {

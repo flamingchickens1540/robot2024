@@ -6,16 +6,17 @@ import edu.wpi.first.math.controller.ProfiledPIDController;
 import edu.wpi.first.math.system.plant.DCMotor;
 import edu.wpi.first.math.trajectory.TrapezoidProfile;
 import edu.wpi.first.wpilibj.simulation.ElevatorSim;
+
 import static org.team1540.robot2024.Constants.Elevator.*;
 import static org.team1540.robot2024.Constants.LOOP_PERIOD_SECS;
 
-public class ElevatorIOSim implements ElevatorIO{
+public class ElevatorIOSim implements ElevatorIO {
     // fields
     private final ElevatorSim elevatorSim =
             new ElevatorSim(
-                DCMotor.getFalcon500Foc(2),
+                    DCMotor.getFalcon500Foc(2),
                     GEAR_RATIO, SIM_CARRIAGE_MASS_KG,
-                    SPROCKET_RADIUS_M,ELEVATOR_MINIMUM_HEIGHT,
+                    SPROCKET_RADIUS_M, ELEVATOR_MINIMUM_HEIGHT,
                     ELEVATOR_MAX_HEIGHT,
                     true,
                     ELEVATOR_MINIMUM_HEIGHT);
@@ -31,7 +32,7 @@ public class ElevatorIOSim implements ElevatorIO{
     private TrapezoidProfile.State setpoint;
 
     @Override
-    public void updateInputs(ElevatorIOInputs inputs){
+    public void updateInputs(ElevatorIOInputs inputs) {
         if (isClosedLoop) {
             elevatorAppliedVolts =
                     controller.calculate(elevatorSim.getPositionMeters(), setpoint)
@@ -55,6 +56,7 @@ public class ElevatorIOSim implements ElevatorIO{
         isClosedLoop = false;
         elevatorAppliedVolts = MathUtil.clamp(volts, -12.0, 12.0);
     }
+
     @Override
     public void setSetpointMeters(double position) {
         isClosedLoop = true;
