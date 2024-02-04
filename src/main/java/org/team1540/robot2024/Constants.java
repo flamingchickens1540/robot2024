@@ -105,6 +105,7 @@ public final class Constants {
         public static final double SIM_AVG_LATENCY_MS = 67.0;
     }
 
+
     public static class Shooter {
         public static class Flywheels {
             // TODO: determine ids
@@ -160,10 +161,29 @@ public final class Constants {
 
     public static class Elevator {
         public static final double CHAIN_HEIGHT_METERS = Units.inchesToMeters(28.25);
-        public static final double ELEVATOR_MAX_HEIGHT = Units.inchesToMeters(48.0);
-        public static final double ELEVATOR_MINIMUM_HEIGHT = Units.inchesToMeters(27.0);
+        public static final double ELEVATOR_MINIMUM_HEIGHT = Units.inchesToMeters(6.0);
         public static final double CLIMBING_HOOKS_MINIMUM_HEIGHT = Units.inchesToMeters(12.0);
+        public static final double ELEVATOR_MAX_HEIGHT = ELEVATOR_MINIMUM_HEIGHT + Units.inchesToMeters(21.0); //TODO: Fix these constants to be more accurate
         public static final double CLIMBING_HOOKS_MAX_HEIGHT = CLIMBING_HOOKS_MINIMUM_HEIGHT + ELEVATOR_MAX_HEIGHT - ELEVATOR_MINIMUM_HEIGHT;
+
+        public static final double GEAR_RATIO = 2.0 / 1.0; //TODO: Get constants right sometime
+        public static final int LEADER_ID = -1;
+        public static final int FOLLOWER_ID = -1;
+        public static final double KS = 0.25;
+        public static final double KV = 0.12;
+        public static final double KA = 0.01;
+        public static final double KP = 4.8;
+        public static final double KI = 0;
+        public static final double KD = 0.1;
+        public static final double KG = 0;
+        public static final double CRUISE_VELOCITY_MPS = 2;
+        public static final double MAXIMUM_ACCELERATION_MPS2 = 20;
+        public static final double JERK_MPS3 = 40;
+        public static final double SPROCKET_RADIUS_M = 0.022;
+        public static final double SPROCKET_CIRCUMFERENCE_M = 2 * SPROCKET_RADIUS_M * Math.PI;
+        public static final double MOTOR_ROTS_TO_METERS = GEAR_RATIO * SPROCKET_CIRCUMFERENCE_M;
+        public static final double ERROR_TOLERANCE = 0.03;
+        public static final double SIM_CARRIAGE_MASS_KG = 1.55; //TODO: check this number :)
 
         public enum ElevatorState {
             /**
@@ -177,15 +197,15 @@ public final class Constants {
             /**
              * At height for top of initial climb :D
              */
-            CLIMB(254.0), //TODO: Find these values :D
+            CLIMB(CHAIN_HEIGHT_METERS + 0.1 - (CLIMBING_HOOKS_MINIMUM_HEIGHT - ELEVATOR_MINIMUM_HEIGHT)), //TODO: Find these values :D
             /**
              * At height for trap doing :D
              */
-            TRAP(254.0), //TODO: Find these values :D
+            TRAP(27.0), //TODO: Find these values :D
             /**
              * At height for top of initial climb :D
              */
-            AMP(254.0); //TODO: Find these values :D
+            AMP(27.0); //TODO: Find these values :D
 
             public final double heightMeters;
             ElevatorState(double heightMeters) {
@@ -199,5 +219,6 @@ public final class Constants {
         public static final double TRAP_SCORING_TIME_SECONDS = 1.114; //TODO: Find these values :D
         public static final int TRAMP_MOTOR_ID = -1; //TODO: Configure this later
         public static final int TRAMP_BEAM_BREAK_CHANNEL = -1; //TODO: Configure this later
+
     }
 }

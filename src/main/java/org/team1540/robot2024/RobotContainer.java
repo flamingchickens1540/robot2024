@@ -10,10 +10,17 @@ import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 
 import org.littletonrobotics.junction.networktables.LoggedDashboardNumber;
+import org.team1540.robot2024.Constants.Elevator.ElevatorState;
 import org.team1540.robot2024.commands.FeedForwardCharacterization;
 import org.team1540.robot2024.commands.SwerveDriveCommand;
+import org.team1540.robot2024.commands.elevator.ElevatorManualCommand;
+import org.team1540.robot2024.commands.elevator.ElevatorSetpointCommand;
 import org.team1540.robot2024.commands.indexer.IntakeCommand;
 import org.team1540.robot2024.subsystems.drive.*;
+import org.team1540.robot2024.subsystems.elevator.Elevator;
+import org.team1540.robot2024.subsystems.elevator.ElevatorIO;
+import org.team1540.robot2024.subsystems.elevator.ElevatorIOSim;
+import org.team1540.robot2024.subsystems.elevator.ElevatorIOTalonFX;
 import org.team1540.robot2024.subsystems.tramp.Tramp;
 import org.team1540.robot2024.subsystems.tramp.TrampIO;
 import org.team1540.robot2024.subsystems.tramp.TrampIOSim;
@@ -45,13 +52,13 @@ public class RobotContainer {
     public final Drivetrain drivetrain;
     public final Tramp tramp;
     public final Shooter shooter;
+    public final Elevator elevator;
     public final Indexer indexer;
     public final AprilTagVision aprilTagVision;
 
     // Controller
     public final CommandXboxController driver = new CommandXboxController(0);
     public final CommandXboxController copilot = new CommandXboxController(1);
-
 
     // Dashboard inputs
     public final LoggedDashboardChooser<Command> autoChooser;
@@ -78,6 +85,7 @@ public class RobotContainer {
                                 new ModuleIOTalonFX(SwerveFactory.getModuleMotors(SwerveConfig.BACK_RIGHT, SwerveFactory.SwerveCorner.BACK_RIGHT), odometrySignalRefresher));
                 tramp = new Tramp(new TrampIOSparkMax());
                 shooter = new Shooter(new ShooterPivotIOTalonFX(), new FlywheelsIOTalonFX());
+                elevator = new Elevator(new ElevatorIOTalonFX());
                 indexer =
                         new Indexer(
                                 new IndexerIOSparkMax()
@@ -100,6 +108,7 @@ public class RobotContainer {
                                 new ModuleIOSim());
                 tramp = new Tramp(new TrampIOSim());
                 shooter = new Shooter(new ShooterPivotIOSim(), new FlywheelsIOSim());
+                elevator = new Elevator(new ElevatorIOSim());
                 aprilTagVision =
                         new AprilTagVision(
                                 new AprilTagVisionIOSim(Constants.Vision.FRONT_CAMERA_NAME, Constants.Vision.FRONT_CAMERA_POSE, drivetrain::getPose),
@@ -122,6 +131,7 @@ public class RobotContainer {
                                 new ModuleIO() {},
                                 new ModuleIO() {});
                 shooter = new Shooter(new ShooterPivotIO() {}, new FlywheelsIO() {});
+                elevator = new Elevator(new ElevatorIO() {});
                 aprilTagVision =
                         new AprilTagVision(
                                 new AprilTagVisionIO() {},
@@ -166,6 +176,9 @@ public class RobotContainer {
      */
     private void configureButtonBindings() {
         drivetrain.setDefaultCommand(new SwerveDriveCommand(drivetrain, driver));
+        elevator.setDefaultCommand(new ElevatorManualCommand(elevator, copilot));
+        copilot.rightBumper().onTrue(new ElevatorSetpointCommand(elevator, ElevatorState.TOP));
+        copilot.leftBumper().onTrue(new ElevatorSetpointCommand(elevator, ElevatorState.BOTTOM));
         driver.x().onTrue(Commands.runOnce(drivetrain::stopWithX, drivetrain));
         driver.b().onTrue(
                 Commands.runOnce(
