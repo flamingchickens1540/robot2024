@@ -58,13 +58,12 @@ public class AprilTagVisionIOSim implements AprilTagVisionIO {
                 PhotonPoseEstimator.PoseStrategy.MULTI_TAG_PNP_ON_COPROCESSOR,
                 camera,
                 cameraTransform);
-        photonEstimator.setMultiTagFallbackStrategy(PhotonPoseEstimator.PoseStrategy.CLOSEST_TO_LAST_POSE);
+        photonEstimator.setMultiTagFallbackStrategy(PhotonPoseEstimator.PoseStrategy.LOWEST_AMBIGUITY);
         lastEstimatedPose = poseSupplier.get();
     }
 
     @Override
     public void updateInputs(AprilTagVisionIOInputs inputs) {
-        photonEstimator.setReferencePose(lastEstimatedPose);
         visionSystemSim.update(poseSupplier.get());
 
         Optional<EstimatedRobotPose> estimatedPose = photonEstimator.update();
