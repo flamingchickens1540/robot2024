@@ -1,1 +1,2 @@
-src/main/deploy/** linguist-generated=true
+src/main/deploy/** linguist-language=JSON linguist-generated=true
+**/*.java               text=auto
