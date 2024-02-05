@@ -27,7 +27,7 @@ public class Leds extends SubsystemBase {
     @Override
     public void periodic() {
         for (int i = 0; i < ZONE_COUNT;i++) {
-            if (patterns[i].isDynamic) {
+            if (patterns[i].isDynamic()) {
                 patterns[i].apply(buffers[i]);
             }
         }
@@ -36,7 +36,7 @@ public class Leds extends SubsystemBase {
 
     public void setPattern(Zone zone, LedPattern pattern) {
         patterns[zone.ordinal()] = pattern;
-        if (!pattern.isDynamic) {
+        if (!pattern.isDynamic()) {
             pattern.apply(buffers[zone.ordinal()]);
         }
     }

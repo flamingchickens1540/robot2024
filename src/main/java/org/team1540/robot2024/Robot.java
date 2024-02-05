@@ -10,10 +10,7 @@ import org.littletonrobotics.junction.Logger;
 import org.littletonrobotics.junction.networktables.NT4Publisher;
 import org.littletonrobotics.junction.wpilog.WPILOGReader;
 import org.littletonrobotics.junction.wpilog.WPILOGWriter;
-import org.team1540.robot2024.subsystems.led.LedPattern;
-import org.team1540.robot2024.subsystems.led.LedPatternRainbow;
-import org.team1540.robot2024.subsystems.led.LedPatternWave;
-import org.team1540.robot2024.subsystems.led.Leds;
+import org.team1540.robot2024.subsystems.led.*;
 import org.team1540.robot2024.util.MechanismVisualiser;
 
 /**
@@ -106,8 +103,8 @@ public class Robot extends LoggedRobot {
      */
     @Override
     public void disabledInit() {
-        robotContainer.leds.setPattern(Leds.Zone.ZONE1, LedPattern.solid(Color.kBlueViolet));
-        robotContainer.leds.setPattern(Leds.Zone.ZONE2, LedPattern.solid(Color.kPaleVioletRed));
+        robotContainer.leds.setPattern(Leds.Zone.ZONE1, SimpleLedPattern.solid(Color.kBlueViolet));
+        robotContainer.leds.setPattern(Leds.Zone.ZONE2, SimpleLedPattern.solid(Color.kPaleVioletRed));
     }
 
     /**
@@ -122,7 +119,7 @@ public class Robot extends LoggedRobot {
      */
     @Override
     public void autonomousInit() {
-        robotContainer.leds.setPattern(Leds.Zone.ZONE1,LedPattern.alternating(Color.kBlueViolet, Color.kCrimson));
+        robotContainer.leds.setPattern(Leds.Zone.ZONE1,SimpleLedPattern.alternating(Color.kBlueViolet, Color.kCrimson));
         autonomousCommand = robotContainer.getAutonomousCommand();
         // schedule the autonomous command (example)
         if (autonomousCommand != null) {
@@ -146,7 +143,7 @@ public class Robot extends LoggedRobot {
         // teleop starts running. If you want the autonomous to
         // continue until interrupted by another command, remove
         // this line or comment it out.
-        robotContainer.leds.setPattern(Leds.Zone.ZONE1, LedPattern.alternating(Color.kBlueViolet, Color.kGreen));
+        robotContainer.leds.setPattern(Leds.Zone.ZONE1, SimpleLedPattern.alternating(Color.kBlueViolet, Color.kGreen));
         if (autonomousCommand != null) {
             autonomousCommand.cancel();
         }
