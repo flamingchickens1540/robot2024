@@ -27,6 +27,7 @@ import org.team1540.robot2024.subsystems.indexer.Indexer;
 import org.team1540.robot2024.subsystems.indexer.IndexerIO;
 import org.team1540.robot2024.subsystems.indexer.IndexerIOSim;
 import org.team1540.robot2024.subsystems.indexer.IndexerIOSparkMax;
+import org.team1540.robot2024.subsystems.led.Leds;
 import org.team1540.robot2024.subsystems.shooter.*;
 import org.team1540.robot2024.subsystems.tramp.Tramp;
 import org.team1540.robot2024.subsystems.tramp.TrampIO;
@@ -56,6 +57,7 @@ public class RobotContainer {
     public final Elevator elevator;
     public final Indexer indexer;
     public final AprilTagVision aprilTagVision;
+    public final Leds leds = new Leds();
 
     // Controller
     public final CommandXboxController driver = new CommandXboxController(0);
