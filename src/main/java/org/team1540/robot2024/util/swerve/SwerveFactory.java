@@ -9,8 +9,8 @@ import com.ctre.phoenix6.signals.FeedbackSensorSourceValue;
 import com.ctre.phoenix6.signals.InvertedValue;
 import com.ctre.phoenix6.signals.SensorDirectionValue;
 
-import static org.team1540.robot2024.Constants.SwerveConfig.CAN_BUS;
 import static org.team1540.robot2024.Constants.Drivetrain.TURN_GEAR_RATIO;
+import static org.team1540.robot2024.Constants.SwerveConfig.CAN_BUS;
 
 
 public class SwerveFactory {
@@ -36,6 +36,7 @@ public class SwerveFactory {
         BACK_RIGHT(0.5);
 
         private final double offsetRots;
+
         SwerveCorner(double offsetRots) {
             this.offsetRots = offsetRots;
         }
@@ -76,7 +77,7 @@ public class SwerveFactory {
             turnConfig.Feedback.SensorToMechanismRatio = 1.0;
             turnConfig.Feedback.RotorToSensorRatio = TURN_GEAR_RATIO;
 
-            canCoderConfig.MagnetSensor.MagnetOffset = moduleOffsetsRots[id-1] + corner.offsetRots;
+            canCoderConfig.MagnetSensor.MagnetOffset = moduleOffsetsRots[id - 1] + corner.offsetRots;
             canCoderConfig.MagnetSensor.SensorDirection = SensorDirectionValue.CounterClockwise_Positive;
             canCoderConfig.MagnetSensor.AbsoluteSensorRange = AbsoluteSensorRangeValue.Unsigned_0To1;
 

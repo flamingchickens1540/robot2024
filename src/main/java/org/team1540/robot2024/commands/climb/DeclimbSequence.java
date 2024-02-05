@@ -9,9 +9,9 @@ import org.team1540.robot2024.subsystems.fakesubsystems.Hooks;
 public class DeclimbSequence extends SequentialCommandGroup {
     public DeclimbSequence(Elevator elevator, Hooks hooks) {
         addCommands(
-            new ElevatorSetpointCommand(elevator, ElevatorState.BOTTOM),
-            hooks.undeployHooksCommand(), //Release hooks
-            new ElevatorSetpointCommand(elevator, ElevatorState.TOP)
+                new ElevatorSetpointCommand(elevator, ElevatorState.BOTTOM),
+                hooks.undeployHooksCommand(), //Release hooks
+                new ElevatorSetpointCommand(elevator, ElevatorState.TOP)
         );
     }
 }

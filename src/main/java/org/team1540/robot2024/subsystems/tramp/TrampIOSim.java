@@ -7,10 +7,11 @@ import org.team1540.robot2024.Constants;
 
 import static org.team1540.robot2024.Constants.Tramp.GEAR_RATIO;
 
-public class TrampIOSim implements TrampIO{
-    private final DCMotorSim sim = new DCMotorSim(DCMotor.getNEO(1), GEAR_RATIO,0.025); //TODO: Fix MOI its probably wrong :D
+public class TrampIOSim implements TrampIO {
+    private final DCMotorSim sim = new DCMotorSim(DCMotor.getNEO(1), GEAR_RATIO, 0.025); //TODO: Fix MOI its probably wrong :D
 
     private double appliedVolts = 0.0;
+
     @Override
     public void updateInputs(TrampIOInputs inputs) {
         sim.update(Constants.LOOP_PERIOD_SECS);

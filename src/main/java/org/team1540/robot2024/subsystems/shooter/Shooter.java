@@ -2,12 +2,17 @@ package org.team1540.robot2024.subsystems.shooter;
 
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.geometry.Rotation2d;
-import edu.wpi.first.wpilibj2.command.*;
+import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.FunctionalCommand;
+import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import org.littletonrobotics.junction.Logger;
 import org.team1540.robot2024.util.LoggedTunableNumber;
 import org.team1540.robot2024.util.math.AverageFilter;
 
-import static org.team1540.robot2024.Constants.Shooter.*;
+import java.util.function.Supplier;
+
+import static org.team1540.robot2024.Constants.Shooter.Flywheels;
+import static org.team1540.robot2024.Constants.Shooter.Pivot;
 
 public class Shooter extends SubsystemBase {
     private final ShooterPivotIO pivotIO;
@@ -147,7 +152,7 @@ public class Shooter extends SubsystemBase {
     public boolean areFlywheelsSpunUp() {
         return
                 MathUtil.isNear(leftFlywheelSetpointRPM, leftSpeedFilter.getAverage(), Flywheels.ERROR_TOLERANCE_RPM) &&
-                MathUtil.isNear(rightFlywheelSetpointRPM, rightSpeedFilter.getAverage(), Flywheels.ERROR_TOLERANCE_RPM);
+                        MathUtil.isNear(rightFlywheelSetpointRPM, rightSpeedFilter.getAverage(), Flywheels.ERROR_TOLERANCE_RPM);
     }
 
     /**
@@ -158,9 +163,9 @@ public class Shooter extends SubsystemBase {
                 pivotSetpoint.getRotations(), pivotPositionFilter.getAverage(), Pivot.ERROR_TOLERANCE.getRotations());
     }
 
-    public Command spinUpCommand(double leftSetpoint, double rightSetpoint) {
+    public Command spinUpCommand(Supplier<Double> leftSetpoint, Supplier<Double> rightSetpoint) {
         return new FunctionalCommand(
-                () -> setFlywheelSpeeds(leftSetpoint, rightSetpoint),
+                () -> setFlywheelSpeeds(leftSetpoint.get(), rightSetpoint.get()),
                 () -> {},
                 (ignored) -> {},
                 this::areFlywheelsSpunUp,
@@ -175,4 +180,5 @@ public class Shooter extends SubsystemBase {
                 this::isPivotAtSetpoint,
                 this);
     }
+
 }

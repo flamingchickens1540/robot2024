@@ -26,7 +26,7 @@ public class AverageFilter {
     }
 
     public double getAverage() {
-        return sum/(double) items.size();
+        return sum / (double) items.size();
     }
 }
 

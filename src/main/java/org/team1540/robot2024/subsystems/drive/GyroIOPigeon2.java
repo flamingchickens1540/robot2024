@@ -8,7 +8,7 @@ import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.util.Units;
 import org.team1540.robot2024.util.PhoenixTimeSyncSignalRefresher;
 
-import static org.team1540.robot2024.Constants.SwerveConfig.*;
+import static org.team1540.robot2024.Constants.SwerveConfig.PIGEON_ID;
 
 /**
  * IO implementation for Pigeon2

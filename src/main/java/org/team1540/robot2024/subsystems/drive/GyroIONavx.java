@@ -5,11 +5,11 @@ import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.SPI;
 import edu.wpi.first.wpilibj.Timer;
 
-public class GyroIONavx implements GyroIO{
+public class GyroIONavx implements GyroIO {
     private final AHRS navx = new AHRS(SPI.Port.kMXP);
     private Rotation2d lastAngle;
 
-    public GyroIONavx(){
+    public GyroIONavx() {
         lastAngle = navx.getRotation2d();
     }
 
@@ -20,7 +20,7 @@ public class GyroIONavx implements GyroIO{
         inputs.time = Timer.getFPGATimestamp();
         inputs.connected = navx.isConnected();
         inputs.yawPosition = angle;
-        inputs.yawVelocityRadPerSec = (angle.minus(lastAngle).getRadians())/(inputs.time - lastTime);
+        inputs.yawVelocityRadPerSec = (angle.minus(lastAngle).getRadians()) / (inputs.time - lastTime);
         lastAngle = angle;
     }
 }

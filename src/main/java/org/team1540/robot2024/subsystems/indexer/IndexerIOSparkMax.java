@@ -1,6 +1,9 @@
 package org.team1540.robot2024.subsystems.indexer;
 
-import com.revrobotics.*;
+import com.revrobotics.CANSparkBase;
+import com.revrobotics.CANSparkLowLevel;
+import com.revrobotics.CANSparkMax;
+import com.revrobotics.SparkPIDController;
 import edu.wpi.first.math.controller.SimpleMotorFeedforward;
 import edu.wpi.first.wpilibj.DigitalInput;
 

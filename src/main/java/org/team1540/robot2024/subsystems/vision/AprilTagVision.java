@@ -12,7 +12,8 @@ import java.util.Optional;
 import java.util.function.Consumer;
 import java.util.function.Supplier;
 
-import static org.team1540.robot2024.Constants.Vision.*;
+import static org.team1540.robot2024.Constants.Vision.FRONT_CAMERA_POSE;
+import static org.team1540.robot2024.Constants.Vision.REAR_CAMERA_POSE;
 
 public class AprilTagVision extends SubsystemBase {
     private final AprilTagVisionIO frontCameraIO;
