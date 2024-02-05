@@ -1,5 +1,6 @@
 package org.team1540.robot2024.subsystems.indexer;
 
+import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
@@ -52,7 +53,10 @@ public class Indexer extends SubsystemBase {
         return Commands.runOnce(() -> io.setFeederVelocity(1200), this);
     }
 
-    // TODO: Add method to check if feeder is spun up
+    public boolean isFeederAtSetpoint() {
+        return Math.abs(inputs.feederVelocityError) < VELOCITY_ERR_TOLERANCE_RPM;
+//        return MathUtil.isNear(inputs.setpointRPM, inputs.feederVelocityRPM, VELOCITY_ERR_TOLERANCE_RPM);
+    }
 
     public void stopFeeder() {
         io.setFeederVoltage(0);
