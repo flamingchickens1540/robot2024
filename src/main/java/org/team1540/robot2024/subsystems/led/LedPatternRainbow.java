@@ -1,12 +1,11 @@
 package org.team1540.robot2024.subsystems.led;
 
-import static java.lang.Math.round;
-
 public class LedPatternRainbow extends LedPattern {
     private final int speed;
-    int initialHue = 0;
+    private int initialHue = 0;
+
     public LedPatternRainbow(int speed) {
-        super(null, true);
+        super(true);
         this.speed = speed;
     }
 
