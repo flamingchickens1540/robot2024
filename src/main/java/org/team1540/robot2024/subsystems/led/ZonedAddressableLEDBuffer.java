@@ -30,7 +30,6 @@ class ZonedAddressableLEDBuffer {
     }
 
     public void setLED(int index, Color color) {
-        System.out.println(this.getAbsoluteIndex(index));
         buffer.setLED(this.getAbsoluteIndex(index), color);
     }
 
