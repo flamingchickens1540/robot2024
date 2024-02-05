@@ -24,7 +24,7 @@ public class StageTrampCommand extends Command {
 
     @Override
     public boolean isFinished() {
-        return tramp.isBeamBreakBlocked();
+        return tramp.isNoteStaged();
     }
 
     @Override

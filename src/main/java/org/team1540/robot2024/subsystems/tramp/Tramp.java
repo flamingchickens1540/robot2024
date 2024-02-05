@@ -15,7 +15,7 @@ public class Tramp extends SubsystemBase {
         io.setVoltage(12.0 * percentage);
     }
 
-    public boolean isBeamBreakBlocked() {
+    public boolean isNoteStaged() {
         return inputs.breamBreakTripped;
     }
 

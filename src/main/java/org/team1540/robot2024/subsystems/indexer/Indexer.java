@@ -36,7 +36,7 @@ public class Indexer extends SubsystemBase {
         io.setIntakeVoltage(percent * 12.0);
     }
 
-    public boolean isNotePresent() {
+    public boolean isNoteStaged() {
         return inputs.noteInIntake;
     }
 
