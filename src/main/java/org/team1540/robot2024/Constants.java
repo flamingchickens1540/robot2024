@@ -110,8 +110,8 @@ public final class Constants {
     public static class Shooter {
         public static class Flywheels {
             // TODO: determine ids
-            public static final int LEFT_ID = 0;
-            public static final int RIGHT_ID = 0;
+            public static final int LEFT_ID = 11;
+            public static final int RIGHT_ID = 12;
 
             public static final double GEAR_RATIO = 24.0 / 36.0;
             public static final double SIM_MOI = 4.08232288e-4;
@@ -120,7 +120,7 @@ public final class Constants {
             public static final double KP = 0.4;
             public static final double KI = 0.0;
             public static final double KD = 0.0;
-            public static final double KS = 0.01146;
+            public static final double KS = 0.26925;
             public static final double KV = 0.07485; // TODO: this is what recalc says, may have to tune
 
             public static final double ERROR_TOLERANCE_RPM = 50;
