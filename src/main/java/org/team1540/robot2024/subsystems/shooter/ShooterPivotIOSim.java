@@ -37,7 +37,7 @@ public class ShooterPivotIOSim implements ShooterPivotIO {
         if (isClosedLoop) {
             appliedVolts =
                     controller.calculate(Units.radiansToRotations(sim.getAngleRads()), goalState)
-                    + feedforward.calculate(
+                            + feedforward.calculate(
                             Units.rotationsToRadians(controller.getSetpoint().position),
                             controller.getSetpoint().velocity);
         }

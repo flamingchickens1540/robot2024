@@ -5,8 +5,9 @@ import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.system.plant.DCMotor;
 import edu.wpi.first.wpilibj.simulation.DCMotorSim;
 
-import static org.team1540.robot2024.Constants.Drivetrain.*;
-import static org.team1540.robot2024.Constants.*;
+import static org.team1540.robot2024.Constants.Drivetrain.DRIVE_GEAR_RATIO;
+import static org.team1540.robot2024.Constants.Drivetrain.TURN_GEAR_RATIO;
+import static org.team1540.robot2024.Constants.LOOP_PERIOD_SECS;
 
 /**
  * Physics sim implementation of module IO.
@@ -16,7 +17,6 @@ import static org.team1540.robot2024.Constants.*;
  * approximation for the behavior of the module.
  */
 public class ModuleIOSim implements ModuleIO {
-    private final Rotation2d turnAbsoluteInitPosition = new Rotation2d(Math.random() * 2.0 * Math.PI);
     private final DCMotorSim driveSim = new DCMotorSim(DCMotor.getFalcon500Foc(1), DRIVE_GEAR_RATIO, 0.025);
     private final DCMotorSim turnSim = new DCMotorSim(DCMotor.getFalcon500Foc(1), TURN_GEAR_RATIO, 0.004);
     private double driveAppliedVolts = 0.0;
@@ -32,8 +32,8 @@ public class ModuleIOSim implements ModuleIO {
         inputs.driveAppliedVolts = driveAppliedVolts;
         inputs.driveCurrentAmps = Math.abs(driveSim.getCurrentDrawAmps());
 
-        inputs.turnAbsolutePosition = new Rotation2d(turnSim.getAngularPositionRad()).plus(turnAbsoluteInitPosition);
-        inputs.turnPosition = new Rotation2d(turnSim.getAngularPositionRad());
+        inputs.turnAbsolutePosition = Rotation2d.fromRadians(turnSim.getAngularPositionRad());
+        inputs.turnPosition = Rotation2d.fromRadians(turnSim.getAngularPositionRad());
         inputs.turnVelocityRadPerSec = turnSim.getAngularVelocityRadPerSec();
         inputs.turnAppliedVolts = turnAppliedVolts;
         inputs.turnCurrentAmps = Math.abs(turnSim.getCurrentDrawAmps());

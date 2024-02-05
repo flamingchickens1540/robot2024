@@ -1,6 +1,8 @@
 package org.team1540.robot2024;
 
+import edu.wpi.first.math.geometry.Pose3d;
 import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.geometry.Rotation3d;
 import edu.wpi.first.math.util.Units;
 
 /**
@@ -16,7 +18,7 @@ public final class Constants {
     // Whether to pull PID constants from SmartDashboard
     public static final boolean tuningMode = true; // TODO: DO NOT SET TO TRUE FOR COMP
     private static final Mode simMode = Mode.SIM; // Can also be Mode.REPLAY
-    
+
     public static final Mode currentMode = Robot.isReal() ? Mode.REAL : simMode;
 
     public enum Mode {
@@ -39,11 +41,14 @@ public final class Constants {
     public static final double LOOP_PERIOD_SECS = 0.02;
 
     public static class SwerveConfig {
-        public static final String CAN_BUS = IS_COMPETITION_ROBOT ? "" : "";
+        public static final String CAN_BUS  = IS_COMPETITION_ROBOT ? "" : "";
         public static final int FRONT_LEFT  = IS_COMPETITION_ROBOT ? 3 : 0;
         public static final int FRONT_RIGHT = IS_COMPETITION_ROBOT ? 4 : 0;
         public static final int BACK_LEFT   = IS_COMPETITION_ROBOT ? 7 : 0;
         public static final int BACK_RIGHT  = IS_COMPETITION_ROBOT ? 1 : 0;
+
+        // TODO: set this id
+        public static final int PIGEON_ID = 0;
     }
 
     public static class Drivetrain {
@@ -58,6 +63,49 @@ public final class Constants {
         public static final double DRIVE_BASE_RADIUS = Math.hypot(TRACK_WIDTH_X / 2.0, TRACK_WIDTH_Y / 2.0);
         public static final double MAX_ANGULAR_SPEED = MAX_LINEAR_SPEED / DRIVE_BASE_RADIUS;
     }
+
+    public static class Indexer {
+        // TODO: fix these constants
+        public static final int INTAKE_ID = 11;
+        public static final int FEEDER_ID = 12;
+        public static final double FEEDER_KP = 0.5;
+        public static final double FEEDER_KI = 0.1;
+        public static final double FEEDER_KD = 0.001;
+        public static final double FEEDER_KS = 0.0;
+        public static final double FEEDER_KV = 0.0;
+        public static final double FEEDER_GEAR_RATIO = 1.0;
+        public static final double INTAKE_GEAR_RATIO = 1.0;
+        public static final double INTAKE_MOI = 0.025;
+        public static final double FEEDER_MOI = 0.025;
+        public static final int BEAM_BREAK_ID = 0;
+
+
+    }
+
+
+    public static class Vision {
+        public static final String FRONT_CAMERA_NAME = "limelight-front";
+        public static final String REAR_CAMERA_NAME = "limelight-rear";
+
+        // TODO: measure these offsets
+        public static final Pose3d FRONT_CAMERA_POSE = new Pose3d(0, 0, 0.5, new Rotation3d());
+        public static final Pose3d REAR_CAMERA_POSE = new Pose3d(0, 0, 0.5, new Rotation3d(0, 0, Math.PI));
+
+        // TODO: find these values
+        public static final double MAX_VISION_DELAY_SECS = 0.08;
+        public static final double MAX_ACCEPTED_ROT_SPEED_RAD_PER_SEC = 1.0;
+        public static final double MAX_ACCEPTED_LINEAR_SPEED_MPS = 4.0;
+        public static final double MIN_ACCEPTED_NUM_TAGS = 1;
+        public static final double MAX_ACCEPTED_AVG_TAG_DIST_METERS = 8.0;
+        public static final double MAX_ACCEPTED_ELEVATOR_SPEED_MPS = 0.05;
+
+        public static final int SIM_RES_WIDTH = 1280;
+        public static final int SIM_RES_HEIGHT = 960;
+        public static final Rotation2d SIM_DIAGONAL_FOV = Rotation2d.fromDegrees(100);
+        public static final double SIM_FPS = 14.5;
+        public static final double SIM_AVG_LATENCY_MS = 67.0;
+    }
+
 
     public static class Shooter {
         public static class Flywheels {
@@ -114,10 +162,29 @@ public final class Constants {
 
     public static class Elevator {
         public static final double CHAIN_HEIGHT_METERS = Units.inchesToMeters(28.25);
-        public static final double ELEVATOR_MAX_HEIGHT = Units.inchesToMeters(48.0);
-        public static final double ELEVATOR_MINIMUM_HEIGHT = Units.inchesToMeters(27.0);
+        public static final double ELEVATOR_MINIMUM_HEIGHT = Units.inchesToMeters(6.0);
         public static final double CLIMBING_HOOKS_MINIMUM_HEIGHT = Units.inchesToMeters(12.0);
+        public static final double ELEVATOR_MAX_HEIGHT = ELEVATOR_MINIMUM_HEIGHT + Units.inchesToMeters(21.0); //TODO: Fix these constants to be more accurate
         public static final double CLIMBING_HOOKS_MAX_HEIGHT = CLIMBING_HOOKS_MINIMUM_HEIGHT + ELEVATOR_MAX_HEIGHT - ELEVATOR_MINIMUM_HEIGHT;
+
+        public static final double GEAR_RATIO = 2.0; //TODO: Get constants right sometime
+        public static final int LEADER_ID = -1;
+        public static final int FOLLOWER_ID = -1;
+        public static final double KS = 0.25;
+        public static final double KV = 0.12;
+        public static final double KA = 0.01;
+        public static final double KP = 4.8;
+        public static final double KI = 0;
+        public static final double KD = 0.1;
+        public static final double KG = 0;
+        public static final double CRUISE_VELOCITY_MPS = 2;
+        public static final double MAXIMUM_ACCELERATION_MPS2 = 20;
+        public static final double JERK_MPS3 = 40;
+        public static final double SPROCKET_RADIUS_M = 0.022;
+        public static final double SPROCKET_CIRCUMFERENCE_M = 2 * SPROCKET_RADIUS_M * Math.PI;
+        public static final double MOTOR_ROTS_TO_METERS = GEAR_RATIO * SPROCKET_CIRCUMFERENCE_M;
+        public static final double POS_ERR_TOLERANCE_METERS = 0.03;
+        public static final double SIM_CARRIAGE_MASS_KG = 1.55; //TODO: check this number :)
 
         public enum ElevatorState {
             /**
@@ -131,17 +198,18 @@ public final class Constants {
             /**
              * At height for top of initial climb :D
              */
-            CLIMB(254.0), //TODO: Find these values :D
+            CLIMB(CHAIN_HEIGHT_METERS + 0.1 - (CLIMBING_HOOKS_MINIMUM_HEIGHT - ELEVATOR_MINIMUM_HEIGHT)), //TODO: Find these values :D
             /**
              * At height for trap doing :D
              */
-            TRAP(254.0), //TODO: Find these values :D
+            TRAP(27.0), //TODO: Find these values :D
             /**
              * At height for top of initial climb :D
              */
-            AMP(254.0); //TODO: Find these values :D
+            AMP(27.0); //TODO: Find these values :D
 
             public final double heightMeters;
+
             ElevatorState(double heightMeters) {
                 this.heightMeters = heightMeters;
             }
@@ -149,9 +217,10 @@ public final class Constants {
     }
 
     public static class Tramp {
-        public static final double GEAR_RATIO = 3.0 / 1.0;
+        public static final double GEAR_RATIO = 3.0;
         public static final double TRAP_SCORING_TIME_SECONDS = 1.114; //TODO: Find these values :D
         public static final int TRAMP_MOTOR_ID = -1; //TODO: Configure this later
         public static final int TRAMP_BEAM_BREAK_CHANNEL = -1; //TODO: Configure this later
+
     }
 }

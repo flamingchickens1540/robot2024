@@ -5,19 +5,21 @@ import com.pathplanner.lib.pathfinding.Pathfinding;
 import com.pathplanner.lib.util.HolonomicPathFollowerConfig;
 import com.pathplanner.lib.util.PathPlannerLogging;
 import com.pathplanner.lib.util.ReplanningConfig;
+import edu.wpi.first.math.VecBuilder;
+import edu.wpi.first.math.estimator.SwerveDrivePoseEstimator;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
-import edu.wpi.first.math.geometry.Twist2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
-import org.team1540.robot2024.util.LocalADStarAK;
 import org.littletonrobotics.junction.AutoLogOutput;
 import org.littletonrobotics.junction.Logger;
+import org.team1540.robot2024.util.LocalADStarAK;
+import org.team1540.robot2024.util.vision.TimestampedVisionPose;
 
 import static org.team1540.robot2024.Constants.Drivetrain.*;
 
@@ -27,9 +29,10 @@ public class Drivetrain extends SubsystemBase {
     private final Module[] modules = new Module[4]; // FL, FR, BL, BR
 
     private final SwerveDriveKinematics kinematics = new SwerveDriveKinematics(getModuleTranslations());
-    private Pose2d pose = new Pose2d();
-    private Rotation2d lastGyroRotation = new Rotation2d();
+    private Rotation2d rawGyroRotation = new Rotation2d();
     private boolean forceModuleAngleChange = false;
+
+    private final SwerveDrivePoseEstimator poseEstimator;
 
     public Drivetrain(
             GyroIO gyroIO,
@@ -42,6 +45,15 @@ public class Drivetrain extends SubsystemBase {
         modules[1] = new Module(frModuleIO, 1);
         modules[2] = new Module(blModuleIO, 2);
         modules[3] = new Module(brModuleIO, 3);
+
+        poseEstimator = new SwerveDrivePoseEstimator(
+                kinematics,
+                rawGyroRotation,
+                getModulePositions(),
+                new Pose2d(),
+                // TODO: tune std devs (scale vision by distance?)
+                VecBuilder.fill(0.1, 0.1, 0.1),
+                VecBuilder.fill(0.5, 0.5, 5.0)); // Trust the gyro more than the AprilTags
 
         // Configure AutoBuilder for PathPlanner
         AutoBuilder.configureHolonomic(
@@ -60,6 +72,7 @@ public class Drivetrain extends SubsystemBase {
                 (targetPose) -> Logger.recordOutput("Odometry/TrajectorySetpoint", targetPose));
     }
 
+    @Override
     public void periodic() {
         gyroIO.updateInputs(gyroInputs);
         Logger.processInputs("Drivetrain/Gyro", gyroInputs);
@@ -67,37 +80,27 @@ public class Drivetrain extends SubsystemBase {
             module.periodic();
         }
 
-        // Stop moving when disabled
         if (DriverStation.isDisabled()) {
-            for (Module module : modules) {
-                module.stop();
-            }
-        }
-        // Log empty setpoint states when disabled
-        if (DriverStation.isDisabled()) {
+            // Stop moving when disabled
+            for (Module module : modules) module.stop();
+
+            // Log empty setpoint states when disabled
             Logger.recordOutput("SwerveStates/Setpoints", new SwerveModuleState[]{});
             Logger.recordOutput("SwerveStates/SetpointsOptimized", new SwerveModuleState[]{});
         }
 
-        // Update odometry
+        // Calculate module deltas
         SwerveModulePosition[] wheelDeltas = new SwerveModulePosition[4];
         for (int i = 0; i < 4; i++) {
             wheelDeltas[i] = modules[i].getPositionDelta();
         }
-        // The twist represents the motion of the robot since the last
-        // loop cycle in x, y, and theta based only on the modules,
-        // without the gyro. The gyro is always disconnected in simulation.
-        Twist2d twist = kinematics.toTwist2d(wheelDeltas);
-        if (gyroInputs.connected) {
-            // If the gyro is connected, replace the theta component of the twist
-            // with the change in angle since the last loop cycle.
-            twist =
-                    new Twist2d(
-                            twist.dx, twist.dy, gyroInputs.yawPosition.minus(lastGyroRotation).getRadians());
-            lastGyroRotation = gyroInputs.yawPosition;
-        }
-        // Apply the twist (change since last loop cycle) to the current pose
-        pose = pose.exp(twist);
+        // Use gyro rotation if gyro is connected, otherwise use module deltas to calculate rotation delta
+        rawGyroRotation =
+                gyroInputs.connected ?
+                        gyroInputs.yawPosition
+                        : rawGyroRotation.plus(Rotation2d.fromRadians(kinematics.toTwist2d(wheelDeltas).dtheta));
+        // Update odometry
+        poseEstimator.update(rawGyroRotation, getModulePositions());
     }
 
     /**
@@ -164,6 +167,10 @@ public class Drivetrain extends SubsystemBase {
         return driveVelocityAverage / 4.0;
     }
 
+    public ChassisSpeeds getChassisSpeeds() {
+        return kinematics.toChassisSpeeds(getModuleStates());
+    }
+
     /**
      * Returns the module states (turn angles and drive velocities) for all the modules.
      */
@@ -181,21 +188,34 @@ public class Drivetrain extends SubsystemBase {
      */
     @AutoLogOutput(key = "Odometry/Robot")
     public Pose2d getPose() {
-        return pose;
+        return poseEstimator.getEstimatedPosition();
     }
 
     /**
      * Returns the current odometry rotation.
      */
     public Rotation2d getRotation() {
-        return pose.getRotation();
+        return getPose().getRotation();
     }
 
     /**
      * Resets the current odometry pose.
      */
     public void setPose(Pose2d pose) {
-        this.pose = pose;
+        poseEstimator.resetPosition(rawGyroRotation, getModulePositions(), pose);
+    }
+
+    public void addVisionMeasurement(TimestampedVisionPose visionPose) {
+        poseEstimator.addVisionMeasurement(visionPose.poseMeters(), visionPose.timestampSecs());
+    }
+
+    public SwerveModulePosition[] getModulePositions() {
+        return new SwerveModulePosition[]{
+                modules[0].getPosition(),
+                modules[1].getPosition(),
+                modules[2].getPosition(),
+                modules[3].getPosition(),
+        };
     }
 
     /**
