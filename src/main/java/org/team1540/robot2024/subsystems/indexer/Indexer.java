@@ -1,6 +1,5 @@
 package org.team1540.robot2024.subsystems.indexer;
 
-import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
@@ -59,9 +58,15 @@ public class Indexer extends SubsystemBase {
     }
 
     public void stopFeeder() {
-        io.setFeederVoltage(0);
+        io.setFeederVoltage(0); // shouldn't stopFeeder probably set its velocity?
     }
     public void stopIntake() {
         io.setIntakeVoltage(0);
     }
+
+    public void stopAll() {
+        io.setIntakeVoltage(0);
+        io.setFeederVoltage(0);
+    }
+
 }

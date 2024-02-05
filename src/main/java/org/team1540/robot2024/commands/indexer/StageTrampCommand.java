@@ -17,9 +17,17 @@ public class StageTrampCommand extends Command {
 
     @Override
     public void initialize() {
-        tramp.setPercent(0.5);
         indexer.setFeederVelocity(-600);
-        indexer.setIntakePercent(0.5);
+    }
+
+    // This could instead be written like ShootSequence and PrepareIndexerForShooter, but perhaps that
+    // is more intelligent than what is needed for the tramp
+    @Override
+    public void execute() {
+        if (indexer.isFeederAtSetpoint()) {
+            tramp.setPercent(0.5);
+            indexer.setIntakePercent(0.5);
+        }
     }
 
     @Override
@@ -30,6 +38,7 @@ public class StageTrampCommand extends Command {
     @Override
     public void end(boolean interrupted) {
         indexer.stopFeeder();
+        indexer.stopIntake();
         tramp.stop();
     }
 }
