@@ -12,6 +12,7 @@ import org.littletonrobotics.junction.wpilog.WPILOGReader;
 import org.littletonrobotics.junction.wpilog.WPILOGWriter;
 import org.team1540.robot2024.subsystems.led.LedPattern;
 import org.team1540.robot2024.subsystems.led.LedPatternRainbow;
+import org.team1540.robot2024.subsystems.led.LedPatternWave;
 import org.team1540.robot2024.subsystems.led.Leds;
 import org.team1540.robot2024.util.MechanismVisualiser;
 
@@ -163,8 +164,8 @@ public class Robot extends LoggedRobot {
      */
     @Override
     public void testInit() {
-        robotContainer.leds.setPattern(Leds.Zone.ZONE1,new LedPatternRainbow(1));
-        robotContainer.leds.setPattern(Leds.Zone.ZONE2,new LedPatternRainbow(1));
+        robotContainer.leds.setPattern(Leds.Zone.ZONE1,new LedPatternWave());
+        robotContainer.leds.setPattern(Leds.Zone.ZONE2,new LedPatternWave());
         // Cancels all running commands at the start of test mode.
         CommandScheduler.getInstance().cancelAll();
     }
