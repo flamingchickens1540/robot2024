@@ -9,6 +9,8 @@ import org.littletonrobotics.junction.Logger;
 import org.team1540.robot2024.util.LoggedTunableNumber;
 import org.team1540.robot2024.util.math.AverageFilter;
 
+import java.util.function.Supplier;
+
 import static org.team1540.robot2024.Constants.Shooter.Flywheels;
 import static org.team1540.robot2024.Constants.Shooter.Pivot;
 
@@ -161,9 +163,9 @@ public class Shooter extends SubsystemBase {
                 pivotSetpoint.getRotations(), pivotPositionFilter.getAverage(), Pivot.ERROR_TOLERANCE.getRotations());
     }
 
-    public Command spinUpCommand(double leftSetpoint, double rightSetpoint) {
+    public Command spinUpCommand(Supplier<Double> leftSetpoint, Supplier<Double> rightSetpoint) {
         return new FunctionalCommand(
-                () -> setFlywheelSpeeds(leftSetpoint, rightSetpoint),
+                () -> setFlywheelSpeeds(leftSetpoint.get(), rightSetpoint.get()),
                 () -> {},
                 (ignored) -> {},
                 this::areFlywheelsSpunUp,
@@ -178,4 +180,5 @@ public class Shooter extends SubsystemBase {
                 this::isPivotAtSetpoint,
                 this);
     }
+
 }

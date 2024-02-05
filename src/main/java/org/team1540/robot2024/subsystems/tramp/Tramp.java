@@ -25,7 +25,7 @@ public class Tramp extends SubsystemBase {
         Logger.processInputs("Tramp", inputs);
     }
 
-    public void stopTramp() {
+    public void stop() {
         io.setVoltage(0);
     }
 

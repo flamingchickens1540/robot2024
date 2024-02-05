@@ -16,6 +16,8 @@ import org.team1540.robot2024.commands.SwerveDriveCommand;
 import org.team1540.robot2024.commands.elevator.ElevatorManualCommand;
 import org.team1540.robot2024.commands.elevator.ElevatorSetpointCommand;
 import org.team1540.robot2024.commands.indexer.IntakeCommand;
+import org.team1540.robot2024.commands.shooter.ShootSequence;
+import org.team1540.robot2024.commands.shooter.TuneShooterCommand;
 import org.team1540.robot2024.subsystems.drive.*;
 import org.team1540.robot2024.subsystems.elevator.Elevator;
 import org.team1540.robot2024.subsystems.elevator.ElevatorIO;
@@ -65,8 +67,6 @@ public class RobotContainer {
     public final PhoenixTimeSyncSignalRefresher odometrySignalRefresher = new PhoenixTimeSyncSignalRefresher(SwerveConfig.CAN_BUS);
 
     // TODO: testing dashboard inputs, remove for comp
-    public final LoggedDashboardNumber leftFlywheelSetpoint = new LoggedDashboardNumber("Shooter/Flywheels/leftSetpoint", 6000);
-    public final LoggedDashboardNumber rightFlywheelSetpoint = new LoggedDashboardNumber("Shooter/Flywheels/rightSetpoint", 6000);
 
     /**
      * The container for the robot. Contains subsystems, OI devices, and commands.
@@ -183,7 +183,7 @@ public class RobotContainer {
                 ).ignoringDisable(true)
         );
 
-        copilot.a().onTrue(shooter.spinUpCommand(leftFlywheelSetpoint.get(), rightFlywheelSetpoint.get()))
+        copilot.a().onTrue(new ShootSequence(shooter, indexer))
                 .onFalse(Commands.runOnce(shooter::stopFlywheels, shooter));
 
         driver.a().onTrue(new IntakeCommand(indexer));
