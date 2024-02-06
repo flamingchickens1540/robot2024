@@ -14,11 +14,6 @@ public class IntakeCommand extends Command {
         addRequirements(indexer);
     }
 
-    // It should not be necessary to deal with the case of the note in the robot and not being detected,
-    // because the indexer will always be being used when the note is in transition (?)
-    // but maybe just for code safety this is good
-    // also it is hard to imagine that being a problem
-    // @zach
     @Override
     public void execute() {
         if (indexer.isNoteStaged() || tramp.isNoteStaged()) {

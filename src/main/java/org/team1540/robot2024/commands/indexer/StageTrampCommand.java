@@ -1,44 +1,30 @@
 package org.team1540.robot2024.commands.indexer;
 
-import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.Commands;
+import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import org.team1540.robot2024.subsystems.indexer.Indexer;
 import org.team1540.robot2024.subsystems.tramp.Tramp;
 
-public class StageTrampCommand extends Command {
-
-    private final Tramp tramp;
-    private final Indexer indexer;
+public class StageTrampCommand extends SequentialCommandGroup {
 
     public StageTrampCommand(Tramp tramp, Indexer indexer) {
-        this.tramp = tramp;
-        this.indexer = indexer;
-        addRequirements(tramp, indexer);
+        addCommands(
+                Commands.parallel(
+                        Commands.waitUntil(indexer::isFeederAtSetpoint),
+                        indexer.feedToAmp()
+                ),
+                Commands.parallel(
+                        Commands.runOnce(() -> indexer.setIntakePercent(0.5), indexer),
+                        Commands.runOnce(() -> tramp.setPercent(0.5), tramp),
+                        Commands.waitUntil(tramp::isNoteStaged)
+                ),
+                Commands.parallel(
+                        Commands.runOnce(indexer::stopAll),
+                        Commands.runOnce(tramp::stop, tramp)
+                )
+
+        );
     }
 
-    @Override
-    public void initialize() {
-        indexer.setFeederVelocity(-600);
-    }
 
-    // This could instead be written like ShootSequence and PrepareIndexerForShooter, but perhaps that
-    // is more intelligent than what is needed for the tramp
-    @Override
-    public void execute() {
-        if (indexer.isFeederAtSetpoint()) {
-            tramp.setPercent(0.5);
-            indexer.setIntakePercent(0.5);
-        }
-    }
-
-    @Override
-    public boolean isFinished() {
-        return tramp.isNoteStaged();
-    }
-
-    @Override
-    public void end(boolean interrupted) {
-        indexer.stopFeeder();
-        indexer.stopIntake();
-        tramp.stop();
-    }
 }
