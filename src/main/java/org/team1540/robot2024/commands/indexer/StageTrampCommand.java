@@ -18,6 +18,7 @@ public class StageTrampCommand extends Command {
     public void initialize() {
         tramp.setPercent(0.5);
         indexer.setFeederVelocity(-600);
+        indexer.setIntakePercent(0.5);
     }
 
     @Override

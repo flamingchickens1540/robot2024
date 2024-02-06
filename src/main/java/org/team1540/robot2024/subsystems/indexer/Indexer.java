@@ -58,7 +58,7 @@ public class Indexer extends SubsystemBase {
     }
 
     public void stopFeeder() {
-        io.setFeederVoltage(0); // shouldn't stopFeeder probably set its velocity?
+        io.setFeederVoltage(0);
     }
     public void stopIntake() {
         io.setIntakeVoltage(0);
