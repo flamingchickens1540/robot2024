@@ -4,6 +4,7 @@ import edu.wpi.first.math.geometry.Pose3d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Rotation3d;
 import edu.wpi.first.math.util.Units;
+import edu.wpi.first.wpilibj.I2C.Port;
 
 /**
  * The Constants class provides a convenient place for teams to hold robot-wide numerical or boolean
@@ -90,6 +91,7 @@ public final class Constants {
         // TODO: measure these offsets
         public static final Pose3d FRONT_CAMERA_POSE = new Pose3d(0, 0, 0.5, new Rotation3d());
         public static final Pose3d REAR_CAMERA_POSE = new Pose3d(0, 0, 0.5, new Rotation3d(0, 0, Math.PI));
+        public static final Pose3d LIDAR_POSE = new Pose3d(0, 0, 0.5, new Rotation3d());
 
         // TODO: find these values
         public static final double MAX_VISION_DELAY_SECS = 0.08;
@@ -104,6 +106,7 @@ public final class Constants {
         public static final Rotation2d SIM_DIAGONAL_FOV = Rotation2d.fromDegrees(100);
         public static final double SIM_FPS = 14.5;
         public static final double SIM_AVG_LATENCY_MS = 67.0;
+        public static final Port LIDAR_PORT = null;
     }
 
 

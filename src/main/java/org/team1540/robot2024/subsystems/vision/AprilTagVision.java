@@ -12,8 +12,7 @@ import java.util.Optional;
 import java.util.function.Consumer;
 import java.util.function.Supplier;
 
-import static org.team1540.robot2024.Constants.Vision.FRONT_CAMERA_POSE;
-import static org.team1540.robot2024.Constants.Vision.REAR_CAMERA_POSE;
+import static org.team1540.robot2024.Constants.Vision.*;
 
 public class AprilTagVision extends SubsystemBase {
     private final AprilTagVisionIO frontCameraIO;
@@ -25,6 +24,10 @@ public class AprilTagVision extends SubsystemBase {
     private final Consumer<TimestampedVisionPose> visionPoseConsumer;
     private final Supplier<Double> elevatorHeightSupplierMeters;
     private final VisionPoseAcceptor poseAcceptor;
+
+    private Pose3d frontCameraPoseOffset;
+    private Pose3d rearCameraPoseOffset;
+    private Pose3d lidarPoseOffset;
 
     private TimestampedVisionPose frontPose =
             new TimestampedVisionPose(-1, new Pose2d(), new int[0], new Pose2d[0], true, false);
@@ -47,25 +50,34 @@ public class AprilTagVision extends SubsystemBase {
     @Override
     public void periodic() {
         // TODO: need to change if one camera is stationary
-        frontCameraIO.setPoseOffset(
-                new Pose3d(
-                        FRONT_CAMERA_POSE.getX(),
-                        FRONT_CAMERA_POSE.getY(),
-                        FRONT_CAMERA_POSE.getZ() + elevatorHeightSupplierMeters.get(),
-                        FRONT_CAMERA_POSE.getRotation())
-        );
-        rearCameraIO.setPoseOffset(
-                new Pose3d(
-                        REAR_CAMERA_POSE.getX(),
-                        REAR_CAMERA_POSE.getY(),
-                        REAR_CAMERA_POSE.getZ() + elevatorHeightSupplierMeters.get(),
-                        REAR_CAMERA_POSE.getRotation())
-        );
+        frontCameraPoseOffset = new Pose3d(
+                FRONT_CAMERA_POSE.getX(),
+                FRONT_CAMERA_POSE.getY(),
+                FRONT_CAMERA_POSE.getZ() + elevatorHeightSupplierMeters.get(),
+                FRONT_CAMERA_POSE.getRotation());
+        rearCameraPoseOffset = new Pose3d(
+                REAR_CAMERA_POSE.getX(),
+                REAR_CAMERA_POSE.getY(),
+                REAR_CAMERA_POSE.getZ() + elevatorHeightSupplierMeters.get(),
+                REAR_CAMERA_POSE.getRotation());
+        lidarPoseOffset = new Pose3d(
+                LIDAR_POSE.getX(),
+                LIDAR_POSE.getY(),
+                LIDAR_POSE.getZ() + elevatorHeightSupplierMeters.get(),
+                LIDAR_POSE.getRotation());
+
+        frontCameraIO.setPoseOffset(frontCameraPoseOffset);
+        rearCameraIO.setPoseOffset(rearCameraPoseOffset);
+
+        Logger.recordOutput("Vision/FrontCameraPosition", frontCameraPoseOffset);
+        Logger.recordOutput("Vision/RearCameraPosition", rearCameraPoseOffset);
 
         frontCameraIO.updateInputs(frontCameraInputs);
         rearCameraIO.updateInputs(rearCameraInputs);
         Logger.processInputs("Vision/FrontCamera", frontCameraInputs);
         Logger.processInputs("Vision/RearCamera", rearCameraInputs);
+
+
 
         if (frontCameraInputs.lastMeasurementTimestampSecs > frontPose.timestampSecs()) {
             frontPose = new TimestampedVisionPose(
