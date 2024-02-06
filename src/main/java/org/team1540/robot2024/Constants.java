@@ -65,9 +65,12 @@ public final class Constants {
     }
 
     public static class Indexer {
-        // TODO: fix these constants
+
+        public static final int BEAM_BREAK_ID = 0;
         public static final int INTAKE_ID = 11;
         public static final int FEEDER_ID = 12;
+
+        // TODO: fix these constants
         public static final double FEEDER_KP = 0.5;
         public static final double FEEDER_KI = 0.1;
         public static final double FEEDER_KD = 0.001;
@@ -77,7 +80,7 @@ public final class Constants {
         public static final double INTAKE_GEAR_RATIO = 1.0;
         public static final double INTAKE_MOI = 0.025;
         public static final double FEEDER_MOI = 0.025;
-        public static final int BEAM_BREAK_ID = 0;
+
 
 
     }
@@ -217,10 +220,11 @@ public final class Constants {
     }
 
     public static class Tramp {
+        public static final int TRAMP_BEAM_BREAK_CHANNEL = 1;
         public static final double GEAR_RATIO = 3.0;
         public static final double TRAP_SCORING_TIME_SECONDS = 1.114; //TODO: Find these values :D
-        public static final int TRAMP_MOTOR_ID = -1; //TODO: Configure this later
-        public static final int TRAMP_BEAM_BREAK_CHANNEL = -1; //TODO: Configure this later
+        public static final int MOTOR_ID = -1; //TODO: Configure this later
+
 
     }
 }
