@@ -1,12 +1,17 @@
 package org.team1540.robot2024.subsystems.led;
 
+import edu.wpi.first.wpilibj.util.Color;
+
 public class LedPatternBreathing extends LedPattern{
     private final int speed;
+    private final int hue;
     private int saturation;
     private boolean isReversed = false;
-    public LedPatternBreathing(int speed) {
+    public LedPatternBreathing(int speed, Color color) {
+
         super(true);
         this.speed = speed;
+        this.hue = getHue(color);
     }
     @Override
     void apply(ZonedAddressableLEDBuffer buffer) {
@@ -20,7 +25,7 @@ public class LedPatternBreathing extends LedPattern{
             isReversed = !isReversed;
         }
         for (int i = 0; i < buffer.getLength(); i++) {
-            buffer.setHSV(i, 0 , saturation, 255);
+            buffer.setHSV(i, hue, saturation, 255);
         }
 
         if (!isReversed) {

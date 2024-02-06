@@ -5,12 +5,12 @@ import java.awt.*;
 import java.util.Random;
 
 public class LedPatternFlame extends LedPattern{
+    private static final Random generator = new Random();
+
     private final int cooling;
     private final int sparking = 123;
-    private boolean reverseDirection = true;
-    private int[] temperatures = new int[40];
-
-    private static Random generator = new Random();
+    private final boolean reverseDirection = true;
+    private final int[] temperatures = new int[40];
 
 
     public LedPatternFlame(int cooling) {
@@ -19,8 +19,7 @@ public class LedPatternFlame extends LedPattern{
     }
 
     public LedPatternFlame() {
-        super(true);
-        cooling = 62;
+        this(62);
     }
 
 
