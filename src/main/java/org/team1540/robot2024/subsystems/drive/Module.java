@@ -5,10 +5,11 @@ import edu.wpi.first.math.controller.SimpleMotorFeedforward;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
-import org.team1540.robot2024.Constants;
 import org.littletonrobotics.junction.Logger;
+import org.team1540.robot2024.Constants;
 
-import static org.team1540.robot2024.Constants.Drivetrain.*;
+import static org.team1540.robot2024.Constants.Drivetrain.MAX_LINEAR_SPEED;
+import static org.team1540.robot2024.Constants.Drivetrain.WHEEL_RADIUS;
 
 public class Module {
     private final ModuleIO io;
@@ -20,8 +21,6 @@ public class Module {
     private final PIDController turnFeedback;
     private Rotation2d angleSetpoint = null; // Setpoint for closed loop control, null for open loop
     private Double speedSetpoint = null; // Setpoint for closed loop control, null for open loop
-    private Rotation2d turnRelativeOffset = null; // Relative + Offset = Absolute
-    private boolean forceTurn = false;
     private double lastPositionMeters = 0.0; // Used for delta calculation
 
     public Module(ModuleIO io, int index) {
@@ -55,17 +54,10 @@ public class Module {
 
     public void periodic() {
         io.updateInputs(inputs);
-        Logger.processInputs("Drive/Module" + index, inputs);
-
-        // On first cycle, reset relative turn encoder
-        // Wait until absolute angle is nonzero in case it wasn't initialized yet
-        if (turnRelativeOffset == null && inputs.turnAbsolutePosition.getRadians() != 0.0) {
-            turnRelativeOffset = inputs.turnAbsolutePosition.minus(inputs.turnPosition);
-        }
+        Logger.processInputs("Drivetrain/Module" + index, inputs);
 
         // Run closed loop turn control
         if (angleSetpoint != null) {
-
             io.setTurnVoltage(
                     turnFeedback.calculate(getAngle().getRadians(), angleSetpoint.getRadians()));
 
@@ -143,11 +135,7 @@ public class Module {
      * Returns the current turn angle of the module.
      */
     public Rotation2d getAngle() {
-        if (turnRelativeOffset == null) {
-            return new Rotation2d();
-        } else {
-            return inputs.turnPosition.plus(turnRelativeOffset);
-        }
+        return inputs.turnPosition;
     }
 
     /**

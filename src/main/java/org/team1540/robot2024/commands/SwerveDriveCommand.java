@@ -27,9 +27,9 @@ public class SwerveDriveCommand extends Command {
 
     @Override
     public void initialize() {
-       xLimiter.reset(0);
-       yLimiter.reset(0);
-       rotLimiter.reset(0);
+        xLimiter.reset(0);
+        yLimiter.reset(0);
+        rotLimiter.reset(0);
     }
 
     @Override
@@ -46,7 +46,7 @@ public class SwerveDriveCommand extends Command {
         // Calculate new linear velocity
         Translation2d linearVelocity =
                 new Pose2d(new Translation2d(), linearDirection)
-                .transformBy(new Transform2d(linearMagnitude, 0.0, new Rotation2d())).getTranslation();
+                        .transformBy(new Transform2d(linearMagnitude, 0.0, new Rotation2d())).getTranslation();
 
         // Convert to field relative speeds & send command
         drivetrain.runVelocity(

@@ -8,14 +8,13 @@ import com.pathplanner.lib.pathfinding.LocalADStar;
 import com.pathplanner.lib.pathfinding.Pathfinder;
 import edu.wpi.first.math.Pair;
 import edu.wpi.first.math.geometry.Translation2d;
+import org.littletonrobotics.junction.LogTable;
+import org.littletonrobotics.junction.Logger;
+import org.littletonrobotics.junction.inputs.LoggableInputs;
 
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-
-import org.littletonrobotics.junction.LogTable;
-import org.littletonrobotics.junction.Logger;
-import org.littletonrobotics.junction.inputs.LoggableInputs;
 
 // NOTE: This file is available at
 // https://gist.github.com/mjansen4857/a8024b55eb427184dbd10ae8923bd57d

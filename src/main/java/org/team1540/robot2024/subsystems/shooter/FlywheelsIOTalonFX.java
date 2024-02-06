@@ -54,8 +54,8 @@ public class FlywheelsIOTalonFX implements FlywheelsIO {
 
         leftMotor.getConfigurator().apply(config);
         rightMotor.getConfigurator().apply(config);
-        leftMotor.setInverted(false);
-        rightMotor.setInverted(true);
+        leftMotor.setInverted(true);
+        rightMotor.setInverted(false);
 
         BaseStatusSignal.setUpdateFrequencyForAll(
                 50,

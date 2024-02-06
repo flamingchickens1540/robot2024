@@ -1,9 +1,10 @@
 package org.team1540.robot2024.util;
 
-import java.util.HashMap;
-import java.util.Map;
 import org.littletonrobotics.junction.networktables.LoggedDashboardNumber;
 import org.team1540.robot2024.Constants;
+
+import java.util.HashMap;
+import java.util.Map;
 
 // NOTE: This file is available at
 // https://github.com/Mechanical-Advantage/RobotCode2023/blob/main/src/main/java/org/littletonrobotics/frc2023/util/LoggedTunableNumber.java
@@ -19,7 +20,7 @@ public class LoggedTunableNumber {
     private boolean hasDefault = false;
     private double defaultValue;
     private LoggedDashboardNumber dashboardNumber;
-    private Map<Integer, Double> lastHasChangedValues = new HashMap<>();
+    private final Map<Integer, Double> lastHasChangedValues = new HashMap<>();
 
     /**
      * Create a new LoggedTunableNumber
@@ -50,7 +51,7 @@ public class LoggedTunableNumber {
         if (!hasDefault) {
             hasDefault = true;
             this.defaultValue = defaultValue;
-            if (Constants.tuningMode) {
+            if (Constants.isTuningMode()) {
                 dashboardNumber = new LoggedDashboardNumber(key, defaultValue);
             }
         }
@@ -65,7 +66,7 @@ public class LoggedTunableNumber {
         if (!hasDefault) {
             return 0.0;
         } else {
-            return Constants.tuningMode ? dashboardNumber.get() : defaultValue;
+            return Constants.isTuningMode() ? dashboardNumber.get() : defaultValue;
         }
     }
 
@@ -73,12 +74,12 @@ public class LoggedTunableNumber {
      * Checks whether the number has changed since our last check
      *
      * @param id Unique identifier for the caller to avoid conflicts when shared between multiple
-     *     objects. Recommended approach is to pass the result of "hashCode()"
+     *           objects. Recommended approach is to pass the result of "hashCode()"
      * @return True if the number has changed since the last time this method was called, false
-     *     otherwise.
+     * otherwise.
      */
     public boolean hasChanged(int id) {
-        if (!Constants.tuningMode) return false;
+        if (!Constants.isTuningMode()) return false;
         double currentValue = get();
         Double lastValue = lastHasChangedValues.get(id);
         if (lastValue == null || currentValue != lastValue) {
