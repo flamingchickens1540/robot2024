@@ -51,7 +51,7 @@ public class Robot extends LoggedRobot {
         switch (Constants.currentMode) {
             case REAL:
                 // Running on a real robot, log to a USB stick ("/U/logs")
-                Logger.addDataReceiver(new WPILOGWriter());
+//                Logger.addDataReceiver(new WPILOGWriter());
                 Logger.addDataReceiver(new NT4Publisher());
                 break;
 
@@ -96,6 +96,7 @@ public class Robot extends LoggedRobot {
 
         // Update mechanism visualiser in sim
         if (Robot.isSimulation()) MechanismVisualiser.periodic();
+//        robotContainer.leds.setPattern(Leds.Zone.ZONE1, SimpleLedPattern.alternating(Color.kBlueViolet, Color.kGreen));
     }
 
     /**
@@ -143,7 +144,9 @@ public class Robot extends LoggedRobot {
         // teleop starts running. If you want the autonomous to
         // continue until interrupted by another command, remove
         // this line or comment it out.
-        robotContainer.leds.setPattern(Leds.Zone.ZONE1, SimpleLedPattern.alternating(Color.kBlueViolet, Color.kGreen));
+
+        robotContainer.leds.setPattern(Leds.Zone.ZONE1,new LedPatternBreathing(1));
+        robotContainer.leds.setPattern(Leds.Zone.ZONE2,new LedPatternBreathing(1));
         if (autonomousCommand != null) {
             autonomousCommand.cancel();
         }
@@ -161,8 +164,8 @@ public class Robot extends LoggedRobot {
      */
     @Override
     public void testInit() {
-        robotContainer.leds.setPattern(Leds.Zone.ZONE1,new LedPatternWave());
-        robotContainer.leds.setPattern(Leds.Zone.ZONE2,new LedPatternWave());
+        robotContainer.leds.setPattern(Leds.Zone.ZONE1,new LedPatternFlame(82));
+        robotContainer.leds.setPattern(Leds.Zone.ZONE2,new LedPatternFlame(82));
         // Cancels all running commands at the start of test mode.
         CommandScheduler.getInstance().cancelAll();
     }

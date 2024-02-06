@@ -20,7 +20,7 @@ public class Leds extends SubsystemBase {
         strip.setData(ledBuffer);
         strip.start();
 
-        buffers[Zone.ZONE1.ordinal()] = new ZonedAddressableLEDBuffer(ledBuffer, 0, 40, false);
+        buffers[Zone.ZONE1.ordinal()] = new ZonedAddressableLEDBuffer(ledBuffer, 1, 40, false);
         buffers[Zone.ZONE2.ordinal()] = new ZonedAddressableLEDBuffer(ledBuffer, 40, 80, false);
     }
 

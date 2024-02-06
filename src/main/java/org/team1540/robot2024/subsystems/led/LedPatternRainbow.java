@@ -17,7 +17,7 @@ public class LedPatternRainbow extends LedPattern {
     @Override
     public void apply(ZonedAddressableLEDBuffer buffer) {
         for (int i = 0; i < buffer.getLength(); i++) {
-            int hue = (initialHue + (i * 180 / buffer.getLength())) % 180;
+            int hue = (initialHue + (i * 182 / buffer.getLength())) % 180;
             buffer.setHSV(i, hue, 255, 128);
         }
         initialHue += speed;
