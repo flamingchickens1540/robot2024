@@ -19,4 +19,3 @@ public class TrampShoot extends ParallelDeadlineGroup {
         );
     }
 }
-
