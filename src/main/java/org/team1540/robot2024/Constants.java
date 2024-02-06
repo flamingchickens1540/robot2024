@@ -4,6 +4,7 @@ import edu.wpi.first.math.geometry.Pose3d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Rotation3d;
 import edu.wpi.first.math.util.Units;
+import edu.wpi.first.wpilibj.DriverStation;
 
 /**
  * The Constants class provides a convenient place for teams to hold robot-wide numerical or boolean
@@ -16,7 +17,7 @@ import edu.wpi.first.math.util.Units;
 public final class Constants {
     public static final boolean IS_COMPETITION_ROBOT = true;
     // Whether to pull PID constants from SmartDashboard
-    public static final boolean tuningMode = true; // TODO: DO NOT SET TO TRUE FOR COMP
+    private static final boolean tuningMode = true; // TODO: DO NOT SET TO TRUE FOR COMP
     private static final Mode simMode = Mode.SIM; // Can also be Mode.REPLAY
 
     public static final Mode currentMode = Robot.isReal() ? Mode.REAL : simMode;
@@ -224,7 +225,9 @@ public final class Constants {
         public static final double GEAR_RATIO = 3.0;
         public static final double TRAP_SCORING_TIME_SECONDS = 1.114; //TODO: Find these values :D
         public static final int MOTOR_ID = -1; //TODO: Configure this later
+    }
 
-
+    public static boolean isTuningMode() {
+        return tuningMode && !DriverStation.isFMSAttached();
     }
 }
