@@ -3,13 +3,14 @@ package org.team1540.robot2024;
 import com.pathplanner.lib.auto.AutoBuilder;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
+import edu.wpi.first.wpilibj2.command.button.Trigger;
 import org.littletonrobotics.junction.networktables.LoggedDashboardChooser;
-import org.littletonrobotics.junction.networktables.LoggedDashboardNumber;
 import org.team1540.robot2024.Constants.Elevator.ElevatorState;
 import org.team1540.robot2024.commands.FeedForwardCharacterization;
 import org.team1540.robot2024.commands.SwerveDriveCommand;
@@ -17,7 +18,6 @@ import org.team1540.robot2024.commands.elevator.ElevatorManualCommand;
 import org.team1540.robot2024.commands.elevator.ElevatorSetpointCommand;
 import org.team1540.robot2024.commands.indexer.IntakeCommand;
 import org.team1540.robot2024.commands.shooter.ShootSequence;
-import org.team1540.robot2024.commands.shooter.TuneShooterCommand;
 import org.team1540.robot2024.subsystems.drive.*;
 import org.team1540.robot2024.subsystems.elevator.Elevator;
 import org.team1540.robot2024.subsystems.elevator.ElevatorIO;
@@ -28,6 +28,7 @@ import org.team1540.robot2024.subsystems.indexer.IndexerIO;
 import org.team1540.robot2024.subsystems.indexer.IndexerIOSim;
 import org.team1540.robot2024.subsystems.indexer.IndexerIOSparkMax;
 import org.team1540.robot2024.subsystems.led.Leds;
+import org.team1540.robot2024.subsystems.led.patterns.LedPatternFlame;
 import org.team1540.robot2024.subsystems.shooter.*;
 import org.team1540.robot2024.subsystems.tramp.Tramp;
 import org.team1540.robot2024.subsystems.tramp.TrampIO;
@@ -64,7 +65,7 @@ public class RobotContainer {
     public final CommandXboxController copilot = new CommandXboxController(1);
 
     // Dashboard inputs
-//    public final LoggedDashboardChooser<Command> autoChooser;
+    public final LoggedDashboardChooser<Command> autoChooser;
 
     public final PhoenixTimeSyncSignalRefresher odometrySignalRefresher = new PhoenixTimeSyncSignalRefresher(SwerveConfig.CAN_BUS);
 
@@ -75,29 +76,29 @@ public class RobotContainer {
      */
     public RobotContainer() {
         switch (Constants.currentMode) {
-//            case REAL:
-//                // Real robot, instantiate hardware IO implementations
-//                drivetrain =
-//                        new Drivetrain(
-//                                new GyroIOPigeon2(odometrySignalRefresher),
-//                                new ModuleIOTalonFX(SwerveFactory.getModuleMotors(SwerveConfig.FRONT_LEFT, SwerveFactory.SwerveCorner.FRONT_LEFT), odometrySignalRefresher),
-//                                new ModuleIOTalonFX(SwerveFactory.getModuleMotors(SwerveConfig.FRONT_RIGHT, SwerveFactory.SwerveCorner.FRONT_RIGHT), odometrySignalRefresher),
-//                                new ModuleIOTalonFX(SwerveFactory.getModuleMotors(SwerveConfig.BACK_LEFT, SwerveFactory.SwerveCorner.BACK_LEFT), odometrySignalRefresher),
-//                                new ModuleIOTalonFX(SwerveFactory.getModuleMotors(SwerveConfig.BACK_RIGHT, SwerveFactory.SwerveCorner.BACK_RIGHT), odometrySignalRefresher));
-//                tramp = new Tramp(new TrampIOSparkMax());
-//                shooter = new Shooter(new ShooterPivotIOTalonFX(), new FlywheelsIOTalonFX());
-//                elevator = new Elevator(new ElevatorIOTalonFX());
-//                indexer =
-//                        new Indexer(
-//                                new IndexerIOSparkMax()
-//                        );
-//                aprilTagVision = new AprilTagVision(
-//                        new AprilTagVisionIOLimelight(Constants.Vision.FRONT_CAMERA_NAME, Constants.Vision.FRONT_CAMERA_POSE),
-//                        new AprilTagVisionIOLimelight(Constants.Vision.REAR_CAMERA_NAME, Constants.Vision.REAR_CAMERA_POSE),
-//                        drivetrain::addVisionMeasurement,
-//                        () -> 0.0, // TODO: ACTUALLY GET ELEVATOR HEIGHT HERE
-//                        new VisionPoseAcceptor(drivetrain::getChassisSpeeds, () -> 0.0)); // TODO: ACTUALLY GET ELEVATOR VELOCITY HERE
-//                break;
+            case REAL:
+                // Real robot, instantiate hardware IO implementations
+                drivetrain =
+                        new Drivetrain(
+                                new GyroIOPigeon2(odometrySignalRefresher),
+                                new ModuleIOTalonFX(SwerveFactory.getModuleMotors(SwerveConfig.FRONT_LEFT, SwerveFactory.SwerveCorner.FRONT_LEFT), odometrySignalRefresher),
+                                new ModuleIOTalonFX(SwerveFactory.getModuleMotors(SwerveConfig.FRONT_RIGHT, SwerveFactory.SwerveCorner.FRONT_RIGHT), odometrySignalRefresher),
+                                new ModuleIOTalonFX(SwerveFactory.getModuleMotors(SwerveConfig.BACK_LEFT, SwerveFactory.SwerveCorner.BACK_LEFT), odometrySignalRefresher),
+                                new ModuleIOTalonFX(SwerveFactory.getModuleMotors(SwerveConfig.BACK_RIGHT, SwerveFactory.SwerveCorner.BACK_RIGHT), odometrySignalRefresher));
+                tramp = new Tramp(new TrampIOSparkMax());
+                shooter = new Shooter(new ShooterPivotIOTalonFX(), new FlywheelsIOTalonFX());
+                elevator = new Elevator(new ElevatorIOTalonFX());
+                indexer =
+                        new Indexer(
+                                new IndexerIOSparkMax()
+                        );
+                aprilTagVision = new AprilTagVision(
+                        new AprilTagVisionIOLimelight(Constants.Vision.FRONT_CAMERA_NAME, Constants.Vision.FRONT_CAMERA_POSE),
+                        new AprilTagVisionIOLimelight(Constants.Vision.REAR_CAMERA_NAME, Constants.Vision.REAR_CAMERA_POSE),
+                        drivetrain::addVisionMeasurement,
+                        () -> 0.0, // TODO: ACTUALLY GET ELEVATOR HEIGHT HERE
+                        new VisionPoseAcceptor(drivetrain::getChassisSpeeds, () -> 0.0)); // TODO: ACTUALLY GET ELEVATOR VELOCITY HERE
+                break;
             case SIM:
                 // Sim robot, instantiate physics sim IO implementations
                 drivetrain =
@@ -150,22 +151,31 @@ public class RobotContainer {
 
 
         // Set up auto routines
-//        autoChooser = new LoggedDashboardChooser<>("Auto Choices", AutoBuilder.buildAutoChooser());
-//
-//        // Set up FF characterization routines
-//        autoChooser.addOption(
-//                "Drive FF Characterization",
-//                new FeedForwardCharacterization(
-//                        drivetrain, drivetrain::runCharacterizationVolts, drivetrain::getCharacterizationVelocity));
-//        autoChooser.addOption(
-//                "Flywheels FF Characterization",
-//                new FeedForwardCharacterization(
-//                        shooter, volts -> shooter.setFlywheelVolts(volts, volts), () -> shooter.getLeftFlywheelSpeed() / 60));
+        autoChooser = new LoggedDashboardChooser<>("Auto Choices", AutoBuilder.buildAutoChooser());
+
+        // Set up FF characterization routines
+        autoChooser.addOption(
+                "Drive FF Characterization",
+                new FeedForwardCharacterization(
+                        drivetrain, drivetrain::runCharacterizationVolts, drivetrain::getCharacterizationVelocity));
+        autoChooser.addOption(
+                "Flywheels FF Characterization",
+                new FeedForwardCharacterization(
+                        shooter, volts -> shooter.setFlywheelVolts(volts, volts), () -> shooter.getLeftFlywheelSpeed() / 60));
 
         // Configure the button bindings
-//        configureButtonBindings();
+        configureButtonBindings();
+        configureLedBindings();
     }
 
+    private void configureLedBindings() {
+        leds.setFatalPattern(new LedPatternFlame());
+        new Trigger(DriverStation::isDSAttached)
+                .onTrue(Commands.runOnce(leds::clearFatalPattern)
+                            .ignoringDisable(true))
+                .onFalse(Commands.runOnce(() -> leds.setFatalPattern(new LedPatternFlame()))
+                            .ignoringDisable(true));
+    }
     /**
      * Use this method to define your button->command mappings. Buttons can be created by
      * instantiating a {@link GenericHID} or one of its subclasses ({@link

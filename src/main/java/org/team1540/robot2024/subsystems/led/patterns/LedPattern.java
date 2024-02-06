@@ -1,6 +1,7 @@
-package org.team1540.robot2024.subsystems.led;
+package org.team1540.robot2024.subsystems.led.patterns;
 
 import edu.wpi.first.wpilibj.util.Color;
+import org.team1540.robot2024.subsystems.led.ZonedAddressableLEDBuffer;
 
 public abstract class LedPattern {
     private final boolean isDynamic;
@@ -9,11 +10,12 @@ public abstract class LedPattern {
         this.isDynamic = isDynamic;
     }
 
-    final boolean isDynamic() {
+    public final boolean isDynamic() {
         return isDynamic;
     }
 
-    abstract void apply(ZonedAddressableLEDBuffer buffer);
+    public abstract void apply(ZonedAddressableLEDBuffer buffer);
+    public void setLength(int length) {}
 
     protected static int getHue(Color color) {
         final int red = (int) color.red * 255;

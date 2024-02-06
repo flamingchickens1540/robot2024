@@ -1,6 +1,7 @@
-package org.team1540.robot2024.subsystems.led;
+package org.team1540.robot2024.subsystems.led.patterns;
 
 import edu.wpi.first.wpilibj.util.Color;
+import org.team1540.robot2024.subsystems.led.ZonedAddressableLEDBuffer;
 
 import java.util.function.BiConsumer;
 
@@ -11,7 +12,7 @@ public class SimpleLedPattern extends LedPattern{
         this.applier = applier;
     }
 
-    void apply(ZonedAddressableLEDBuffer buffer) {
+    public void apply(ZonedAddressableLEDBuffer buffer) {
         for (int i = 0; i < buffer.getLength(); i++) {
             this.applier.accept(buffer, i);
         }

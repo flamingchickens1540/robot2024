@@ -1,6 +1,7 @@
-package org.team1540.robot2024.subsystems.led;
+package org.team1540.robot2024.subsystems.led.patterns;
 
 import edu.wpi.first.wpilibj.util.Color;
+import org.team1540.robot2024.subsystems.led.ZonedAddressableLEDBuffer;
 
 public class LedPatternBreathing extends LedPattern {
     private final int speed;
@@ -15,7 +16,7 @@ public class LedPatternBreathing extends LedPattern {
     }
 
     @Override
-    void apply(ZonedAddressableLEDBuffer buffer) {
+    public void apply(ZonedAddressableLEDBuffer buffer) {
         if (saturation > 255) {
             saturation = 255;
             isReversed = !isReversed;

@@ -1,16 +1,19 @@
-package org.team1540.robot2024.subsystems.led;
+package org.team1540.robot2024.subsystems.led.patterns;
 
+
+import org.team1540.robot2024.subsystems.led.ZonedAddressableLEDBuffer;
 
 import java.awt.*;
 import java.util.Random;
 
 public class LedPatternFlame extends LedPattern {
     private static final Random generator = new Random();
+    private static final boolean reverseDirection = true;
 
     private final int cooling;
     private final int sparking = 123;
-    private final boolean reverseDirection = true;
-    private final int[] temperatures = new int[40];
+
+    private int[] temperatures;
 
 
     public LedPatternFlame(int cooling) {
@@ -22,9 +25,13 @@ public class LedPatternFlame extends LedPattern {
         this(62);
     }
 
+    @Override
+    public void setLength(int length) {
+        this.temperatures = new int[length];
+    }
 
     @Override
-    void apply(ZonedAddressableLEDBuffer buffer) {
+    public void apply(ZonedAddressableLEDBuffer buffer) {
 
         for (int i = 0; i < buffer.getLength(); i++) {
             temperatures[i] = bit8Subtraction(temperatures[i], getRandomInt(0, ((cooling * 10) / buffer.getLength()) + 2));

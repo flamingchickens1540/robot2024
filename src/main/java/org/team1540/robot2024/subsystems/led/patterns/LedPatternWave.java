@@ -1,6 +1,7 @@
-package org.team1540.robot2024.subsystems.led;
+package org.team1540.robot2024.subsystems.led.patterns;
 
 import edu.wpi.first.wpilibj.util.Color;
+import org.team1540.robot2024.subsystems.led.ZonedAddressableLEDBuffer;
 
 public class LedPatternWave extends LedPattern {
     private static final double degradation = 0.7;
@@ -15,7 +16,7 @@ public class LedPatternWave extends LedPattern {
     }
 
     @Override
-    void apply(ZonedAddressableLEDBuffer buffer) {
+    public void apply(ZonedAddressableLEDBuffer buffer) {
         for (int i = 0; i < buffer.getLength(); i++) {
             int distance = Math.abs(location - i);
             if (distance > buffer.getLength() / 2) {

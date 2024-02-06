@@ -5,10 +5,10 @@ import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.util.Color;
 import edu.wpi.first.wpilibj.util.Color8Bit;
 
-class ZonedAddressableLEDBuffer {
-    public final boolean isInverted;
-    public final int start;
-    public final int length;
+public class ZonedAddressableLEDBuffer {
+    private final boolean isInverted;
+    private final int start;
+    private final int length;
     private final AddressableLEDBuffer buffer;
 
     public ZonedAddressableLEDBuffer(AddressableLEDBuffer buffer, int start, int end, boolean isInverted) {
