@@ -8,10 +8,10 @@ import org.team1540.robot2024.util.AutoCommand;
 import org.team1540.robot2024.util.AutoManager;
 import org.team1540.robot2024.util.PathPlannerHelper;
 
-public class ThreeCloseTop extends AutoCommand {
+public class AmpSide3Close extends AutoCommand {
 
-    ThreeCloseTop(Drivetrain drivetrain, Shooter shooter, Indexer indexer){
-        super("3CloseTop");
+    AmpSide3Close(Drivetrain drivetrain, Shooter shooter, Indexer indexer){
+        super("AmpSide3Close");
 
         addPath(
                 new PathPlannerHelper(drivetrain, "3CloseTop.1", true),
