@@ -4,7 +4,7 @@ package org.team1540.robot2024.subsystems.led;
 import java.awt.*;
 import java.util.Random;
 
-public class LedPatternFlame extends LedPattern{
+public class LedPatternFlame extends LedPattern {
     private static final Random generator = new Random();
 
     private final int cooling;
@@ -46,6 +46,7 @@ public class LedPatternFlame extends LedPattern{
             buffer.setRGB(pixelnumber, color.getRed(), color.getGreen(), color.getBlue());
         }
     }
+
     private Color getHeatColor(int temperature) {
         Color finalColor;
         int scaledTemperature = (temperature * 191) / 255;

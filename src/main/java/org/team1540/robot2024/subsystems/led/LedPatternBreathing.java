@@ -2,17 +2,18 @@ package org.team1540.robot2024.subsystems.led;
 
 import edu.wpi.first.wpilibj.util.Color;
 
-public class LedPatternBreathing extends LedPattern{
+public class LedPatternBreathing extends LedPattern {
     private final int speed;
     private final int hue;
     private int saturation;
     private boolean isReversed = false;
-    public LedPatternBreathing(int speed, Color color) {
 
+    public LedPatternBreathing(int speed, Color color) {
         super(true);
         this.speed = speed;
         this.hue = getHue(color);
     }
+
     @Override
     void apply(ZonedAddressableLEDBuffer buffer) {
         if (saturation > 255) {

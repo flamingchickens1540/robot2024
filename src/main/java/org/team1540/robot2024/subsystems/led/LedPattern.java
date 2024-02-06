@@ -9,16 +9,16 @@ public abstract class LedPattern {
         this.isDynamic = isDynamic;
     }
 
-    boolean isDynamic() {
+    final boolean isDynamic() {
         return isDynamic;
     }
 
     abstract void apply(ZonedAddressableLEDBuffer buffer);
 
     protected static int getHue(Color color) {
-        final int red = (int)color.red*255;
-        final int green = (int)color.green*255;
-        final int blue = (int)color.blue*255;
+        final int red = (int) color.red * 255;
+        final int green = (int) color.green * 255;
+        final int blue = (int) color.blue * 255;
         float min = Math.min(Math.min(red, green), blue);
         float max = Math.max(Math.max(red, green), blue);
 
