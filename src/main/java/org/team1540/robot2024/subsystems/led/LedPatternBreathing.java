@@ -22,6 +22,7 @@ public class LedPatternBreathing extends LedPattern{
         for (int i = 0; i < buffer.getLength(); i++) {
             buffer.setHSV(i, 0 , saturation, 255);
         }
+
         if (!isReversed) {
             saturation = saturation + speed;
         } else {

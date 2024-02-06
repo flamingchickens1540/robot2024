@@ -5,8 +5,8 @@ import java.awt.*;
 import java.util.Random;
 
 public class LedPatternFlame extends LedPattern{
-    private int COOLING;
-    private int SPARKING = 123;
+    private final int cooling;
+    private final int sparking = 123;
     private boolean reverseDirection = true;
     private int[] temperatures = new int[40];
 
@@ -15,12 +15,12 @@ public class LedPatternFlame extends LedPattern{
 
     public LedPatternFlame(int cooling) {
         super(true);
-        COOLING = cooling;
+        this.cooling = cooling;
     }
 
     public LedPatternFlame() {
         super(true);
-        COOLING = 62;
+        cooling = 62;
     }
 
 
@@ -28,14 +28,14 @@ public class LedPatternFlame extends LedPattern{
     void apply(ZonedAddressableLEDBuffer buffer) {
 
         for (int i = 0; i < buffer.getLength(); i++) {
-            temperatures[i] = bit8Subtraction(temperatures[i], getRandomInt(0, ((COOLING * 10) / buffer.getLength()) + 2));
+            temperatures[i] = bit8Subtraction(temperatures[i], getRandomInt(0, ((cooling * 10) / buffer.getLength()) + 2));
         }
 
         for (int k = buffer.getLength() - 1; k >= 2; k--) {
             temperatures[k] = (temperatures[k - 1] + temperatures[k - 2] + temperatures[k - 2]) / 3;
         }
 
-        if (getRandomInt(0, 255) < SPARKING) {
+        if (getRandomInt(0, 255) < sparking) {
             int y = getRandomInt(0, 6);
             temperatures[y] = bit8Addition(temperatures[y], getRandomInt(160, 255));
         }
