@@ -15,11 +15,12 @@ public class PrepareIndexerForShooter extends Command {
     @Override
     public void initialize() {
         indexer.setFeederVelocity(1200);
+        indexer.setIntakePercent(-0.5);
     }
 
     @Override
     public boolean isFinished() {
-        return indexer.isFeederAtSetpoint();
+        return indexer.isFeederAtSetpoint() && !indexer.isNoteStaged();
     }
 
 }

@@ -1,29 +1,35 @@
 package org.team1540.robot2024.commands.indexer;
 
-import edu.wpi.first.wpilibj2.command.Commands;
-import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
+import edu.wpi.first.wpilibj2.command.Command;
 import org.team1540.robot2024.subsystems.indexer.Indexer;
 import org.team1540.robot2024.subsystems.tramp.Tramp;
 
-public class StageTrampCommand extends SequentialCommandGroup {
+public class StageTrampCommand extends Command {
+
+    private final Tramp tramp;
+    private final Indexer indexer;
 
     public StageTrampCommand(Tramp tramp, Indexer indexer) {
-        addCommands(
-                Commands.parallel(
-                        Commands.waitUntil(indexer::isFeederAtSetpoint),
-                        indexer.feedToAmp()
-                ),
-                Commands.parallel(
-                        Commands.runOnce(() -> indexer.setIntakePercent(0.5), indexer),
-                        Commands.runOnce(() -> tramp.setPercent(0.5), tramp),
-                        Commands.waitUntil(tramp::isNoteStaged)
-                ),
-                Commands.parallel(
-                        Commands.runOnce(indexer::stopAll),
-                        Commands.runOnce(tramp::stop, tramp)
-                )
+        this.tramp = tramp;
+        this.indexer = indexer;
+        addRequirements(tramp, indexer);
+    }
+    @Override
+    public void initialize() {
+        tramp.setPercent(0.5);
+        indexer.setFeederVelocity(-600);
+    }
 
-        );
+    @Override
+    public boolean isFinished() {
+        return tramp.isNoteStaged();
+    }
+
+    @Override
+    public void end(boolean interrupted) {
+        indexer.stopFeeder();
+        indexer.stopIntake();
+        tramp.stop();
     }
 
 
