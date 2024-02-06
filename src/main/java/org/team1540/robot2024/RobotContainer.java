@@ -1,6 +1,8 @@
 package org.team1540.robot2024;
 
 import com.pathplanner.lib.auto.AutoBuilder;
+import com.pathplanner.lib.commands.PathPlannerAuto;
+import com.pathplanner.lib.path.PathPlannerPath;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.GenericHID;
@@ -36,6 +38,8 @@ import org.team1540.robot2024.subsystems.vision.AprilTagVision;
 import org.team1540.robot2024.subsystems.vision.AprilTagVisionIO;
 import org.team1540.robot2024.subsystems.vision.AprilTagVisionIOLimelight;
 import org.team1540.robot2024.subsystems.vision.AprilTagVisionIOSim;
+import org.team1540.robot2024.util.AutoCommand;
+import org.team1540.robot2024.util.AutoManager;
 import org.team1540.robot2024.util.PhoenixTimeSyncSignalRefresher;
 import org.team1540.robot2024.util.swerve.SwerveFactory;
 import org.team1540.robot2024.util.vision.VisionPoseAcceptor;
@@ -61,8 +65,6 @@ public class RobotContainer {
     public final CommandXboxController driver = new CommandXboxController(0);
     public final CommandXboxController copilot = new CommandXboxController(1);
 
-    // Dashboard inputs
-    public final LoggedDashboardChooser<Command> autoChooser;
 
     public final PhoenixTimeSyncSignalRefresher odometrySignalRefresher = new PhoenixTimeSyncSignalRefresher(SwerveConfig.CAN_BUS);
 
@@ -147,18 +149,25 @@ public class RobotContainer {
         }
 
 
-        // Set up auto routines
-        autoChooser = new LoggedDashboardChooser<>("Auto Choices", AutoBuilder.buildAutoChooser());
 
         // Set up FF characterization routines
-        autoChooser.addOption(
-                "Drive FF Characterization",
-                new FeedForwardCharacterization(
-                        drivetrain, drivetrain::runCharacterizationVolts, drivetrain::getCharacterizationVelocity));
-        autoChooser.addOption(
-                "Flywheels FF Characterization",
-                new FeedForwardCharacterization(
-                        shooter, volts -> shooter.setFlywheelVolts(volts, volts), () -> shooter.getLeftFlywheelSpeed() / 60));
+        AutoManager.getInstance().addAuto(
+                new AutoCommand(
+                        "Drive FF Characterization",
+                        new FeedForwardCharacterization(
+                                drivetrain, drivetrain::runCharacterizationVolts, drivetrain::getCharacterizationVelocity
+                        )
+                )
+        );
+
+        AutoManager.getInstance().addAuto(
+                new AutoCommand(
+                        "Flywheels FF Characterization",
+                        new FeedForwardCharacterization(
+                                shooter, volts -> shooter.setFlywheelVolts(volts, volts), () -> shooter.getLeftFlywheelSpeed() / 60
+                        )
+                )
+        );
 
         // Configure the button bindings
         configureButtonBindings();
@@ -195,6 +204,6 @@ public class RobotContainer {
      * @return the command to run in autonomous
      */
     public Command getAutonomousCommand() {
-        return autoChooser.get();
+        return AutoManager.getInstance().getSelected();
     }
 }
