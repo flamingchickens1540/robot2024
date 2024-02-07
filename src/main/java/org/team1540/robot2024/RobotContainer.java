@@ -13,9 +13,11 @@ import org.littletonrobotics.junction.networktables.LoggedDashboardNumber;
 import org.team1540.robot2024.Constants.Elevator.ElevatorState;
 import org.team1540.robot2024.commands.FeedForwardCharacterization;
 import org.team1540.robot2024.commands.SwerveDriveCommand;
+import org.team1540.robot2024.commands.TrampShoot;
 import org.team1540.robot2024.commands.elevator.ElevatorManualCommand;
 import org.team1540.robot2024.commands.elevator.ElevatorSetpointCommand;
 import org.team1540.robot2024.commands.indexer.IntakeCommand;
+import org.team1540.robot2024.commands.indexer.StageTrampCommand;
 import org.team1540.robot2024.commands.shooter.ShootSequence;
 import org.team1540.robot2024.commands.shooter.TuneShooterCommand;
 import org.team1540.robot2024.subsystems.drive.*;
@@ -96,6 +98,7 @@ public class RobotContainer {
                         () -> 0.0, // TODO: ACTUALLY GET ELEVATOR HEIGHT HERE
                         new VisionPoseAcceptor(drivetrain::getChassisSpeeds, () -> 0.0)); // TODO: ACTUALLY GET ELEVATOR VELOCITY HERE
                 break;
+
             case SIM:
                 // Sim robot, instantiate physics sim IO implementations
                 drivetrain =
@@ -182,11 +185,16 @@ public class RobotContainer {
                         drivetrain
                 ).ignoringDisable(true)
         );
+        driver.rightBumper().onTrue(new IntakeCommand(indexer));
+        driver.leftBumper().onTrue(new TrampShoot(tramp));
+        //TODO: not sure how to do angling/don't think there's a command for this yet?
 
         copilot.a().onTrue(new ShootSequence(shooter, indexer))
                 .onFalse(Commands.runOnce(shooter::stopFlywheels, shooter));
+        copilot.rightBumper().onTrue(new StageTrampCommand(tramp, indexer));
 
-        driver.a().onTrue(new IntakeCommand(indexer));
+        // copilot: shooter staging, climbing, shooter override, elevator override, signaling
+        // use tramp stage
     }
 
     /**
