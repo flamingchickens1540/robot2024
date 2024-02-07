@@ -4,6 +4,7 @@ import edu.wpi.first.math.geometry.Pose3d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Rotation3d;
 import edu.wpi.first.math.util.Units;
+import edu.wpi.first.wpilibj.DriverStation;
 
 /**
  * The Constants class provides a convenient place for teams to hold robot-wide numerical or boolean
@@ -16,7 +17,7 @@ import edu.wpi.first.math.util.Units;
 public final class Constants {
     public static final boolean IS_COMPETITION_ROBOT = true;
     // Whether to pull PID constants from SmartDashboard
-    public static final boolean tuningMode = true; // TODO: DO NOT SET TO TRUE FOR COMP
+    private static final boolean tuningMode = true; // TODO: DO NOT SET TO TRUE FOR COMP
     private static final Mode simMode = Mode.SIM; // Can also be Mode.REPLAY
 
     public static final Mode currentMode = Robot.isReal() ? Mode.REAL : simMode;
@@ -65,9 +66,12 @@ public final class Constants {
     }
 
     public static class Indexer {
-        // TODO: fix these constants
+
+        public static final int BEAM_BREAK_ID = 0;
         public static final int INTAKE_ID = 11;
         public static final int FEEDER_ID = 12;
+
+        // TODO: fix these constants
         public static final double FEEDER_KP = 0.5;
         public static final double FEEDER_KI = 0.1;
         public static final double FEEDER_KD = 0.001;
@@ -77,7 +81,6 @@ public final class Constants {
         public static final double INTAKE_GEAR_RATIO = 1.0;
         public static final double INTAKE_MOI = 0.025;
         public static final double FEEDER_MOI = 0.025;
-        public static final int BEAM_BREAK_ID = 0;
         public static final int VELOCITY_ERR_TOLERANCE_RPM = 10;
 
 
@@ -218,10 +221,13 @@ public final class Constants {
     }
 
     public static class Tramp {
+        public static final int TRAMP_BEAM_BREAK_CHANNEL = 1;
         public static final double GEAR_RATIO = 3.0;
         public static final double TRAP_SCORING_TIME_SECONDS = 1.114; //TODO: Find these values :D
-        public static final int TRAMP_MOTOR_ID = -1; //TODO: Configure this later
-        public static final int TRAMP_BEAM_BREAK_CHANNEL = -1; //TODO: Configure this later
+        public static final int MOTOR_ID = -1; //TODO: Configure this later
+    }
 
+    public static boolean isTuningMode() {
+        return tuningMode && !DriverStation.isFMSAttached();
     }
 }
