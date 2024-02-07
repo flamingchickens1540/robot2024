@@ -22,9 +22,7 @@ public class AmpSide3Close extends AutoCommand {
                 );
         addCommands(
 //                new ShootSequence(shooter, indexer),
-                new PrintCommand("Starting command"),
                 getPath(0).getCommand(),
-                new PrintCommand("Past path 1"),
 //                new ShootSequence(shooter, indexer),
                 getPath(1).getCommand(),
 //                new ShootSequence(shooter, indexer),
