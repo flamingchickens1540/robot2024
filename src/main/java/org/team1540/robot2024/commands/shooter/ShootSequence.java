@@ -1,8 +1,8 @@
 package org.team1540.robot2024.commands.shooter;
 
 import edu.wpi.first.wpilibj2.command.Commands;
+import edu.wpi.first.wpilibj2.command.FunctionalCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
-import org.team1540.robot2024.commands.indexer.OuttakeCommand;
 import org.team1540.robot2024.commands.indexer.PrepareFeederForShooter;
 import org.team1540.robot2024.subsystems.indexer.Indexer;
 import org.team1540.robot2024.subsystems.shooter.Shooter;
@@ -13,7 +13,13 @@ public class ShootSequence extends SequentialCommandGroup {
                 Commands.parallel(
                         new PrepareShooterCommand(shooter),
                         Commands.sequence(
-                                new OuttakeCommand(indexer),
+                                new FunctionalCommand(
+                                        () -> indexer.setIntakePercent(-1),
+                                        () -> {},
+                                        (interrupted) -> indexer.stopIntake(),
+                                        () -> !indexer.isNoteStaged(),
+                                        indexer
+                                ),
                                 new PrepareFeederForShooter(indexer)
                         )
                 ),
