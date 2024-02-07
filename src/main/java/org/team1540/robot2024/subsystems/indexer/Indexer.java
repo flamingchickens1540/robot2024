@@ -2,6 +2,7 @@ package org.team1540.robot2024.subsystems.indexer;
 
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
+import edu.wpi.first.wpilibj2.command.FunctionalCommand;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import org.littletonrobotics.junction.Logger;
 import org.team1540.robot2024.Constants;
@@ -51,7 +52,16 @@ public class Indexer extends SubsystemBase {
     public Command feedToShooter() {
         return Commands.runOnce(() -> io.setFeederVelocity(1200), this);
     }
-
+    
+    public Command moveNoteOut() {
+        return new FunctionalCommand(
+                () -> setIntakePercent(-1),
+                () -> {},
+                (interrupted) -> stopIntake(),
+                () -> !isNoteStaged(),
+                this
+        );
+    }
     public boolean isFeederAtSetpoint() {
         return Math.abs(inputs.feederVelocityError) < VELOCITY_ERR_TOLERANCE_RPM;
 //        return MathUtil.isNear(inputs.setpointRPM, inputs.feederVelocityRPM, VELOCITY_ERR_TOLERANCE_RPM);
