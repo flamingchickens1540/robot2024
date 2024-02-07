@@ -11,9 +11,11 @@ public class ShootSequence extends SequentialCommandGroup {
     public ShootSequence(Shooter shooter, Indexer indexer) {
         addCommands(
                 Commands.parallel(
-                        new PrepareFeederForShooter(indexer),
                         new PrepareShooterCommand(shooter),
-                        new OuttakeCommand(indexer)
+                        Commands.sequence(
+                                new OuttakeCommand(indexer),
+                                new PrepareFeederForShooter(indexer)
+                        )
                 ),
                 Commands.runOnce(() -> indexer.setIntakePercent(1), indexer)
                 // TODO: Add a wait for having completed the shot (steady then current spike/velocity dip and then back down?)

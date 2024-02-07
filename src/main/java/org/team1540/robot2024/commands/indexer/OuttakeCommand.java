@@ -14,7 +14,7 @@ public class OuttakeCommand extends Command {
 
     @Override
     public void initialize() {
-        indexer.setIntakePercent(-0.5);
+        indexer.setIntakePercent(-1);
     }
 
     @Override
