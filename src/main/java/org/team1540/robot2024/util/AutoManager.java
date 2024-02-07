@@ -19,8 +19,8 @@ public class AutoManager {
     public void addAuto(AutoCommand command) {
         chooser.addOption(command.getName(), command);
     }
-    public void addDefaultAuto(String name, AutoCommand command) {
-        chooser.addDefaultOption(name, command);
+    public void addDefaultAuto(AutoCommand command) {
+        chooser.addDefaultOption(command.getName(), command);
     }
 
     public void updateSelected() {

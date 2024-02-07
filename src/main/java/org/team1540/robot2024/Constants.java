@@ -3,6 +3,7 @@ package org.team1540.robot2024;
 import edu.wpi.first.math.geometry.Pose3d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Rotation3d;
+import edu.wpi.first.math.trajectory.TrajectoryConfig;
 import edu.wpi.first.math.util.Units;
 
 /**
@@ -62,6 +63,8 @@ public final class Constants {
         public static final double TRACK_WIDTH_Y = Units.inchesToMeters(25.0);
         public static final double DRIVE_BASE_RADIUS = Math.hypot(TRACK_WIDTH_X / 2.0, TRACK_WIDTH_Y / 2.0);
         public static final double MAX_ANGULAR_SPEED = MAX_LINEAR_SPEED / DRIVE_BASE_RADIUS;
+
+        public static final TrajectoryConfig trajectoryConfig = new TrajectoryConfig(MAX_LINEAR_SPEED, 8.269);
     }
 
     public static class Indexer {
