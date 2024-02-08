@@ -81,7 +81,7 @@ public final class Constants {
         public static final double INTAKE_GEAR_RATIO = 1.0;
         public static final double INTAKE_MOI = 0.025;
         public static final double FEEDER_MOI = 0.025;
-
+        public static final int VELOCITY_ERR_TOLERANCE_RPM = 10;
 
 
     }
