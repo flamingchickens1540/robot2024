@@ -56,7 +56,7 @@ public class PathPlannerHelper{
         Command command = new ProxyCommand(() -> AutoBuilder.followPath(path));
         if (isResetting) {
             Command resetCommand = new InstantCommand(() -> drivetrain.setPose(DriverStation.getAlliance().isPresent() && DriverStation.getAlliance().get() == DriverStation.Alliance.Red ? GeometryUtil.flipFieldPose(initialPose) : initialPose));
-            return resetCommand.andThen(command).andThen(new PrintCommand("New X: " + initialPose.getX() + " " + DriverStation.getAlliance().isPresent()));
+            return resetCommand.andThen(command);
         } else {
             return command;
         }

@@ -66,7 +66,7 @@ public class AutoCommand extends SequentialCommandGroup {
         return paths.get(index);
     }
     public PathPlannerHelper getNextPath(){
-        return getPath(index += 1);
+        return getPath(index++);
     }
     public int getIndex(){
         return index;

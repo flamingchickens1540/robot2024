@@ -1,24 +1,21 @@
 package org.team1540.robot2024.commands.autos;
 
-import edu.wpi.first.wpilibj2.command.InstantCommand;
-import edu.wpi.first.wpilibj2.command.PrintCommand;
-import org.team1540.robot2024.commands.shooter.ShootSequence;
 import org.team1540.robot2024.subsystems.drive.Drivetrain;
 import org.team1540.robot2024.subsystems.indexer.Indexer;
 import org.team1540.robot2024.subsystems.shooter.Shooter;
 import org.team1540.robot2024.util.AutoCommand;
-import org.team1540.robot2024.util.AutoManager;
 import org.team1540.robot2024.util.PathPlannerHelper;
 
-public class AmpSide3Close extends AutoCommand {
+public class AmpLanePABCSprint extends AutoCommand {
 
-    public AmpSide3Close(Drivetrain drivetrain, Shooter shooter, Indexer indexer){
-        super("AmpSide3Close");
+    public AmpLanePABCSprint(Drivetrain drivetrain, Shooter shooter, Indexer indexer){
+        super("AmpLanePABCSprint");
 
         addPath(
-                new PathPlannerHelper(drivetrain, "3CloseTop.1", true, true, true),
-                new PathPlannerHelper(drivetrain, "3CloseTop.2", true),
-                new PathPlannerHelper(drivetrain, "3CloseTop.3", true)
+                new PathPlannerHelper(drivetrain, "AmpLanePABCSprint.1", true, true, true),
+                new PathPlannerHelper(drivetrain, "AmpLanePABCSprint.2", true),
+                new PathPlannerHelper(drivetrain, "AmpLanePABCSprint.3", true),
+                new PathPlannerHelper(drivetrain, "AmpLanePABCSprint.4", true)
                 );
         addCommands(
 //                new ShootSequence(shooter, indexer),
@@ -26,8 +23,9 @@ public class AmpSide3Close extends AutoCommand {
 //                new ShootSequence(shooter, indexer),
                 getPath(1).getCommand(),
 //                new ShootSequence(shooter, indexer),
-                getPath(2).getCommand()
+                getPath(2).getCommand(),
 //                new ShootSequence(shooter, indexer)
+                getPath(3).getCommand()
         );
     }
 }
