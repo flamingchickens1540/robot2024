@@ -20,6 +20,8 @@ public class SwerveDriveCommand extends Command {
     private final SlewRateLimiter yLimiter = new SlewRateLimiter(2);
     private final SlewRateLimiter rotLimiter = new SlewRateLimiter(3);
 
+    private boolean isFlipped;
+
     public SwerveDriveCommand(Drivetrain drivetrain, CommandXboxController controller) {
         this.drivetrain = drivetrain;
         this.controller = controller;
@@ -31,6 +33,9 @@ public class SwerveDriveCommand extends Command {
         xLimiter.reset(0);
         yLimiter.reset(0);
         rotLimiter.reset(0);
+        isFlipped =
+                DriverStation.getAlliance().isPresent()
+                        && DriverStation.getAlliance().get() == DriverStation.Alliance.Red;
     }
 
     @Override
@@ -48,10 +53,6 @@ public class SwerveDriveCommand extends Command {
         Translation2d linearVelocity =
                 new Pose2d(new Translation2d(), linearDirection)
                         .transformBy(new Transform2d(linearMagnitude, 0.0, new Rotation2d())).getTranslation();
-
-        boolean isFlipped =
-                DriverStation.getAlliance().isPresent()
-                        && DriverStation.getAlliance().get() == DriverStation.Alliance.Red;
 
         // Convert to field relative speeds & send command
         drivetrain.runVelocity(
