@@ -82,8 +82,6 @@ public final class Constants {
         public static final double INTAKE_MOI = 0.025;
         public static final double FEEDER_MOI = 0.025;
         public static final int VELOCITY_ERR_TOLERANCE_RPM = 10;
-
-
     }
 
 
@@ -121,7 +119,7 @@ public final class Constants {
             public static final double SIM_MOI = 4.08232288e-4;
 
             // TODO: if it's tuned in simulation, it's tuned in real life
-            public static final double KP = 0.4;
+            public static final double KP = 0.1;
             public static final double KI = 0.0;
             public static final double KD = 0.0;
             public static final double KS = 0.26925;
@@ -143,7 +141,7 @@ public final class Constants {
             public static final double TOTAL_GEAR_RATIO = MOTOR_TO_CANCODER * CANCODER_TO_PIVOT;
             public static final double SIM_LENGTH_METERS = Units.inchesToMeters(12.910);
             // TODO: find the moi
-            public static final double SIM_MOI = 0.22552744227754662;
+            public static final double SIM_MOI = 0.04064471269;
 
             public static final Rotation2d MAX_ANGLE = Rotation2d.fromDegrees(60.0);
             public static final Rotation2d MIN_ANGLE = Rotation2d.fromDegrees(8.0);
@@ -156,8 +154,15 @@ public final class Constants {
             public static final double KG = 0.1;
             public static final double KV = 0.1;
 
-            public static final double CRUISE_VELOCITY_RPS = 4.0;
-            public static final double MAX_ACCEL_RPS2 = 40.0;
+            public static final double SIM_KP = 254;
+            public static final double SIM_KI = 0.0;
+            public static final double SIM_KD = 0.0;
+            public static final double SIM_KS = 0.0;
+            public static final double SIM_KG = 0.15;
+            public static final double SIM_KV = 0.187;
+
+            public static final double CRUISE_VELOCITY_RPS = 1.0;
+            public static final double MAX_ACCEL_RPS2 = 10.0;
             public static final double JERK_RPS3 = 2000;
 
             public static final Rotation2d ERROR_TOLERANCE = Rotation2d.fromDegrees(0.2);
