@@ -5,6 +5,7 @@ import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Rotation3d;
 import edu.wpi.first.math.trajectory.TrajectoryConfig;
 import edu.wpi.first.math.util.Units;
+import edu.wpi.first.wpilibj.DriverStation;
 
 /**
  * The Constants class provides a convenient place for teams to hold robot-wide numerical or boolean
@@ -17,7 +18,7 @@ import edu.wpi.first.math.util.Units;
 public final class Constants {
     public static final boolean IS_COMPETITION_ROBOT = true;
     // Whether to pull PID constants from SmartDashboard
-    public static final boolean tuningMode = true; // TODO: DO NOT SET TO TRUE FOR COMP
+    private static final boolean tuningMode = true; // TODO: DO NOT SET TO TRUE FOR COMP
     private static final Mode simMode = Mode.SIM; // Can also be Mode.REPLAY
 
     public static final Mode currentMode = Robot.isReal() ? Mode.REAL : simMode;
@@ -83,9 +84,7 @@ public final class Constants {
         public static final double INTAKE_GEAR_RATIO = 1.0;
         public static final double INTAKE_MOI = 0.025;
         public static final double FEEDER_MOI = 0.025;
-
-
-
+        public static final int VELOCITY_ERR_TOLERANCE_RPM = 10;
     }
 
 
@@ -123,7 +122,7 @@ public final class Constants {
             public static final double SIM_MOI = 4.08232288e-4;
 
             // TODO: if it's tuned in simulation, it's tuned in real life
-            public static final double KP = 0.4;
+            public static final double KP = 0.1;
             public static final double KI = 0.0;
             public static final double KD = 0.0;
             public static final double KS = 0.26925;
@@ -145,7 +144,7 @@ public final class Constants {
             public static final double TOTAL_GEAR_RATIO = MOTOR_TO_CANCODER * CANCODER_TO_PIVOT;
             public static final double SIM_LENGTH_METERS = Units.inchesToMeters(12.910);
             // TODO: find the moi
-            public static final double SIM_MOI = 0.22552744227754662;
+            public static final double SIM_MOI = 0.04064471269;
 
             public static final Rotation2d MAX_ANGLE = Rotation2d.fromDegrees(60.0);
             public static final Rotation2d MIN_ANGLE = Rotation2d.fromDegrees(8.0);
@@ -158,8 +157,15 @@ public final class Constants {
             public static final double KG = 0.1;
             public static final double KV = 0.1;
 
-            public static final double CRUISE_VELOCITY_RPS = 4.0;
-            public static final double MAX_ACCEL_RPS2 = 40.0;
+            public static final double SIM_KP = 254;
+            public static final double SIM_KI = 0.0;
+            public static final double SIM_KD = 0.0;
+            public static final double SIM_KS = 0.0;
+            public static final double SIM_KG = 0.15;
+            public static final double SIM_KV = 0.187;
+
+            public static final double CRUISE_VELOCITY_RPS = 1.0;
+            public static final double MAX_ACCEL_RPS2 = 10.0;
             public static final double JERK_RPS3 = 2000;
 
             public static final Rotation2d ERROR_TOLERANCE = Rotation2d.fromDegrees(0.2);
@@ -227,7 +233,9 @@ public final class Constants {
         public static final double GEAR_RATIO = 3.0;
         public static final double TRAP_SCORING_TIME_SECONDS = 1.114; //TODO: Find these values :D
         public static final int MOTOR_ID = -1; //TODO: Configure this later
+    }
 
-
+    public static boolean isTuningMode() {
+        return tuningMode && !DriverStation.isFMSAttached();
     }
 }

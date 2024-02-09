@@ -7,6 +7,7 @@ import edu.wpi.first.wpilibj2.command.FunctionalCommand;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import org.littletonrobotics.junction.Logger;
 import org.team1540.robot2024.util.LoggedTunableNumber;
+import org.team1540.robot2024.util.MechanismVisualiser;
 import org.team1540.robot2024.util.math.AverageFilter;
 
 import java.util.function.Supplier;
@@ -27,7 +28,7 @@ public class Shooter extends SubsystemBase {
 
     private double leftFlywheelSetpointRPM;
     private double rightFlywheelSetpointRPM;
-    private Rotation2d pivotSetpoint;
+    private Rotation2d pivotSetpoint = new Rotation2d();
 
     private final LoggedTunableNumber flywheelsKP = new LoggedTunableNumber("Shooter/Flywheels/kP", Flywheels.KP);
     private final LoggedTunableNumber flywheelsKI = new LoggedTunableNumber("Shooter/Flywheels/kI", Flywheels.KI);
@@ -49,6 +50,7 @@ public class Shooter extends SubsystemBase {
         flywheelsIO.updateInputs(flywheelInputs);
         Logger.processInputs("Shooter/Pivot", pivotInputs);
         Logger.processInputs("Shooter/Flywheels", flywheelInputs);
+        MechanismVisualiser.setShooterPivotRotation(getPivotPosition());
 
         // Update tunable numbers
         if (flywheelsKP.hasChanged(hashCode()) || flywheelsKI.hasChanged(hashCode()) || flywheelsKD.hasChanged(hashCode())) {
@@ -62,6 +64,7 @@ public class Shooter extends SubsystemBase {
         leftSpeedFilter.add(getLeftFlywheelSpeed());
         rightSpeedFilter.add(getRightFlywheelSpeed());
         pivotPositionFilter.add(getPivotPosition().getRotations());
+        Logger.recordOutput("Shooter/Pivot/Setpoint", pivotSetpoint.getDegrees());
     }
 
     /**
@@ -180,5 +183,4 @@ public class Shooter extends SubsystemBase {
                 this::isPivotAtSetpoint,
                 this);
     }
-
 }
