@@ -7,6 +7,7 @@ import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Transform2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
+import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import org.team1540.robot2024.subsystems.drive.Drivetrain;
@@ -48,13 +49,19 @@ public class SwerveDriveCommand extends Command {
                 new Pose2d(new Translation2d(), linearDirection)
                         .transformBy(new Transform2d(linearMagnitude, 0.0, new Rotation2d())).getTranslation();
 
+        boolean isFlipped =
+                DriverStation.getAlliance().isPresent()
+                        && DriverStation.getAlliance().get() == DriverStation.Alliance.Red;
+
         // Convert to field relative speeds & send command
         drivetrain.runVelocity(
                 ChassisSpeeds.fromFieldRelativeSpeeds(
                         linearVelocity.getX() * drivetrain.getMaxLinearSpeedMetersPerSec(),
                         linearVelocity.getY() * drivetrain.getMaxLinearSpeedMetersPerSec(),
                         omega * drivetrain.getMaxAngularSpeedRadPerSec(),
-                        drivetrain.getRotation()
+                        isFlipped
+                                ? drivetrain.getRotation().plus(Rotation2d.fromDegrees(180))
+                                : drivetrain.getRotation()
                 )
         );
     }
