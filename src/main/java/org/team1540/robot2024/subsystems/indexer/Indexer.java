@@ -45,6 +45,10 @@ public class Indexer extends SubsystemBase {
         io.setFeederVelocity(setpointRPM);
     }
 
+    public void setFeederPercent(double percent) {
+        io.setFeederVoltage(12.0 * percent);
+    }
+
     public Command feedToAmp() {
         return Commands.runOnce(() -> io.setFeederVelocity(-600), this);
     }
@@ -70,6 +74,7 @@ public class Indexer extends SubsystemBase {
     public void stopFeeder() {
         io.setFeederVoltage(0);
     }
+
     public void stopIntake() {
         io.setIntakeVoltage(0);
     }

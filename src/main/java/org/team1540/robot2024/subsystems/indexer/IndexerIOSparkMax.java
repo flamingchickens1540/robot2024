@@ -25,8 +25,9 @@ public class IndexerIOSparkMax implements IndexerIO {
         intakeMotor.setSmartCurrentLimit(30);
 
         feederMotor.setIdleMode(CANSparkBase.IdleMode.kBrake);
+        feederMotor.setInverted(true);
         feederMotor.enableVoltageCompensation(12.0);
-        feederMotor.setSmartCurrentLimit(30);
+        feederMotor.setSmartCurrentLimit(40);
 
         feederPID = feederMotor.getPIDController();
         feederPID.setP(FEEDER_KP, 0);
