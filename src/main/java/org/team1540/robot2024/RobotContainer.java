@@ -9,15 +9,14 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import org.littletonrobotics.junction.networktables.LoggedDashboardChooser;
-import org.littletonrobotics.junction.networktables.LoggedDashboardNumber;
 import org.team1540.robot2024.Constants.Elevator.ElevatorState;
 import org.team1540.robot2024.commands.FeedForwardCharacterization;
+import org.team1540.robot2024.commands.DriveWithSpeakerTargetingCommand;
 import org.team1540.robot2024.commands.SwerveDriveCommand;
 import org.team1540.robot2024.commands.elevator.ElevatorManualCommand;
 import org.team1540.robot2024.commands.elevator.ElevatorSetpointCommand;
 import org.team1540.robot2024.commands.indexer.IntakeCommand;
 import org.team1540.robot2024.commands.shooter.ShootSequence;
-import org.team1540.robot2024.commands.shooter.TuneShooterCommand;
 import org.team1540.robot2024.subsystems.drive.*;
 import org.team1540.robot2024.subsystems.elevator.Elevator;
 import org.team1540.robot2024.subsystems.elevator.ElevatorIO;
@@ -176,6 +175,7 @@ public class RobotContainer {
         indexer.setDefaultCommand(new IntakeCommand(indexer, tramp));
 
         driver.x().onTrue(Commands.runOnce(drivetrain::stopWithX, drivetrain));
+        driver.y().toggleOnFalse(new DriveWithSpeakerTargetingCommand(drivetrain, driver));
         driver.b().onTrue(
                 Commands.runOnce(
                         () -> drivetrain.setPose(new Pose2d(drivetrain.getPose().getTranslation(), new Rotation2d())),

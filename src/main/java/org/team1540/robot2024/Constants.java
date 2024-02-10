@@ -1,5 +1,6 @@
 package org.team1540.robot2024;
 
+import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Pose3d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Rotation3d;
@@ -230,6 +231,14 @@ public final class Constants {
         public static final double GEAR_RATIO = 3.0;
         public static final double TRAP_SCORING_TIME_SECONDS = 1.114; //TODO: Find these values :D
         public static final int MOTOR_ID = -1; //TODO: Configure this later
+    }
+
+    public static class Targeting {
+        public static final double ROT_KP = 1.18;
+        public static final double ROT_KI = 0.0;
+        public static final double ROT_KD = 0.0;
+
+        public static final Pose2d SPEAKER_POSE = new Pose2d(0.0, 5.12445, new Rotation2d());
     }
 
     public static boolean isTuningMode() {
