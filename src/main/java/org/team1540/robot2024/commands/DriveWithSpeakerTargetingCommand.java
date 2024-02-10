@@ -30,6 +30,7 @@ public class DriveWithSpeakerTargetingCommand extends Command {
     public DriveWithSpeakerTargetingCommand(Drivetrain drivetrain, CommandXboxController controller) {
         this.drivetrain = drivetrain;
         this.controller = controller;
+        rotController.enableContinuousInput(-Math.PI, Math.PI);
         addRequirements(drivetrain);
     }
 
