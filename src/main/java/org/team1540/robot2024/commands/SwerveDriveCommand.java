@@ -22,14 +22,6 @@ public class SwerveDriveCommand extends Command {
     }
 
     @Override
-    public void initialize() {
-        xLimiter.reset(0);
-        yLimiter.reset(0);
-        rotLimiter.reset(0);
-
-    }
-
-    @Override
     public void execute() {
         boolean isFlipped =
             DriverStation.getAlliance().isPresent()

@@ -36,8 +36,6 @@ public class DriveWithSpeakerTargetingCommand extends Command {
 
     @Override
     public void initialize() {
-        xLimiter.reset(0);
-        yLimiter.reset(0);
         rotController.reset();
     }
 
