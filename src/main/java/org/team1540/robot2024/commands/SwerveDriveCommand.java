@@ -2,11 +2,6 @@ package org.team1540.robot2024.commands;
 
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.filter.SlewRateLimiter;
-import edu.wpi.first.math.geometry.Pose2d;
-import edu.wpi.first.math.geometry.Rotation2d;
-import edu.wpi.first.math.geometry.Transform2d;
-import edu.wpi.first.math.geometry.Translation2d;
-import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
@@ -20,8 +15,6 @@ public class SwerveDriveCommand extends Command {
     private final SlewRateLimiter yLimiter = new SlewRateLimiter(2);
     private final SlewRateLimiter rotLimiter = new SlewRateLimiter(3);
 
-    private boolean isFlipped;
-
     public SwerveDriveCommand(Drivetrain drivetrain, CommandXboxController controller) {
         this.drivetrain = drivetrain;
         this.controller = controller;
@@ -33,38 +26,20 @@ public class SwerveDriveCommand extends Command {
         xLimiter.reset(0);
         yLimiter.reset(0);
         rotLimiter.reset(0);
-        isFlipped =
-                DriverStation.getAlliance().isPresent()
-                        && DriverStation.getAlliance().get() == DriverStation.Alliance.Red;
+
     }
 
     @Override
     public void execute() {
-        double xPercent = xLimiter.calculate(-controller.getLeftY());
-        double yPercent = yLimiter.calculate(-controller.getLeftX());
-        double rotPercent = rotLimiter.calculate(-controller.getRightX());
+        boolean isFlipped =
+            DriverStation.getAlliance().isPresent()
+                    && DriverStation.getAlliance().get() == DriverStation.Alliance.Red;
 
-        // Apply deadband
-        double linearMagnitude = MathUtil.applyDeadband(Math.hypot(xPercent, yPercent), 0.1);
-        Rotation2d linearDirection = new Rotation2d(xPercent, yPercent);
-        double omega = MathUtil.applyDeadband(rotPercent, 0.1);
+        double xPercent = MathUtil.applyDeadband(xLimiter.calculate(-controller.getLeftY()), 0.1);
+        double yPercent = MathUtil.applyDeadband(yLimiter.calculate(-controller.getLeftX()), 0.1);
+        double rotPercent = MathUtil.applyDeadband(rotLimiter.calculate(-controller.getRightX()), 0.1);
 
-        // Calculate new linear velocity
-        Translation2d linearVelocity =
-                new Pose2d(new Translation2d(), linearDirection)
-                        .transformBy(new Transform2d(linearMagnitude, 0.0, new Rotation2d())).getTranslation();
-
-        // Convert to field relative speeds & send command
-        drivetrain.runVelocity(
-                ChassisSpeeds.fromFieldRelativeSpeeds(
-                        linearVelocity.getX() * drivetrain.getMaxLinearSpeedMetersPerSec(),
-                        linearVelocity.getY() * drivetrain.getMaxLinearSpeedMetersPerSec(),
-                        omega * drivetrain.getMaxAngularSpeedRadPerSec(),
-                        isFlipped
-                                ? drivetrain.getRotation().plus(Rotation2d.fromDegrees(180))
-                                : drivetrain.getRotation()
-                )
-        );
+        drivetrain.drivePercent(xPercent, yPercent, rotPercent, isFlipped);
     }
 
     @Override
