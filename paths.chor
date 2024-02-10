@@ -1113,35 +1113,35 @@
                         "first"
                     ],
                     "type": "StopPoint",
-                    "uuid": "83079f8e-fefa-47cc-87cc-8867feaa1e6c"
+                    "uuid": "c00a6464-af10-4300-90ce-952800dc7e9a"
                 },
                 {
                     "scope": [
                         "last"
                     ],
                     "type": "StopPoint",
-                    "uuid": "6ff295ea-b983-4294-a840-0fde7be9f66c"
+                    "uuid": "73740625-61a2-4739-a695-90c84a5f7412"
                 },
                 {
                     "scope": [
                         2
                     ],
                     "type": "StopPoint",
-                    "uuid": "72936a64-67c4-42df-bfbf-e7f853e9bae0"
+                    "uuid": "5c04c4fe-8eac-4784-b24e-af9ec0f85261"
                 },
                 {
                     "scope": [
                         4
                     ],
                     "type": "StopPoint",
-                    "uuid": "5278ce2b-3706-44fe-85b0-80a9ea6bb9f8"
+                    "uuid": "cdc93131-3b87-4434-bdcd-3f9a616b7c80"
                 },
                 {
                     "scope": [
                         6
                     ],
                     "type": "StopPoint",
-                    "uuid": "1f6d0afb-9ebf-4c07-ab8c-827a56d70310"
+                    "uuid": "b2828fb4-c3a8-4f46-add5-8cae352854ae"
                 }
             ],
             "usesControlIntervalGuessing": true,
@@ -1844,97 +1844,35 @@
                         "first"
                     ],
                     "type": "StopPoint",
-                    "uuid": "1ba9d924-950b-4d1c-a49d-2ce5f4c4c45e"
+                    "uuid": "962a75ae-272d-4f0b-93d7-2b047f5627e8"
                 },
                 {
                     "scope": [
                         "last"
                     ],
                     "type": "StopPoint",
-                    "uuid": "36ec2c36-f812-4664-bda7-2392a5f706c2"
+                    "uuid": "a37c8409-9495-4f4f-b954-6c80c8dd1ac5"
                 },
                 {
                     "scope": [
                         1
                     ],
                     "type": "StopPoint",
-                    "uuid": "07b1b8b6-7190-49bb-a17e-31809a35a3b9"
+                    "uuid": "7ed7d9e8-6686-4f36-b616-2986828bd372"
                 },
                 {
                     "scope": [
                         3
                     ],
                     "type": "StopPoint",
-                    "uuid": "52df946c-6098-4264-a2f2-422c61e0fb2d"
+                    "uuid": "a3994878-b186-4802-a80f-f2801e310f9a"
                 },
                 {
                     "scope": [
                         2
                     ],
                     "type": "StopPoint",
-                    "uuid": "6c971225-e71e-4eb8-b09c-a1ed9bdb28eb"
-                }
-            ],
-            "usesControlIntervalGuessing": true,
-            "defaultControlIntervalCount": 40,
-            "usesDefaultFieldObstacles": true,
-            "circleObstacles": []
-        },
-        "EmptyPath": {
-            "waypoints": [
-                {
-                    "x": 1,
-                    "y": 1,
-                    "heading": 0,
-                    "isInitialGuess": false,
-                    "translationConstrained": true,
-                    "headingConstrained": true,
-                    "controlIntervalCount": 1
-                },
-                {
-                    "x": 1,
-                    "y": 1.000001,
-                    "heading": 0,
-                    "isInitialGuess": false,
-                    "translationConstrained": true,
-                    "headingConstrained": true,
-                    "controlIntervalCount": 40
-                }
-            ],
-            "trajectory": [
-                {
-                    "x": 1,
-                    "y": 1.0000003333333334,
-                    "heading": 5.4689024577671225e-42,
-                    "angularVelocity": -2.1892842089250095e-33,
-                    "velocityX": 7.557330153455215e-39,
-                    "velocityY": 1.5224217195382258e-19,
-                    "timestamp": 0
-                },
-                {
-                    "x": 1,
-                    "y": 1.0000006666666665,
-                    "heading": -5.468902457767124e-42,
-                    "angularVelocity": 2.1892842089250995e-33,
-                    "velocityX": -7.557330146409807e-39,
-                    "velocityY": -2.498184433116995e-15,
-                    "timestamp": -7.49409660472034e-9
-                }
-            ],
-            "constraints": [
-                {
-                    "scope": [
-                        "first"
-                    ],
-                    "type": "StopPoint",
-                    "uuid": "0ce5eda8-4d90-4c17-8731-ce786dd98449"
-                },
-                {
-                    "scope": [
-                        "last"
-                    ],
-                    "type": "StopPoint",
-                    "uuid": "f988f977-368e-48bb-b4db-9416817d1aeb"
+                    "uuid": "30d3abd8-8da6-4d22-ba1b-787dd8668d41"
                 }
             ],
             "usesControlIntervalGuessing": true,
