@@ -238,7 +238,8 @@ public final class Constants {
         public static final double ROT_KI = 0.0;
         public static final double ROT_KD = 0.0;
 
-        public static final Pose2d SPEAKER_POSE = new Pose2d(0.0, 5.12445, new Rotation2d());
+        public static final Pose2d SPEAKER_POSE =
+                new Pose2d(Units.inchesToMeters(8.861), Units.inchesToMeters(218), new Rotation2d());
     }
 
     public static boolean isTuningMode() {

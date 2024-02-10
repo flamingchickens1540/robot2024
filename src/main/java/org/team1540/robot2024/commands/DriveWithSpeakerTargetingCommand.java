@@ -23,9 +23,6 @@ public class DriveWithSpeakerTargetingCommand extends Command {
     private final SlewRateLimiter yLimiter = new SlewRateLimiter(2);
     private final PIDController rotController = new PIDController(ROT_KP, ROT_KI, ROT_KD);
 
-    private boolean isFlipped;
-    private Pose2d speakerPose;
-
     private final LoggedTunableNumber kP = new LoggedTunableNumber("Targeting/ROT_KP", ROT_KP);
     private final LoggedTunableNumber kI = new LoggedTunableNumber("Targeting/ROT_KI", ROT_KI);
     private final LoggedTunableNumber kD = new LoggedTunableNumber("Targeting/ROT_KD", ROT_KD);
@@ -41,11 +38,6 @@ public class DriveWithSpeakerTargetingCommand extends Command {
         xLimiter.reset(0);
         yLimiter.reset(0);
         rotController.reset();
-
-        isFlipped =
-                DriverStation.getAlliance().isPresent()
-                        && DriverStation.getAlliance().get() == DriverStation.Alliance.Red;
-        speakerPose = isFlipped ? GeometryUtil.flipFieldPose(SPEAKER_POSE) : SPEAKER_POSE;
     }
 
     @Override
@@ -54,10 +46,15 @@ public class DriveWithSpeakerTargetingCommand extends Command {
             rotController.setPID(kP.get(), kI.get(), kD.get());
         }
 
+        boolean isFlipped = DriverStation.getAlliance().isPresent()
+                && DriverStation.getAlliance().get() == DriverStation.Alliance.Red;
+        Pose2d speakerPose = isFlipped ? GeometryUtil.flipFieldPose(SPEAKER_POSE) : SPEAKER_POSE;
+
         Rotation2d targetRot =
                 drivetrain.getPose().minus(speakerPose).getTranslation().getAngle()
                         .rotateBy(isFlipped ? Rotation2d.fromDegrees(0) : Rotation2d.fromDegrees(180));
         Logger.recordOutput("Targeting/setpointPose", new Pose2d(drivetrain.getPose().getTranslation(), targetRot));
+        Logger.recordOutput("Targeting/speakerPose", speakerPose);
 
         double xPercent = MathUtil.applyDeadband(xLimiter.calculate(-controller.getLeftY()), 0.1);
         double yPercent = MathUtil.applyDeadband(yLimiter.calculate(-controller.getLeftX()), 0.1);
