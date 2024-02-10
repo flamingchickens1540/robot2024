@@ -60,6 +60,9 @@ public class RobotContainer {
     public final Indexer indexer;
     public final AprilTagVision aprilTagVision;
 
+    private int currentPathHash = Integer.MAX_VALUE;
+    private Trajectory currentPathTrajectory = new Trajectory();
+
     // Controller
     public final CommandXboxController driver = new CommandXboxController(0);
     public final CommandXboxController copilot = new CommandXboxController(1);
@@ -104,8 +107,12 @@ public class RobotContainer {
                     Logger.recordOutput("PathPlanner/TargetPosition", pose);
                 });
                 PathPlannerLogging.setLogActivePathCallback((path) -> {
-                    Trajectory trajectory = TrajectoryGenerator.generateTrajectory(path, Constants.Drivetrain.trajectoryConfig);
-                    Logger.recordOutput("PathPlanner/ActivePath", trajectory);
+                    if(path.hashCode() != currentPathHash){
+                        currentPathHash = path.hashCode();
+                        currentPathTrajectory = path.size() > 0 ? TrajectoryGenerator.generateTrajectory(path, Constants.Drivetrain.trajectoryConfig) : new Trajectory();
+                        Logger.recordOutput("PathPlanner/PathHash", currentPathHash);
+                        Logger.recordOutput("PathPlanner/ActivePath", currentPathTrajectory);
+                    }
                 });
 
                 break;
@@ -138,8 +145,13 @@ public class RobotContainer {
                     Logger.recordOutput("PathPlanner/TargetPosition", pose);
                 });
                 PathPlannerLogging.setLogActivePathCallback((path) -> {
-                    Trajectory trajectory = path.size() > 0 ? TrajectoryGenerator.generateTrajectory(path, Constants.Drivetrain.trajectoryConfig) : new Trajectory();
-                    Logger.recordOutput("PathPlanner/ActivePath", trajectory);
+                    if(path.hashCode() != currentPathHash){
+                        currentPathHash = path.hashCode();
+                        currentPathTrajectory = path.size() > 0 ? TrajectoryGenerator.generateTrajectory(path, Constants.Drivetrain.trajectoryConfig) : new Trajectory();
+                        Logger.recordOutput("PathPlanner/PathHash", currentPathHash);
+                        Logger.recordOutput("PathPlanner/ActivePath", currentPathTrajectory);
+                    }
+
                 });
                 break;
             default:

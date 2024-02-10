@@ -1,5 +1,6 @@
 package org.team1540.robot2024.commands.autos;
 
+import edu.wpi.first.wpilibj2.command.PrintCommand;
 import org.team1540.robot2024.subsystems.drive.Drivetrain;
 import org.team1540.robot2024.util.AutoCommand;
 import org.team1540.robot2024.util.PathPlannerHelper;
@@ -15,9 +16,13 @@ public class SourceLanePHGFSprint extends AutoCommand {
         );
         addCommands(
                 getPath(0).getCommand(),
+                new PrintCommand("Past 1"),
                 getPath(1).getCommand(),
+                new PrintCommand("Past 2"),
                 getPath(2).getCommand(),
-                getPath(3).getCommand()
+                new PrintCommand("Past 3"),
+                getPath(3).getCommand(),
+                new PrintCommand("Past 4")
         );
     }
 }

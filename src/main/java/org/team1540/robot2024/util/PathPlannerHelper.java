@@ -1,20 +1,24 @@
 package org.team1540.robot2024.util;
 
 import com.pathplanner.lib.auto.AutoBuilder;
+import com.pathplanner.lib.path.PathConstraints;
 import com.pathplanner.lib.path.PathPlannerPath;
 import com.pathplanner.lib.util.GeometryUtil;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Rotation3d;
+import edu.wpi.first.math.geometry.Transform2d;
 import edu.wpi.first.math.trajectory.Trajectory;
 import edu.wpi.first.math.trajectory.TrajectoryGenerator;
+import edu.wpi.first.math.util.Units;
+import edu.wpi.first.networktables.NetworkTable;
 import edu.wpi.first.wpilibj.DriverStation;
-import edu.wpi.first.wpilibj2.command.Command;
-import edu.wpi.first.wpilibj2.command.InstantCommand;
-import edu.wpi.first.wpilibj2.command.PrintCommand;
-import edu.wpi.first.wpilibj2.command.ProxyCommand;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import edu.wpi.first.wpilibj2.command.*;
 import org.team1540.robot2024.Constants;
 import org.team1540.robot2024.subsystems.drive.Drivetrain;
+
+import java.util.function.BooleanSupplier;
 
 public class PathPlannerHelper{
     boolean isResetting = false;
@@ -52,13 +56,20 @@ public class PathPlannerHelper{
         return path;
     }
 
+    public Command getCommand(boolean shouldRealign){
+        PathConstraints constraints = new PathConstraints(
+                3.0, 4.0,
+                Units.degreesToRadians(540), Units.degreesToRadians(720));
+        BooleanSupplier shouldFlip = ()->(DriverStation.getAlliance().orElse(null) == DriverStation.Alliance.Red);
+        Command command = new ConditionalCommand(
+                AutoBuilder.pathfindThenFollowPath(path,constraints),
+                AutoBuilder.followPath(path),
+                ()->drivetrain.getPose().getTranslation().getDistance((shouldFlip.getAsBoolean() ? GeometryUtil.flipFieldPose(initialPose) : initialPose).getTranslation()) > 1 && shouldRealign); //TODO tune this distance
+        Command resetCommand = new InstantCommand(() -> drivetrain.setPose(shouldFlip.getAsBoolean() ? GeometryUtil.flipFieldPose(initialPose) : initialPose));
+        if(isResetting)return resetCommand.andThen(command);
+        else return command;
+    }
     public Command getCommand(){
-        Command command = new ProxyCommand(() -> AutoBuilder.followPath(path));
-        if (isResetting) {
-            Command resetCommand = new InstantCommand(() -> drivetrain.setPose(DriverStation.getAlliance().isPresent() && DriverStation.getAlliance().get() == DriverStation.Alliance.Red ? GeometryUtil.flipFieldPose(initialPose) : initialPose));
-            return resetCommand.andThen(command);
-        } else {
-            return command;
-        }
+       return getCommand(false);
     }
 }
