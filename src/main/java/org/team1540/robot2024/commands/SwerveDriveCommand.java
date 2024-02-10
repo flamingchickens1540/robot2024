@@ -15,6 +15,8 @@ public class SwerveDriveCommand extends Command {
     private final SlewRateLimiter yLimiter = new SlewRateLimiter(2);
     private final SlewRateLimiter rotLimiter = new SlewRateLimiter(3);
 
+    private boolean isFlipped;
+
     public SwerveDriveCommand(Drivetrain drivetrain, CommandXboxController controller) {
         this.drivetrain = drivetrain;
         this.controller = controller;
@@ -22,11 +24,14 @@ public class SwerveDriveCommand extends Command {
     }
 
     @Override
-    public void execute() {
-        boolean isFlipped =
-            DriverStation.getAlliance().isPresent()
-                    && DriverStation.getAlliance().get() == DriverStation.Alliance.Red;
+    public void initialize() {
+        isFlipped =
+                DriverStation.getAlliance().isPresent()
+                        && DriverStation.getAlliance().get() == DriverStation.Alliance.Red;
+    }
 
+    @Override
+    public void execute() {
         double xPercent = MathUtil.applyDeadband(xLimiter.calculate(-controller.getLeftY()), 0.1);
         double yPercent = MathUtil.applyDeadband(yLimiter.calculate(-controller.getLeftX()), 0.1);
         double rotPercent = MathUtil.applyDeadband(rotLimiter.calculate(-controller.getRightX()), 0.1);

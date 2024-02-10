@@ -234,6 +234,7 @@ public final class Constants {
     }
 
     public static class Targeting {
+        // TODO: tune these
         public static final double ROT_KP = 1.18;
         public static final double ROT_KI = 0.0;
         public static final double ROT_KD = 0.0;

@@ -27,6 +27,9 @@ public class DriveWithSpeakerTargetingCommand extends Command {
     private final LoggedTunableNumber kI = new LoggedTunableNumber("Targeting/ROT_KI", ROT_KI);
     private final LoggedTunableNumber kD = new LoggedTunableNumber("Targeting/ROT_KD", ROT_KD);
 
+    private boolean isFlipped;
+    private Pose2d speakerPose;
+
     public DriveWithSpeakerTargetingCommand(Drivetrain drivetrain, CommandXboxController controller) {
         this.drivetrain = drivetrain;
         this.controller = controller;
@@ -37,6 +40,11 @@ public class DriveWithSpeakerTargetingCommand extends Command {
     @Override
     public void initialize() {
         rotController.reset();
+
+        isFlipped =
+                DriverStation.getAlliance().isPresent()
+                        && DriverStation.getAlliance().get() == DriverStation.Alliance.Red;
+        speakerPose = isFlipped ? GeometryUtil.flipFieldPose(SPEAKER_POSE) : SPEAKER_POSE;
     }
 
     @Override
@@ -44,10 +52,6 @@ public class DriveWithSpeakerTargetingCommand extends Command {
         if (kP.hasChanged(hashCode()) || kI.hasChanged(hashCode()) || kD.hasChanged(hashCode())) {
             rotController.setPID(kP.get(), kI.get(), kD.get());
         }
-
-        boolean isFlipped = DriverStation.getAlliance().isPresent()
-                && DriverStation.getAlliance().get() == DriverStation.Alliance.Red;
-        Pose2d speakerPose = isFlipped ? GeometryUtil.flipFieldPose(SPEAKER_POSE) : SPEAKER_POSE;
 
         Rotation2d targetRot =
                 drivetrain.getPose().minus(speakerPose).getTranslation().getAngle()
@@ -59,7 +63,6 @@ public class DriveWithSpeakerTargetingCommand extends Command {
         double yPercent = MathUtil.applyDeadband(yLimiter.calculate(-controller.getLeftX()), 0.1);
         double rotPercent = rotController.calculate(drivetrain.getRotation().getRadians(), targetRot.getRadians());
         drivetrain.drivePercent(xPercent, yPercent, rotPercent, isFlipped);
-
     }
 
     @Override
