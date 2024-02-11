@@ -71,12 +71,12 @@ public class PathHelper {
 
     public Command getCommand(Drivetrain drivetrain, boolean shouldRealign) {
         BooleanSupplier shouldFlip = () -> DriverStation.getAlliance().orElse(null) == DriverStation.Alliance.Red;
-        Supplier<Pose2d> flippedInitialPose = () -> shouldFlip.getAsBoolean() ? GeometryUtil.flipFieldPose(initialPose) : initialPose;
+        Supplier<Pose2d> startingPose = () -> shouldFlip.getAsBoolean() ? GeometryUtil.flipFieldPose(initialPose) : initialPose;
         Command command = new ConditionalCommand(
                 AutoBuilder.pathfindThenFollowPath(path, constraints),
                 AutoBuilder.followPath(path),
-                () -> drivetrain.getPose().getTranslation().getDistance((flippedInitialPose.get()).getTranslation()) > 1 && shouldRealign); //TODO tune this distance
-        Command resetCommand = new InstantCommand(() -> drivetrain.setPose(flippedInitialPose.get()));
+                () -> drivetrain.getPose().getTranslation().getDistance((startingPose.get()).getTranslation()) > 1 && shouldRealign); //TODO tune this distance
+        Command resetCommand = new InstantCommand(() -> drivetrain.setPose(startingPose.get()));
         return isResetting ? resetCommand.andThen(command) : command;
     }
 

@@ -15,7 +15,7 @@ public class AutoCommand extends SequentialCommandGroup {
 
     private List<PathHelper> paths = new ArrayList<>();
 
-    private int index = 0;
+    private int pathIndex = 0;
 
     public AutoCommand(String name){
         this.name = name;
@@ -52,16 +52,16 @@ public class AutoCommand extends SequentialCommandGroup {
         return paths;
     }
 
-    public PathHelper getPath(int index){
-        return paths.get(index);
+    public PathHelper getPath(int pathIndex){
+        return paths.get(pathIndex);
     }
     public PathHelper getNextPath(){
-        return getPath(index++);
+        return getPath(pathIndex++);
     }
-    public int getIndex(){
-        return index;
+    public int getPathIndex(){
+        return pathIndex;
     }
-    public void setIndex(int index){
-        this.index = index;
+    public void setPathIndex(int index){
+        this.pathIndex = index;
     }
 }
