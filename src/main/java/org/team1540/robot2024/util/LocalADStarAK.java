@@ -50,13 +50,10 @@ public class LocalADStarAK implements Pathfinder {
         if (!Logger.hasReplaySource()) {
             io.updateCurrentPathPoints(constraints, goalEndState);
         }
-
         Logger.processInputs("LocalADStarAK", io);
-
         if (io.currentPathPoints.isEmpty()) {
             return null;
         }
-
         return PathPlannerPath.fromPathPoints(io.currentPathPoints, constraints, goalEndState);
     }
 
