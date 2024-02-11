@@ -41,8 +41,10 @@ public class AutoCommand extends SequentialCommandGroup {
     }
 
     public void addPath(PathHelper... paths){
-        this.paths.addAll(Arrays.stream(paths).toList());
-        if(!this.paths.isEmpty() && this.paths.size() == Arrays.stream(paths).count()){
+        for (PathHelper path: paths) {
+            this.paths.add(path);
+        }
+        if(!this.paths.isEmpty() && this.paths.size() == paths.length){
             isResetting = this.paths.get(0).isResetting;
             initialPose = this.paths.get(0).initialPose;
         }
