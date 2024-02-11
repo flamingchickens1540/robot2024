@@ -175,7 +175,7 @@ public class RobotContainer {
         indexer.setDefaultCommand(new IntakeCommand(indexer, tramp));
 
         driver.x().onTrue(Commands.runOnce(drivetrain::stopWithX, drivetrain));
-        driver.y().toggleOnFalse(new DriveWithSpeakerTargetingCommand(drivetrain, driver));
+        driver.y().toggleOnTrue(new DriveWithSpeakerTargetingCommand(drivetrain, driver));
         driver.b().onTrue(
                 Commands.runOnce(
                         () -> drivetrain.setPose(new Pose2d(drivetrain.getPose().getTranslation(), new Rotation2d())),
