@@ -4,7 +4,7 @@ import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj2.command.Command;
 import org.team1540.robot2024.subsystems.shooter.Shooter;
 
-class PrepareShooterCommand extends Command {
+public class PrepareShooterCommand extends Command {
     private final Shooter shooter;
 
     public PrepareShooterCommand(Shooter shooter) {

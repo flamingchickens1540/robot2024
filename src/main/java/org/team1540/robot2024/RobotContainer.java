@@ -14,10 +14,14 @@ import org.team1540.robot2024.Constants.Elevator.ElevatorState;
 import org.team1540.robot2024.commands.FeedForwardCharacterization;
 import org.team1540.robot2024.commands.SwerveDriveCommand;
 import org.team1540.robot2024.commands.TrampShoot;
+import org.team1540.robot2024.commands.climb.ClimbSequence;
+import org.team1540.robot2024.commands.climb.DeclimbSequence;
 import org.team1540.robot2024.commands.elevator.ElevatorManualCommand;
 import org.team1540.robot2024.commands.elevator.ElevatorSetpointCommand;
 import org.team1540.robot2024.commands.indexer.IntakeCommand;
 import org.team1540.robot2024.commands.indexer.StageTrampCommand;
+import org.team1540.robot2024.commands.shooter.ManualShooterCommand;
+import org.team1540.robot2024.commands.shooter.PrepareShooterCommand;
 import org.team1540.robot2024.commands.shooter.ShootSequence;
 import org.team1540.robot2024.commands.shooter.TuneShooterCommand;
 import org.team1540.robot2024.subsystems.drive.*;
@@ -25,6 +29,7 @@ import org.team1540.robot2024.subsystems.elevator.Elevator;
 import org.team1540.robot2024.subsystems.elevator.ElevatorIO;
 import org.team1540.robot2024.subsystems.elevator.ElevatorIOSim;
 import org.team1540.robot2024.subsystems.elevator.ElevatorIOTalonFX;
+import org.team1540.robot2024.subsystems.fakesubsystems.Hooks;
 import org.team1540.robot2024.subsystems.indexer.Indexer;
 import org.team1540.robot2024.subsystems.indexer.IndexerIO;
 import org.team1540.robot2024.subsystems.indexer.IndexerIOSim;
@@ -56,6 +61,7 @@ public class RobotContainer {
     public final Tramp tramp;
     public final Shooter shooter;
     public final Elevator elevator;
+    public final Hooks hook;
     public final Indexer indexer;
     public final AprilTagVision aprilTagVision;
 
@@ -87,6 +93,7 @@ public class RobotContainer {
                 tramp = new Tramp(new TrampIOSparkMax());
                 shooter = new Shooter(new ShooterPivotIOTalonFX(), new FlywheelsIOTalonFX());
                 elevator = new Elevator(new ElevatorIOTalonFX());
+                hook = new Hooks();
                 indexer =
                         new Indexer(
                                 new IndexerIOSparkMax()
@@ -111,6 +118,7 @@ public class RobotContainer {
                 tramp = new Tramp(new TrampIOSim());
                 shooter = new Shooter(new ShooterPivotIOSim(), new FlywheelsIOSim());
                 elevator = new Elevator(new ElevatorIOSim());
+                hook = new Hooks();
                 aprilTagVision =
                         new AprilTagVision(
                                 new AprilTagVisionIOSim(Constants.Vision.FRONT_CAMERA_NAME, Constants.Vision.FRONT_CAMERA_POSE, drivetrain::getPose),
@@ -134,6 +142,7 @@ public class RobotContainer {
                                 new ModuleIO() {});
                 shooter = new Shooter(new ShooterPivotIO() {}, new FlywheelsIO() {});
                 elevator = new Elevator(new ElevatorIO() {});
+                hook = new Hooks();
                 aprilTagVision =
                         new AprilTagVision(
                                 new AprilTagVisionIO() {},
@@ -174,27 +183,32 @@ public class RobotContainer {
      * edu.wpi.first.wpilibj2.command.button.JoystickButton}.
      */
     private void configureButtonBindings() {
+        // driver left (x,y) and right (x,y) -> drive
         drivetrain.setDefaultCommand(new SwerveDriveCommand(drivetrain, driver));
-        elevator.setDefaultCommand(new ElevatorManualCommand(elevator, copilot));
-        copilot.rightBumper().onTrue(new ElevatorSetpointCommand(elevator, ElevatorState.TOP));
-        copilot.leftBumper().onTrue(new ElevatorSetpointCommand(elevator, ElevatorState.BOTTOM));
+        // driver y -> zero field orientation, x -> x stop
         driver.x().onTrue(Commands.runOnce(drivetrain::stopWithX, drivetrain));
-        driver.b().onTrue(
+        driver.y().onTrue(
                 Commands.runOnce(
                         () -> drivetrain.setPose(new Pose2d(drivetrain.getPose().getTranslation(), new Rotation2d())),
                         drivetrain
                 ).ignoringDisable(true)
         );
-        driver.rightBumper().onTrue(new IntakeCommand(indexer));
-        driver.leftBumper().onTrue(new TrampShoot(tramp));
-        //TODO: not sure how to do angling/don't think there's a command for this yet?
-
-        copilot.a().onTrue(new ShootSequence(shooter, indexer))
+        // driver left bumper -> shooter align and shoot
+        driver.leftBumper().onTrue(new ShootSequence(shooter, indexer))
                 .onFalse(Commands.runOnce(shooter::stopFlywheels, shooter));
-        copilot.rightBumper().onTrue(new StageTrampCommand(tramp, indexer));
+        //TODO: driver needs angling command (Alvin wrote it)
 
-        // copilot: shooter staging, climbing, shooter override, elevator override, signaling
-        // use tramp stage
+        // copilot left and right trigger -> elevator up and down
+        elevator.setDefaultCommand(new ElevatorManualCommand(elevator, copilot));
+        // copilot left y -> shooter angle
+        shooter.setDefaultCommand(new ManualShooterCommand(shooter, copilot));
+        // copilot left and right bumper -> climb up climb down
+        copilot.leftBumper().onTrue(new ClimbSequence(elevator, hook));
+        copilot.rightBumper().onTrue(new DeclimbSequence(elevator, hook));
+        // copilot a + b -> stage trap + stage shooter
+        copilot.a().onTrue(new StageTrampCommand(tramp, indexer));
+        copilot.b().onTrue(new PrepareShooterCommand(shooter));
+        //TODO: copilot needs signaling? (not sure how this works)
     }
 
     /**
