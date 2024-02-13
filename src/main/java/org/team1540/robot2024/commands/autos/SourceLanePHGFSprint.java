@@ -8,12 +8,14 @@ import org.team1540.robot2024.util.PathHelper;
 public class SourceLanePHGFSprint extends AutoCommand {
     public SourceLanePHGFSprint(Drivetrain drivetrain){
         super("SourceLanePHGFSprint");
+
         addPath(
                 PathHelper.fromChoreoPath("SourceLanePHGFSprint.1", true, true),
                 PathHelper.fromChoreoPath("SourceLanePHGFSprint.2"),
                 PathHelper.fromChoreoPath("SourceLanePHGFSprint.3"),
                 PathHelper.fromChoreoPath("SourceLanePHGFSprint.4")
         );
+
         addCommands(
                 getPath(0).getCommand(drivetrain),
                 new PrintCommand("Past 1"),

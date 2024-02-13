@@ -7,7 +7,6 @@ import org.team1540.robot2024.util.AutoCommand;
 import org.team1540.robot2024.util.PathHelper;
 
 public class AmpLanePABCSprint extends AutoCommand {
-
     public AmpLanePABCSprint(Drivetrain drivetrain, Shooter shooter, Indexer indexer){
         super("AmpLanePABCSprint");
 
@@ -17,6 +16,7 @@ public class AmpLanePABCSprint extends AutoCommand {
                 PathHelper.fromChoreoPath("AmpLanePABCSprint.3"),
                 PathHelper.fromChoreoPath("AmpLanePABCSprint.4")
         );
+
         addCommands(
 //                new ShootSequence(shooter, indexer),
                 getPath(0).getCommand(drivetrain),

@@ -16,12 +16,11 @@ public class Elevator extends SubsystemBase {
     private final AverageFilter positionFilter = new AverageFilter(10);
     private double setpointMeters;
 
-
     public Elevator(ElevatorIO elevatorIO) {
         this.io = elevatorIO;
     }
 
-    // periodic
+    @Override
     public void periodic() {
         io.updateInputs(inputs);
         Logger.processInputs("Elevator", inputs);
@@ -31,7 +30,7 @@ public class Elevator extends SubsystemBase {
     }
 
     public void setElevatorPosition(double positionMeters) {
-        positionMeters = MathUtil.clamp(positionMeters, Constants.Elevator.ELEVATOR_MINIMUM_HEIGHT, Constants.Elevator.ELEVATOR_MAX_HEIGHT);
+        positionMeters = MathUtil.clamp(positionMeters, Constants.Elevator.MINIMUM_HEIGHT, Constants.Elevator.MAX_HEIGHT);
         setpointMeters = positionMeters;
         io.setSetpointMeters(setpointMeters);
 

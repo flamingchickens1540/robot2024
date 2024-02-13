@@ -86,8 +86,8 @@ public class Drivetrain extends SubsystemBase {
             for (Module module : modules) module.stop();
 
             // Log empty setpoint states when disabled
-            Logger.recordOutput("SwerveStates/Setpoints", new SwerveModuleState[]{});
-            Logger.recordOutput("SwerveStates/SetpointsOptimized", new SwerveModuleState[]{});
+            Logger.recordOutput("SwerveStates/Setpoints");
+            Logger.recordOutput("SwerveStates/SetpointsOptimized");
         }
 
         // Calculate module deltas

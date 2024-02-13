@@ -6,11 +6,11 @@ import com.pathplanner.lib.path.PathPlannerPath;
 import com.pathplanner.lib.util.GeometryUtil;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
-import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.ConditionalCommand;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
+import org.team1540.robot2024.Constants;
 import org.team1540.robot2024.subsystems.drive.Drivetrain;
 
 import java.util.function.BooleanSupplier;
@@ -19,16 +19,16 @@ import java.util.function.Supplier;
 public class PathHelper {
     private static final PathConstraints constraints = new PathConstraints(
             3.0, 4.0,
-            Units.degreesToRadians(540), Units.degreesToRadians(720)
+            Constants.Drivetrain.MAX_ANGULAR_SPEED,
+            Constants.Drivetrain.MAX_ANGULAR_SPEED * (4.0/3.0)
     );
 
-    boolean isResetting;
-    Pose2d initialPose;
-    String pathname;
-    boolean isChoreo;
-    boolean canFlip;
-    PathPlannerPath path;
-
+    final boolean isResetting;
+    final Pose2d initialPose;
+    final String pathname;
+    final boolean isChoreo;
+    final boolean shouldFlip;
+    final PathPlannerPath path;
 
     public static PathHelper fromChoreoPath(String pathname) {
         return new PathHelper(pathname, true, false, true);
@@ -47,11 +47,11 @@ public class PathHelper {
     }
 
 
-    private PathHelper(String pathname, boolean isChoreo, boolean shouldReset, boolean canFlip) {
+    private PathHelper(String pathname, boolean isChoreo, boolean shouldReset, boolean shouldFlip) {
         this.pathname = pathname;
         this.isChoreo = isChoreo;
         this.isResetting = shouldReset;
-        this.canFlip = canFlip;
+        this.shouldFlip = shouldFlip;
         this.path = isChoreo ? PathPlannerPath.fromChoreoTrajectory(pathname) : PathPlannerPath.fromPathFile(pathname);
         Rotation2d rotation = path.getPoint(0).rotationTarget == null ? new Rotation2d() : path.getPoint(0).rotationTarget.getTarget();
         this.initialPose = new Pose2d(path.getPoint(0).position, rotation);

@@ -175,10 +175,10 @@ public final class Constants {
 
     public static class Elevator {
         public static final double CHAIN_HEIGHT_METERS = Units.inchesToMeters(28.25);
-        public static final double ELEVATOR_MINIMUM_HEIGHT = Units.inchesToMeters(6.0);
+        public static final double MINIMUM_HEIGHT = Units.inchesToMeters(6.0);
         public static final double CLIMBING_HOOKS_MINIMUM_HEIGHT = Units.inchesToMeters(12.0);
-        public static final double ELEVATOR_MAX_HEIGHT = ELEVATOR_MINIMUM_HEIGHT + Units.inchesToMeters(21.0); //TODO: Fix these constants to be more accurate
-        public static final double CLIMBING_HOOKS_MAX_HEIGHT = CLIMBING_HOOKS_MINIMUM_HEIGHT + ELEVATOR_MAX_HEIGHT - ELEVATOR_MINIMUM_HEIGHT;
+        public static final double MAX_HEIGHT = MINIMUM_HEIGHT + Units.inchesToMeters(21.0); //TODO: Fix these constants to be more accurate
+        public static final double CLIMBING_HOOKS_MAX_HEIGHT = CLIMBING_HOOKS_MINIMUM_HEIGHT + MAX_HEIGHT - MINIMUM_HEIGHT;
 
         public static final double GEAR_RATIO = 2.0; //TODO: Get constants right sometime
         public static final int LEADER_ID = -1;
@@ -203,15 +203,15 @@ public final class Constants {
             /**
              * At max height :D
              */
-            TOP(ELEVATOR_MAX_HEIGHT),
+            TOP(MAX_HEIGHT),
             /**
              * At minimum height :D
              */
-            BOTTOM(ELEVATOR_MINIMUM_HEIGHT),
+            BOTTOM(MINIMUM_HEIGHT),
             /**
              * At height for top of initial climb :D
              */
-            CLIMB(CHAIN_HEIGHT_METERS + 0.1 - (CLIMBING_HOOKS_MINIMUM_HEIGHT - ELEVATOR_MINIMUM_HEIGHT)), //TODO: Find these values :D
+            CLIMB(CHAIN_HEIGHT_METERS + 0.1 - (CLIMBING_HOOKS_MINIMUM_HEIGHT - MINIMUM_HEIGHT)), //TODO: Find these values :D
             /**
              * At height for trap doing :D
              */
@@ -230,7 +230,7 @@ public final class Constants {
     }
 
     public static class Tramp {
-        public static final int TRAMP_BEAM_BREAK_CHANNEL = 1;
+        public static final int BEAM_BREAK_CHANNEL = 1;
         public static final double GEAR_RATIO = 3.0;
         public static final double TRAP_SCORING_TIME_SECONDS = 1.114; //TODO: Find these values :D
         public static final int MOTOR_ID = -1; //TODO: Configure this later

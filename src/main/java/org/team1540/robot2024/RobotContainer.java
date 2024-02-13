@@ -11,7 +11,6 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import org.littletonrobotics.junction.Logger;
-import org.littletonrobotics.junction.networktables.LoggedDashboardChooser;
 import org.team1540.robot2024.Constants.Elevator.ElevatorState;
 import org.team1540.robot2024.commands.FeedForwardCharacterization;
 import org.team1540.robot2024.commands.DriveWithSpeakerTargetingCommand;
@@ -72,8 +71,6 @@ public class RobotContainer {
 
     public final PhoenixTimeSyncSignalRefresher odometrySignalRefresher = new PhoenixTimeSyncSignalRefresher(SwerveConfig.CAN_BUS);
 
-    // TODO: testing dashboard inputs, remove for comp
-
     /**
      * The container for the robot. Contains subsystems, IO devices, and commands.
      */
@@ -102,16 +99,14 @@ public class RobotContainer {
                         () -> 0.0, // TODO: ACTUALLY GET ELEVATOR HEIGHT HERE
                         new VisionPoseAcceptor(drivetrain::getChassisSpeeds, () -> 0.0)); // TODO: ACTUALLY GET ELEVATOR VELOCITY HERE
 
-                PathPlannerLogging.setLogCurrentPoseCallback((pose) -> {
-                    Logger.recordOutput("PathPlanner/Position", pose);
-                });
-                PathPlannerLogging.setLogTargetPoseCallback((pose) -> {
-                    Logger.recordOutput("PathPlanner/TargetPosition", pose);
-                });
+                PathPlannerLogging.setLogCurrentPoseCallback(
+                        (pose) -> Logger.recordOutput("PathPlanner/Position", pose));
+                PathPlannerLogging.setLogTargetPoseCallback(
+                        (pose) -> Logger.recordOutput("PathPlanner/TargetPosition", pose));
                 PathPlannerLogging.setLogActivePathCallback((path) -> {
-                    if(path.hashCode() != currentPathHash){
+                    if(path.hashCode() != currentPathHash) {
                         currentPathHash = path.hashCode();
-                        currentPathTrajectory = path.size() > 0 ? TrajectoryGenerator.generateTrajectory(path, Constants.Drivetrain.trajectoryConfig) : new Trajectory();
+                        currentPathTrajectory = !path.isEmpty() ? TrajectoryGenerator.generateTrajectory(path, Constants.Drivetrain.trajectoryConfig) : new Trajectory();
                         Logger.recordOutput("PathPlanner/PathHash", currentPathHash);
                         Logger.recordOutput("PathPlanner/ActivePath", currentPathTrajectory);
                     }
@@ -149,11 +144,10 @@ public class RobotContainer {
                 PathPlannerLogging.setLogActivePathCallback((path) -> {
                     if(path.hashCode() != currentPathHash){
                         currentPathHash = path.hashCode();
-                        currentPathTrajectory = path.size() > 0 ? TrajectoryGenerator.generateTrajectory(path, Constants.Drivetrain.trajectoryConfig) : new Trajectory();
+                        currentPathTrajectory = !path.isEmpty() ? TrajectoryGenerator.generateTrajectory(path, Constants.Drivetrain.trajectoryConfig) : new Trajectory();
                         Logger.recordOutput("PathPlanner/PathHash", currentPathHash);
                         Logger.recordOutput("PathPlanner/ActivePath", currentPathTrajectory);
                     }
-
                 });
                 break;
             default:
