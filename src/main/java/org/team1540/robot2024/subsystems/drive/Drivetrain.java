@@ -67,10 +67,9 @@ public class Drivetrain extends SubsystemBase {
                 this);
         Pathfinding.setPathfinder(new LocalADStarAK());
         PathPlannerLogging.setLogActivePathCallback(
-                (activePath) -> Logger.recordOutput(
-                        "Odometry/Trajectory", activePath.toArray(new Pose2d[activePath.size()])));
+                (activePath) -> Logger.recordOutput("Pathplanner/ActivePath", activePath.toArray(new Pose2d[activePath.size()])));
         PathPlannerLogging.setLogTargetPoseCallback(
-                (targetPose) -> Logger.recordOutput("Odometry/TrajectorySetpoint", targetPose));
+                (targetPose) -> Logger.recordOutput("Pathplanner/TargetPosition", targetPose));
     }
 
     @Override
@@ -86,8 +85,8 @@ public class Drivetrain extends SubsystemBase {
             for (Module module : modules) module.stop();
 
             // Log empty setpoint states when disabled
-            Logger.recordOutput("SwerveStates/Setpoints");
-            Logger.recordOutput("SwerveStates/SetpointsOptimized");
+            Logger.recordOutput("SwerveStates/Setpoints", new SwerveModuleState[]{});
+            Logger.recordOutput("SwerveStates/SetpointsOptimized", new SwerveModuleState[]{});
         }
 
         // Calculate module deltas

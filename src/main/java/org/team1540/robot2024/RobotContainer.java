@@ -1,16 +1,12 @@
 package org.team1540.robot2024;
 
-import com.pathplanner.lib.util.PathPlannerLogging;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
-import edu.wpi.first.math.trajectory.Trajectory;
-import edu.wpi.first.math.trajectory.TrajectoryGenerator;
 import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
-import org.littletonrobotics.junction.Logger;
 import org.team1540.robot2024.Constants.Elevator.ElevatorState;
 import org.team1540.robot2024.commands.FeedForwardCharacterization;
 import org.team1540.robot2024.commands.DriveWithSpeakerTargetingCommand;
@@ -61,9 +57,6 @@ public class RobotContainer {
     public final Indexer indexer;
     public final AprilTagVision aprilTagVision;
 
-    private int currentPathHash = Integer.MAX_VALUE;
-    private Trajectory currentPathTrajectory = new Trajectory();
-
     // Controller
     public final CommandXboxController driver = new CommandXboxController(0);
     public final CommandXboxController copilot = new CommandXboxController(1);
@@ -98,20 +91,6 @@ public class RobotContainer {
                         drivetrain::addVisionMeasurement,
                         () -> 0.0, // TODO: ACTUALLY GET ELEVATOR HEIGHT HERE
                         new VisionPoseAcceptor(drivetrain::getChassisSpeeds, () -> 0.0)); // TODO: ACTUALLY GET ELEVATOR VELOCITY HERE
-
-                PathPlannerLogging.setLogCurrentPoseCallback(
-                        (pose) -> Logger.recordOutput("PathPlanner/Position", pose));
-                PathPlannerLogging.setLogTargetPoseCallback(
-                        (pose) -> Logger.recordOutput("PathPlanner/TargetPosition", pose));
-                PathPlannerLogging.setLogActivePathCallback((path) -> {
-                    if(path.hashCode() != currentPathHash) {
-                        currentPathHash = path.hashCode();
-                        currentPathTrajectory = !path.isEmpty() ? TrajectoryGenerator.generateTrajectory(path, Constants.Drivetrain.trajectoryConfig) : new Trajectory();
-                        Logger.recordOutput("PathPlanner/PathHash", currentPathHash);
-                        Logger.recordOutput("PathPlanner/ActivePath", currentPathTrajectory);
-                    }
-                });
-
                 break;
             case SIM:
                 // Sim robot, instantiate physics sim IO implementations
@@ -136,19 +115,6 @@ public class RobotContainer {
                         new Indexer(
                                 new IndexerIOSim()
                         );
-
-                PathPlannerLogging.setLogTargetPoseCallback((pose) -> {
-                    Logger.recordOutput("PathPlanner/Position", pose);
-                    Logger.recordOutput("PathPlanner/TargetPosition", pose);
-                });
-                PathPlannerLogging.setLogActivePathCallback((path) -> {
-                    if(path.hashCode() != currentPathHash){
-                        currentPathHash = path.hashCode();
-                        currentPathTrajectory = !path.isEmpty() ? TrajectoryGenerator.generateTrajectory(path, Constants.Drivetrain.trajectoryConfig) : new Trajectory();
-                        Logger.recordOutput("PathPlanner/PathHash", currentPathHash);
-                        Logger.recordOutput("PathPlanner/ActivePath", currentPathTrajectory);
-                    }
-                });
                 break;
             default:
                 // Replayed robot, disable IO implementations
