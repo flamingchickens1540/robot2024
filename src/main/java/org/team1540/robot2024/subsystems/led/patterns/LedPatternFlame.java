@@ -8,7 +8,7 @@ import java.util.Random;
 
 public class LedPatternFlame extends LedPattern {
     private static final Random generator = new Random();
-    private static final boolean reverseDirection = true;
+    private static final boolean reverseDirection = false;
 
     private final int cooling;
     private final int sparking = 123;

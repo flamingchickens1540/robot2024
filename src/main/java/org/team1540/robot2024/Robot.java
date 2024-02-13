@@ -11,6 +11,11 @@ import org.littletonrobotics.junction.networktables.NT4Publisher;
 import org.littletonrobotics.junction.wpilog.WPILOGReader;
 import org.littletonrobotics.junction.wpilog.WPILOGWriter;
 import org.team1540.robot2024.subsystems.led.*;
+import org.team1540.robot2024.subsystems.led.patterns.LedPatternFlame;
+import org.team1540.robot2024.subsystems.led.patterns.LedPatternRSLState;
+import org.team1540.robot2024.subsystems.led.patterns.LedPatternRainbow;
+import org.team1540.robot2024.subsystems.led.patterns.SimpleLedPattern;
+import org.team1540.robot2024.util.LoggedTunableNumber;
 import org.team1540.robot2024.util.MechanismVisualiser;
 
 /**
@@ -22,6 +27,10 @@ import org.team1540.robot2024.util.MechanismVisualiser;
 public class Robot extends LoggedRobot {
     private Command autonomousCommand;
     private RobotContainer robotContainer;
+
+    LoggedTunableNumber led_r = new LoggedTunableNumber("led/r", 0);
+    LoggedTunableNumber led_g = new LoggedTunableNumber("led/g", 0);
+    LoggedTunableNumber led_b = new LoggedTunableNumber("led/b", 0);
 
     /**
      * This function is run when the robot is first started up and should be used for any
@@ -104,8 +113,7 @@ public class Robot extends LoggedRobot {
      */
     @Override
     public void disabledInit() {
-        robotContainer.leds.setPattern(Leds.Zone.ZONE1, SimpleLedPattern.solid(Color.kBlueViolet));
-        robotContainer.leds.setPattern(Leds.Zone.ZONE2, SimpleLedPattern.solid(Color.kPaleVioletRed));
+        robotContainer.leds.setPattern(Leds.Zone.ELEVATOR_BACK, new LedPatternFlame());
     }
 
     /**
@@ -120,7 +128,7 @@ public class Robot extends LoggedRobot {
      */
     @Override
     public void autonomousInit() {
-        robotContainer.leds.setPattern(Leds.Zone.ZONE1,SimpleLedPattern.alternating(Color.kBlueViolet, Color.kCrimson));
+        robotContainer.leds.setPattern(Leds.Zone.ELEVATOR_BACK,LedPatternRSLState.matchingColors());
         autonomousCommand = robotContainer.getAutonomousCommand();
         // schedule the autonomous command (example)
         if (autonomousCommand != null) {
@@ -164,8 +172,7 @@ public class Robot extends LoggedRobot {
      */
     @Override
     public void testInit() {
-        robotContainer.leds.setPattern(Leds.Zone.ZONE1,new LedPatternFlame(82));
-        robotContainer.leds.setPattern(Leds.Zone.ZONE2,new LedPatternFlame(82));
+        robotContainer.leds.setPattern(Leds.Zone.ELEVATOR_BACK,new LedPatternRainbow(1));
         // Cancels all running commands at the start of test mode.
         CommandScheduler.getInstance().cancelAll();
     }
@@ -175,6 +182,7 @@ public class Robot extends LoggedRobot {
      */
     @Override
     public void testPeriodic() {
+        robotContainer.leds.setPattern(Leds.Zone.ELEVATOR_BACK,SimpleLedPattern.solid(new Color(led_r.get(), led_g.get(), led_b.get())));
     }
 
     /**

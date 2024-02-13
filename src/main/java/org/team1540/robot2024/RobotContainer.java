@@ -169,11 +169,11 @@ public class RobotContainer {
     }
 
     private void configureLedBindings() {
-        leds.setFatalPattern(new LedPatternFlame());
+        leds.setFatalPattern(LedPatternFlame::new);
         new Trigger(DriverStation::isDSAttached)
                 .onTrue(Commands.runOnce(leds::clearFatalPattern)
                             .ignoringDisable(true))
-                .onFalse(Commands.runOnce(() -> leds.setFatalPattern(new LedPatternFlame()))
+                .onFalse(Commands.runOnce(() -> leds.setFatalPattern(LedPatternFlame::new))
                             .ignoringDisable(true));
     }
     /**

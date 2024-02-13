@@ -20,7 +20,7 @@ public final class Constants {
     private static final Mode simMode = Mode.SIM; // Can also be Mode.REPLAY
 
     public static final Mode currentMode = Robot.isReal() ? Mode.REAL : simMode;
-    public static final int LED_STRIP_PORT_PWM = 1;
+    public static final int LED_STRIP_PORT_PWM = 9;
     public static final int LED_STRIP_LENGTH= 80;
     public enum Mode {
         /**

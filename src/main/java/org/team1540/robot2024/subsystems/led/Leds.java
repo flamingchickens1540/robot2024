@@ -7,6 +7,8 @@ import org.team1540.robot2024.Constants;
 import org.team1540.robot2024.subsystems.led.patterns.LedPattern;
 
 
+import java.util.function.Supplier;
+
 import static org.team1540.robot2024.Constants.LED_STRIP_PORT_PWM;
 
 public class Leds extends SubsystemBase {
@@ -20,8 +22,7 @@ public class Leds extends SubsystemBase {
         strip.setData(ledBuffer);
         strip.start();
 
-        buffers[Zone.ZONE1.ordinal()] = new ZonedAddressableLEDBuffer(ledBuffer, 1, 40, false);
-        buffers[Zone.ZONE2.ordinal()] = new ZonedAddressableLEDBuffer(ledBuffer, 40, 80, false);
+        buffers[Zone.ELEVATOR_BACK.ordinal()] = new ZonedAddressableLEDBuffer(ledBuffer, 1, 41, false);
         for (int i = 0; i < ZONE_COUNT;i++) {
             patterns[i] = new LedTriager();
         }
@@ -50,27 +51,24 @@ public class Leds extends SubsystemBase {
         patterns[zone.ordinal()].clearPattern(criticality);
     }
 
-    public void setFatalPattern(LedPattern pattern) {
-        System.out.println("Setting criticality");
+    public void setFatalPattern(Supplier<LedPattern> patternSupplier) {
         for (int i = 0; i<ZONE_COUNT;i++) {
+            LedPattern pattern = patternSupplier.get();
             patterns[i].addPattern(pattern, PatternCriticality.FATAL);
             pattern.setLength(buffers[i].getLength());
         }
     }
 
     public void clearFatalPattern() {
-        System.out.println("Clearing criticality");
         for (int i = 0; i<ZONE_COUNT;i++) {
             patterns[i].clearPattern(PatternCriticality.FATAL);
         }
-
     }
 
 
     private static final int ZONE_COUNT=Zone.values().length;
     public enum Zone {
-        ZONE1,
-        ZONE2;
+        ELEVATOR_BACK,
     }
     static final int CRITICALITY_COUNT=PatternCriticality.values().length;
     public enum PatternCriticality {
