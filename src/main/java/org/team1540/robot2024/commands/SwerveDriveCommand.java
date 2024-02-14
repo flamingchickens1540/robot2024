@@ -39,9 +39,9 @@ public class SwerveDriveCommand extends Command {
         double rotPercent = rotLimiter.calculate(-controller.getRightX());
 
         // Apply deadband
-        double linearMagnitude = MathUtil.applyDeadband(Math.hypot(xPercent, yPercent), 0.1);
+        double linearMagnitude = Math.hypot(MathUtil.applyDeadband(xPercent, 0.1), MathUtil.applyDeadband(yPercent, 0.1));
         Rotation2d linearDirection = new Rotation2d(xPercent, yPercent);
-        double omega = MathUtil.applyDeadband(rotPercent, 0.1);
+        double omega = MathUtil.applyDeadband(rotPercent, 0.5);
 
         // Calculate new linear velocity
         Translation2d linearVelocity =

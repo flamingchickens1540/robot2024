@@ -43,6 +43,7 @@ import org.team1540.robot2024.util.swerve.SwerveFactory;
 import org.team1540.robot2024.util.vision.VisionPoseAcceptor;
 
 import static org.team1540.robot2024.Constants.SwerveConfig;
+import static org.team1540.robot2024.Constants.currentMode;
 
 /**
  * This class is where the bulk of the robot should be declared. Since Command-based is a
@@ -75,7 +76,7 @@ public class RobotContainer {
      * The container for the robot. Contains subsystems, OI devices, and commands.
      */
     public RobotContainer() {
-        switch (Constants.currentMode) {
+        switch (Constants.Mode.REPLAY) {
             case REAL:
                 // Real robot, instantiate hardware IO implementations
                 drivetrain =
@@ -88,11 +89,10 @@ public class RobotContainer {
                 tramp = new Tramp(new TrampIOSparkMax());
                 shooter = new Shooter(new ShooterPivotIOTalonFX(), new FlywheelsIOTalonFX());
                 elevator = new Elevator(new ElevatorIOTalonFX());
-                indexer =
-                        new Indexer(
+                indexer = new Indexer(
                                 new IndexerIOSparkMax()
                         );
-                aprilTagVision = new AprilTagVision(
+                 aprilTagVision = new AprilTagVision(
                         new AprilTagVisionIOLimelight(Constants.Vision.FRONT_CAMERA_NAME, Constants.Vision.FRONT_CAMERA_POSE),
                         new AprilTagVisionIOLimelight(Constants.Vision.REAR_CAMERA_NAME, Constants.Vision.REAR_CAMERA_POSE),
                         drivetrain::addVisionMeasurement,
@@ -125,13 +125,20 @@ public class RobotContainer {
                 break;
             default:
                 // Replayed robot, disable IO implementations
+//                drivetrain =
+//                        new Drivetrain(
+//                                new GyroIO() {},
+//                                new ModuleIO() {},
+//                                new ModuleIO() {},
+//                                new ModuleIO() {},
+//                                new ModuleIO() {});
                 drivetrain =
                         new Drivetrain(
-                                new GyroIO() {},
-                                new ModuleIO() {},
-                                new ModuleIO() {},
-                                new ModuleIO() {},
-                                new ModuleIO() {});
+                                new GyroIOPigeon2(odometrySignalRefresher),
+                                new ModuleIOTalonFX(SwerveFactory.getModuleMotors(SwerveConfig.FRONT_LEFT, SwerveFactory.SwerveCorner.FRONT_LEFT), odometrySignalRefresher),
+                                new ModuleIOTalonFX(SwerveFactory.getModuleMotors(SwerveConfig.FRONT_RIGHT, SwerveFactory.SwerveCorner.FRONT_RIGHT), odometrySignalRefresher),
+                                new ModuleIOTalonFX(SwerveFactory.getModuleMotors(SwerveConfig.BACK_LEFT, SwerveFactory.SwerveCorner.BACK_LEFT), odometrySignalRefresher),
+                                new ModuleIOTalonFX(SwerveFactory.getModuleMotors(SwerveConfig.BACK_RIGHT, SwerveFactory.SwerveCorner.BACK_RIGHT), odometrySignalRefresher));
                 shooter = new Shooter(new ShooterPivotIO() {}, new FlywheelsIO() {});
                 elevator = new Elevator(new ElevatorIO() {});
                 aprilTagVision =
@@ -154,14 +161,14 @@ public class RobotContainer {
         autoChooser = new LoggedDashboardChooser<>("Auto Choices", AutoBuilder.buildAutoChooser());
 
         // Set up FF characterization routines
-        autoChooser.addOption(
-                "Drive FF Characterization",
-                new FeedForwardCharacterization(
-                        drivetrain, drivetrain::runCharacterizationVolts, drivetrain::getCharacterizationVelocity));
-        autoChooser.addOption(
-                "Flywheels FF Characterization",
-                new FeedForwardCharacterization(
-                        shooter, volts -> shooter.setFlywheelVolts(volts, volts), () -> shooter.getLeftFlywheelSpeed() / 60));
+//        autoChooser.addOption(
+//                "Drive FF Characterization",
+//                new FeedForwardCharacterization(
+//                        drivetrain, drivetrain::runCharacterizationVolts, drivetrain::getCharacterizationVelocity));
+//        autoChooser.addOption(
+//                "Flywheels FF Characterization",
+//                new FeedForwardCharacterization(
+//                        shooter, volts -> shooter.setFlywheelVolts(volts, volts), () -> shooter.getLeftFlywheelSpeed() / 60));
 
         // Configure the button bindings
         configureButtonBindings();

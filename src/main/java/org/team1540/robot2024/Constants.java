@@ -42,14 +42,14 @@ public final class Constants {
     public static final double LOOP_PERIOD_SECS = 0.02;
 
     public static class SwerveConfig {
-        public static final String CAN_BUS  = IS_COMPETITION_ROBOT ? "" : "";
+        public static final String CAN_BUS  = IS_COMPETITION_ROBOT ? "swerve" : "swerve";
         public static final int FRONT_LEFT  = IS_COMPETITION_ROBOT ? 3 : 0;
         public static final int FRONT_RIGHT = IS_COMPETITION_ROBOT ? 4 : 0;
         public static final int BACK_LEFT   = IS_COMPETITION_ROBOT ? 7 : 0;
         public static final int BACK_RIGHT  = IS_COMPETITION_ROBOT ? 1 : 0;
 
         // TODO: set this id
-        public static final int PIGEON_ID = 0;
+        public static final int PIGEON_ID = 9;
     }
 
     public static class Drivetrain {

@@ -8,13 +8,14 @@ import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.util.Units;
 import org.team1540.robot2024.util.PhoenixTimeSyncSignalRefresher;
 
+import static org.team1540.robot2024.Constants.SwerveConfig.CAN_BUS;
 import static org.team1540.robot2024.Constants.SwerveConfig.PIGEON_ID;
 
 /**
  * IO implementation for Pigeon2
  */
 public class GyroIOPigeon2 implements GyroIO {
-    private final Pigeon2 pigeon = new Pigeon2(PIGEON_ID);
+    private final Pigeon2 pigeon = new Pigeon2(PIGEON_ID, CAN_BUS);
     private final StatusSignal<Double> yaw = pigeon.getYaw();
     private final StatusSignal<Double> yawVelocity = pigeon.getAngularVelocityZDevice();
 
