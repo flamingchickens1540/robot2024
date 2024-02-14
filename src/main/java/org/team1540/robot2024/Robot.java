@@ -153,8 +153,7 @@ public class Robot extends LoggedRobot {
         // continue until interrupted by another command, remove
         // this line or comment it out.
 
-        robotContainer.leds.setPattern(Leds.Zone.ZONE1, new LedPatternFlame());
-        robotContainer.leds.setPattern(Leds.Zone.ZONE2, new LedPatternFlame());
+        robotContainer.leds.setPattern(Leds.Zone.ELEVATOR_BACK, LedPatternRSLState.matchingColors());
         if (autonomousCommand != null) {
             autonomousCommand.cancel();
         }
