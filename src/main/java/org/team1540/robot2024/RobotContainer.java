@@ -11,22 +11,17 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import org.littletonrobotics.junction.Logger;
-import org.littletonrobotics.junction.networktables.LoggedDashboardChooser;
-import org.team1540.robot2024.Constants.Elevator.ElevatorState;
 import org.team1540.robot2024.commands.FeedForwardCharacterization;
-import org.team1540.robot2024.commands.DriveWithSpeakerTargetingCommand;
 import org.team1540.robot2024.commands.SwerveDriveCommand;
-import org.team1540.robot2024.commands.TrampShoot;
+import org.team1540.robot2024.commands.autos.AmpLanePABCSprint;
+import org.team1540.robot2024.commands.autos.SourceLanePHGFSprint;
 import org.team1540.robot2024.commands.climb.ClimbSequence;
 import org.team1540.robot2024.commands.climb.DeclimbSequence;
 import org.team1540.robot2024.commands.elevator.ElevatorManualCommand;
-import org.team1540.robot2024.commands.elevator.ElevatorSetpointCommand;
-import org.team1540.robot2024.commands.indexer.IntakeCommand;
 import org.team1540.robot2024.commands.indexer.StageTrampCommand;
-import org.team1540.robot2024.commands.shooter.ManualShooterCommand;
+import org.team1540.robot2024.commands.shooter.ManualPivotCommand;
 import org.team1540.robot2024.commands.shooter.PrepareShooterCommand;
 import org.team1540.robot2024.commands.shooter.ShootSequence;
-import org.team1540.robot2024.commands.autos.*;
 import org.team1540.robot2024.subsystems.drive.*;
 import org.team1540.robot2024.subsystems.elevator.Elevator;
 import org.team1540.robot2024.subsystems.elevator.ElevatorIO;
@@ -247,7 +242,7 @@ public class RobotContainer {
         // copilot left and right trigger -> elevator up and down
         elevator.setDefaultCommand(new ElevatorManualCommand(elevator, copilot));
         // copilot left y -> shooter angle
-        shooter.setDefaultCommand(new ManualShooterCommand(shooter, copilot));
+        shooter.setDefaultCommand(new ManualPivotCommand(shooter, copilot));
         // copilot left and right bumper -> climb up climb down
         copilot.leftBumper().onTrue(new ClimbSequence(elevator, hook));
         copilot.rightBumper().onTrue(new DeclimbSequence(elevator, hook));

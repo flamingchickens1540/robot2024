@@ -5,11 +5,11 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import org.team1540.robot2024.subsystems.shooter.Shooter;
 
-public class ManualShooterCommand extends Command{
+public class ManualPivotCommand extends Command{
         private final Shooter shooter;
         private final CommandXboxController controller;
 
-        public ManualShooterCommand(Shooter shooter, CommandXboxController controller) {
+        public ManualPivotCommand(Shooter shooter, CommandXboxController controller) {
             this.shooter = shooter;
             addRequirements(shooter);
             this.controller = controller;
