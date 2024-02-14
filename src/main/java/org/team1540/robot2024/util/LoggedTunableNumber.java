@@ -51,7 +51,7 @@ public class LoggedTunableNumber {
         if (!hasDefault) {
             hasDefault = true;
             this.defaultValue = defaultValue;
-            if (Constants.tuningMode) {
+            if (Constants.isTuningMode()) {
                 dashboardNumber = new LoggedDashboardNumber(key, defaultValue);
             }
         }
@@ -66,7 +66,7 @@ public class LoggedTunableNumber {
         if (!hasDefault) {
             return 0.0;
         } else {
-            return Constants.tuningMode ? dashboardNumber.get() : defaultValue;
+            return Constants.isTuningMode() ? dashboardNumber.get() : defaultValue;
         }
     }
 
@@ -79,7 +79,7 @@ public class LoggedTunableNumber {
      * otherwise.
      */
     public boolean hasChanged(int id) {
-        if (!Constants.tuningMode) return false;
+        if (!Constants.isTuningMode()) return false;
         double currentValue = get();
         Double lastValue = lastHasChangedValues.get(id);
         if (lastValue == null || currentValue != lastValue) {

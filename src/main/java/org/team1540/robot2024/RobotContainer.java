@@ -1,8 +1,11 @@
 package org.team1540.robot2024;
 
-import com.pathplanner.lib.auto.AutoBuilder;
+import com.pathplanner.lib.util.PathPlannerLogging;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.trajectory.Trajectory;
+import edu.wpi.first.math.trajectory.TrajectoryGenerator;
+import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.XboxController;
@@ -10,14 +13,18 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
+import org.littletonrobotics.junction.Logger;
+import edu.wpi.first.wpilibj2.command.button.Trigger;
 import org.littletonrobotics.junction.networktables.LoggedDashboardChooser;
 import org.team1540.robot2024.Constants.Elevator.ElevatorState;
 import org.team1540.robot2024.commands.FeedForwardCharacterization;
+import org.team1540.robot2024.commands.DriveWithSpeakerTargetingCommand;
 import org.team1540.robot2024.commands.SwerveDriveCommand;
 import org.team1540.robot2024.commands.elevator.ElevatorManualCommand;
 import org.team1540.robot2024.commands.elevator.ElevatorSetpointCommand;
 import org.team1540.robot2024.commands.indexer.IntakeCommand;
 import org.team1540.robot2024.commands.shooter.ShootSequence;
+import org.team1540.robot2024.commands.autos.*;
 import org.team1540.robot2024.subsystems.drive.*;
 import org.team1540.robot2024.subsystems.elevator.Elevator;
 import org.team1540.robot2024.subsystems.elevator.ElevatorIO;
@@ -38,6 +45,8 @@ import org.team1540.robot2024.subsystems.vision.AprilTagVision;
 import org.team1540.robot2024.subsystems.vision.AprilTagVisionIO;
 import org.team1540.robot2024.subsystems.vision.AprilTagVisionIOLimelight;
 import org.team1540.robot2024.subsystems.vision.AprilTagVisionIOSim;
+import org.team1540.robot2024.util.AutoCommand;
+import org.team1540.robot2024.util.AutoManager;
 import org.team1540.robot2024.util.PhoenixTimeSyncSignalRefresher;
 import org.team1540.robot2024.util.swerve.SwerveFactory;
 import org.team1540.robot2024.util.vision.VisionPoseAcceptor;
@@ -61,19 +70,20 @@ public class RobotContainer {
     public final AprilTagVision aprilTagVision;
     public final Leds leds = new Leds();
 
+    private int currentPathHash = Integer.MAX_VALUE;
+    private Trajectory currentPathTrajectory = new Trajectory();
+
     // Controller
     public final CommandXboxController driver = new CommandXboxController(0);
     public final CommandXboxController copilot = new CommandXboxController(1);
 
-    // Dashboard inputs
-    public final LoggedDashboardChooser<Command> autoChooser;
 
     public final PhoenixTimeSyncSignalRefresher odometrySignalRefresher = new PhoenixTimeSyncSignalRefresher(SwerveConfig.CAN_BUS);
 
     // TODO: testing dashboard inputs, remove for comp
 
     /**
-     * The container for the robot. Contains subsystems, OI devices, and commands.
+     * The container for the robot. Contains subsystems, IO devices, and commands.
      */
     public RobotContainer() {
         switch (Constants.Mode.REPLAY) {
@@ -98,6 +108,22 @@ public class RobotContainer {
                         drivetrain::addVisionMeasurement,
                         () -> 0.0, // TODO: ACTUALLY GET ELEVATOR HEIGHT HERE
                         new VisionPoseAcceptor(drivetrain::getChassisSpeeds, () -> 0.0)); // TODO: ACTUALLY GET ELEVATOR VELOCITY HERE
+
+                PathPlannerLogging.setLogCurrentPoseCallback((pose) -> {
+                    Logger.recordOutput("PathPlanner/Position", pose);
+                });
+                PathPlannerLogging.setLogTargetPoseCallback((pose) -> {
+                    Logger.recordOutput("PathPlanner/TargetPosition", pose);
+                });
+                PathPlannerLogging.setLogActivePathCallback((path) -> {
+                    if(path.hashCode() != currentPathHash){
+                        currentPathHash = path.hashCode();
+                        currentPathTrajectory = path.size() > 0 ? TrajectoryGenerator.generateTrajectory(path, Constants.Drivetrain.trajectoryConfig) : new Trajectory();
+                        Logger.recordOutput("PathPlanner/PathHash", currentPathHash);
+                        Logger.recordOutput("PathPlanner/ActivePath", currentPathTrajectory);
+                    }
+                });
+
                 break;
             case SIM:
                 // Sim robot, instantiate physics sim IO implementations
@@ -122,6 +148,20 @@ public class RobotContainer {
                         new Indexer(
                                 new IndexerIOSim()
                         );
+
+                PathPlannerLogging.setLogTargetPoseCallback((pose) -> {
+                    Logger.recordOutput("PathPlanner/Position", pose);
+                    Logger.recordOutput("PathPlanner/TargetPosition", pose);
+                });
+                PathPlannerLogging.setLogActivePathCallback((path) -> {
+                    if(path.hashCode() != currentPathHash){
+                        currentPathHash = path.hashCode();
+                        currentPathTrajectory = path.size() > 0 ? TrajectoryGenerator.generateTrajectory(path, Constants.Drivetrain.trajectoryConfig) : new Trajectory();
+                        Logger.recordOutput("PathPlanner/PathHash", currentPathHash);
+                        Logger.recordOutput("PathPlanner/ActivePath", currentPathTrajectory);
+                    }
+
+                });
                 break;
             default:
                 // Replayed robot, disable IO implementations
@@ -157,18 +197,28 @@ public class RobotContainer {
         }
 
 
-        // Set up auto routines
-        autoChooser = new LoggedDashboardChooser<>("Auto Choices", AutoBuilder.buildAutoChooser());
 
         // Set up FF characterization routines
-//        autoChooser.addOption(
-//                "Drive FF Characterization",
-//                new FeedForwardCharacterization(
-//                        drivetrain, drivetrain::runCharacterizationVolts, drivetrain::getCharacterizationVelocity));
-//        autoChooser.addOption(
-//                "Flywheels FF Characterization",
-//                new FeedForwardCharacterization(
-//                        shooter, volts -> shooter.setFlywheelVolts(volts, volts), () -> shooter.getLeftFlywheelSpeed() / 60));
+//        AutoManager.getInstance().addAuto(
+//                new AutoCommand(
+//                        "Drive FF Characterization",
+//                        new FeedForwardCharacterization(
+//                                drivetrain, drivetrain::runCharacterizationVolts, drivetrain::getCharacterizationVelocity
+//                        )
+//                )
+//        );
+//
+//        AutoManager.getInstance().addAuto(
+//                new AutoCommand(
+//                        "Flywheels FF Characterization",
+//                        new FeedForwardCharacterization(
+//                                shooter, volts -> shooter.setFlywheelVolts(volts, volts), () -> shooter.getLeftFlywheelSpeed() / 60
+//                        )
+//                )
+//        );
+//
+//        AutoManager.getInstance().addDefaultAuto(new AmpLanePABCSprint(drivetrain, shooter, indexer));
+//        AutoManager.getInstance().addAuto(new SourceLanePHGFSprint(drivetrain));
 
         // Configure the button bindings
         configureButtonBindings();
@@ -192,9 +242,10 @@ public class RobotContainer {
     private void configureButtonBindings() {
         drivetrain.setDefaultCommand(new SwerveDriveCommand(drivetrain, driver));
         elevator.setDefaultCommand(new ElevatorManualCommand(elevator, copilot));
-        copilot.rightBumper().onTrue(new ElevatorSetpointCommand(elevator, ElevatorState.TOP));
-        copilot.leftBumper().onTrue(new ElevatorSetpointCommand(elevator, ElevatorState.BOTTOM));
+        indexer.setDefaultCommand(new IntakeCommand(indexer, tramp));
+
         driver.x().onTrue(Commands.runOnce(drivetrain::stopWithX, drivetrain));
+        driver.y().toggleOnTrue(new DriveWithSpeakerTargetingCommand(drivetrain, driver));
         driver.b().onTrue(
                 Commands.runOnce(
                         () -> drivetrain.setPose(new Pose2d(drivetrain.getPose().getTranslation(), new Rotation2d())),
@@ -202,10 +253,10 @@ public class RobotContainer {
                 ).ignoringDisable(true)
         );
 
+        copilot.rightBumper().onTrue(new ElevatorSetpointCommand(elevator, ElevatorState.TOP));
+        copilot.leftBumper().onTrue(new ElevatorSetpointCommand(elevator, ElevatorState.BOTTOM));
         copilot.a().onTrue(new ShootSequence(shooter, indexer))
                 .onFalse(Commands.runOnce(shooter::stopFlywheels, shooter));
-
-        driver.a().onTrue(new IntakeCommand(indexer));
     }
 
     /**

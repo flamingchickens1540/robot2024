@@ -7,9 +7,9 @@ import edu.wpi.first.wpilibj.DigitalInput;
 import org.team1540.robot2024.Constants.Tramp;
 
 public class TrampIOSparkMax implements TrampIO {
-    private final DigitalInput beamBreak = new DigitalInput(4);
+    private final DigitalInput beamBreak = new DigitalInput(Tramp.TRAMP_BEAM_BREAK_CHANNEL);
     //TODO: Potentially change name :D
-    private final CANSparkMax motor = new CANSparkMax(Tramp.TRAMP_MOTOR_ID, MotorType.kBrushless);
+    private final CANSparkMax motor = new CANSparkMax(Tramp.MOTOR_ID, MotorType.kBrushless);
     private final RelativeEncoder motorEncoder = motor.getEncoder();
 
     public TrampIOSparkMax() {

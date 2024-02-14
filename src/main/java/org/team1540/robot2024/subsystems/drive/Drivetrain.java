@@ -9,6 +9,7 @@ import edu.wpi.first.math.VecBuilder;
 import edu.wpi.first.math.estimator.SwerveDrivePoseEstimator;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.geometry.Transform2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
@@ -123,6 +124,27 @@ public class Drivetrain extends SubsystemBase {
         // Log setpoint states
         Logger.recordOutput("SwerveStates/Setpoints", setpointStates);
         Logger.recordOutput("SwerveStates/SetpointsOptimized", optimizedSetpointStates);
+    }
+
+    public void drivePercent(double xPercent, double yPercent, double rotPercent, boolean isFlipped) {
+        Rotation2d linearDirection = new Rotation2d(xPercent, yPercent);
+        double linearMagnitude = Math.hypot(xPercent, yPercent);
+
+        Translation2d linearVelocity =
+                new Pose2d(new Translation2d(), linearDirection)
+                        .transformBy(new Transform2d(linearMagnitude, 0.0, new Rotation2d())).getTranslation();
+
+        // Convert to field relative
+        runVelocity(
+                ChassisSpeeds.fromFieldRelativeSpeeds(
+                        linearVelocity.getX() * getMaxLinearSpeedMetersPerSec(),
+                        linearVelocity.getY() * getMaxLinearSpeedMetersPerSec(),
+                        rotPercent * getMaxAngularSpeedRadPerSec(),
+                        isFlipped
+                                ? getRotation().plus(Rotation2d.fromDegrees(180))
+                                : getRotation()
+                )
+        );
     }
 
     /**
