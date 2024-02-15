@@ -20,7 +20,7 @@ public class PathHelper {
     final Pose2d initialPose;
     final String pathname;
     final boolean isChoreo;
-    final boolean shouldFlip;
+    final boolean canFlip;
     final PathPlannerPath path;
 
     public static PathHelper fromChoreoPath(String pathname) {
@@ -40,11 +40,11 @@ public class PathHelper {
     }
 
 
-    private PathHelper(String pathname, boolean isChoreo, boolean shouldReset, boolean shouldFlip) {
+    private PathHelper(String pathname, boolean isChoreo, boolean shouldReset, boolean canFlip) {
         this.pathname = pathname;
         this.isChoreo = isChoreo;
         this.isResetting = shouldReset;
-        this.shouldFlip = shouldFlip;
+        this.canFlip = canFlip;
         this.path = isChoreo ? PathPlannerPath.fromChoreoTrajectory(pathname) : PathPlannerPath.fromPathFile(pathname);
         Rotation2d rotation = path.getPoint(0).rotationTarget == null ? new Rotation2d() : path.getPoint(0).rotationTarget.getTarget();
         this.initialPose = new Pose2d(path.getPoint(0).position, rotation);
