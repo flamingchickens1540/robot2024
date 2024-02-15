@@ -1,7 +1,6 @@
 package org.team1540.robot2024.util;
 
 import com.pathplanner.lib.auto.AutoBuilder;
-import com.pathplanner.lib.path.PathConstraints;
 import com.pathplanner.lib.path.PathPlannerPath;
 import com.pathplanner.lib.util.GeometryUtil;
 import edu.wpi.first.math.geometry.Pose2d;
@@ -17,12 +16,6 @@ import java.util.function.BooleanSupplier;
 import java.util.function.Supplier;
 
 public class PathHelper {
-    private static final PathConstraints constraints = new PathConstraints(
-            3.0, 4.0,
-            Constants.Drivetrain.MAX_ANGULAR_SPEED,
-            Constants.Drivetrain.MAX_ANGULAR_SPEED * (4.0/3.0)
-    );
-
     final boolean isResetting;
     final Pose2d initialPose;
     final String pathname;
@@ -73,7 +66,7 @@ public class PathHelper {
         BooleanSupplier shouldFlip = () -> DriverStation.getAlliance().orElse(null) == DriverStation.Alliance.Red;
         Supplier<Pose2d> startingPose = () -> shouldFlip.getAsBoolean() ? GeometryUtil.flipFieldPose(initialPose) : initialPose;
         Command command = new ConditionalCommand(
-                AutoBuilder.pathfindThenFollowPath(path, constraints),
+                AutoBuilder.pathfindThenFollowPath(path, Constants.Auto.PATH_CONSTRAINTS),
                 AutoBuilder.followPath(path),
                 () -> drivetrain.getPose().getTranslation().getDistance((startingPose.get()).getTranslation()) > 1 && shouldRealign); //TODO tune this distance
         Command resetCommand = new InstantCommand(() -> drivetrain.setPose(startingPose.get()));
