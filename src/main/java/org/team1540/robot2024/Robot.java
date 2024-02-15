@@ -113,7 +113,7 @@ public class Robot extends LoggedRobot {
      */
     @Override
     public void disabledInit() {
-        robotContainer.leds.setPattern(Leds.Zone.ELEVATOR_BACK, new LedPatternFlame());
+        robotContainer.leds.setPattern(Leds.Zone.ELEVATOR_BACK, new LedPatternRainbow(1));
     }
 
     /**
