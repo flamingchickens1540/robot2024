@@ -1,6 +1,7 @@
 package org.team1540.robot2024;
 
 import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj.util.Color;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import org.littletonrobotics.junction.LogFileUtil;
@@ -9,6 +10,12 @@ import org.littletonrobotics.junction.Logger;
 import org.littletonrobotics.junction.networktables.NT4Publisher;
 import org.littletonrobotics.junction.wpilog.WPILOGReader;
 import org.littletonrobotics.junction.wpilog.WPILOGWriter;
+import org.team1540.robot2024.subsystems.led.*;
+import org.team1540.robot2024.subsystems.led.patterns.LedPatternFlame;
+import org.team1540.robot2024.subsystems.led.patterns.LedPatternRSLState;
+import org.team1540.robot2024.subsystems.led.patterns.LedPatternRainbow;
+import org.team1540.robot2024.subsystems.led.patterns.SimpleLedPattern;
+import org.team1540.robot2024.util.LoggedTunableNumber;
 import org.team1540.robot2024.util.MechanismVisualiser;
 
 /**
@@ -20,6 +27,10 @@ import org.team1540.robot2024.util.MechanismVisualiser;
 public class Robot extends LoggedRobot {
     private Command autonomousCommand;
     private RobotContainer robotContainer;
+
+    LoggedTunableNumber led_r = new LoggedTunableNumber("led/r", 0);
+    LoggedTunableNumber led_g = new LoggedTunableNumber("led/g", 0);
+    LoggedTunableNumber led_b = new LoggedTunableNumber("led/b", 0);
 
     /**
      * This function is run when the robot is first started up and should be used for any
@@ -49,7 +60,7 @@ public class Robot extends LoggedRobot {
         switch (Constants.currentMode) {
             case REAL:
                 // Running on a real robot, log to a USB stick ("/U/logs")
-                Logger.addDataReceiver(new WPILOGWriter());
+//                Logger.addDataReceiver(new WPILOGWriter());
                 Logger.addDataReceiver(new NT4Publisher());
                 break;
 
@@ -94,6 +105,7 @@ public class Robot extends LoggedRobot {
 
         // Update mechanism visualiser in sim
         if (Robot.isSimulation()) MechanismVisualiser.periodic();
+//        robotContainer.leds.setPattern(Leds.Zone.ZONE1, SimpleLedPattern.alternating(Color.kBlueViolet, Color.kGreen));
     }
 
     /**
@@ -101,6 +113,7 @@ public class Robot extends LoggedRobot {
      */
     @Override
     public void disabledInit() {
+        robotContainer.leds.setPattern(Leds.Zone.ELEVATOR_BACK, new LedPatternRainbow(1));
     }
 
     /**
@@ -115,6 +128,7 @@ public class Robot extends LoggedRobot {
      */
     @Override
     public void autonomousInit() {
+        robotContainer.leds.setPattern(Leds.Zone.ELEVATOR_BACK,LedPatternRSLState.matchingColors());
         autonomousCommand = robotContainer.getAutonomousCommand();
         // schedule the autonomous command (example)
         if (autonomousCommand != null) {
@@ -138,6 +152,8 @@ public class Robot extends LoggedRobot {
         // teleop starts running. If you want the autonomous to
         // continue until interrupted by another command, remove
         // this line or comment it out.
+
+        robotContainer.leds.setPattern(Leds.Zone.ELEVATOR_BACK, LedPatternRSLState.matchingColors());
         if (autonomousCommand != null) {
             autonomousCommand.cancel();
         }
@@ -155,6 +171,7 @@ public class Robot extends LoggedRobot {
      */
     @Override
     public void testInit() {
+        robotContainer.leds.setPattern(Leds.Zone.ELEVATOR_BACK,new LedPatternRainbow(1));
         // Cancels all running commands at the start of test mode.
         CommandScheduler.getInstance().cancelAll();
     }
@@ -164,6 +181,7 @@ public class Robot extends LoggedRobot {
      */
     @Override
     public void testPeriodic() {
+        robotContainer.leds.setPattern(Leds.Zone.ELEVATOR_BACK,SimpleLedPattern.solid(new Color(led_r.get(), led_g.get(), led_b.get())));
     }
 
     /**
