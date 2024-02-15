@@ -1,4 +1,4 @@
-package org.team1540.robot2024.util;
+package org.team1540.robot2024.util.auto;
 
 import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.path.PathPlannerPath;

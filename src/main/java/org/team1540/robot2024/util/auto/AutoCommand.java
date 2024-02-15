@@ -1,4 +1,4 @@
-package org.team1540.robot2024.util;
+package org.team1540.robot2024.util.auto;
 
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.wpilibj2.command.Command;
