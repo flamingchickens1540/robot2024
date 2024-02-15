@@ -13,13 +13,16 @@ import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import org.littletonrobotics.junction.Logger;
 import org.team1540.robot2024.commands.FeedForwardCharacterization;
 import org.team1540.robot2024.commands.SwerveDriveCommand;
+import org.team1540.robot2024.commands.TrampShoot;
 import org.team1540.robot2024.commands.autos.AmpLanePABCSprint;
 import org.team1540.robot2024.commands.autos.SourceLanePHGFSprint;
 import org.team1540.robot2024.commands.climb.ClimbSequence;
 import org.team1540.robot2024.commands.climb.DeclimbSequence;
 import org.team1540.robot2024.commands.elevator.ElevatorManualCommand;
+import org.team1540.robot2024.commands.indexer.IntakeCommand;
 import org.team1540.robot2024.commands.indexer.StageTrampCommand;
 import org.team1540.robot2024.commands.shooter.ManualPivotCommand;
+import org.team1540.robot2024.commands.shooter.ManualShooterCommand;
 import org.team1540.robot2024.commands.shooter.PrepareShooterCommand;
 import org.team1540.robot2024.commands.shooter.ShootSequence;
 import org.team1540.robot2024.subsystems.drive.*;
@@ -234,21 +237,28 @@ public class RobotContainer {
                         drivetrain
                 ).ignoringDisable(true)
         );
-        // driver left bumper -> shooter align and shoot
-        driver.leftBumper().onTrue(new ShootSequence(shooter, indexer))
-                .onFalse(Commands.runOnce(shooter::stopFlywheels, shooter));
-        //TODO: driver needs angling command (Alvin wrote it)
+        // driver left bumper -> score amp
+        driver.leftBumper().onTrue(new TrampShoot(tramp));
+        //driver right bumper -> intake
+        driver.rightBumper().onTrue(new IntakeCommand(indexer, tramp));
+        // driver a -> shooter align and shoot, driver right stick -> abort auto shoot
+        ShootSequence shootSequence = new ShootSequence(shooter, indexer);
+        driver.a().onTrue(shootSequence).onFalse(Commands.runOnce(shooter::stopFlywheels, shooter));
+        driver.rightStick().onTrue(Commands.runOnce(shootSequence::cancel));
+        //TODO: driver needs angling command, waiting on Zach's meeting with William to figure this out
 
         // copilot left and right trigger -> elevator up and down
         elevator.setDefaultCommand(new ElevatorManualCommand(elevator, copilot));
         // copilot left y -> shooter angle
         shooter.setDefaultCommand(new ManualPivotCommand(shooter, copilot));
-        // copilot left and right bumper -> climb up climb down
+        // copilot left and right bumper -> climb up, climb down
         copilot.leftBumper().onTrue(new ClimbSequence(elevator, hook));
         copilot.rightBumper().onTrue(new DeclimbSequence(elevator, hook));
         // copilot a + b -> stage trap + stage shooter
         copilot.a().onTrue(new StageTrampCommand(tramp, indexer));
         copilot.b().onTrue(new PrepareShooterCommand(shooter));
+        // copilot x -> manually shoot
+        copilot.x().onTrue(new ManualShooterCommand(shooter, 3000, 3000));
         //TODO: copilot needs signaling? (not sure how this works)
     }
 
