@@ -11,10 +11,7 @@ import org.littletonrobotics.junction.networktables.NT4Publisher;
 import org.littletonrobotics.junction.wpilog.WPILOGReader;
 import org.littletonrobotics.junction.wpilog.WPILOGWriter;
 import org.team1540.robot2024.subsystems.led.*;
-import org.team1540.robot2024.subsystems.led.patterns.LedPatternFlame;
-import org.team1540.robot2024.subsystems.led.patterns.LedPatternRSLState;
-import org.team1540.robot2024.subsystems.led.patterns.LedPatternRainbow;
-import org.team1540.robot2024.subsystems.led.patterns.SimpleLedPattern;
+import org.team1540.robot2024.subsystems.led.patterns.*;
 import org.team1540.robot2024.util.LoggedTunableNumber;
 import org.team1540.robot2024.util.MechanismVisualiser;
 
@@ -153,7 +150,10 @@ public class Robot extends LoggedRobot {
         // continue until interrupted by another command, remove
         // this line or comment it out.
 
-        robotContainer.leds.setPattern(Leds.Zone.ELEVATOR_BACK, LedPatternRSLState.matchingColors());
+        robotContainer.leds.setPattern(Leds.Zone.ELEVATOR_BACK,
+                new LedPatternProgressBar(() -> Math.hypot(
+                        robotContainer.drivetrain.getChassisSpeeds().vxMetersPerSecond,
+                        robotContainer.drivetrain.getChassisSpeeds().vyMetersPerSecond) / Constants.Drivetrain.MAX_LINEAR_SPEED));
         if (autonomousCommand != null) {
             autonomousCommand.cancel();
         }
