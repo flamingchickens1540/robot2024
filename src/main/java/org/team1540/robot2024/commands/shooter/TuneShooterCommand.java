@@ -16,12 +16,14 @@ public class TuneShooterCommand extends Command {
         addRequirements(shooter);
     }
 
+    @Override
     public void execute() {
         shooter.setFlywheelSpeeds(leftFlywheelSetpoint.get(), rightFlywheelSetpoint.get());
         shooter.setPivotPosition(Rotation2d.fromDegrees(angleSetpoint.get()));
     }
 
-    public void end() {
+    @Override
+    public void end(boolean interrupted) {
         shooter.stopFlywheels();
         shooter.stopPivot();
     }

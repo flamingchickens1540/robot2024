@@ -18,7 +18,11 @@ public class ElevatorManualCommand extends Command {
 
     @Override
     public void execute() {
-        elevator.setElevatorPosition(elevator.getSetpoint() + Constants.Elevator.CRUISE_VELOCITY_MPS * Constants.LOOP_PERIOD_SECS * (copilot.getRightTriggerAxis() - copilot.getLeftTriggerAxis()));
+        elevator.setElevatorPosition(
+                elevator.getSetpoint()
+                + Constants.Elevator.CRUISE_VELOCITY_MPS
+                * Constants.LOOP_PERIOD_SECS
+                * (copilot.getRightTriggerAxis() - copilot.getLeftTriggerAxis()));
     }
 
     @Override

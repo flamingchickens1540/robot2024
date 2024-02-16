@@ -1,13 +1,9 @@
 package org.team1540.robot2024;
 
-import com.pathplanner.lib.util.PathPlannerLogging;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 
 import edu.wpi.first.wpilibj.DriverStation;
-import edu.wpi.first.math.trajectory.Trajectory;
-import edu.wpi.first.math.trajectory.TrajectoryGenerator;
-
 import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -46,8 +42,8 @@ import org.team1540.robot2024.subsystems.vision.AprilTagVision;
 import org.team1540.robot2024.subsystems.vision.AprilTagVisionIO;
 import org.team1540.robot2024.subsystems.vision.AprilTagVisionIOLimelight;
 import org.team1540.robot2024.subsystems.vision.AprilTagVisionIOSim;
-import org.team1540.robot2024.util.AutoCommand;
-import org.team1540.robot2024.util.AutoManager;
+import org.team1540.robot2024.util.auto.AutoCommand;
+import org.team1540.robot2024.util.auto.AutoManager;
 import org.team1540.robot2024.util.PhoenixTimeSyncSignalRefresher;
 import org.team1540.robot2024.util.swerve.SwerveFactory;
 import org.team1540.robot2024.util.vision.VisionPoseAcceptor;
@@ -70,17 +66,12 @@ public class RobotContainer {
     public final AprilTagVision aprilTagVision;
     public final Leds leds = new Leds();
 
-    private int currentPathHash = Integer.MAX_VALUE;
-    private Trajectory currentPathTrajectory = new Trajectory();
-
     // Controller
     public final CommandXboxController driver = new CommandXboxController(0);
     public final CommandXboxController copilot = new CommandXboxController(1);
 
 
     public final PhoenixTimeSyncSignalRefresher odometrySignalRefresher = new PhoenixTimeSyncSignalRefresher(SwerveConfig.CAN_BUS);
-
-    // TODO: testing dashboard inputs, remove for comp
 
     /**
      * The container for the robot. Contains subsystems, IO devices, and commands.
@@ -109,22 +100,6 @@ public class RobotContainer {
                         drivetrain::addVisionMeasurement,
                         () -> 0.0, // TODO: ACTUALLY GET ELEVATOR HEIGHT HERE
                         new VisionPoseAcceptor(drivetrain::getChassisSpeeds, () -> 0.0)); // TODO: ACTUALLY GET ELEVATOR VELOCITY HERE
-
-                PathPlannerLogging.setLogCurrentPoseCallback((pose) -> {
-                    Logger.recordOutput("PathPlanner/Position", pose);
-                });
-                PathPlannerLogging.setLogTargetPoseCallback((pose) -> {
-                    Logger.recordOutput("PathPlanner/TargetPosition", pose);
-                });
-                PathPlannerLogging.setLogActivePathCallback((path) -> {
-                    if(path.hashCode() != currentPathHash){
-                        currentPathHash = path.hashCode();
-                        currentPathTrajectory = path.size() > 0 ? TrajectoryGenerator.generateTrajectory(path, Constants.Drivetrain.trajectoryConfig) : new Trajectory();
-                        Logger.recordOutput("PathPlanner/PathHash", currentPathHash);
-                        Logger.recordOutput("PathPlanner/ActivePath", currentPathTrajectory);
-                    }
-                });
-
                 break;
             case SIM:
                 // Sim robot, instantiate physics sim IO implementations
@@ -149,20 +124,6 @@ public class RobotContainer {
                         new Indexer(
                                 new IndexerIOSim()
                         );
-
-                PathPlannerLogging.setLogTargetPoseCallback((pose) -> {
-                    Logger.recordOutput("PathPlanner/Position", pose);
-                    Logger.recordOutput("PathPlanner/TargetPosition", pose);
-                });
-                PathPlannerLogging.setLogActivePathCallback((path) -> {
-                    if(path.hashCode() != currentPathHash){
-                        currentPathHash = path.hashCode();
-                        currentPathTrajectory = path.size() > 0 ? TrajectoryGenerator.generateTrajectory(path, Constants.Drivetrain.trajectoryConfig) : new Trajectory();
-                        Logger.recordOutput("PathPlanner/PathHash", currentPathHash);
-                        Logger.recordOutput("PathPlanner/ActivePath", currentPathTrajectory);
-                    }
-
-                });
                 break;
             default:
                 // Replayed robot, disable IO implementations

@@ -1,34 +1,27 @@
-package org.team1540.robot2024.util;
+package org.team1540.robot2024.util.auto;
 
 import com.pathplanner.lib.auto.AutoBuilder;
-import com.pathplanner.lib.path.PathConstraints;
 import com.pathplanner.lib.path.PathPlannerPath;
 import com.pathplanner.lib.util.GeometryUtil;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
-import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.ConditionalCommand;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
+import org.team1540.robot2024.Constants;
 import org.team1540.robot2024.subsystems.drive.Drivetrain;
 
 import java.util.function.BooleanSupplier;
 import java.util.function.Supplier;
 
 public class PathHelper {
-    private static final PathConstraints constraints = new PathConstraints(
-            3.0, 4.0,
-            Units.degreesToRadians(540), Units.degreesToRadians(720)
-    );
-
-    boolean isResetting;
-    Pose2d initialPose;
-    String pathname;
-    boolean isChoreo;
-    boolean canFlip;
-    PathPlannerPath path;
-
+    final boolean isResetting;
+    final Pose2d initialPose;
+    final String pathname;
+    final boolean isChoreo;
+    final boolean canFlip;
+    final PathPlannerPath path;
 
     public static PathHelper fromChoreoPath(String pathname) {
         return new PathHelper(pathname, true, false, true);
@@ -73,7 +66,7 @@ public class PathHelper {
         BooleanSupplier shouldFlip = () -> DriverStation.getAlliance().orElse(null) == DriverStation.Alliance.Red;
         Supplier<Pose2d> startingPose = () -> shouldFlip.getAsBoolean() ? GeometryUtil.flipFieldPose(initialPose) : initialPose;
         Command command = new ConditionalCommand(
-                AutoBuilder.pathfindThenFollowPath(path, constraints),
+                AutoBuilder.pathfindThenFollowPath(path, Constants.Auto.PATH_CONSTRAINTS),
                 AutoBuilder.followPath(path),
                 () -> drivetrain.getPose().getTranslation().getDistance((startingPose.get()).getTranslation()) > 1 && shouldRealign); //TODO tune this distance
         Command resetCommand = new InstantCommand(() -> drivetrain.setPose(startingPose.get()));
