@@ -38,9 +38,25 @@ public class Shooter extends SubsystemBase {
     private final LoggedTunableNumber pivotKI = new LoggedTunableNumber("Shooter/Pivot/kI", Pivot.KI);
     private final LoggedTunableNumber pivotKD = new LoggedTunableNumber("Shooter/Pivot/kD", Pivot.KD);
 
-    public Shooter(ShooterPivotIO pivotIO, FlywheelsIO flywheelsIO) {
+    private static boolean hasInstance = false;
+
+    private Shooter(ShooterPivotIO pivotIO, FlywheelsIO flywheelsIO) {
+        if (hasInstance) throw new IllegalStateException("Instance of shooter already exists");
+        hasInstance = true;
         this.pivotIO = pivotIO;
         this.flywheelsIO = flywheelsIO;
+    }
+
+    public static Shooter createReal() {
+        return new Shooter(new ShooterPivotIOTalonFX(), new FlywheelsIOTalonFX());
+    }
+
+    public static Shooter createSim() {
+        return new Shooter(new ShooterPivotIOSim(), new FlywheelsIOSim());
+    }
+
+    public static Shooter createDummy() {
+        return new Shooter(new ShooterPivotIO(){}, new FlywheelsIO(){});
     }
 
     @Override

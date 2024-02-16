@@ -19,7 +19,10 @@ import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import org.littletonrobotics.junction.AutoLogOutput;
 import org.littletonrobotics.junction.Logger;
+import org.team1540.robot2024.Constants;
 import org.team1540.robot2024.util.LocalADStarAK;
+import org.team1540.robot2024.util.PhoenixTimeSyncSignalRefresher;
+import org.team1540.robot2024.util.swerve.SwerveFactory;
 import org.team1540.robot2024.util.vision.TimestampedVisionPose;
 
 import static org.team1540.robot2024.Constants.Drivetrain.*;
@@ -35,12 +38,17 @@ public class Drivetrain extends SubsystemBase {
 
     private final SwerveDrivePoseEstimator poseEstimator;
 
-    public Drivetrain(
+    private static boolean hasInstance = false;
+
+    private Drivetrain(
             GyroIO gyroIO,
             ModuleIO flModuleIO,
             ModuleIO frModuleIO,
             ModuleIO blModuleIO,
             ModuleIO brModuleIO) {
+        if (hasInstance) throw new IllegalStateException("Instance of drivetrain already exists");
+        hasInstance = true;
+
         this.gyroIO = gyroIO;
         modules[0] = new Module(flModuleIO, 0);
         modules[1] = new Module(frModuleIO, 1);
@@ -71,6 +79,33 @@ public class Drivetrain extends SubsystemBase {
                         "Odometry/Trajectory", activePath.toArray(new Pose2d[activePath.size()])));
         PathPlannerLogging.setLogTargetPoseCallback(
                 (targetPose) -> Logger.recordOutput("Odometry/TrajectorySetpoint", targetPose));
+    }
+
+    public static Drivetrain createReal(PhoenixTimeSyncSignalRefresher odometrySignalRefresher) {
+        return new Drivetrain(
+                new GyroIOPigeon2(odometrySignalRefresher),
+                new ModuleIOTalonFX(SwerveFactory.getModuleMotors(Constants.SwerveConfig.FRONT_LEFT, SwerveFactory.SwerveCorner.FRONT_LEFT), odometrySignalRefresher),
+                new ModuleIOTalonFX(SwerveFactory.getModuleMotors(Constants.SwerveConfig.FRONT_RIGHT, SwerveFactory.SwerveCorner.FRONT_RIGHT), odometrySignalRefresher),
+                new ModuleIOTalonFX(SwerveFactory.getModuleMotors(Constants.SwerveConfig.BACK_LEFT, SwerveFactory.SwerveCorner.BACK_LEFT), odometrySignalRefresher),
+                new ModuleIOTalonFX(SwerveFactory.getModuleMotors(Constants.SwerveConfig.BACK_RIGHT, SwerveFactory.SwerveCorner.BACK_RIGHT), odometrySignalRefresher));
+    }
+
+    public static Drivetrain createSim() {
+        return new Drivetrain(
+                new GyroIO() {},
+                new ModuleIOSim(),
+                new ModuleIOSim(),
+                new ModuleIOSim(),
+                new ModuleIOSim());
+    }
+
+    public static Drivetrain createDummy() {
+        return new Drivetrain(
+                new GyroIO() {},
+                new ModuleIO() {},
+                new ModuleIO() {},
+                new ModuleIO() {},
+                new ModuleIO() {});
     }
 
     @Override

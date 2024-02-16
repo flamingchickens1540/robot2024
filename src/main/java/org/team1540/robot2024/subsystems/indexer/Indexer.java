@@ -14,13 +14,29 @@ import static org.team1540.robot2024.Constants.Indexer.*;
 public class Indexer extends SubsystemBase {
     private final IndexerIO io;
     private final IndexerIOInputsAutoLogged inputs = new IndexerIOInputsAutoLogged();
+
     private final LoggedTunableNumber kP = new LoggedTunableNumber("Indexer/kP", FEEDER_KP);
     private final LoggedTunableNumber kI = new LoggedTunableNumber("Indexer/kI", FEEDER_KI);
     private final LoggedTunableNumber kD = new LoggedTunableNumber("Indexer/kD", FEEDER_KD);
 
+    private static boolean hasInstance = false;
 
-    public Indexer(IndexerIO io) {
+    private Indexer(IndexerIO io) {
+        if (hasInstance) throw new IllegalStateException("Instance of indexer already exists");
+        hasInstance = true;
         this.io = io;
+    }
+
+    public static Indexer createReal() {
+        return new Indexer(new IndexerIOSparkMax());
+    }
+
+    public static Indexer createSim() {
+        return new Indexer(new IndexerIOSim());
+    }
+
+    public static Indexer createDummy() {
+        return new Indexer(new IndexerIO(){});
     }
 
     public void periodic() {

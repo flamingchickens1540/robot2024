@@ -16,9 +16,24 @@ public class Elevator extends SubsystemBase {
     private final AverageFilter positionFilter = new AverageFilter(10);
     private double setpointMeters;
 
+    private static boolean hasInstance = false;
 
-    public Elevator(ElevatorIO elevatorIO) {
+    private Elevator(ElevatorIO elevatorIO) {
+        if (hasInstance) throw new IllegalStateException("Instance of elevator already exists");
+        hasInstance = true;
         this.io = elevatorIO;
+    }
+
+    public static Elevator createReal() {
+        return new Elevator(new ElevatorIOTalonFX());
+    }
+
+    public static Elevator createSim() {
+        return new Elevator(new ElevatorIOSim());
+    }
+
+    public static Elevator createDummy() {
+        return new Elevator(new ElevatorIO(){});
     }
 
     // periodic
@@ -55,5 +70,7 @@ public class Elevator extends SubsystemBase {
         return setpointMeters;
     }
 
-
+    public double getPosition() {
+        return inputs.positionMeters;
+    }
 }

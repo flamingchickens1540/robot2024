@@ -2,6 +2,7 @@ package org.team1540.robot2024.subsystems.vision;
 
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Pose3d;
+import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import org.littletonrobotics.junction.Logger;
 import org.team1540.robot2024.util.vision.TimestampedVisionPose;
@@ -12,8 +13,7 @@ import java.util.Optional;
 import java.util.function.Consumer;
 import java.util.function.Supplier;
 
-import static org.team1540.robot2024.Constants.Vision.FRONT_CAMERA_POSE;
-import static org.team1540.robot2024.Constants.Vision.REAR_CAMERA_POSE;
+import static org.team1540.robot2024.Constants.Vision.*;
 
 public class AprilTagVision extends SubsystemBase {
     private final AprilTagVisionIO frontCameraIO;
@@ -31,17 +31,54 @@ public class AprilTagVision extends SubsystemBase {
     private TimestampedVisionPose rearPose =
             new TimestampedVisionPose(-1, new Pose2d(), new int[0], new Pose2d[0], false, true);
 
-    public AprilTagVision(
+    private static boolean hasInstance = false;
+
+    private AprilTagVision(
             AprilTagVisionIO frontCameraIO,
             AprilTagVisionIO rearCameraIO,
             Consumer<TimestampedVisionPose> visionPoseConsumer,
             Supplier<Double> elevatorHeightSupplierMeters,
             VisionPoseAcceptor poseAcceptor) {
+        if (hasInstance) throw new IllegalStateException("Instance of vision already exists");
+        hasInstance = true;
+
         this.frontCameraIO = frontCameraIO;
         this.rearCameraIO = rearCameraIO;
         this.visionPoseConsumer = visionPoseConsumer;
         this.elevatorHeightSupplierMeters = elevatorHeightSupplierMeters;
         this.poseAcceptor = poseAcceptor;
+    }
+
+    public static AprilTagVision createReal(Consumer<TimestampedVisionPose> visionPoseConsumer,
+                                            Supplier<Double> elevatorHeightSupplierMeters,
+                                            VisionPoseAcceptor poseAcceptor) {
+        return new AprilTagVision(
+                new AprilTagVisionIOLimelight(FRONT_CAMERA_NAME, FRONT_CAMERA_POSE),
+                new AprilTagVisionIOLimelight(REAR_CAMERA_NAME, REAR_CAMERA_POSE),
+                visionPoseConsumer,
+                elevatorHeightSupplierMeters,
+                poseAcceptor);
+    }
+
+    public static AprilTagVision createSim(Consumer<TimestampedVisionPose> visionPoseConsumer,
+                                           Supplier<Pose2d> drivetrainPoseSupplier,
+                                           Supplier<Double> elevatorHeightSupplierMeters,
+                                           VisionPoseAcceptor poseAcceptor) {
+        return new AprilTagVision(
+                new AprilTagVisionIOSim(FRONT_CAMERA_NAME, FRONT_CAMERA_POSE, drivetrainPoseSupplier),
+                new AprilTagVisionIOSim(REAR_CAMERA_NAME, REAR_CAMERA_POSE, drivetrainPoseSupplier),
+                visionPoseConsumer,
+                elevatorHeightSupplierMeters,
+                poseAcceptor);
+    }
+
+    public static AprilTagVision createDummy() {
+        return new AprilTagVision(
+                new AprilTagVisionIO() {},
+                new AprilTagVisionIO() {},
+                (pose) -> {},
+                () -> 0.0,
+                new VisionPoseAcceptor(ChassisSpeeds::new, () -> 0.0));
     }
 
     @Override

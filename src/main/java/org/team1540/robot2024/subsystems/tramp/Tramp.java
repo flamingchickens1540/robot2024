@@ -7,8 +7,24 @@ public class Tramp extends SubsystemBase {
     private final TrampIO io;
     private final TrampIOInputsAutoLogged inputs = new TrampIOInputsAutoLogged();
 
-    public Tramp(TrampIO io) {
+    private static boolean hasInstance = false;
+
+    private Tramp(TrampIO io) {
+        if (hasInstance) throw new IllegalStateException("Instance of tramp already exists");
+        hasInstance = true;
         this.io = io;
+    }
+
+    public static Tramp createReal() {
+        return new Tramp(new TrampIOSparkMax());
+    }
+
+    public static Tramp createSim() {
+        return new Tramp(new TrampIOSim());
+    }
+
+    public static Tramp createDummy() {
+        return new Tramp(new TrampIO(){});
     }
 
     public void setPercent(double percentage) {
