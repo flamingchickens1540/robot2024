@@ -19,7 +19,7 @@ import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import org.littletonrobotics.junction.AutoLogOutput;
 import org.littletonrobotics.junction.Logger;
-import org.team1540.robot2024.util.LocalADStarAK;
+import org.team1540.robot2024.util.auto.LocalADStarAK;
 import org.team1540.robot2024.util.vision.TimestampedVisionPose;
 
 import static org.team1540.robot2024.Constants.Drivetrain.*;
@@ -67,10 +67,9 @@ public class Drivetrain extends SubsystemBase {
                 this);
         Pathfinding.setPathfinder(new LocalADStarAK());
         PathPlannerLogging.setLogActivePathCallback(
-                (activePath) -> Logger.recordOutput(
-                        "Odometry/Trajectory", activePath.toArray(new Pose2d[activePath.size()])));
+                (activePath) -> Logger.recordOutput("Pathplanner/ActivePath", activePath.toArray(new Pose2d[activePath.size()])));
         PathPlannerLogging.setLogTargetPoseCallback(
-                (targetPose) -> Logger.recordOutput("Odometry/TrajectorySetpoint", targetPose));
+                (targetPose) -> Logger.recordOutput("Pathplanner/TargetPosition", targetPose));
     }
 
     @Override

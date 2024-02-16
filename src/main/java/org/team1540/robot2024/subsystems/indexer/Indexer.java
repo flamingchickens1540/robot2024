@@ -18,11 +18,11 @@ public class Indexer extends SubsystemBase {
     private final LoggedTunableNumber kI = new LoggedTunableNumber("Indexer/kI", FEEDER_KI);
     private final LoggedTunableNumber kD = new LoggedTunableNumber("Indexer/kD", FEEDER_KD);
 
-
     public Indexer(IndexerIO io) {
         this.io = io;
     }
 
+    @Override
     public void periodic() {
         io.updateInputs(inputs);
         Logger.processInputs("Indexer", inputs);
