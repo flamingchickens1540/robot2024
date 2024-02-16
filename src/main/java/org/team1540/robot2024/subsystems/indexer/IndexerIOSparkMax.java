@@ -4,7 +4,6 @@ import com.revrobotics.CANSparkBase;
 import com.revrobotics.CANSparkLowLevel;
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.SparkPIDController;
-import edu.wpi.first.math.controller.SimpleMotorFeedforward;
 import edu.wpi.first.wpilibj.DigitalInput;
 
 import static org.team1540.robot2024.Constants.Indexer.*;
@@ -15,7 +14,6 @@ public class IndexerIOSparkMax implements IndexerIO {
     private final CANSparkMax feederMotor = new CANSparkMax(FEEDER_ID, CANSparkLowLevel.MotorType.kBrushless);
     private final DigitalInput indexerBeamBreak = new DigitalInput(BEAM_BREAK_ID);
     private final SparkPIDController feederPID;
-    private final SimpleMotorFeedforward feederFF = new SimpleMotorFeedforward(FEEDER_KS, FEEDER_KV);
     private double setpointRPM;
 
 
@@ -33,6 +31,7 @@ public class IndexerIOSparkMax implements IndexerIO {
         feederPID.setP(FEEDER_KP, 0);
         feederPID.setI(FEEDER_KI, 0);
         feederPID.setD(FEEDER_KD, 0);
+        feederPID.setFF(FEEDER_KV, 0);
     }
 
     @Override
@@ -62,10 +61,10 @@ public class IndexerIOSparkMax implements IndexerIO {
     public void setFeederVelocity(double velocity) {
         setpointRPM = velocity;
         feederPID.setReference(
-                velocity / FEEDER_GEAR_RATIO, // Should this be multiplied?
+                velocity * FEEDER_GEAR_RATIO,
                 CANSparkBase.ControlType.kVelocity,
                 0,
-                feederFF.calculate(velocity),
+                FEEDER_KS,
                 SparkPIDController.ArbFFUnits.kVoltage
         );
     }

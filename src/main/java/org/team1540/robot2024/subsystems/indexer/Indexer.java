@@ -39,6 +39,7 @@ public class Indexer extends SubsystemBase {
         return new Indexer(new IndexerIO(){});
     }
 
+    @Override
     public void periodic() {
         io.updateInputs(inputs);
         Logger.processInputs("Indexer", inputs);

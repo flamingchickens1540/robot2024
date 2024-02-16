@@ -23,7 +23,9 @@ public class IndexerIOSim implements IndexerIO {
     @Override
     public void updateInputs(IndexerIOInputs inputs) {
         if (isClosedLoop) {
-            feederVoltage = MathUtil.clamp(feederSimPID.calculate(feederSim.getAngularVelocityRPM() / 60, feederSetpointRPS), -12.0, 12.0);
+            feederVoltage = MathUtil.clamp(
+                    feederSimPID.calculate(feederSim.getAngularVelocityRPM() / 60, feederSetpointRPS),
+                    -12.0, 12.0);
         }
         intakeSim.setInputVoltage(intakeVoltage);
         feederSim.setInputVoltage(feederVoltage);
@@ -50,12 +52,13 @@ public class IndexerIOSim implements IndexerIO {
         feederSimPID.setPID(p, i, d);
     }
 
+    @Override
     public void setFeederVoltage(double volts) {
         isClosedLoop = false;
         feederVoltage = MathUtil.clamp(volts, -12.0, 12.0);
     }
 
-
+    @Override
     public void setFeederVelocity(double velocity) {
         isClosedLoop = true;
         feederSimPID.reset();

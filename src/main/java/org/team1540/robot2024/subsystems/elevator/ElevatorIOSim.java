@@ -16,10 +16,10 @@ public class ElevatorIOSim implements ElevatorIO {
             new ElevatorSim(
                     DCMotor.getFalcon500Foc(2),
                     GEAR_RATIO, SIM_CARRIAGE_MASS_KG,
-                    SPROCKET_RADIUS_M, ELEVATOR_MINIMUM_HEIGHT,
-                    ELEVATOR_MAX_HEIGHT,
+                    SPROCKET_RADIUS_M, MINIMUM_HEIGHT,
+                    MAX_HEIGHT,
                     true,
-                    ELEVATOR_MINIMUM_HEIGHT);
+                    MINIMUM_HEIGHT);
     private double elevatorAppliedVolts = 0.0;
     private final ProfiledPIDController controller =
             new ProfiledPIDController(
