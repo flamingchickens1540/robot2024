@@ -2,11 +2,17 @@ package org.team1540.robot2024;
 
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
+
+import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
+import edu.wpi.first.wpilibj2.command.button.Trigger;
+
+import org.littletonrobotics.junction.Logger;
+import org.littletonrobotics.junction.networktables.LoggedDashboardChooser;
 import org.team1540.robot2024.Constants.Elevator.ElevatorState;
 import org.team1540.robot2024.commands.FeedForwardCharacterization;
 import org.team1540.robot2024.commands.DriveWithSpeakerTargetingCommand;
@@ -25,6 +31,8 @@ import org.team1540.robot2024.subsystems.indexer.Indexer;
 import org.team1540.robot2024.subsystems.indexer.IndexerIO;
 import org.team1540.robot2024.subsystems.indexer.IndexerIOSim;
 import org.team1540.robot2024.subsystems.indexer.IndexerIOSparkMax;
+import org.team1540.robot2024.subsystems.led.Leds;
+import org.team1540.robot2024.subsystems.led.patterns.LedPatternFlame;
 import org.team1540.robot2024.subsystems.shooter.*;
 import org.team1540.robot2024.subsystems.tramp.Tramp;
 import org.team1540.robot2024.subsystems.tramp.TrampIO;
@@ -56,6 +64,7 @@ public class RobotContainer {
     public final Elevator elevator;
     public final Indexer indexer;
     public final AprilTagVision aprilTagVision;
+    public final Leds leds = new Leds();
 
     // Controller
     public final CommandXboxController driver = new CommandXboxController(0);
@@ -168,8 +177,17 @@ public class RobotContainer {
 
         // Configure the button bindings
         configureButtonBindings();
+        configureLedBindings();
     }
 
+    private void configureLedBindings() {
+        leds.setFatalPattern(LedPatternFlame::new);
+        new Trigger(DriverStation::isDSAttached)
+                .onTrue(Commands.runOnce(leds::clearFatalPattern)
+                            .ignoringDisable(true))
+                .onFalse(Commands.runOnce(() -> leds.setFatalPattern(LedPatternFlame::new))
+                            .ignoringDisable(true));
+    }
     /**
      * Use this method to define your button->command mappings. Buttons can be created by
      * instantiating a {@link GenericHID} or one of its subclasses ({@link
