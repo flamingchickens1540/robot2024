@@ -1,6 +1,7 @@
 package org.team1540.robot2024.subsystems.elevator;
 
 import edu.wpi.first.math.MathUtil;
+import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import org.littletonrobotics.junction.AutoLogOutput;
 import org.littletonrobotics.junction.Logger;
@@ -25,14 +26,23 @@ public class Elevator extends SubsystemBase {
     }
 
     public static Elevator createReal() {
+        if (Constants.currentMode != Constants.Mode.REAL) {
+            DriverStation.reportWarning("Using real elevator on simulated robot", false);
+        }
         return new Elevator(new ElevatorIOTalonFX());
     }
 
     public static Elevator createSim() {
+        if (Constants.currentMode == Constants.Mode.REAL) {
+            DriverStation.reportWarning("Using simulated elevator on real robot", false);
+        }
         return new Elevator(new ElevatorIOSim());
     }
 
     public static Elevator createDummy() {
+        if (Constants.currentMode == Constants.Mode.REAL) {
+            DriverStation.reportWarning("Using dummy elevator on real robot", false);
+        }
         return new Elevator(new ElevatorIO(){});
     }
 

@@ -81,6 +81,9 @@ public class Drivetrain extends SubsystemBase {
     }
 
     public static Drivetrain createReal(PhoenixTimeSyncSignalRefresher odometrySignalRefresher) {
+        if (Constants.currentMode != Constants.Mode.REAL) {
+            DriverStation.reportWarning("Using real drivetrain on simulated robot", false);
+        }
         return new Drivetrain(
                 new GyroIOPigeon2(odometrySignalRefresher),
                 new ModuleIOTalonFX(SwerveFactory.getModuleMotors(Constants.SwerveConfig.FRONT_LEFT, SwerveFactory.SwerveCorner.FRONT_LEFT), odometrySignalRefresher),
@@ -90,6 +93,9 @@ public class Drivetrain extends SubsystemBase {
     }
 
     public static Drivetrain createSim() {
+        if (Constants.currentMode == Constants.Mode.REAL) {
+            DriverStation.reportWarning("Using simulated drivetrain on real robot", false);
+        }
         return new Drivetrain(
                 new GyroIO() {},
                 new ModuleIOSim(),
@@ -99,6 +105,9 @@ public class Drivetrain extends SubsystemBase {
     }
 
     public static Drivetrain createDummy() {
+        if (Constants.currentMode == Constants.Mode.REAL) {
+            DriverStation.reportWarning("Using dummy drivetrain on real robot", false);
+        }
         return new Drivetrain(
                 new GyroIO() {},
                 new ModuleIO() {},

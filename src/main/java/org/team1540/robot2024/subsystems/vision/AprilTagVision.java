@@ -3,8 +3,10 @@ package org.team1540.robot2024.subsystems.vision;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Pose3d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
+import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import org.littletonrobotics.junction.Logger;
+import org.team1540.robot2024.Constants;
 import org.team1540.robot2024.util.vision.TimestampedVisionPose;
 import org.team1540.robot2024.util.vision.VisionPoseAcceptor;
 
@@ -52,6 +54,9 @@ public class AprilTagVision extends SubsystemBase {
     public static AprilTagVision createReal(Consumer<TimestampedVisionPose> visionPoseConsumer,
                                             Supplier<Double> elevatorHeightSupplierMeters,
                                             VisionPoseAcceptor poseAcceptor) {
+        if (Constants.currentMode != Constants.Mode.REAL) {
+            DriverStation.reportWarning("Using real vision on simulated robot", false);
+        }
         return new AprilTagVision(
                 new AprilTagVisionIOLimelight(FRONT_CAMERA_NAME, FRONT_CAMERA_POSE),
                 new AprilTagVisionIOLimelight(REAR_CAMERA_NAME, REAR_CAMERA_POSE),
@@ -64,6 +69,9 @@ public class AprilTagVision extends SubsystemBase {
                                            Supplier<Pose2d> drivetrainPoseSupplier,
                                            Supplier<Double> elevatorHeightSupplierMeters,
                                            VisionPoseAcceptor poseAcceptor) {
+        if (Constants.currentMode == Constants.Mode.REAL) {
+            DriverStation.reportWarning("Using simulated vision on real robot", false);
+        }
         return new AprilTagVision(
                 new AprilTagVisionIOSim(FRONT_CAMERA_NAME, FRONT_CAMERA_POSE, drivetrainPoseSupplier),
                 new AprilTagVisionIOSim(REAR_CAMERA_NAME, REAR_CAMERA_POSE, drivetrainPoseSupplier),
@@ -73,6 +81,9 @@ public class AprilTagVision extends SubsystemBase {
     }
 
     public static AprilTagVision createDummy() {
+        if (Constants.currentMode == Constants.Mode.REAL) {
+            DriverStation.reportWarning("Using dummy vision on real robot", false);
+        }
         return new AprilTagVision(
                 new AprilTagVisionIO() {},
                 new AprilTagVisionIO() {},

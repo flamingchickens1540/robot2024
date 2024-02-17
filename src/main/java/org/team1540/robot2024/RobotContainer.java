@@ -11,7 +11,6 @@ import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 
-import org.littletonrobotics.junction.Logger;
 import org.team1540.robot2024.Constants.Elevator.ElevatorState;
 import org.team1540.robot2024.commands.FeedForwardCharacterization;
 import org.team1540.robot2024.commands.DriveWithSpeakerTargetingCommand;
@@ -29,9 +28,6 @@ import org.team1540.robot2024.subsystems.led.patterns.LedPatternFlame;
 import org.team1540.robot2024.subsystems.shooter.*;
 import org.team1540.robot2024.subsystems.tramp.Tramp;
 import org.team1540.robot2024.subsystems.vision.AprilTagVision;
-import org.team1540.robot2024.subsystems.vision.AprilTagVisionIO;
-import org.team1540.robot2024.subsystems.vision.AprilTagVisionIOLimelight;
-import org.team1540.robot2024.subsystems.vision.AprilTagVisionIOSim;
 import org.team1540.robot2024.util.auto.AutoCommand;
 import org.team1540.robot2024.util.auto.AutoManager;
 import org.team1540.robot2024.util.PhoenixTimeSyncSignalRefresher;
@@ -58,7 +54,6 @@ public class RobotContainer {
     // Controller
     public final CommandXboxController driver = new CommandXboxController(0);
     public final CommandXboxController copilot = new CommandXboxController(1);
-
 
     public final PhoenixTimeSyncSignalRefresher odometrySignalRefresher = new PhoenixTimeSyncSignalRefresher(SwerveConfig.CAN_BUS);
 
