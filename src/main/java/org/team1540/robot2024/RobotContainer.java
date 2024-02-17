@@ -174,6 +174,7 @@ public class RobotContainer {
 
         AutoManager.getInstance().addDefaultAuto(new AmpLanePABCSprint(drivetrain, shooter, indexer));
         AutoManager.getInstance().addAuto(new SourceLanePHGFSprint(drivetrain));
+        AutoManager.getInstance().addAuto(new PathVisualising(drivetrain));
 
         // Configure the button bindings
         configureButtonBindings();
