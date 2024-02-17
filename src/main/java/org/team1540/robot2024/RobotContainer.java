@@ -61,18 +61,24 @@ public class RobotContainer {
      * The container for the robot. Contains subsystems, IO devices, and commands.
      */
     public RobotContainer() {
-        switch (Constants.Mode.REPLAY) {
+        switch (Constants.currentMode) {
             case REAL:
                 // Real robot, instantiate hardware IO implementations
                 drivetrain = Drivetrain.createReal(odometrySignalRefresher);
-                tramp = Tramp.createReal();
-                shooter = Shooter.createReal();
+                // TODO: 2/16/2024 switch these back to the correct implementations when merging
+//                tramp = Tramp.createReal();
+//                shooter = Shooter.createReal();
+//                elevator = Elevator.createReal();
+//                indexer = Indexer.createReal();
+//                aprilTagVision = AprilTagVision.createReal(
+//                        drivetrain::addVisionMeasurement,
+//                        elevator::getPosition,
+//                        new VisionPoseAcceptor(drivetrain::getChassisSpeeds, () -> 0.0));
+                tramp = Tramp.createDummy();
+                shooter = Shooter.createDummy();
                 elevator = Elevator.createReal();
-                indexer = Indexer.createReal();
-                aprilTagVision = AprilTagVision.createReal(
-                        drivetrain::addVisionMeasurement,
-                        elevator::getPosition,
-                        new VisionPoseAcceptor(drivetrain::getChassisSpeeds, () -> 0.0));
+                indexer = Indexer.createDummy();
+                aprilTagVision = AprilTagVision.createDummy();
                 break;
             case SIM:
                 // Sim robot, instantiate physics sim IO implementations
