@@ -1,10 +1,10 @@
 package org.team1540.robot2024;
 
+import com.pathplanner.lib.path.PathConstraints;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Pose3d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Rotation3d;
-import edu.wpi.first.math.trajectory.TrajectoryConfig;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.DriverStation;
 
@@ -23,8 +23,10 @@ public final class Constants {
     private static final Mode simMode = Mode.SIM; // Can also be Mode.REPLAY
 
     public static final Mode currentMode = Robot.isReal() ? Mode.REAL : simMode;
-    public static final int LED_STRIP_PORT_PWM = 9;
-    public static final int LED_STRIP_LENGTH= 80;
+    public static final class Leds {
+        public static final int LED_STRIP_PORT_PWM = 9;
+        public static final int LED_STRIP_LENGTH= 80;
+    }
     public enum Mode {
         /**
          * Running on a real robot.
@@ -66,8 +68,15 @@ public final class Constants {
         public static final double TRACK_WIDTH_Y = Units.inchesToMeters(25.0);
         public static final double DRIVE_BASE_RADIUS = Math.hypot(TRACK_WIDTH_X / 2.0, TRACK_WIDTH_Y / 2.0);
         public static final double MAX_ANGULAR_SPEED = MAX_LINEAR_SPEED / DRIVE_BASE_RADIUS;
+    }
 
-        public static final TrajectoryConfig trajectoryConfig = new TrajectoryConfig(MAX_LINEAR_SPEED, 8.269);
+    public static class Auto {
+        public static final double LINEAR_ACCEL_TIME_SECS = 4.0/3.0;
+        public static final double ANGULAR_ACCEL_TIME_SECS = 4.0/3.0;
+        public static final PathConstraints PATH_CONSTRAINTS = new PathConstraints(
+                Drivetrain.MAX_LINEAR_SPEED, Drivetrain.MAX_LINEAR_SPEED * LINEAR_ACCEL_TIME_SECS,
+                Constants.Drivetrain.MAX_ANGULAR_SPEED,
+                Constants.Drivetrain.MAX_ANGULAR_SPEED * ANGULAR_ACCEL_TIME_SECS);
     }
 
     public static class Indexer {
@@ -176,10 +185,10 @@ public final class Constants {
 
     public static class Elevator {
         public static final double CHAIN_HEIGHT_METERS = Units.inchesToMeters(28.25);
-        public static final double ELEVATOR_MINIMUM_HEIGHT = Units.inchesToMeters(6.0);
+        public static final double MINIMUM_HEIGHT = Units.inchesToMeters(6.0);
         public static final double CLIMBING_HOOKS_MINIMUM_HEIGHT = Units.inchesToMeters(12.0);
-        public static final double ELEVATOR_MAX_HEIGHT = ELEVATOR_MINIMUM_HEIGHT + Units.inchesToMeters(21.0); //TODO: Fix these constants to be more accurate
-        public static final double CLIMBING_HOOKS_MAX_HEIGHT = CLIMBING_HOOKS_MINIMUM_HEIGHT + ELEVATOR_MAX_HEIGHT - ELEVATOR_MINIMUM_HEIGHT;
+        public static final double MAX_HEIGHT = MINIMUM_HEIGHT + Units.inchesToMeters(21.0); //TODO: Fix these constants to be more accurate
+        public static final double CLIMBING_HOOKS_MAX_HEIGHT = CLIMBING_HOOKS_MINIMUM_HEIGHT + MAX_HEIGHT - MINIMUM_HEIGHT;
 
         public static final double GEAR_RATIO = 2.0; //TODO: Get constants right sometime
         public static final int LEADER_ID = -1;
@@ -204,15 +213,15 @@ public final class Constants {
             /**
              * At max height :D
              */
-            TOP(ELEVATOR_MAX_HEIGHT),
+            TOP(MAX_HEIGHT),
             /**
              * At minimum height :D
              */
-            BOTTOM(ELEVATOR_MINIMUM_HEIGHT),
+            BOTTOM(MINIMUM_HEIGHT),
             /**
              * At height for top of initial climb :D
              */
-            CLIMB(CHAIN_HEIGHT_METERS + 0.1 - (CLIMBING_HOOKS_MINIMUM_HEIGHT - ELEVATOR_MINIMUM_HEIGHT)), //TODO: Find these values :D
+            CLIMB(CHAIN_HEIGHT_METERS + 0.1 - (CLIMBING_HOOKS_MINIMUM_HEIGHT - MINIMUM_HEIGHT)), //TODO: Find these values :D
             /**
              * At height for trap doing :D
              */
@@ -231,7 +240,7 @@ public final class Constants {
     }
 
     public static class Tramp {
-        public static final int TRAMP_BEAM_BREAK_CHANNEL = 1;
+        public static final int BEAM_BREAK_CHANNEL = 1;
         public static final double GEAR_RATIO = 3.0;
         public static final double TRAP_SCORING_TIME_SECONDS = 1.114; //TODO: Find these values :D
         public static final int MOTOR_ID = -1; //TODO: Configure this later

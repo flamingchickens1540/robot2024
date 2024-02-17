@@ -16,11 +16,8 @@ public class IntakeCommand extends Command {
 
     @Override
     public void execute() {
-        if (indexer.isNoteStaged() || tramp.isNoteStaged()) {
-            indexer.stopIntake();
-        } else {
-            indexer.setIntakePercent(0.5);
-        }
+        if (indexer.isNoteStaged() || tramp.isNoteStaged()) indexer.stopIntake();
+        else indexer.setIntakePercent(0.5);
     }
 
     @Override

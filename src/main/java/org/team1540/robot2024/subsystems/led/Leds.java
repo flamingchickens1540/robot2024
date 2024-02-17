@@ -3,16 +3,14 @@ package org.team1540.robot2024.subsystems.led;
 import edu.wpi.first.wpilibj.AddressableLED;
 import edu.wpi.first.wpilibj.AddressableLEDBuffer;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
-import org.team1540.robot2024.Constants;
 import org.team1540.robot2024.subsystems.led.patterns.LedPattern;
-
 
 import java.util.function.Supplier;
 
-import static org.team1540.robot2024.Constants.LED_STRIP_PORT_PWM;
+import static org.team1540.robot2024.Constants.Leds.*;
 
 public class Leds extends SubsystemBase {
-    private final AddressableLEDBuffer ledBuffer = new AddressableLEDBuffer(Constants.LED_STRIP_LENGTH);
+    private final AddressableLEDBuffer ledBuffer = new AddressableLEDBuffer(LED_STRIP_LENGTH);
     private final AddressableLED strip = new AddressableLED(LED_STRIP_PORT_PWM);
     private final ZonedAddressableLEDBuffer[] buffers = new ZonedAddressableLEDBuffer[ZONE_COUNT];
     private final LedTriager[] patterns = new LedTriager[ZONE_COUNT];

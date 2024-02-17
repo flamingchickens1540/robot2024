@@ -13,7 +13,7 @@ public class TrampShoot extends ParallelDeadlineGroup {
                 ),
                 Commands.startEnd(
                         () -> tramp.setPercent(0.5), //TODO: tune this
-                        () -> tramp.stop(),
+                        tramp::stop,
                         tramp
             )
         );

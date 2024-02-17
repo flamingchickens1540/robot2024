@@ -1,11 +1,10 @@
-package org.team1540.robot2024.util;
+package org.team1540.robot2024.util.auto;
 
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 public class AutoCommand extends SequentialCommandGroup {
@@ -13,7 +12,7 @@ public class AutoCommand extends SequentialCommandGroup {
     private boolean isResetting = false;
     private Pose2d initialPose = null;
 
-    private List<PathHelper> paths = new ArrayList<>();
+    private final List<PathHelper> paths = new ArrayList<>();
 
     private int pathIndex = 0;
 
@@ -26,19 +25,22 @@ public class AutoCommand extends SequentialCommandGroup {
         addCommands(command);
     }
 
-
-
     public void setName(String name) {
         this.name = name;
     }
 
-    public String getName() { return name;}
+    public String getName() {
+        return name;
+    }
+
     public boolean getIsResetting() {
         return this.isResetting;
     }
+
     public Pose2d getInitialPose() {
         return initialPose;
     }
+
 
     public void addPath(PathHelper... paths){
         for (PathHelper path: paths) {
@@ -57,12 +59,15 @@ public class AutoCommand extends SequentialCommandGroup {
     public PathHelper getPath(int pathIndex){
         return paths.get(pathIndex);
     }
+
     public PathHelper getNextPath(){
         return getPath(pathIndex++);
     }
+
     public int getPathIndex(){
         return pathIndex;
     }
+
     public void setPathIndex(int index){
         this.pathIndex = index;
     }
