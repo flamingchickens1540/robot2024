@@ -6,7 +6,7 @@ import org.littletonrobotics.junction.AutoLog;
 public interface TrampIO {
     @AutoLog
     class TrampIOInputs {
-        public boolean breamBreakTripped = false;
+        public boolean noteInTramp = false;
         public double velocityRPM = 0.0;
         public double appliedVolts = 0.0;
         public double currentAmps = 0.0;

@@ -75,11 +75,11 @@ public class RobotContainer {
 //                        elevator::getPosition,
 //                        new VisionPoseAcceptor(drivetrain::getChassisSpeeds, () -> 0.0));
 //                drivetrain = Drivetrain.createReal(odometrySignalRefresher);
-                drivetrain = Drivetrain.createDummy();
-                tramp = Tramp.createDummy();
+                drivetrain = Drivetrain.createReal(odometrySignalRefresher);
+                tramp = Tramp.createReal();
                 shooter = Shooter.createDummy();
                 elevator = Elevator.createReal();
-                indexer = Indexer.createDummy();
+                indexer = Indexer.createReal();
                 aprilTagVision = AprilTagVision.createDummy();
                 break;
             case SIM:

@@ -43,7 +43,7 @@ public class Tramp extends SubsystemBase {
     }
 
     public boolean isNoteStaged() {
-        return inputs.breamBreakTripped;
+        return inputs.noteInTramp;
     }
 
     @Override

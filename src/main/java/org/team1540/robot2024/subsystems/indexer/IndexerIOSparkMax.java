@@ -42,7 +42,7 @@ public class IndexerIOSparkMax implements IndexerIO {
         inputs.feederCurrentAmps = feederMotor.getOutputCurrent();
         inputs.feederVoltage = feederMotor.getBusVoltage() * feederMotor.getAppliedOutput();
         inputs.feederVelocityRPM = feederMotor.getEncoder().getVelocity();
-        inputs.noteInIntake = indexerBeamBreak.get();
+        inputs.noteInIntake = !indexerBeamBreak.get();
         inputs.setpointRPM = setpointRPM;
         inputs.feederVelocityError = setpointRPM - feederMotor.getEncoder().getVelocity();
     }

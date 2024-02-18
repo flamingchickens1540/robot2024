@@ -80,8 +80,7 @@ public final class Constants {
     }
 
     public static class Indexer {
-
-        public static final int BEAM_BREAK_ID = 0;
+        public static final int BEAM_BREAK_ID = 8;
         public static final int INTAKE_ID = 13;
         public static final int FEEDER_ID = 12;
 
@@ -146,7 +145,7 @@ public final class Constants {
 
         public static class Pivot {
             // TODO: determine ids
-            public static final int MOTOR_ID = 0;
+            public static final int MOTOR_ID = 12;
             public static final int CANCODER_ID = 0;
 
             // TODO: figure this out
@@ -242,10 +241,10 @@ public final class Constants {
     }
 
     public static class Tramp {
-        public static final int BEAM_BREAK_CHANNEL = 1;
+        public static final int BEAM_BREAK_CHANNEL = 9;
         public static final double GEAR_RATIO = 3.0;
         public static final double TRAP_SCORING_TIME_SECONDS = 1.114; //TODO: Find these values :D
-        public static final int MOTOR_ID = 19;
+        public static final int MOTOR_ID = 17;
     }
 
     public static class Targeting {
