@@ -17,14 +17,10 @@ public class SourceLanePHGFSprint extends AutoCommand {
         );
 
         addCommands(
-                getPath(0).getCommand(drivetrain),
-                new PrintCommand("Past 1"),
+                getPath(0).getCommand(drivetrain, true),
                 getPath(1).getCommand(drivetrain),
-                new PrintCommand("Past 2"),
                 getPath(2).getCommand(drivetrain),
-                new PrintCommand("Past 3"),
-                getPath(3).getCommand(drivetrain),
-                new PrintCommand("Past 4")
+                getPath(3).getCommand(drivetrain)
         );
     }
 }
