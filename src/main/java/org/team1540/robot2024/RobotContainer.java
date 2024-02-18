@@ -64,8 +64,8 @@ public class RobotContainer {
         switch (Constants.currentMode) {
             case REAL:
                 // Real robot, instantiate hardware IO implementations
-                drivetrain = Drivetrain.createReal(odometrySignalRefresher);
                 // TODO: 2/16/2024 switch these back to the correct implementations when merging
+//                drivetrain = Drivetrain.createReal(odometrySignalRefresher);
 //                tramp = Tramp.createReal();
 //                shooter = Shooter.createReal();
 //                elevator = Elevator.createReal();
@@ -74,6 +74,8 @@ public class RobotContainer {
 //                        drivetrain::addVisionMeasurement,
 //                        elevator::getPosition,
 //                        new VisionPoseAcceptor(drivetrain::getChassisSpeeds, () -> 0.0));
+//                drivetrain = Drivetrain.createReal(odometrySignalRefresher);
+                drivetrain = Drivetrain.createDummy();
                 tramp = Tramp.createDummy();
                 shooter = Shooter.createDummy();
                 elevator = Elevator.createReal();
@@ -151,7 +153,7 @@ public class RobotContainer {
         indexer.setDefaultCommand(new IntakeCommand(indexer, tramp));
 
         driver.x().onTrue(Commands.runOnce(drivetrain::stopWithX, drivetrain));
-        driver.y().toggleOnTrue(new DriveWithSpeakerTargetingCommand(drivetrain, driver));
+//        driver.y().toggleOnTrue(new DriveWithSpeakerTargetingCommand(drivetrain, driver));
         driver.b().onTrue(
                 Commands.runOnce(
                         () -> drivetrain.setPose(new Pose2d(drivetrain.getPose().getTranslation(), new Rotation2d())),
@@ -159,10 +161,10 @@ public class RobotContainer {
                 ).ignoringDisable(true)
         );
 
-        copilot.rightBumper().onTrue(new ElevatorSetpointCommand(elevator, ElevatorState.TOP));
-        copilot.leftBumper().onTrue(new ElevatorSetpointCommand(elevator, ElevatorState.BOTTOM));
-        copilot.a().onTrue(new ShootSequence(shooter, indexer))
-                .onFalse(Commands.runOnce(shooter::stopFlywheels, shooter));
+        copilot.rightBumper().whileTrue(new ElevatorSetpointCommand(elevator, ElevatorState.AMP));
+//        copilot.leftBumper().onTrue(new ElevatorSetpointCommand(elevator, ElevatorState.BOTTOM));
+//        copilot.a().onTrue(new ShootSequence(shooter, indexer))
+//                .onFalse(Commands.runOnce(shooter::stopFlywheels, shooter));
     }
 
     /**
@@ -171,6 +173,7 @@ public class RobotContainer {
      * @return the command to run in autonomous
      */
     public Command getAutonomousCommand() {
-        return null;
+//        return null;
+        return new FeedForwardCharacterization(elevator, elevator::setVoltage, elevator::getVelocity);
     }
 }

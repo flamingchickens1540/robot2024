@@ -62,4 +62,9 @@ public class ElevatorIOSim implements ElevatorIO {
         isClosedLoop = true;
         setpoint = new TrapezoidProfile.State(position, 0.0);
     }
+
+    @Override
+    public void configPID(double kP, double kI, double kD) {
+        controller.setPID(kP, kI, kD);
+    }
 }
