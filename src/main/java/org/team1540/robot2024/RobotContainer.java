@@ -24,6 +24,7 @@ import org.team1540.robot2024.commands.indexer.StageTrampCommand;
 import org.team1540.robot2024.commands.shooter.PrepareShooterCommand;
 import org.team1540.robot2024.commands.shooter.ShootSequence;
 import org.team1540.robot2024.commands.autos.*;
+import org.team1540.robot2024.commands.tramp.TrampStageSequence;
 import org.team1540.robot2024.subsystems.drive.*;
 import org.team1540.robot2024.subsystems.elevator.Elevator;
 import org.team1540.robot2024.subsystems.indexer.Indexer;
@@ -181,9 +182,12 @@ public class RobotContainer {
                 )
         );
         copilot.b().whileTrue(new PrepareShooterCommand(shooter));
-        copilot.leftBumper().whileTrue(new TrampShoot(tramp));
 //        copilot.rightTrigger(0.5).whileTrue(new ElevatorSetpointCommand(elevator, ElevatorState.BOTTOM));
 //        copilot.leftTrigger(0.5).whileTrue(new ElevatorSetpointCommand(elevator, ElevatorState.CLIMB));
+        copilot.leftBumper().whileTrue(
+                new TrampStageSequence(indexer, tramp, elevator).onlyIf(() -> !tramp.isNoteStaged()).andThen(new TrampShoot(tramp))
+        ).onFalse(new ElevatorSetpointCommand(elevator, ElevatorState.BOTTOM));
+
 
     }
 
@@ -209,15 +213,16 @@ public class RobotContainer {
             );
         }
 
-        AutoManager.getInstance().addDefaultAuto(new AmpLanePABCSprint(drivetrain, shooter, indexer));
+        AutoManager.getInstance().addAuto(new AmpLanePABCSprint(drivetrain, shooter, indexer));
         AutoManager.getInstance().addAuto(new SourceLanePHGFSprint(drivetrain));
         AutoManager.getInstance().addAuto(new PathVisualising(drivetrain));
         AutoManager.getInstance().addAuto(new DriveSinglePath("AmpLaneTaxi", drivetrain));
         AutoManager.getInstance().addAuto(new DriveSinglePath("AmpLaneSprint", drivetrain));
-        AutoManager.getInstance().addAuto(new DriveSinglePath("CenterLaneTaxi", drivetrain));
+        AutoManager.getInstance().addDefaultAuto(new DriveSinglePath("CenterLaneTaxi", drivetrain));
         AutoManager.getInstance().addAuto(new DriveSinglePath("CenterLaneSprint", drivetrain));
         AutoManager.getInstance().addAuto(new DriveSinglePath("SourceLaneTaxi", drivetrain));
         AutoManager.getInstance().addAuto(new DriveSinglePath("SourceLaneSprint", drivetrain));
+        AutoManager.getInstance().addAuto(new AutoCommand("Dwayne :skull:"));
     }
 
     /**
