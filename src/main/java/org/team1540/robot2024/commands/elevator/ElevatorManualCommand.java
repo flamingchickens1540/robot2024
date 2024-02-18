@@ -22,7 +22,9 @@ public class ElevatorManualCommand extends Command {
 //                + Constants.Elevator.CRUISE_VELOCITY_MPS
 //                * Constants.LOOP_PERIOD_SECS
 //                * (copilot.getRightTriggerAxis() - copilot.getLeftTriggerAxis()));
-        elevator.setVoltage((copilot.getRightTriggerAxis() - copilot.getLeftTriggerAxis()) * 12 * 0.125);
+//        elevator.setVoltage((copilot.getRightTriggerAxis() - copilot.getLeftTriggerAxis()) * 12 * 0.125);
+        elevator.setVoltage((copilot.getRightY()) * 12 * 0.125);
+
     }
 
     @Override

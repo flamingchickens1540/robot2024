@@ -16,9 +16,12 @@ import org.team1540.robot2024.Constants.Elevator.ElevatorState;
 import org.team1540.robot2024.commands.FeedForwardCharacterization;
 import org.team1540.robot2024.commands.DriveWithSpeakerTargetingCommand;
 import org.team1540.robot2024.commands.SwerveDriveCommand;
+import org.team1540.robot2024.commands.TrampShoot;
 import org.team1540.robot2024.commands.elevator.ElevatorManualCommand;
 import org.team1540.robot2024.commands.elevator.ElevatorSetpointCommand;
 import org.team1540.robot2024.commands.indexer.IntakeCommand;
+import org.team1540.robot2024.commands.indexer.StageTrampCommand;
+import org.team1540.robot2024.commands.shooter.PrepareShooterCommand;
 import org.team1540.robot2024.commands.shooter.ShootSequence;
 import org.team1540.robot2024.commands.autos.*;
 import org.team1540.robot2024.subsystems.drive.*;
@@ -153,21 +156,35 @@ public class RobotContainer {
     private void configureButtonBindings() {
         drivetrain.setDefaultCommand(new SwerveDriveCommand(drivetrain, driver));
         elevator.setDefaultCommand(new ElevatorManualCommand(elevator, copilot));
-        indexer.setDefaultCommand(new IntakeCommand(indexer, tramp));
+//        indexer.setDefaultCommand(new IntakeCommand(indexer, tramp));
 
         driver.x().onTrue(Commands.runOnce(drivetrain::stopWithX, drivetrain));
 //        driver.y().toggleOnTrue(new DriveWithSpeakerTargetingCommand(drivetrain, driver));
-        driver.b().onTrue(
+        driver.y().onTrue(
                 Commands.runOnce(
                         () -> drivetrain.setPose(new Pose2d(drivetrain.getPose().getTranslation(), new Rotation2d())),
                         drivetrain
                 ).ignoringDisable(true)
         );
 
-        copilot.rightBumper().whileTrue(new ElevatorSetpointCommand(elevator, ElevatorState.AMP));
+
+        copilot.rightBumper().whileTrue(new IntakeCommand(indexer, tramp));
 //        copilot.leftBumper().onTrue(new ElevatorSetpointCommand(elevator, ElevatorState.BOTTOM));
 //        copilot.a().onTrue(new ShootSequence(shooter, indexer))
 //                .onFalse(Commands.runOnce(shooter::stopFlywheels, shooter));
+        copilot.x().whileTrue(new ShootSequence(shooter, indexer));
+        copilot.a().whileTrue(
+                new ElevatorSetpointCommand(elevator, ElevatorState.BOTTOM).andThen(
+                        new StageTrampCommand(tramp, indexer)
+                ).andThen(
+                        new ElevatorSetpointCommand(elevator, ElevatorState.AMP)
+                )
+        );
+        copilot.b().whileTrue(new PrepareShooterCommand(shooter));
+        copilot.leftBumper().whileTrue(new TrampShoot(tramp));
+//        copilot.rightTrigger(0.5).whileTrue(new ElevatorSetpointCommand(elevator, ElevatorState.BOTTOM));
+//        copilot.leftTrigger(0.5).whileTrue(new ElevatorSetpointCommand(elevator, ElevatorState.CLIMB));
+
     }
 
     private void configureAutoRoutines(){
