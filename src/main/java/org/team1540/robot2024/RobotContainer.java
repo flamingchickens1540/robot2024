@@ -8,6 +8,7 @@ import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
+import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 
@@ -49,6 +50,7 @@ import org.team1540.robot2024.util.swerve.SwerveFactory;
 import org.team1540.robot2024.util.vision.VisionPoseAcceptor;
 
 import static org.team1540.robot2024.Constants.SwerveConfig;
+import static org.team1540.robot2024.Constants.isTuningMode;
 
 /**
  * This class is where the bulk of the robot should be declared. Since Command-based is a
@@ -153,29 +155,8 @@ public class RobotContainer {
 
 
 
-        // Set up FF characterization routines
-        AutoManager.getInstance().addAuto(
-                new AutoCommand(
-                        "Drive FF Characterization",
-                        new FeedForwardCharacterization(
-                                drivetrain, drivetrain::runCharacterizationVolts, drivetrain::getCharacterizationVelocity
-                        )
-                )
-        );
 
-        AutoManager.getInstance().addAuto(
-                new AutoCommand(
-                        "Flywheels FF Characterization",
-                        new FeedForwardCharacterization(
-                                shooter, volts -> shooter.setFlywheelVolts(volts, volts), () -> shooter.getLeftFlywheelSpeed() / 60
-                        )
-                )
-        );
-
-        AutoManager.getInstance().addDefaultAuto(new AmpLanePABCSprint(drivetrain, shooter, indexer));
-        AutoManager.getInstance().addAuto(new SourceLanePHGFSprint(drivetrain));
-        AutoManager.getInstance().addAuto(new PathVisualising(drivetrain));
-
+        configureAutoRoutines();
         // Configure the button bindings
         configureButtonBindings();
         configureLedBindings();
@@ -213,6 +194,39 @@ public class RobotContainer {
         copilot.leftBumper().onTrue(new ElevatorSetpointCommand(elevator, ElevatorState.BOTTOM));
         copilot.a().onTrue(new ShootSequence(shooter, indexer))
                 .onFalse(Commands.runOnce(shooter::stopFlywheels, shooter));
+    }
+
+    private void configureAutoRoutines(){
+        // Set up FF characterization routines
+        if(isTuningMode()){
+            AutoManager.getInstance().addAuto(
+                    new AutoCommand(
+                            "Drive FF Characterization",
+                            new FeedForwardCharacterization(
+                                    drivetrain, drivetrain::runCharacterizationVolts, drivetrain::getCharacterizationVelocity
+                            )
+                    )
+            );
+
+            AutoManager.getInstance().addAuto(
+                    new AutoCommand(
+                            "Flywheels FF Characterization",
+                            new FeedForwardCharacterization(
+                                    shooter, volts -> shooter.setFlywheelVolts(volts, volts), () -> shooter.getLeftFlywheelSpeed() / 60
+                            )
+                    )
+            );
+        }
+
+        AutoManager.getInstance().addDefaultAuto(new AmpLanePABCSprint(drivetrain, shooter, indexer));
+        AutoManager.getInstance().addAuto(new SourceLanePHGFSprint(drivetrain));
+        AutoManager.getInstance().addAuto(new PathVisualising(drivetrain));
+        AutoManager.getInstance().addAuto(new DriveSinglePath("AmpLaneTaxi", drivetrain));
+        AutoManager.getInstance().addAuto(new DriveSinglePath("AmpLaneSprint", drivetrain));
+        AutoManager.getInstance().addAuto(new DriveSinglePath("CenterLaneTaxi", drivetrain));
+        AutoManager.getInstance().addAuto(new DriveSinglePath("CenterLaneSprint", drivetrain));
+        AutoManager.getInstance().addAuto(new DriveSinglePath("SourceLaneTaxi", drivetrain));
+        AutoManager.getInstance().addAuto(new DriveSinglePath("SourceLaneSprint", drivetrain));
     }
 
     /**
