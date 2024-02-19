@@ -14,21 +14,17 @@ public class ShootSequence extends SequentialCommandGroup {
     public ShootSequence(Shooter shooter, Indexer indexer) {
         addCommands(
                 Commands.parallel(
-                        new PrepareShooterCommand(shooter),
                         new WaitCommand(0.7),
+                        new PrepareShooterCommand(shooter),
                         Commands.sequence(
                                 indexer.moveNoteOut(),
                                 new PrepareFeederForShooter(indexer)
                         )
                 ),
-                new IntakeAndFeed(indexer, 1, 0.5),
-//                Commands.waitUntil(() -> !indexer.isFeederAtSetpoint())
-                new WaitCommand(15),
-                new InstantCommand(() -> {
-                    indexer.setFeederPercent(0);
-                    indexer.setIntakePercent(0);
-                    shooter.stopFlywheels();
-                })
+                new IntakeAndFeed(indexer, ()->1, ()->0.5),
+//                Commands.waitUntil(() -> !indexer.isNoteStaged()),
+//                Commands.waitSeconds(1),
+                new WaitCommand(15)
                 // TODO: Add a wait for having completed the shot (steady then current spike/velocity dip and then back down?)
         );
     }

@@ -1,6 +1,7 @@
 package org.team1540.robot2024.subsystems.indexer;
 
 import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj.RobotState;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.FunctionalCommand;
@@ -53,6 +54,11 @@ public class Indexer extends SubsystemBase {
     public void periodic() {
         io.updateInputs(inputs);
         Logger.processInputs("Indexer", inputs);
+
+        if (RobotState.isDisabled()){
+            stopAll();
+        }
+
         if (Constants.isTuningMode()) {
             if (kP.hasChanged(hashCode()) || kI.hasChanged(hashCode()) || kD.hasChanged(hashCode())) {
                 io.configureFeederPID(kP.get(), kI.get(), kD.get());

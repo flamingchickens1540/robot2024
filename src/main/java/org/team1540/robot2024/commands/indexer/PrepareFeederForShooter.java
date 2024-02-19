@@ -14,7 +14,7 @@ public class PrepareFeederForShooter extends Command {
 
     @Override
     public void initialize() {
-//        indexer.setFeederVelocity(1200);
+//        indexer.setFeederVelocity(1200); TODO Make this work again
         indexer.setFeederPercent(0.5);
     }
 

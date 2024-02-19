@@ -21,7 +21,7 @@ public class PrepareShooterCommand extends Command {
     @Override
     public boolean isFinished() {
         return true;
-//        return shooter.areFlywheelsSpunUp() && shooter.isPivotAtSetpoint();
+//        return shooter.areFlywheelsSpunUp() && shooter.isPivotAtSetpoint(); TODO make this terminate properly so it works
 //        return shooter.areFlywheelsSpunUp();
     }
 

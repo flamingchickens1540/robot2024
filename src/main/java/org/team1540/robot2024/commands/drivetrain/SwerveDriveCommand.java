@@ -1,4 +1,4 @@
-package org.team1540.robot2024.commands;
+package org.team1540.robot2024.commands.drivetrain;
 
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.filter.SlewRateLimiter;
@@ -10,10 +10,6 @@ import org.team1540.robot2024.subsystems.drive.Drivetrain;
 public class SwerveDriveCommand extends Command {
     private final Drivetrain drivetrain;
     private final CommandXboxController controller;
-
-    private final SlewRateLimiter xLimiter = new SlewRateLimiter(2);
-    private final SlewRateLimiter yLimiter = new SlewRateLimiter(2);
-    private final SlewRateLimiter rotLimiter = new SlewRateLimiter(3);
 
     private boolean isFlipped;
 

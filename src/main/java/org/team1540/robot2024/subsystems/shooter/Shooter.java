@@ -3,6 +3,7 @@ package org.team1540.robot2024.subsystems.shooter;
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj.RobotState;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.FunctionalCommand;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
@@ -79,6 +80,11 @@ public class Shooter extends SubsystemBase {
         Logger.processInputs("Shooter/Pivot", pivotInputs);
         Logger.processInputs("Shooter/Flywheels", flywheelInputs);
         MechanismVisualiser.setShooterPivotRotation(getPivotPosition());
+
+        if (RobotState.isDisabled()){
+            stopFlywheels();
+            stopPivot();
+        }
 
         // Update tunable numbers
         if (flywheelsKP.hasChanged(hashCode()) || flywheelsKI.hasChanged(hashCode()) || flywheelsKD.hasChanged(hashCode())) {

@@ -18,6 +18,7 @@ public class ElevatorManualCommand extends Command {
 
     @Override
     public void execute() {
+        //TODO Make the better version of elevator manual work
 //        elevator.setElevatorPosition(
 //                elevator.getSetpoint()
 //                + Constants.Elevator.CRUISE_VELOCITY_MPS
