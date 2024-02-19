@@ -83,7 +83,7 @@ public class RobotContainer {
 //                drivetrain = Drivetrain.createReal(odometrySignalRefresher);
                 drivetrain = Drivetrain.createReal(odometrySignalRefresher);
                 tramp = Tramp.createReal();
-                shooter = Shooter.createDummy();
+                shooter = Shooter.createReal();
                 elevator = Elevator.createReal();
                 indexer = Indexer.createReal();
                 aprilTagVision = AprilTagVision.createDummy();
@@ -156,7 +156,7 @@ public class RobotContainer {
      */
     private void configureButtonBindings() {
         drivetrain.setDefaultCommand(new SwerveDriveCommand(drivetrain, driver));
-        elevator.setDefaultCommand(new ElevatorManualCommand(elevator, copilot));
+//        elevator.setDefaultCommand(new ElevatorManualCommand(elevator, copilot));
 //        indexer.setDefaultCommand(new IntakeCommand(indexer, tramp));
 
         driver.x().onTrue(Commands.runOnce(drivetrain::stopWithX, drivetrain));
@@ -169,11 +169,18 @@ public class RobotContainer {
         );
 
 
-        copilot.rightBumper().whileTrue(new IntakeCommand(indexer, tramp));
+        copilot.rightBumper().whileTrue(new IntakeCommand(indexer, tramp, 1));
+        copilot.povDown().onTrue(new InstantCommand(() -> indexer.setIntakePercent(-1))).
+                onFalse(new InstantCommand( () -> indexer.setIntakePercent(0)));
 //        copilot.leftBumper().onTrue(new ElevatorSetpointCommand(elevator, ElevatorState.BOTTOM));
 //        copilot.a().onTrue(new ShootSequence(shooter, indexer))
 //                .onFalse(Commands.runOnce(shooter::stopFlywheels, shooter));
-        copilot.x().whileTrue(new ShootSequence(shooter, indexer));
+        copilot.x().whileTrue(new ShootSequence(shooter, indexer))
+                .onFalse(new InstantCommand(() -> {
+                    indexer.setFeederPercent(0);
+                    indexer.setIntakePercent(0);
+                    shooter.stopFlywheels();
+                }));
         copilot.a().whileTrue(
                 new ElevatorSetpointCommand(elevator, ElevatorState.BOTTOM).andThen(
                         new StageTrampCommand(tramp, indexer)
@@ -181,12 +188,14 @@ public class RobotContainer {
                         new ElevatorSetpointCommand(elevator, ElevatorState.AMP)
                 )
         );
-        copilot.b().whileTrue(new PrepareShooterCommand(shooter));
+        copilot.b().onTrue(new PrepareShooterCommand(shooter));
 //        copilot.rightTrigger(0.5).whileTrue(new ElevatorSetpointCommand(elevator, ElevatorState.BOTTOM));
 //        copilot.leftTrigger(0.5).whileTrue(new ElevatorSetpointCommand(elevator, ElevatorState.CLIMB));
         copilot.leftBumper().whileTrue(
                 new TrampStageSequence(indexer, tramp, elevator).onlyIf(() -> !tramp.isNoteStaged()).andThen(new TrampShoot(tramp))
-        ).onFalse(new ElevatorSetpointCommand(elevator, ElevatorState.BOTTOM));
+        ).onFalse(new ElevatorSetpointCommand(elevator, ElevatorState.BOTTOM)).onFalse(new InstantCommand(() -> tramp.setPercent(0)));
+        copilot.rightStick().whileTrue(new ElevatorManualCommand(elevator, copilot));
+
 
 
     }
@@ -232,6 +241,6 @@ public class RobotContainer {
      */
     public Command getAutonomousCommand() {
 //        return null;
-        return new FeedForwardCharacterization(elevator, elevator::setVoltage, elevator::getVelocity);
+        return AutoManager.getInstance().getSelected();
     }
 }

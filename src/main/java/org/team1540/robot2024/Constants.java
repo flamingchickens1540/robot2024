@@ -63,7 +63,7 @@ public final class Constants {
         public static final boolean IS_TURN_MOTOR_INVERTED = true;
         public static final double WHEEL_RADIUS = Units.inchesToMeters(2.0);
 
-        public static final double MAX_LINEAR_SPEED = Units.feetToMeters(14.5);
+        public static final double MAX_LINEAR_SPEED = Units.feetToMeters(16);
         public static final double TRACK_WIDTH_X = Units.inchesToMeters(18.75);
         public static final double TRACK_WIDTH_Y = Units.inchesToMeters(19.75);
         public static final double DRIVE_BASE_RADIUS = Math.hypot(TRACK_WIDTH_X / 2.0, TRACK_WIDTH_Y / 2.0);
@@ -82,7 +82,7 @@ public final class Constants {
     public static class Indexer {
         public static final int BEAM_BREAK_ID = 8;
         public static final int INTAKE_ID = 13;
-        public static final int FEEDER_ID = 12;
+        public static final int FEEDER_ID = 15;
 
         // TODO: fix these constants
         public static final double FEEDER_KP = 0.5;
@@ -127,8 +127,8 @@ public final class Constants {
     public static class Shooter {
         public static class Flywheels {
             // TODO: determine ids
-            public static final int LEFT_ID = 11;
-            public static final int RIGHT_ID = 12;
+            public static final int LEFT_ID = 12;
+            public static final int RIGHT_ID = 11;
 
             public static final double GEAR_RATIO = 24.0 / 36.0;
             public static final double SIM_MOI = 4.08232288e-4;
@@ -145,7 +145,7 @@ public final class Constants {
 
         public static class Pivot {
             // TODO: determine ids
-            public static final int MOTOR_ID = 12;
+            public static final int MOTOR_ID = 9;
             public static final int CANCODER_ID = 0;
 
             // TODO: figure this out

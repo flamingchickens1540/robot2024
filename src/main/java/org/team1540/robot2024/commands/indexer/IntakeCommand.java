@@ -7,17 +7,22 @@ import org.team1540.robot2024.subsystems.tramp.Tramp;
 public class IntakeCommand extends Command {
     private final Indexer indexer;
     private final Tramp tramp;
-
-    public IntakeCommand(Indexer indexer, Tramp tramp) {
+    private final double percent;
+    public IntakeCommand(Indexer indexer, Tramp tramp, double percent) {
         this.indexer = indexer;
         this.tramp = tramp;
+        this.percent = percent;
         addRequirements(indexer);
     }
 
     @Override
-    public void execute() {
-        if (indexer.isNoteStaged() || tramp.isNoteStaged()) indexer.stopIntake();
-        else indexer.setIntakePercent(0.5);
+    public void initialize() {
+        indexer.setIntakePercent(percent);
+    }
+
+    @Override
+    public boolean isFinished() {
+        return tramp.isNoteStaged() || indexer.isNoteStaged();
     }
 
     @Override

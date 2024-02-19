@@ -15,7 +15,7 @@ public class TrampIOSparkMax implements TrampIO {
     public TrampIOSparkMax() {
         motor.setIdleMode(CANSparkMax.IdleMode.kBrake);
         //Potentially invert motor
-        motor.setSmartCurrentLimit(40);
+        motor.setSmartCurrentLimit(80);
         motor.enableVoltageCompensation(12);
     }
 

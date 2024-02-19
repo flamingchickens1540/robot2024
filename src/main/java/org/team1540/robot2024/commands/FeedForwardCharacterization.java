@@ -3,6 +3,7 @@ package org.team1540.robot2024.commands;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Subsystem;
+import org.littletonrobotics.junction.Logger;
 import org.team1540.robot2024.util.math.PolynomialRegression;
 
 import java.util.LinkedList;
@@ -48,6 +49,7 @@ public class FeedForwardCharacterization extends Command {
             voltageConsumer.accept(voltage);
             data.add(velocitySupplier.get(), voltage);
         }
+        System.out.println("I AM DOing the thing" + timer.get());
     }
 
     // Called once the command ends or is interrupted.
@@ -91,6 +93,10 @@ public class FeedForwardCharacterization extends Command {
             System.out.printf("\tR2=%.5f%n", regression.R2());
             System.out.printf("\tkS=%.5f%n", regression.beta(0));
             System.out.printf("\tkV=%.5f%n", regression.beta(1));
+            Logger.recordOutput("FFChar/Count", velocityData.size());
+            Logger.recordOutput("FFChar/R2", regression.R2());
+            Logger.recordOutput("FFChar/kS", regression.beta(0));
+            Logger.recordOutput("FFChar/kV", regression.beta(1));
         }
     }
 }

@@ -2,6 +2,7 @@ package org.team1540.robot2024.commands.elevator;
 
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
+import org.team1540.robot2024.Constants;
 import org.team1540.robot2024.subsystems.elevator.Elevator;
 
 public class ElevatorManualCommand extends Command {
@@ -23,7 +24,7 @@ public class ElevatorManualCommand extends Command {
 //                * Constants.LOOP_PERIOD_SECS
 //                * (copilot.getRightTriggerAxis() - copilot.getLeftTriggerAxis()));
 //        elevator.setVoltage((copilot.getRightTriggerAxis() - copilot.getLeftTriggerAxis()) * 12 * 0.125);
-        elevator.setVoltage((copilot.getRightY()) * 12 * 0.125);
+        elevator.setVoltage((-copilot.getRightY()) * 12 * 0.125);
 
     }
 

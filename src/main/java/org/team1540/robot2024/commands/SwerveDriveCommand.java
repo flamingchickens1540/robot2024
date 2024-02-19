@@ -32,9 +32,9 @@ public class SwerveDriveCommand extends Command {
 
     @Override
     public void execute() {
-        double xPercent = MathUtil.applyDeadband(xLimiter.calculate(-controller.getLeftY()), 0.1);
-        double yPercent = MathUtil.applyDeadband(yLimiter.calculate(-controller.getLeftX()), 0.1);
-        double rotPercent = MathUtil.applyDeadband(rotLimiter.calculate(-controller.getRightX()), 0.1);
+        double xPercent = MathUtil.applyDeadband((-controller.getLeftY()), 0.1);
+        double yPercent = MathUtil.applyDeadband((-controller.getLeftX()), 0.1);
+        double rotPercent = MathUtil.applyDeadband((-controller.getRightX()), 0.1);
 
         drivetrain.drivePercent(xPercent, yPercent, rotPercent, isFlipped);
     }
