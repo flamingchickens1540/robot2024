@@ -13,16 +13,11 @@ public class ShootSequence extends ParallelCommandGroup {
         addCommands(
                 new PrepareShooterCommand(shooter),
                 Commands.sequence(
-                        indexer.moveNoteOut(),
-                        new PrepareFeederForShooter(indexer)
-                ),
-                Commands.sequence(
-                        new WaitCommand(0.7),
-                        Commands.waitUntil(() -> shooter.areFlywheelsSpunUp() && indexer.isFeederAtSetpoint()),
-                        new IntakeAndFeed(indexer, () -> 1, () -> 0.5),
-                        //                Commands.waitUntil(() -> !indexer.isNoteStaged()),
-                        //                Commands.waitSeconds(1),
-                        new WaitCommand(15)
+                        Commands.sequence(
+                                indexer.moveNoteOut(),
+                                new PrepareFeederForShooter(indexer)
+                        ).until(() -> shooter.areFlywheelsSpunUp() && indexer.isFeederAtSetpoint()),
+                        new IntakeAndFeed(indexer, () -> 1, () -> 0.5).withTimeout(15)
                 )
                 // TODO: Add a wait for having completed the shot (steady then current spike/velocity dip and then back down?)
         );

@@ -23,4 +23,9 @@ public class IntakeAndFeed extends Command {
         indexer.setIntakePercent(intakePercent.getAsDouble());
         indexer.setFeederPercent(feederPercent.getAsDouble());
     }
+
+    @Override
+    public void end(boolean isInterrupted) {
+        indexer.stopAll();
+    }
 }
