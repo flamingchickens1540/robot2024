@@ -5,21 +5,13 @@ import edu.wpi.first.math.geometry.Pose2d;
 import java.util.Arrays;
 import java.util.Objects;
 
-/**
- * @param timestampSecs  RIO FPGA timestamp of this vision pose
- * @param poseMeters     Measured, blue alliance-origin pose from vision
- * @param seenTagIDs     Array of all tags used to compute this measurement
- * @param tagPosesMeters Pose in robot-space of all tags used to compute this measurement
- * @param hasFrontCamera Whether this pose contains measurements from the front camera
- * @param hasRearCamera  Whether this pose contains measurements from the rear camera
- */
-public record TimestampedVisionPose(
-        double timestampSecs,
-        Pose2d poseMeters,
-        int[] seenTagIDs,
-        Pose2d[] tagPosesMeters,
-        boolean hasFrontCamera,
-        boolean hasRearCamera) {
+public class TimestampedVisionPose {
+    public double timestampSecs = -1;
+    public Pose2d poseMeters = new Pose2d();
+    public int[] seenTagIDs = new int[0];
+    public Pose2d[] tagPosesMeters = new Pose2d[0];
+    public boolean hasFrontCamera = false;
+    public boolean hasRearCamera = false;
 
     public int getNumTagsSeen() {
         return seenTagIDs.length;

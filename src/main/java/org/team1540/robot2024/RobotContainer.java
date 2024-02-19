@@ -80,7 +80,13 @@ public class RobotContainer {
                 shooter = Shooter.createReal();
                 elevator = Elevator.createReal();
                 indexer = Indexer.createReal();
-                aprilTagVision = AprilTagVision.createDummy();
+                aprilTagVision = AprilTagVision.createReal(
+                        (pose) -> {},
+                        elevator::getPosition,
+                        new VisionPoseAcceptor(
+                                drivetrain::getChassisSpeeds,
+                                elevator::getVelocity
+                        ));
                 break;
             case SIM:
                 // Sim robot, instantiate physics sim IO implementations
