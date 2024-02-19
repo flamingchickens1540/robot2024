@@ -157,7 +157,10 @@ public class RobotContainer {
 //        driver.y().toggleOnTrue(new DriveWithSpeakerTargetingCommand(drivetrain, driver));
         driver.y().onTrue(
                 Commands.runOnce(
-                        () -> drivetrain.setPose(new Pose2d(drivetrain.getPose().getTranslation(), new Rotation2d())),
+                        () -> drivetrain.setPose(new Pose2d(drivetrain.getPose().getTranslation(),
+                                DriverStation.getAlliance().orElse(null) == DriverStation.Alliance.Red
+                                        ? Rotation2d.fromDegrees(180)
+                                        : new Rotation2d())),
                         drivetrain
                 ).ignoringDisable(true)
         );
