@@ -9,9 +9,9 @@ import java.util.function.DoubleSupplier;
 
 public class IntakeCommand extends Command {
     private final Indexer indexer;
-    private final DoubleSupplier percent;
+    private final double percent;
     private final BooleanSupplier noteInTramp;
-    public IntakeCommand(Indexer indexer, BooleanSupplier noteInTramp, DoubleSupplier percent) {
+    public IntakeCommand(Indexer indexer, BooleanSupplier noteInTramp, double percent) {
         this.indexer = indexer;
         this.noteInTramp = noteInTramp;
         this.percent = percent;
@@ -20,7 +20,7 @@ public class IntakeCommand extends Command {
 
     @Override
     public void initialize() {
-        indexer.setIntakePercent(percent.getAsDouble());
+        indexer.setIntakePercent(percent);
     }
 
     @Override

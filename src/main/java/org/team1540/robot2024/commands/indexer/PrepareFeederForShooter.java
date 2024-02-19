@@ -20,7 +20,11 @@ public class PrepareFeederForShooter extends Command {
 
     @Override
     public boolean isFinished() {
-        return indexer.isFeederAtSetpoint();
+        return false;
     }
 
+    @Override
+    public void end(boolean isInterrupted) {
+        indexer.stopFeeder();
+    }
 }

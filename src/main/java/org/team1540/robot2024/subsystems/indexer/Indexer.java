@@ -117,4 +117,12 @@ public class Indexer extends SubsystemBase {
         io.setFeederVoltage(0);
     }
 
+    public Command commandRunIntake(double percent) {
+        return Commands.startEnd(
+                () -> this.setIntakePercent(percent),
+                () -> this.setIntakePercent(0),
+                this
+                );
+    }
+
 }

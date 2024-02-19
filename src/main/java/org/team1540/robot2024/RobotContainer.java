@@ -6,21 +6,15 @@ import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.XboxController;
-import edu.wpi.first.wpilibj2.command.Command;
-import edu.wpi.first.wpilibj2.command.CommandScheduler;
-import edu.wpi.first.wpilibj2.command.Commands;
-import edu.wpi.first.wpilibj2.command.InstantCommand;
+import edu.wpi.first.wpilibj2.command.*;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 
-import org.team1540.robot2024.Constants.Elevator.ElevatorState;
 import org.team1540.robot2024.commands.FeedForwardCharacterization;
 import org.team1540.robot2024.commands.drivetrain.SwerveDriveCommand;
-import org.team1540.robot2024.commands.tramp.TrampShoot;
+import org.team1540.robot2024.commands.tramp.TrampScoreSequence;
 import org.team1540.robot2024.commands.elevator.ElevatorManualCommand;
-import org.team1540.robot2024.commands.elevator.ElevatorSetpointCommand;
 import org.team1540.robot2024.commands.indexer.IntakeCommand;
-import org.team1540.robot2024.commands.indexer.StageTrampCommand;
 import org.team1540.robot2024.commands.shooter.PrepareShooterCommand;
 import org.team1540.robot2024.commands.shooter.ShootSequence;
 import org.team1540.robot2024.commands.autos.*;
@@ -33,7 +27,6 @@ import org.team1540.robot2024.subsystems.led.patterns.LedPatternFlame;
 import org.team1540.robot2024.subsystems.shooter.*;
 import org.team1540.robot2024.subsystems.tramp.Tramp;
 import org.team1540.robot2024.subsystems.vision.AprilTagVision;
-import org.team1540.robot2024.util.CommandTerminator;
 import org.team1540.robot2024.util.auto.AutoCommand;
 import org.team1540.robot2024.util.auto.AutoManager;
 import org.team1540.robot2024.util.PhoenixTimeSyncSignalRefresher;
@@ -170,36 +163,18 @@ public class RobotContainer {
         );
 
 
-        copilot.rightBumper().whileTrue(new IntakeCommand(indexer, tramp::isNoteStaged, ()->1));
-        copilot.povDown().onTrue(new CommandTerminator(
-                        new InstantCommand(() -> indexer.setIntakePercent(-1)),
-                        () -> indexer.setIntakePercent(0)
-                )
-        );
+        copilot.rightBumper().whileTrue(new IntakeCommand(indexer, tramp::isNoteStaged, 1));
+        copilot.povDown().onTrue(indexer.commandRunIntake(-1));
 //        copilot.leftBumper().onTrue(new ElevatorSetpointCommand(elevator, ElevatorState.BOTTOM));
 //        copilot.a().onTrue(new ShootSequence(shooter, indexer))
 //                .onFalse(Commands.runOnce(shooter::stopFlywheels, shooter));
-        copilot.x().whileTrue(
-                new CommandTerminator(
-                        new ShootSequence(shooter, indexer),
-                        () -> {
-                            indexer.setFeederPercent(0);
-                            indexer.setIntakePercent(0);
-                            shooter.stopFlywheels();
-                        })
-                );
+        copilot.x().whileTrue(new ShootSequence(shooter, indexer));
 
         copilot.a().whileTrue(new TrampStageSequence(indexer, tramp, elevator));
         copilot.b().onTrue(new PrepareShooterCommand(shooter));
 //        copilot.rightTrigger(0.5).whileTrue(new ElevatorSetpointCommand(elevator, ElevatorState.BOTTOM));
 //        copilot.leftTrigger(0.5).whileTrue(new ElevatorSetpointCommand(elevator, ElevatorState.CLIMB));
-        copilot.leftBumper().whileTrue(
-                new CommandTerminator(
-                        new TrampStageSequence(indexer, tramp, elevator).onlyIf(() -> !tramp.isNoteStaged()).andThen(new TrampShoot(tramp)),
-                        tramp::stop,
-                        () -> CommandScheduler.getInstance().schedule(new ElevatorSetpointCommand(elevator, ElevatorState.BOTTOM))
-                )
-        );
+        copilot.leftBumper().whileTrue(new TrampScoreSequence(tramp, indexer, elevator));
 
         copilot.rightStick().whileTrue(new ElevatorManualCommand(elevator, copilot));
 
