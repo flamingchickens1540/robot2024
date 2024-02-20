@@ -14,6 +14,7 @@ import org.team1540.robot2024.subsystems.led.*;
 import org.team1540.robot2024.subsystems.led.patterns.*;
 import org.team1540.robot2024.util.LoggedTunableNumber;
 import org.team1540.robot2024.util.MechanismVisualiser;
+import edu.wpi.first.wpilibj.util.Color;
 
 /**
  * The VM is configured to automatically run this class, and to call the functions corresponding to
@@ -153,7 +154,8 @@ public class Robot extends LoggedRobot {
         robotContainer.leds.setPattern(Leds.Zone.ELEVATOR_BACK,
                 new LedPatternProgressBar(() -> Math.hypot(
                         robotContainer.drivetrain.getChassisSpeeds().vxMetersPerSecond,
-                        robotContainer.drivetrain.getChassisSpeeds().vyMetersPerSecond) / Constants.Drivetrain.MAX_LINEAR_SPEED));
+                        robotContainer.drivetrain.getChassisSpeeds().vyMetersPerSecond) / Constants.Drivetrain.MAX_LINEAR_SPEED,
+                        Color.kRed));
         if (autonomousCommand != null) {
             autonomousCommand.cancel();
         }
