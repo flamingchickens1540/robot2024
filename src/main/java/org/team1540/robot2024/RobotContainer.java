@@ -35,12 +35,6 @@ import org.team1540.robot2024.util.vision.VisionPoseAcceptor;
 import static org.team1540.robot2024.Constants.SwerveConfig;
 import static org.team1540.robot2024.Constants.isTuningMode;
 
-/**
- * This class is where the bulk of the robot should be declared. Since Command-based is a
- * "declarative" paradigm, very little robot logic should actually be handled in the {@link Robot}
- * periodic methods (other than the scheduler calls). Instead, the structure of the robot (including
- * subsystems, commands, and button mappings) should be declared here.
- */
 public class RobotContainer {
     // Subsystems
     public final Drivetrain drivetrain;
@@ -142,12 +136,7 @@ public class RobotContainer {
                 .onFalse(Commands.runOnce(() -> leds.setFatalPattern(LedPatternFlame::new))
                             .ignoringDisable(true));
     }
-    /**
-     * Use this method to define your button->command mappings. Buttons can be created by
-     * instantiating a {@link GenericHID} or one of its subclasses ({@link
-     * edu.wpi.first.wpilibj.Joystick} or {@link XboxController}), and then passing it to a {@link
-     * edu.wpi.first.wpilibj2.command.button.JoystickButton}.
-     */
+
     private void configureButtonBindings() {
         drivetrain.setDefaultCommand(new SwerveDriveCommand(drivetrain, driver));
 //        elevator.setDefaultCommand(new ElevatorManualCommand(elevator, copilot));
@@ -206,7 +195,6 @@ public class RobotContainer {
 
         AutoManager.getInstance().addAuto(new AmpLanePABCSprint(drivetrain, shooter, indexer));
         AutoManager.getInstance().addAuto(new SourceLanePHGFSprint(drivetrain));
-        AutoManager.getInstance().addAuto(new PathVisualising(drivetrain));
         AutoManager.getInstance().addAuto(new DriveSinglePath("AmpLaneTaxi", drivetrain));
         AutoManager.getInstance().addAuto(new DriveSinglePath("AmpLaneSprint", drivetrain));
         AutoManager.getInstance().addDefaultAuto(new DriveSinglePath("CenterLaneTaxi", drivetrain));
@@ -214,6 +202,9 @@ public class RobotContainer {
         AutoManager.getInstance().addAuto(new DriveSinglePath("SourceLaneTaxi", drivetrain));
         AutoManager.getInstance().addAuto(new DriveSinglePath("SourceLaneSprint", drivetrain));
         AutoManager.getInstance().addAuto(new AutoCommand("Dwayne :skull:"));
+        AutoManager.getInstance().addAuto(new AmpLanePADESprint(drivetrain, shooter, indexer));
+        AutoManager.getInstance().addAuto(new CenterLanePCBFSprint(drivetrain, shooter, indexer));
+        AutoManager.getInstance().addAuto(new SourceLanePHGSprint(drivetrain, shooter, indexer));
     }
 
     /**
@@ -222,7 +213,6 @@ public class RobotContainer {
      * @return the command to run in autonomous
      */
     public Command getAutonomousCommand() {
-//        return null;
         return AutoManager.getInstance().getSelected();
     }
 }

@@ -202,19 +202,32 @@ public class Shooter extends SubsystemBase {
 
     public Command spinUpCommand(Supplier<Double> leftSetpoint, Supplier<Double> rightSetpoint) {
         return new FunctionalCommand(
-                () -> setFlywheelSpeeds(leftSetpoint.get(), rightSetpoint.get()),
                 () -> {},
+                () -> setFlywheelSpeeds(leftSetpoint.get(), rightSetpoint.get()),
                 (ignored) -> {},
                 this::areFlywheelsSpunUp,
                 this);
     }
 
-    public Command setPivotPositionCommand(Rotation2d setpoint) {
+    public Command setPivotPositionCommand(Supplier<Rotation2d> setpoint) {
         return new FunctionalCommand(
-                () -> setPivotPosition(setpoint),
                 () -> {},
+                () -> setPivotPosition(setpoint.get()),
                 (ignored) -> {},
                 this::isPivotAtSetpoint,
                 this);
+    }
+
+    public Command spinUpAndSetPivotPosition(Supplier<Double> leftSetpoint, Supplier<Double> rightSetpoint, Supplier<Rotation2d> setpoint){
+        return new FunctionalCommand(
+                () -> {},
+                () -> {
+                    setPivotPosition(setpoint.get());
+                    setFlywheelSpeeds(leftSetpoint.get(), rightSetpoint.get());
+                },
+                (ignored) -> {},
+                () -> areFlywheelsSpunUp() && isPivotAtSetpoint(),
+                this
+        );
     }
 }

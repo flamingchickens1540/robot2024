@@ -14,7 +14,7 @@ public class PrepareShooterCommand extends Command {
     @Override
     public void execute() {
         // TODO: Make this dynamically update based on estimated pose
-        shooter.setFlywheelSpeeds(6000, 5000);
+        shooter.setFlywheelSpeeds(7000, 6000);
         shooter.setPivotPosition(Rotation2d.fromDegrees(30));
     }
 
