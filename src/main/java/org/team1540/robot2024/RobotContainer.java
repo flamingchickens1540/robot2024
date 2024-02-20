@@ -81,7 +81,7 @@ public class RobotContainer {
                 elevator = Elevator.createReal();
                 indexer = Indexer.createReal();
                 aprilTagVision = AprilTagVision.createReal(
-                        (pose) -> {},
+                        drivetrain::addVisionMeasurement,
                         elevator::getPosition,
                         new VisionPoseAcceptor(
                                 drivetrain::getChassisSpeeds,

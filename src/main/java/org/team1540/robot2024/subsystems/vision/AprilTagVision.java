@@ -111,28 +111,19 @@ public class AprilTagVision extends SubsystemBase {
         Logger.processInputs("Vision/FrontCamera", frontCameraInputs);
         Logger.processInputs("Vision/RearCamera", rearCameraInputs);
 
-        if (frontCameraInputs.lastMeasurementTimestampSecs > frontPose.timestampSecs) {
-            frontPose.timestampSecs = frontCameraInputs.lastMeasurementTimestampSecs;
-            frontPose.poseMeters = frontCameraInputs.estimatedPoseMeters;
-            frontPose.seenTagIDs = frontCameraInputs.seenTagIDs;
-            frontPose.tagPosesMeters = frontCameraInputs.tagPosesMeters;
-            frontPose.hasFrontCamera = true;
-            frontPose.hasRearCamera = false;
-        }
-        if (rearCameraInputs.lastMeasurementTimestampSecs > rearPose.timestampSecs) {
-            rearPose.timestampSecs = rearCameraInputs.lastMeasurementTimestampSecs;
-            rearPose.poseMeters = rearCameraInputs.estimatedPoseMeters;
-            rearPose.seenTagIDs = rearCameraInputs.seenTagIDs;
-            rearPose.tagPosesMeters = rearCameraInputs.tagPosesMeters;
-            rearPose.hasFrontCamera = false;
-            rearPose.hasRearCamera = false;
-        }
-
-//        Optional<TimestampedVisionPose> latestPose = getEstimatedPose();
-//        latestPose.ifPresent(visionPose -> Logger.recordOutput("Vision/EstimatedPose", visionPose.poseMeters()));
-//        latestPose.ifPresent(visionPoseConsumer);
+        updateAndAcceptPose(frontCameraInputs, frontPose);
+        updateAndAcceptPose(rearCameraInputs, rearPose);
     }
 
+    private void updateAndAcceptPose(AprilTagVisionIOInputsAutoLogged cameraInputs, TimestampedVisionPose pose) {
+        if (cameraInputs.lastMeasurementTimestampSecs > pose.timestampSecs) {
+            pose.timestampSecs = cameraInputs.lastMeasurementTimestampSecs;
+            pose.poseMeters = cameraInputs.estimatedPoseMeters;
+            pose.seenTagIDs = cameraInputs.seenTagIDs;
+            pose.tagPosesMeters = cameraInputs.tagPosesMeters;
+            if (poseAcceptor.shouldAcceptVision(pose)) visionPoseConsumer.accept(pose);
+        }
+    }
 //    /**
 //     * Gets the estimated pose by fusing individual computed poses from each camera.
 //     * Returns null if no tags seen, in simulation, or if the elevator is moving

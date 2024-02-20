@@ -10,8 +10,6 @@ public class TimestampedVisionPose {
     public Pose2d poseMeters = new Pose2d();
     public int[] seenTagIDs = new int[0];
     public Pose2d[] tagPosesMeters = new Pose2d[0];
-    public boolean hasFrontCamera = false;
-    public boolean hasRearCamera = false;
 
     public int getNumTagsSeen() {
         return seenTagIDs.length;
