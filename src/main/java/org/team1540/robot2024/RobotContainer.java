@@ -11,7 +11,9 @@ import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 
 import org.team1540.robot2024.commands.FeedForwardCharacterization;
+import org.team1540.robot2024.commands.climb.ClimbSequence;
 import org.team1540.robot2024.commands.drivetrain.SwerveDriveCommand;
+import org.team1540.robot2024.commands.shooter.TuneShooterCommand;
 import org.team1540.robot2024.commands.tramp.TrampScoreSequence;
 import org.team1540.robot2024.commands.elevator.ElevatorManualCommand;
 import org.team1540.robot2024.commands.indexer.IntakeCommand;
@@ -146,7 +148,7 @@ public class RobotContainer {
     private void configureButtonBindings() {
         drivetrain.setDefaultCommand(new SwerveDriveCommand(drivetrain, driver));
         elevator.setDefaultCommand(new ElevatorManualCommand(elevator, copilot));
-//        indexer.setDefaultCommand(new IntakeCommand(indexer, tramp));
+//        shooter.setDefaultCommand(new TuneShooterCommand(shooter));
 
         driver.x().onTrue(Commands.runOnce(drivetrain::stopWithX, drivetrain));
 //        driver.y().toggleOnTrue(new DriveWithSpeakerTargetingCommand(drivetrain, driver));
@@ -163,6 +165,7 @@ public class RobotContainer {
 
         copilot.rightBumper().whileTrue(new IntakeCommand(indexer, tramp::isNoteStaged, 1));
         copilot.povDown().onTrue(indexer.commandRunIntake(-1));
+        copilot.povUp().whileTrue(new ClimbSequence(elevator, null));
 //        copilot.leftBumper().onTrue(new ElevatorSetpointCommand(elevator, ElevatorState.BOTTOM));
 //        copilot.a().onTrue(new ShootSequence(shooter, indexer))
 //                .onFalse(Commands.runOnce(shooter::stopFlywheels, shooter));
@@ -210,6 +213,8 @@ public class RobotContainer {
         AutoManager.getInstance().addAuto(new DriveSinglePath("CenterLaneSprint", drivetrain));
         AutoManager.getInstance().addAuto(new DriveSinglePath("SourceLaneTaxi", drivetrain));
         AutoManager.getInstance().addAuto(new DriveSinglePath("SourceLaneSprint", drivetrain));
+        AutoManager.getInstance().addAuto(new DriveSinglePath("SQUARFE", drivetrain));
+        AutoManager.getInstance().addAuto(new DriveSinglePath("SQUARFE (1)", drivetrain));
         AutoManager.getInstance().addAuto(new AutoCommand("Dwayne :skull:"));
         AutoManager.getInstance().addAuto(new AmpLanePADESprint(drivetrain, shooter, indexer));
         AutoManager.getInstance().addAuto(new CenterLanePCBFSprint(drivetrain, shooter, indexer));

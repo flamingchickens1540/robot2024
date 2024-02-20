@@ -134,8 +134,8 @@ public final class Constants {
             public static final double SIM_MOI = 4.08232288e-4;
 
             // TODO: if it's tuned in simulation, it's tuned in real life
-            public static final double KP = 0.1;
-            public static final double KI = 0.0;
+            public static final double KP = 0.53;
+            public static final double KI = 0.2;
             public static final double KD = 0.0;
             public static final double KS = 0.26925;
             public static final double KV = 0.07485; // TODO: this is what recalc says, may have to tune
