@@ -16,7 +16,8 @@ public class CenterLanePCBFSprint extends AutoCommand {
         addPath(
                 PathHelper.fromChoreoPath("CenterLanePCBFSprint.1", true, true),
                 PathHelper.fromChoreoPath("CenterLanePCBFSprint.2"),
-                PathHelper.fromChoreoPath("CenterLanePCBFSprint.3")
+                PathHelper.fromChoreoPath("CenterLanePCBFSprint.3"),
+                PathHelper.fromChoreoPath("CenterLanePCBFSprint.4")
         );
 
         addCommands(
