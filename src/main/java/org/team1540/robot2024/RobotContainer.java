@@ -74,7 +74,13 @@ public class RobotContainer {
                 shooter = Shooter.createReal();
                 elevator = Elevator.createReal();
                 indexer = Indexer.createReal();
-                aprilTagVision = AprilTagVision.createDummy();
+                aprilTagVision = AprilTagVision.createReal(
+                        drivetrain::addVisionMeasurement,
+                        elevator::getPosition,
+                        new VisionPoseAcceptor(
+                                drivetrain::getChassisSpeeds,
+                                elevator::getVelocity
+                        ));
                 break;
             case SIM:
                 // Sim robot, instantiate physics sim IO implementations
@@ -146,7 +152,10 @@ public class RobotContainer {
 //        driver.y().toggleOnTrue(new DriveWithSpeakerTargetingCommand(drivetrain, driver));
         driver.y().onTrue(
                 Commands.runOnce(
-                        () -> drivetrain.setPose(new Pose2d(drivetrain.getPose().getTranslation(), new Rotation2d())),
+                        () -> drivetrain.setPose(new Pose2d(drivetrain.getPose().getTranslation(),
+                                DriverStation.getAlliance().orElse(null) == DriverStation.Alliance.Red
+                                        ? Rotation2d.fromDegrees(180)
+                                        : new Rotation2d())),
                         drivetrain
                 ).ignoringDisable(true)
         );

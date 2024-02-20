@@ -271,7 +271,7 @@ public class Drivetrain extends SubsystemBase {
     }
 
     public void addVisionMeasurement(TimestampedVisionPose visionPose) {
-        poseEstimator.addVisionMeasurement(visionPose.poseMeters(), visionPose.timestampSecs());
+        poseEstimator.addVisionMeasurement(visionPose.poseMeters, visionPose.timestampSecs);
     }
 
     public SwerveModulePosition[] getModulePositions() {

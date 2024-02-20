@@ -65,7 +65,7 @@ public class ModuleIOTalonFX implements ModuleIO {
         turnAppliedVolts = turnTalon.getMotorVoltage();
         turnCurrent = turnTalon.getSupplyCurrent();
 
-        BaseStatusSignal.setUpdateFrequencyForAll(100.0, drivePosition, turnPosition); // Required for odometry, use faster rate
+        BaseStatusSignal.setUpdateFrequencyForAll(250.0, drivePosition, turnPosition); // Required for odometry, use faster rate
         BaseStatusSignal.setUpdateFrequencyForAll(
                 50.0,
                 driveVelocity,

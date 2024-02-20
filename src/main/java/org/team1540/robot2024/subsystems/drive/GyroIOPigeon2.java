@@ -24,8 +24,8 @@ public class GyroIOPigeon2 implements GyroIO {
     public GyroIOPigeon2(PhoenixTimeSyncSignalRefresher odometrySignalRefresher) {
         pigeon.getConfigurator().apply(new Pigeon2Configuration());
         pigeon.getConfigurator().setYaw(0.0);
-        yaw.setUpdateFrequency(100.0);
-        yawVelocity.setUpdateFrequency(100.0);
+        yaw.setUpdateFrequency(250.0);
+        yawVelocity.setUpdateFrequency(250.0);
         pigeon.optimizeBusUtilization();
 
         this.odometrySignalRefresher = odometrySignalRefresher;
