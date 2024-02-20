@@ -145,7 +145,7 @@ public class RobotContainer {
 
     private void configureButtonBindings() {
         drivetrain.setDefaultCommand(new SwerveDriveCommand(drivetrain, driver));
-//        elevator.setDefaultCommand(new ElevatorManualCommand(elevator, copilot));
+        elevator.setDefaultCommand(new ElevatorManualCommand(elevator, copilot));
 //        indexer.setDefaultCommand(new IntakeCommand(indexer, tramp));
 
         driver.x().onTrue(Commands.runOnce(drivetrain::stopWithX, drivetrain));
@@ -174,7 +174,7 @@ public class RobotContainer {
 //        copilot.leftTrigger(0.5).whileTrue(new ElevatorSetpointCommand(elevator, ElevatorState.CLIMB));
         copilot.leftBumper().whileTrue(new TrampScoreSequence(tramp, indexer, elevator));
 
-        copilot.rightStick().whileTrue(new ElevatorManualCommand(elevator, copilot));
+
 
 
 
