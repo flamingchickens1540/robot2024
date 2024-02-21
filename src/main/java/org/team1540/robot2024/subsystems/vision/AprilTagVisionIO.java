@@ -7,9 +7,9 @@ import org.littletonrobotics.junction.AutoLog;
 public interface AprilTagVisionIO {
     @AutoLog
     class AprilTagVisionIOInputs {
-        public Pose2d estimatedPoseMeters = new Pose2d();
+        public Pose3d estimatedPoseMeters = new Pose3d();
         public int[] seenTagIDs = {};
-        public Pose2d[] tagPosesMeters = {};
+        public Pose3d[] tagPosesMeters = {};
         public double lastMeasurementTimestampSecs = 0.0;
     }
 

@@ -29,7 +29,7 @@ public class AprilTagVisionIOSim implements AprilTagVisionIO {
     private final Supplier<Pose2d> poseSupplier;
 
     private Transform3d cameraTransform;
-    private Pose2d lastEstimatedPose;
+    private Pose3d lastEstimatedPose;
 
     public AprilTagVisionIOSim(String name, Pose3d cameraOffsetMeters, Supplier<Pose2d> poseSupplier) {
         this.visionSystemSim = new VisionSystemSim(name);
@@ -59,7 +59,7 @@ public class AprilTagVisionIOSim implements AprilTagVisionIO {
                 camera,
                 cameraTransform);
         photonEstimator.setMultiTagFallbackStrategy(PhotonPoseEstimator.PoseStrategy.LOWEST_AMBIGUITY);
-        lastEstimatedPose = poseSupplier.get();
+        lastEstimatedPose = new Pose3d(poseSupplier.get());
     }
 
     @Override
@@ -70,17 +70,17 @@ public class AprilTagVisionIOSim implements AprilTagVisionIO {
         List<PhotonTrackedTarget> trackedTargets = camera.getLatestResult().getTargets();
 
         if (estimatedPose.isPresent()) {
-            lastEstimatedPose = estimatedPose.get().estimatedPose.toPose2d();
+            lastEstimatedPose = estimatedPose.get().estimatedPose;
             inputs.estimatedPoseMeters = lastEstimatedPose;
             inputs.lastMeasurementTimestampSecs = estimatedPose.get().timestampSeconds;
         }
         inputs.seenTagIDs = new int[trackedTargets.size()];
-        inputs.tagPosesMeters = new Pose2d[trackedTargets.size()];
+        inputs.tagPosesMeters = new Pose3d[trackedTargets.size()];
         for (int i = 0; i < trackedTargets.size(); i++) {
             PhotonTrackedTarget target = trackedTargets.get(i);
             inputs.seenTagIDs[i] = target.getFiducialId();
             inputs.tagPosesMeters[i] =
-                    new Pose3d().plus(target.getBestCameraToTarget().plus(cameraTransform.inverse())).toPose2d();
+                    new Pose3d().plus(target.getBestCameraToTarget().plus(cameraTransform.inverse()));
         }
     }
 
