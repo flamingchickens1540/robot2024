@@ -1,6 +1,5 @@
 package org.team1540.robot2024.commands.autos;
 
-import org.team1540.robot2024.Constants;
 import org.team1540.robot2024.commands.shooter.ShootSequence;
 import org.team1540.robot2024.subsystems.drive.Drivetrain;
 import org.team1540.robot2024.subsystems.indexer.Indexer;
