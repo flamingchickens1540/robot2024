@@ -53,9 +53,9 @@ public class DriveWithSpeakerTargetingCommand extends Command {
 
         Rotation2d targetRot =
                 drivetrain.getPose().minus(speakerPose).getTranslation().getAngle()
-                        .rotateBy(isFlipped ? Rotation2d.fromDegrees(0) : Rotation2d.fromDegrees(180));
+                        .rotateBy(isFlipped ? Rotation2d.fromDegrees(180) : Rotation2d.fromDegrees(0));
         Logger.recordOutput("Targeting/setpointPose", new Pose2d(drivetrain.getPose().getTranslation(), targetRot));
-        Logger.recordOutput("Targeting/speakerPose", speakerPose);
+        Logger.recordOutput("Targeting/rotErrorDegrees", Math.abs(targetRot.minus(drivetrain.getRotation()).getDegrees()));
 
         double xPercent = MathUtil.applyDeadband((-controller.getLeftY()), 0.1);
         double yPercent = MathUtil.applyDeadband((-controller.getLeftX()), 0.1);

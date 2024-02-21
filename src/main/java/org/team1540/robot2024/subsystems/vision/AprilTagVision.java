@@ -90,7 +90,6 @@ public class AprilTagVision extends SubsystemBase {
 
     @Override
     public void periodic() {
-        // TODO: need to change if one camera is stationary
         frontCameraIO.setPoseOffset(
                 new Pose3d(
                         FRONT_CAMERA_POSE.getX(),
@@ -124,30 +123,4 @@ public class AprilTagVision extends SubsystemBase {
             if (poseAcceptor.shouldAcceptVision(pose)) visionPoseConsumer.accept(pose);
         }
     }
-//    /**
-//     * Gets the estimated pose by fusing individual computed poses from each camera.
-//     * Returns null if no tags seen, in simulation, or if the elevator is moving
-//     * too fast
-//     */
-//    public Optional<TimestampedVisionPose> getEstimatedPose() {
-//        boolean useFrontPose = poseAcceptor.shouldAcceptVision(frontPose);
-//        boolean useRearPose = poseAcceptor.shouldAcceptVision(rearPose);
-//
-//        if (useFrontPose && useRearPose) {
-//            int[] allTagIDs = Arrays.copyOf(frontPose.seenTagIDs, frontPose.getNumTagsSeen() + rearPose.getNumTagsSeen());
-//            System.arraycopy(rearPose.seenTagIDs, 0, allTagIDs, frontPose.getNumTagsSeen(), rearPose.getNumTagsSeen());
-//            Pose2d[] allTagPoses = Arrays.copyOf(frontPose.tagPosesMeters, frontPose.getNumTagsSeen() + rearPose.getNumTagsSeen());
-//            System.arraycopy(rearPose.tagPosesMeters, 0, allTagPoses, frontPose.getNumTagsSeen(), rearPose.getNumTagsSeen());
-//
-//            return Optional.of(new TimestampedVisionPose(
-//                    (frontPose.timestampSecs + rearPose.timestampSecs) / 2,
-//                    frontPose.poseMeters.interpolate(rearPose.poseMeters, 0.5),
-//                    allTagIDs,
-//                    allTagPoses,
-//                    true,
-//                    true));
-//        } else if (useFrontPose) return Optional.of(frontPose);
-//        else if (useRearPose) return Optional.of(rearPose);
-//        else return Optional.empty();
-//    }
 }
