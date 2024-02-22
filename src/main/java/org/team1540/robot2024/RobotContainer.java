@@ -1,11 +1,6 @@
 package org.team1540.robot2024;
 
-import edu.wpi.first.math.geometry.Pose2d;
-import edu.wpi.first.math.geometry.Rotation2d;
-
 import edu.wpi.first.wpilibj.DriverStation;
-import edu.wpi.first.wpilibj.GenericHID;
-import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj2.command.*;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
@@ -14,7 +9,6 @@ import org.team1540.robot2024.commands.FeedForwardCharacterization;
 import org.team1540.robot2024.commands.climb.ClimbSequence;
 import org.team1540.robot2024.commands.drivetrain.DriveWithSpeakerTargetingCommand;
 import org.team1540.robot2024.commands.drivetrain.SwerveDriveCommand;
-import org.team1540.robot2024.commands.shooter.TuneShooterCommand;
 import org.team1540.robot2024.commands.tramp.TrampScoreSequence;
 import org.team1540.robot2024.commands.elevator.ElevatorManualCommand;
 import org.team1540.robot2024.commands.indexer.IntakeCommand;
@@ -61,17 +55,6 @@ public class RobotContainer {
         switch (Constants.currentMode) {
             case REAL:
                 // Real robot, instantiate hardware IO implementations
-                // TODO: 2/16/2024 switch these back to the correct implementations when merging
-//                drivetrain = Drivetrain.createReal(odometrySignalRefresher);
-//                tramp = Tramp.createReal();
-//                shooter = Shooter.createReal();
-//                elevator = Elevator.createReal();
-//                indexer = Indexer.createReal();
-//                aprilTagVision = AprilTagVision.createReal(
-//                        drivetrain::addVisionMeasurement,
-//                        elevator::getPosition,
-//                        new VisionPoseAcceptor(drivetrain::getChassisSpeeds, () -> 0.0));
-//                drivetrain = Drivetrain.createReal(odometrySignalRefresher);
                 drivetrain = Drivetrain.createReal(odometrySignalRefresher);
                 tramp = Tramp.createReal();
                 shooter = Shooter.createReal();
@@ -80,10 +63,7 @@ public class RobotContainer {
                 aprilTagVision = AprilTagVision.createReal(
                         drivetrain::addVisionMeasurement,
                         elevator::getPosition,
-                        new VisionPoseAcceptor(
-                                drivetrain::getChassisSpeeds,
-                                elevator::getVelocity
-                        ));
+                        new VisionPoseAcceptor(drivetrain::getChassisSpeeds, elevator::getVelocity));
                 break;
             case SIM:
                 // Sim robot, instantiate physics sim IO implementations
@@ -96,7 +76,7 @@ public class RobotContainer {
                         drivetrain::addVisionMeasurement,
                         drivetrain::getPose,
                         elevator::getPosition,
-                        new VisionPoseAcceptor(drivetrain::getChassisSpeeds, () -> 0.0));
+                        new VisionPoseAcceptor(drivetrain::getChassisSpeeds, elevator::getVelocity));
                 break;
             default:
                 // Replayed robot, disable IO implementations
@@ -153,15 +133,7 @@ public class RobotContainer {
 
         driver.x().onTrue(Commands.runOnce(drivetrain::stopWithX, drivetrain));
 //        driver.y().toggleOnTrue(new DriveWithSpeakerTargetingCommand(drivetrain, driver));
-        driver.y().onTrue(
-                Commands.runOnce(
-                        () -> drivetrain.setPose(new Pose2d(drivetrain.getPose().getTranslation(),
-                                DriverStation.getAlliance().orElse(null) == DriverStation.Alliance.Red
-                                        ? Rotation2d.fromDegrees(180)
-                                        : new Rotation2d())),
-                        drivetrain
-                ).ignoringDisable(true)
-        );
+        driver.y().onTrue(Commands.runOnce(drivetrain::zeroFieldOrientationManual).ignoringDisable(true));
 
         driver.a().whileTrue(new DriveWithSpeakerTargetingCommand(drivetrain, driver));
 
