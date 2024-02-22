@@ -155,6 +155,7 @@ public class Robot extends LoggedRobot {
         // this line or comment it out.
 
         // TODO: 2/16/2024 add enabledInit()
+        robotContainer.drivetrain.zeroFieldOrientation();
         robotContainer.elevator.setBrakeMode(true);
         robotContainer.leds.setPattern(Leds.Zone.ELEVATOR_BACK, LedPatternRSLState.matchingColors());
         if (autonomousCommand != null) {
