@@ -11,10 +11,9 @@ import org.photonvision.PhotonPoseEstimator;
 import org.photonvision.simulation.PhotonCameraSim;
 import org.photonvision.simulation.SimCameraProperties;
 import org.photonvision.simulation.VisionSystemSim;
-import org.photonvision.targeting.PhotonTrackedTarget;
+import org.photonvision.targeting.PhotonPipelineResult;
 
 import java.io.IOException;
-import java.util.List;
 import java.util.Optional;
 import java.util.function.Supplier;
 
@@ -67,21 +66,21 @@ public class AprilTagVisionIOSim implements AprilTagVisionIO {
         visionSystemSim.update(poseSupplier.get());
 
         Optional<EstimatedRobotPose> estimatedPose = photonEstimator.update();
-        List<PhotonTrackedTarget> trackedTargets = camera.getLatestResult().getTargets();
+        PhotonPipelineResult latestResult = camera.getLatestResult();
 
         if (estimatedPose.isPresent()) {
             lastEstimatedPose = estimatedPose.get().estimatedPose;
             inputs.estimatedPoseMeters = lastEstimatedPose;
             inputs.lastMeasurementTimestampSecs = estimatedPose.get().timestampSeconds;
         }
-        inputs.seenTagIDs = new int[trackedTargets.size()];
-        inputs.tagPosesMeters = new Pose3d[trackedTargets.size()];
-        for (int i = 0; i < trackedTargets.size(); i++) {
-            PhotonTrackedTarget target = trackedTargets.get(i);
-            inputs.seenTagIDs[i] = target.getFiducialId();
-            inputs.tagPosesMeters[i] =
-                    new Pose3d().plus(target.getBestCameraToTarget().plus(cameraTransform.inverse()));
-        }
+
+        inputs.hasTargets = latestResult.hasTargets();
+        inputs.primaryTagID = inputs.hasTargets ? latestResult.getBestTarget().getFiducialId() : -1;
+        inputs.primaryTagPoseMeters =
+                inputs.hasTargets
+                        ? new Pose3d().plus(
+                                latestResult.getBestTarget().getBestCameraToTarget().plus(cameraTransform.inverse()))
+                        : new Pose3d();
     }
 
     @Override
