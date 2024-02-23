@@ -48,12 +48,12 @@ public final class Constants {
 
     public static class SwerveConfig {
         public static final String CAN_BUS  = IS_COMPETITION_ROBOT ? "swerve" : "swerve";
+        public static final double CAN_UPDATE_FREQUENCY_HZ = 250.0;
         public static final int FRONT_LEFT  = IS_COMPETITION_ROBOT ? 0 : 1;
         public static final int FRONT_RIGHT = IS_COMPETITION_ROBOT ? 0 : 7;
         public static final int BACK_LEFT   = IS_COMPETITION_ROBOT ? 0 : 4;
         public static final int BACK_RIGHT  = IS_COMPETITION_ROBOT ? 0 : 3;
 
-        // TODO: set this id
         public static final int PIGEON_ID = 9;
     }
 
