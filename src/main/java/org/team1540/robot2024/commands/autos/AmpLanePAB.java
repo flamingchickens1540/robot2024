@@ -22,7 +22,7 @@ public class AmpLanePAB extends AutoCommand {
                 new IntakeCommand(indexer, () -> false, 100), //TODO: Tune this
                 new ShootSequence(shooter, indexer),
                 getPath(1).getCommand(drivetrain),
-                new ShootSequence(shooter, indexer),
+                new IntakeCommand(indexer, () -> false, 100),
                 getPath(2).getCommand(drivetrain),
                 new ShootSequence(shooter, indexer)
         );
