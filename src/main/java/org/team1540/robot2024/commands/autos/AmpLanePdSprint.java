@@ -8,9 +8,9 @@ import org.team1540.robot2024.subsystems.shooter.Shooter;
 import org.team1540.robot2024.util.auto.AutoCommand;
 import org.team1540.robot2024.util.auto.PathHelper;
 
-public class AmpLanePd extends AutoCommand {
-    public AmpLanePd (Drivetrain drivetrain, Shooter shooter, Indexer indexer) {
-        super("AmpLanePd");
+public class AmpLanePdSprint extends AutoCommand {
+    public AmpLanePdSprint (Drivetrain drivetrain, Shooter shooter, Indexer indexer) {
+        super("AmpLanePdSprint");
         addPath(
                 PathHelper.fromChoreoPath("AmpLanePd.1"),
                 PathHelper.fromChoreoPath("AmpLanePd.2")
