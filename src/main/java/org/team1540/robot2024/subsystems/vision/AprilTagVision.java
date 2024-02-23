@@ -118,6 +118,7 @@ public class AprilTagVision extends SubsystemBase {
         if (cameraInputs.lastMeasurementTimestampSecs > pose.timestampSecs) {
             pose.timestampSecs = cameraInputs.lastMeasurementTimestampSecs;
             pose.poseMeters = cameraInputs.estimatedPoseMeters.toPose2d();
+            pose.hasTargets = cameraInputs.hasTargets;
             pose.primaryTagID = cameraInputs.primaryTagID;
             pose.primaryTagPose = cameraInputs.primaryTagPoseMeters.toPose2d();
             if (poseAcceptor.shouldAcceptVision(pose)) visionPoseConsumer.accept(pose);
