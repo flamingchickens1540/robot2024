@@ -13,8 +13,8 @@ import edu.wpi.first.math.util.Units;
 import org.team1540.robot2024.util.PhoenixTimeSyncSignalRefresher;
 import org.team1540.robot2024.util.swerve.SwerveFactory;
 
-import static org.team1540.robot2024.Constants.Drivetrain.DRIVE_GEAR_RATIO;
-import static org.team1540.robot2024.Constants.Drivetrain.IS_TURN_MOTOR_INVERTED;
+import static org.team1540.robot2024.Constants.Drivetrain.*;
+import static org.team1540.robot2024.Constants.SwerveConfig.*;
 
 /**
  * Module IO implementation for Talon FX drive motor controller, Talon FX turn motor controller, and
@@ -65,7 +65,7 @@ public class ModuleIOTalonFX implements ModuleIO {
         turnAppliedVolts = turnTalon.getMotorVoltage();
         turnCurrent = turnTalon.getSupplyCurrent();
 
-        BaseStatusSignal.setUpdateFrequencyForAll(250.0, drivePosition, turnPosition); // Required for odometry, use faster rate
+        BaseStatusSignal.setUpdateFrequencyForAll(CAN_UPDATE_FREQUENCY_HZ, drivePosition, turnPosition); // Required for odometry, use faster rate
         BaseStatusSignal.setUpdateFrequencyForAll(
                 50.0,
                 driveVelocity,
