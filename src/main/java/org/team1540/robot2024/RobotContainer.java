@@ -12,6 +12,8 @@ import edu.wpi.first.wpilibj2.command.button.Trigger;
 
 import org.team1540.robot2024.commands.FeedForwardCharacterization;
 import org.team1540.robot2024.commands.climb.ClimbSequence;
+import org.team1540.robot2024.commands.climb.ScoreInTrap;
+import org.team1540.robot2024.commands.climb.TrapAndClimbSequence;
 import org.team1540.robot2024.commands.drivetrain.SwerveDriveCommand;
 import org.team1540.robot2024.commands.shooter.TuneShooterCommand;
 import org.team1540.robot2024.commands.tramp.TrampScoreSequence;
@@ -20,6 +22,7 @@ import org.team1540.robot2024.commands.indexer.IntakeCommand;
 import org.team1540.robot2024.commands.shooter.PrepareShooterCommand;
 import org.team1540.robot2024.commands.shooter.ShootSequence;
 import org.team1540.robot2024.commands.autos.*;
+import org.team1540.robot2024.commands.tramp.TrampShoot;
 import org.team1540.robot2024.commands.tramp.TrampStageSequence;
 import org.team1540.robot2024.subsystems.drive.*;
 import org.team1540.robot2024.subsystems.elevator.Elevator;
@@ -165,7 +168,10 @@ public class RobotContainer {
 
         copilot.rightBumper().whileTrue(new IntakeCommand(indexer, tramp::isNoteStaged, 1));
         copilot.povDown().onTrue(indexer.commandRunIntake(-1));
-        copilot.povUp().whileTrue(new ClimbSequence(elevator, null));
+        copilot.povUp().whileTrue(new ClimbSequence(drivetrain, elevator, null));
+        copilot.povLeft().whileTrue(new TrapAndClimbSequence(drivetrain, elevator, null, tramp));
+        copilot.povCenter().whileTrue(new TrampShoot(tramp));
+        copilot.povRight().whileTrue(new InstantCommand(() -> tramp.setPercent(1))).onFalse(new InstantCommand(tramp::stop));
 //        copilot.leftBumper().onTrue(new ElevatorSetpointCommand(elevator, ElevatorState.BOTTOM));
 //        copilot.a().onTrue(new ShootSequence(shooter, indexer))
 //                .onFalse(Commands.runOnce(shooter::stopFlywheels, shooter));
