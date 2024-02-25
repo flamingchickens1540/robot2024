@@ -194,6 +194,7 @@ public class RobotContainer {
         AutoManager.getInstance().addAuto(new AmpLanePADESprint(drivetrain, shooter, indexer));
         AutoManager.getInstance().addAuto(new CenterLanePCBFSprint(drivetrain, shooter, indexer));
         AutoManager.getInstance().addAuto(new SourceLanePHGSprint(drivetrain, shooter, indexer));
+        AutoManager.getInstance().addAuto(new AmpLanePSprint(drivetrain, shooter, indexer));
     }
 
     /**

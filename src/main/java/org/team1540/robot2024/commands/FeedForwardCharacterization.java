@@ -49,7 +49,6 @@ public class FeedForwardCharacterization extends Command {
             voltageConsumer.accept(voltage);
             data.add(velocitySupplier.get(), voltage);
         }
-        System.out.println("I AM DOing the thing" + timer.get());
     }
 
     // Called once the command ends or is interrupted.

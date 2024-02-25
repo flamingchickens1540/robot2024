@@ -11,7 +11,7 @@ public class ShootAndIntake extends ParallelDeadlineGroup{
                 Commands.sequence(
                         Commands.waitUntil(indexer::isNoteStaged),
                         Commands.waitUntil(() -> !indexer.isNoteStaged()),
-                        Commands.waitSeconds(0.3)
+                        Commands.waitSeconds(0.3) // TODO: Adjust
 
                 ),
                 Commands.startEnd(
