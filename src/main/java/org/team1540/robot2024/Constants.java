@@ -17,7 +17,7 @@ import edu.wpi.first.wpilibj.DriverStation;
  * constants are needed, to reduce verbosity.
  */
 public final class Constants {
-    public static final boolean IS_COMPETITION_ROBOT = false;
+    public static final boolean IS_COMPETITION_ROBOT = true; // Objects.equals(RobotController.getComments(), "comp");
     // Whether to pull PID constants from SmartDashboard
     private static final boolean tuningMode = true; // TODO: DO NOT SET TO TRUE FOR COMP
     private static final Mode simMode = Mode.SIM; // Can also be Mode.REPLAY
@@ -49,10 +49,11 @@ public final class Constants {
     public static class SwerveConfig {
         public static final String CAN_BUS  = IS_COMPETITION_ROBOT ? "swerve" : "swerve";
         public static final double CAN_UPDATE_FREQUENCY_HZ = 250.0;
-        public static final int FRONT_LEFT  = IS_COMPETITION_ROBOT ? 0 : 1;
-        public static final int FRONT_RIGHT = IS_COMPETITION_ROBOT ? 0 : 7;
-        public static final int BACK_LEFT   = IS_COMPETITION_ROBOT ? 0 : 4;
-        public static final int BACK_RIGHT  = IS_COMPETITION_ROBOT ? 0 : 3;
+
+        public static final int FRONT_LEFT  = IS_COMPETITION_ROBOT ? 9 : 1;
+        public static final int FRONT_RIGHT = IS_COMPETITION_ROBOT ? 2 : 7;
+        public static final int BACK_LEFT   = IS_COMPETITION_ROBOT ? 5 : 4;
+        public static final int BACK_RIGHT  = IS_COMPETITION_ROBOT ? 6 : 3;
 
         public static final int PIGEON_ID = 9;
     }
