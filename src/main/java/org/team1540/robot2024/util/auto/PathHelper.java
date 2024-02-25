@@ -55,7 +55,9 @@ public class PathHelper {
     }
 
     public Pose2d getInitialPose() {
-        return initialPose;
+        BooleanSupplier shouldFlip = () -> DriverStation.getAlliance().orElse(null) == DriverStation.Alliance.Red;
+        System.out.println(DriverStation.getAlliance().orElse(null) + " " + shouldFlip.getAsBoolean());
+        return shouldFlip.getAsBoolean() ? GeometryUtil.flipFieldPose(initialPose) : initialPose;
     }
 
     public PathPlannerPath getPath() {
@@ -71,6 +73,15 @@ public class PathHelper {
                 () -> drivetrain.getPose().getTranslation().getDistance((startingPose.get()).getTranslation()) > 1 && shouldRealign); //TODO tune this distance
         Command resetCommand = new InstantCommand(() -> drivetrain.setPose(startingPose.get()));
         return isResetting ? resetCommand.andThen(command) : command;
+    }
+
+    public Command resetToInitialPose(Drivetrain drivetrain){
+        BooleanSupplier shouldFlip = () -> DriverStation.getAlliance().orElse(null) == DriverStation.Alliance.Red;
+        Supplier<Pose2d> startingPose = () -> shouldFlip.getAsBoolean() ? GeometryUtil.flipFieldPose(initialPose) : initialPose;
+        return new ConditionalCommand(
+                AutoBuilder.pathfindToPose(startingPose.get(), Constants.Auto.PATH_CONSTRAINTS),
+                new InstantCommand(),
+                () -> drivetrain.getPose().getTranslation().getDistance((startingPose.get()).getTranslation()) > 1);
     }
 
     public Command getCommand(Drivetrain drivetrain) {
