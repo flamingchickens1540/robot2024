@@ -250,9 +250,9 @@ public final class Constants {
 
     public static class Targeting {
         // TODO: tune these
-        public static final double ROT_KP = 1.18;
+        public static final double ROT_KP = 0.6;
         public static final double ROT_KI = 0.0;
-        public static final double ROT_KD = 0.0;
+        public static final double ROT_KD = 0.028;
 
         public static final Pose2d SPEAKER_POSE =
                 new Pose2d(Units.inchesToMeters(8.861), Units.inchesToMeters(218), new Rotation2d());

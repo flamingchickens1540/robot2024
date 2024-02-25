@@ -9,6 +9,7 @@ import edu.wpi.first.wpilibj2.command.button.Trigger;
 
 import org.team1540.robot2024.commands.FeedForwardCharacterization;
 import org.team1540.robot2024.commands.climb.ClimbSequence;
+import org.team1540.robot2024.commands.drivetrain.DriveWithSpeakerTargetingCommand;
 import org.team1540.robot2024.commands.drivetrain.SwerveDriveCommand;
 import org.team1540.robot2024.commands.tramp.TrampScoreSequence;
 import org.team1540.robot2024.commands.elevator.ElevatorManualCommand;
@@ -138,6 +139,8 @@ public class RobotContainer {
         driver.x().onTrue(Commands.runOnce(drivetrain::stopWithX, drivetrain));
 //        driver.y().toggleOnTrue(new DriveWithSpeakerTargetingCommand(drivetrain, driver));
         driver.y().onTrue(Commands.runOnce(drivetrain::zeroFieldOrientationManual).ignoringDisable(true));
+
+        driver.a().whileTrue(new DriveWithSpeakerTargetingCommand(drivetrain, driver));
 
 
         copilot.rightBumper().whileTrue(new IntakeCommand(indexer, tramp::isNoteStaged, 1));

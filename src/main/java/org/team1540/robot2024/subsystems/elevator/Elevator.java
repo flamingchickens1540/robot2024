@@ -2,6 +2,7 @@ package org.team1540.robot2024.subsystems.elevator;
 
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj.RobotState;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import org.littletonrobotics.junction.AutoLogOutput;
 import org.littletonrobotics.junction.Logger;
@@ -57,6 +58,8 @@ public class Elevator extends SubsystemBase {
         io.updateInputs(inputs);
         Logger.processInputs("Elevator", inputs);
         MechanismVisualiser.setElevatorPosition(inputs.positionMeters);
+
+        if (RobotState.isDisabled()) stop();
 
         positionFilter.add(inputs.positionMeters);
 
