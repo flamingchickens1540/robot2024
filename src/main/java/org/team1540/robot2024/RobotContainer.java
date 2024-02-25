@@ -1,6 +1,8 @@
 package org.team1540.robot2024;
 
 import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj.RobotController;
+import edu.wpi.first.wpilibj.util.Color;
 import edu.wpi.first.wpilibj2.command.*;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
@@ -20,6 +22,7 @@ import org.team1540.robot2024.subsystems.elevator.Elevator;
 import org.team1540.robot2024.subsystems.indexer.Indexer;
 import org.team1540.robot2024.subsystems.led.Leds;
 import org.team1540.robot2024.subsystems.led.patterns.LedPatternFlame;
+import org.team1540.robot2024.subsystems.led.patterns.LedPatternRSLState;
 import org.team1540.robot2024.subsystems.shooter.*;
 import org.team1540.robot2024.subsystems.tramp.Tramp;
 import org.team1540.robot2024.subsystems.vision.AprilTagVision;
@@ -27,6 +30,8 @@ import org.team1540.robot2024.util.auto.AutoCommand;
 import org.team1540.robot2024.util.auto.AutoManager;
 import org.team1540.robot2024.util.PhoenixTimeSyncSignalRefresher;
 import org.team1540.robot2024.util.vision.VisionPoseAcceptor;
+
+import java.awt.*;
 
 import static org.team1540.robot2024.Constants.SwerveConfig;
 import static org.team1540.robot2024.Constants.isTuningMode;
@@ -117,12 +122,12 @@ public class RobotContainer {
     }
 
     private void configureLedBindings() {
-        leds.setFatalPattern(LedPatternFlame::new);
+        Runnable onDisconnect = () -> leds.setPatternAll(LedPatternFlame::new, Leds.PatternCriticality.HIGH);
+        onDisconnect.run();
         new Trigger(DriverStation::isDSAttached)
-                .onTrue(Commands.runOnce(leds::clearFatalPattern)
+                .onTrue(Commands.runOnce(() -> leds.clearPatternAll(Leds.PatternCriticality.HIGH))
                             .ignoringDisable(true))
-                .onFalse(Commands.runOnce(() -> leds.setFatalPattern(LedPatternFlame::new))
-                            .ignoringDisable(true));
+                .onFalse(Commands.runOnce(onDisconnect).ignoringDisable(true));
     }
 
     private void configureButtonBindings() {
@@ -149,7 +154,20 @@ public class RobotContainer {
 //        copilot.leftTrigger(0.5).whileTrue(new ElevatorSetpointCommand(elevator, ElevatorState.CLIMB));
         copilot.leftBumper().whileTrue(new TrampScoreSequence(tramp, indexer, elevator));
 
-
+        new Trigger(RobotController::getUserButton).toggleOnTrue(Commands.startEnd(
+                () -> {
+                    elevator.setBrakeMode(false);
+                    leds.setPatternAll(() -> new LedPatternRSLState(Color.kMagenta), Leds.PatternCriticality.EXTREME);
+                    Commands.sequence(
+                            Commands.waitSeconds(5),
+                            Commands.runOnce(() ->leds.clearPatternAll(Leds.PatternCriticality.EXTREME))
+                    ).schedule();
+                },
+                () -> {
+                    elevator.setBrakeMode(true);
+                    leds.clearPatternAll(Leds.PatternCriticality.EXTREME);
+                }
+        ));
 
 
 
