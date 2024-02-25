@@ -12,8 +12,8 @@ public class AmpLanePSprint extends AutoCommand {
         super("AmpLanePSprint");
 
         addPath(
-                PathHelper.fromChoreoPath("AmpLanePSprint.1.traj", true, true),
-                PathHelper.fromChoreoPath("AmpLanePSprint.2.traj"));
+                PathHelper.fromChoreoPath("AmpLanePSprint.1", true, true),
+                PathHelper.fromChoreoPath("AmpLanePSprint.2"));
 
         addCommands(
                 getPath(0).getCommand(drivetrain),
