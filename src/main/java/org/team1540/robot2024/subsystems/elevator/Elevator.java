@@ -6,9 +6,11 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import org.littletonrobotics.junction.AutoLogOutput;
 import org.littletonrobotics.junction.Logger;
 import org.team1540.robot2024.Constants;
+import org.team1540.robot2024.util.LoggedTunableNumber;
 import org.team1540.robot2024.util.MechanismVisualiser;
 import org.team1540.robot2024.util.math.AverageFilter;
 
+import static org.team1540.robot2024.Constants.Elevator.*;
 import static org.team1540.robot2024.Constants.Elevator.POS_ERR_TOLERANCE_METERS;
 
 public class Elevator extends SubsystemBase {
@@ -16,6 +18,10 @@ public class Elevator extends SubsystemBase {
     private final ElevatorIOInputsAutoLogged inputs = new ElevatorIOInputsAutoLogged();
     private final AverageFilter positionFilter = new AverageFilter(10);
     private double setpointMeters;
+
+    private final LoggedTunableNumber kP = new LoggedTunableNumber("Elevator/kP", KP);
+    private final LoggedTunableNumber kI = new LoggedTunableNumber("Elevator/kI", KI);
+    private final LoggedTunableNumber kD = new LoggedTunableNumber("Elevator/kD", KD);
 
     private static boolean hasInstance = false;
 
@@ -53,10 +59,14 @@ public class Elevator extends SubsystemBase {
         MechanismVisualiser.setElevatorPosition(inputs.positionMeters);
 
         positionFilter.add(inputs.positionMeters);
+
+        if (kP.hasChanged(hashCode()) || kI.hasChanged(hashCode()) || kD.hasChanged(hashCode())) {
+            io.configPID(kP.get(), kI.get(), kD.get());
+        }
     }
 
     public void setElevatorPosition(double positionMeters) {
-        positionMeters = MathUtil.clamp(positionMeters, Constants.Elevator.MINIMUM_HEIGHT, Constants.Elevator.MAX_HEIGHT);
+        positionMeters = MathUtil.clamp(positionMeters, MINIMUM_HEIGHT, MAX_HEIGHT);
         setpointMeters = positionMeters;
         io.setSetpointMeters(setpointMeters);
 
@@ -82,5 +92,17 @@ public class Elevator extends SubsystemBase {
 
     public double getPosition() {
         return inputs.positionMeters;
+    }
+
+    public double getVelocity() {
+        return inputs.velocityMPS;
+    }
+
+    public void setBrakeMode(boolean isBrakeMode) {
+        io.setBrakeMode(isBrakeMode);
+    }
+
+    public void holdPosition() {
+        setElevatorPosition(inputs.positionMeters);
     }
 }

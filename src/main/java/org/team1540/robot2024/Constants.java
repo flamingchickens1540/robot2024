@@ -17,7 +17,7 @@ import edu.wpi.first.wpilibj.DriverStation;
  * constants are needed, to reduce verbosity.
  */
 public final class Constants {
-    public static final boolean IS_COMPETITION_ROBOT = true;
+    public static final boolean IS_COMPETITION_ROBOT = true; // Objects.equals(RobotController.getComments(), "comp");
     // Whether to pull PID constants from SmartDashboard
     private static final boolean tuningMode = true; // TODO: DO NOT SET TO TRUE FOR COMP
     private static final Mode simMode = Mode.SIM; // Can also be Mode.REPLAY
@@ -47,14 +47,15 @@ public final class Constants {
     public static final double LOOP_PERIOD_SECS = 0.02;
 
     public static class SwerveConfig {
-        public static final String CAN_BUS  = IS_COMPETITION_ROBOT ? "" : "";
-        public static final int FRONT_LEFT  = IS_COMPETITION_ROBOT ? 3 : 0;
-        public static final int FRONT_RIGHT = IS_COMPETITION_ROBOT ? 4 : 0;
-        public static final int BACK_LEFT   = IS_COMPETITION_ROBOT ? 7 : 0;
-        public static final int BACK_RIGHT  = IS_COMPETITION_ROBOT ? 1 : 0;
+        public static final String CAN_BUS  = IS_COMPETITION_ROBOT ? "swerve" : "swerve";
+        public static final double CAN_UPDATE_FREQUENCY_HZ = 250.0;
 
-        // TODO: set this id
-        public static final int PIGEON_ID = 0;
+        public static final int FRONT_LEFT  = IS_COMPETITION_ROBOT ? 9 : 1;
+        public static final int FRONT_RIGHT = IS_COMPETITION_ROBOT ? 2 : 7;
+        public static final int BACK_LEFT   = IS_COMPETITION_ROBOT ? 5 : 4;
+        public static final int BACK_RIGHT  = IS_COMPETITION_ROBOT ? 6 : 3;
+
+        public static final int PIGEON_ID = 9;
     }
 
     public static class Drivetrain {
@@ -63,9 +64,9 @@ public final class Constants {
         public static final boolean IS_TURN_MOTOR_INVERTED = true;
         public static final double WHEEL_RADIUS = Units.inchesToMeters(2.0);
 
-        public static final double MAX_LINEAR_SPEED = Units.feetToMeters(14.5);
-        public static final double TRACK_WIDTH_X = Units.inchesToMeters(25.0);
-        public static final double TRACK_WIDTH_Y = Units.inchesToMeters(25.0);
+        public static final double MAX_LINEAR_SPEED = Units.feetToMeters(16);
+        public static final double TRACK_WIDTH_X = Units.inchesToMeters(18.75);
+        public static final double TRACK_WIDTH_Y = Units.inchesToMeters(19.75);
         public static final double DRIVE_BASE_RADIUS = Math.hypot(TRACK_WIDTH_X / 2.0, TRACK_WIDTH_Y / 2.0);
         public static final double MAX_ANGULAR_SPEED = MAX_LINEAR_SPEED / DRIVE_BASE_RADIUS;
     }
@@ -80,10 +81,9 @@ public final class Constants {
     }
 
     public static class Indexer {
-
-        public static final int BEAM_BREAK_ID = 0;
-        public static final int INTAKE_ID = 11;
-        public static final int FEEDER_ID = 12;
+        public static final int BEAM_BREAK_ID = 8;
+        public static final int INTAKE_ID = 13;
+        public static final int FEEDER_ID = 15;
 
         // TODO: fix these constants
         public static final double FEEDER_KP = 0.5;
@@ -103,9 +103,11 @@ public final class Constants {
         public static final String FRONT_CAMERA_NAME = "limelight-front";
         public static final String REAR_CAMERA_NAME = "limelight-rear";
 
+        //0.341306
+        //0.609832
         // TODO: measure these offsets
-        public static final Pose3d FRONT_CAMERA_POSE = new Pose3d(0, 0, 0.5, new Rotation3d());
-        public static final Pose3d REAR_CAMERA_POSE = new Pose3d(0, 0, 0.5, new Rotation3d(0, 0, Math.PI));
+        public static final Pose3d FRONT_CAMERA_POSE = new Pose3d(0.0975290, 0, 0.665479, new Rotation3d(0, Math.toRadians(25), 0));
+        public static final Pose3d REAR_CAMERA_POSE = new Pose3d(0.03639, 0, 0.715274, new Rotation3d(0, 0, Math.PI));
 
         // TODO: find these values
         public static final double MAX_VISION_DELAY_SECS = 0.08;
@@ -126,15 +128,15 @@ public final class Constants {
     public static class Shooter {
         public static class Flywheels {
             // TODO: determine ids
-            public static final int LEFT_ID = 11;
-            public static final int RIGHT_ID = 12;
+            public static final int LEFT_ID = 12;
+            public static final int RIGHT_ID = 11;
 
             public static final double GEAR_RATIO = 24.0 / 36.0;
             public static final double SIM_MOI = 4.08232288e-4;
 
             // TODO: if it's tuned in simulation, it's tuned in real life
-            public static final double KP = 0.1;
-            public static final double KI = 0.0;
+            public static final double KP = 0.53;
+            public static final double KI = 0.2;
             public static final double KD = 0.0;
             public static final double KS = 0.26925;
             public static final double KV = 0.07485; // TODO: this is what recalc says, may have to tune
@@ -144,7 +146,7 @@ public final class Constants {
 
         public static class Pivot {
             // TODO: determine ids
-            public static final int MOTOR_ID = 0;
+            public static final int MOTOR_ID = 9;
             public static final int CANCODER_ID = 0;
 
             // TODO: figure this out
@@ -185,27 +187,27 @@ public final class Constants {
 
     public static class Elevator {
         public static final double CHAIN_HEIGHT_METERS = Units.inchesToMeters(28.25);
-        public static final double MINIMUM_HEIGHT = Units.inchesToMeters(6.0);
+        public static final double MINIMUM_HEIGHT = Units.inchesToMeters(0.0);
         public static final double CLIMBING_HOOKS_MINIMUM_HEIGHT = Units.inchesToMeters(12.0);
         public static final double MAX_HEIGHT = MINIMUM_HEIGHT + Units.inchesToMeters(21.0); //TODO: Fix these constants to be more accurate
         public static final double CLIMBING_HOOKS_MAX_HEIGHT = CLIMBING_HOOKS_MINIMUM_HEIGHT + MAX_HEIGHT - MINIMUM_HEIGHT;
 
-        public static final double GEAR_RATIO = 2.0; //TODO: Get constants right sometime
-        public static final int LEADER_ID = -1;
-        public static final int FOLLOWER_ID = -1;
-        public static final double KS = 0.25;
-        public static final double KV = 0.12;
-        public static final double KA = 0.01;
-        public static final double KP = 4.8;
-        public static final double KI = 0;
-        public static final double KD = 0.1;
+        public static final double GEAR_RATIO = 11.571; //TODO: Get constants right sometime
+        public static final int LEADER_ID = 7;
+        public static final int FOLLOWER_ID = 8;
+        public static final double KS = 0.03178;
+        public static final double KV = 0.82983;
+        public static final double KA = 0.00;
+        public static final double KP = 300;
+        public static final double KI = 50;
+        public static final double KD = 1;
         public static final double KG = 0;
-        public static final double CRUISE_VELOCITY_MPS = 2;
-        public static final double MAXIMUM_ACCELERATION_MPS2 = 20;
-        public static final double JERK_MPS3 = 40;
-        public static final double SPROCKET_RADIUS_M = 0.022;
+        public static final double CRUISE_VELOCITY_MPS = 1.2;
+        public static final double MAXIMUM_ACCELERATION_MPS2 = 50;
+        public static final double JERK_MPS3 = 200;
+        public static final double SPROCKET_RADIUS_M = Units.inchesToMeters(1.751/2);
         public static final double SPROCKET_CIRCUMFERENCE_M = 2 * SPROCKET_RADIUS_M * Math.PI;
-        public static final double MOTOR_ROTS_TO_METERS = GEAR_RATIO * SPROCKET_CIRCUMFERENCE_M;
+        public static final double MOTOR_ROTS_PER_METER = GEAR_RATIO / SPROCKET_CIRCUMFERENCE_M;
         public static final double POS_ERR_TOLERANCE_METERS = 0.03;
         public static final double SIM_CARRIAGE_MASS_KG = 1.55; //TODO: check this number :)
 
@@ -225,11 +227,11 @@ public final class Constants {
             /**
              * At height for trap doing :D
              */
-            TRAP(27.0), //TODO: Find these values :D
+            TRAP(0.4), //TODO: Find these values :D
             /**
              * At height for top of initial climb :D
              */
-            AMP(27.0); //TODO: Find these values :D
+            AMP(0.2); //TODO: Find these values :D
 
             public final double heightMeters;
 
@@ -240,10 +242,10 @@ public final class Constants {
     }
 
     public static class Tramp {
-        public static final int BEAM_BREAK_CHANNEL = 1;
+        public static final int BEAM_BREAK_CHANNEL = 9;
         public static final double GEAR_RATIO = 3.0;
         public static final double TRAP_SCORING_TIME_SECONDS = 1.114; //TODO: Find these values :D
-        public static final int MOTOR_ID = -1; //TODO: Configure this later
+        public static final int MOTOR_ID = 17;
     }
 
     public static class Targeting {

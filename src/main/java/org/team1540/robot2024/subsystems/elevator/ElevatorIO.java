@@ -18,6 +18,10 @@ public interface ElevatorIO {
     default void setSetpointMeters(double position) {}
 
     default void setVoltage(double voltage) {}
+
+    default void setBrakeMode(boolean isBrakeMode) {}
+
+    default void configPID(double kP, double kI, double kD) {}
 }
 
 

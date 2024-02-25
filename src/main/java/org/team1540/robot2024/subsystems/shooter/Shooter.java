@@ -3,6 +3,7 @@ package org.team1540.robot2024.subsystems.shooter;
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj.RobotState;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.FunctionalCommand;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
@@ -53,7 +54,8 @@ public class Shooter extends SubsystemBase {
         if (Constants.currentMode != Constants.Mode.REAL) {
             DriverStation.reportWarning("Using real shooter on simulated robot", false);
         }
-        return new Shooter(new ShooterPivotIOTalonFX(), new FlywheelsIOTalonFX());
+//        return new Shooter(new ShooterPivotIOTalonFX(), new FlywheelsIOTalonFX());
+        return new Shooter(new ShooterPivotIO() {}, new FlywheelsIOTalonFX());
     }
 
     public static Shooter createSim() {
@@ -78,6 +80,11 @@ public class Shooter extends SubsystemBase {
         Logger.processInputs("Shooter/Pivot", pivotInputs);
         Logger.processInputs("Shooter/Flywheels", flywheelInputs);
         MechanismVisualiser.setShooterPivotRotation(getPivotPosition());
+
+        if (RobotState.isDisabled()){
+            stopFlywheels();
+            stopPivot();
+        }
 
         // Update tunable numbers
         if (flywheelsKP.hasChanged(hashCode()) || flywheelsKI.hasChanged(hashCode()) || flywheelsKD.hasChanged(hashCode())) {
@@ -195,19 +202,32 @@ public class Shooter extends SubsystemBase {
 
     public Command spinUpCommand(Supplier<Double> leftSetpoint, Supplier<Double> rightSetpoint) {
         return new FunctionalCommand(
-                () -> setFlywheelSpeeds(leftSetpoint.get(), rightSetpoint.get()),
                 () -> {},
+                () -> setFlywheelSpeeds(leftSetpoint.get(), rightSetpoint.get()),
                 (ignored) -> {},
                 this::areFlywheelsSpunUp,
                 this);
     }
 
-    public Command setPivotPositionCommand(Rotation2d setpoint) {
+    public Command setPivotPositionCommand(Supplier<Rotation2d> setpoint) {
         return new FunctionalCommand(
-                () -> setPivotPosition(setpoint),
                 () -> {},
+                () -> setPivotPosition(setpoint.get()),
                 (ignored) -> {},
                 this::isPivotAtSetpoint,
                 this);
+    }
+
+    public Command spinUpAndSetPivotPosition(Supplier<Double> leftSetpoint, Supplier<Double> rightSetpoint, Supplier<Rotation2d> setpoint){
+        return new FunctionalCommand(
+                () -> {},
+                () -> {
+                    setPivotPosition(setpoint.get());
+                    setFlywheelSpeeds(leftSetpoint.get(), rightSetpoint.get());
+                },
+                (ignored) -> {},
+                () -> areFlywheelsSpunUp() && isPivotAtSetpoint(),
+                this
+        );
     }
 }

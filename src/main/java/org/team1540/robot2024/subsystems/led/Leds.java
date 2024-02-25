@@ -3,7 +3,6 @@ package org.team1540.robot2024.subsystems.led;
 import edu.wpi.first.wpilibj.AddressableLED;
 import edu.wpi.first.wpilibj.AddressableLEDBuffer;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
-
 import org.team1540.robot2024.subsystems.led.patterns.LedPattern;
 
 import java.util.function.Supplier;

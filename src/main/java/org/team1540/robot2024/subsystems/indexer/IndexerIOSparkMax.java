@@ -18,14 +18,14 @@ public class IndexerIOSparkMax implements IndexerIO {
 
 
     public IndexerIOSparkMax() {
-        intakeMotor.setIdleMode(CANSparkBase.IdleMode.kBrake);
+        intakeMotor.setIdleMode(CANSparkBase.IdleMode.kCoast);
         intakeMotor.enableVoltageCompensation(12.0);
         intakeMotor.setSmartCurrentLimit(30);
 
-        feederMotor.setIdleMode(CANSparkBase.IdleMode.kBrake);
+        feederMotor.setIdleMode(CANSparkBase.IdleMode.kCoast);
         feederMotor.setInverted(true);
         feederMotor.enableVoltageCompensation(12.0);
-        feederMotor.setSmartCurrentLimit(40);
+        feederMotor.setSmartCurrentLimit(60);
 
         feederPID = feederMotor.getPIDController();
         feederPID.setP(FEEDER_KP, 0);
@@ -42,7 +42,7 @@ public class IndexerIOSparkMax implements IndexerIO {
         inputs.feederCurrentAmps = feederMotor.getOutputCurrent();
         inputs.feederVoltage = feederMotor.getBusVoltage() * feederMotor.getAppliedOutput();
         inputs.feederVelocityRPM = feederMotor.getEncoder().getVelocity();
-        inputs.noteInIntake = indexerBeamBreak.get();
+        inputs.noteInIntake = !indexerBeamBreak.get();
         inputs.setpointRPM = setpointRPM;
         inputs.feederVelocityError = setpointRPM - feederMotor.getEncoder().getVelocity();
     }

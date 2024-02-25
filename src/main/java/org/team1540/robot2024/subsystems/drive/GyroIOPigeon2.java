@@ -8,13 +8,13 @@ import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.util.Units;
 import org.team1540.robot2024.util.PhoenixTimeSyncSignalRefresher;
 
-import static org.team1540.robot2024.Constants.SwerveConfig.PIGEON_ID;
+import static org.team1540.robot2024.Constants.SwerveConfig.*;
 
 /**
  * IO implementation for Pigeon2
  */
 public class GyroIOPigeon2 implements GyroIO {
-    private final Pigeon2 pigeon = new Pigeon2(PIGEON_ID);
+    private final Pigeon2 pigeon = new Pigeon2(PIGEON_ID, CAN_BUS);
     private final StatusSignal<Double> yaw = pigeon.getYaw();
     private final StatusSignal<Double> yawVelocity = pigeon.getAngularVelocityZDevice();
 
@@ -23,8 +23,8 @@ public class GyroIOPigeon2 implements GyroIO {
     public GyroIOPigeon2(PhoenixTimeSyncSignalRefresher odometrySignalRefresher) {
         pigeon.getConfigurator().apply(new Pigeon2Configuration());
         pigeon.getConfigurator().setYaw(0.0);
-        yaw.setUpdateFrequency(100.0);
-        yawVelocity.setUpdateFrequency(100.0);
+        yaw.setUpdateFrequency(CAN_UPDATE_FREQUENCY_HZ);
+        yawVelocity.setUpdateFrequency(CAN_UPDATE_FREQUENCY_HZ);
         pigeon.optimizeBusUtilization();
 
         this.odometrySignalRefresher = odometrySignalRefresher;

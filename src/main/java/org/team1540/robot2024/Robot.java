@@ -60,7 +60,7 @@ public class Robot extends LoggedRobot {
         switch (Constants.currentMode) {
             case REAL:
                 // Running on a real robot, log to a USB stick ("/U/logs")
-//                Logger.addDataReceiver(new WPILOGWriter());
+                Logger.addDataReceiver(new WPILOGWriter("/media/sda1"));
                 Logger.addDataReceiver(new NT4Publisher());
                 break;
 
@@ -113,6 +113,7 @@ public class Robot extends LoggedRobot {
      */
     @Override
     public void disabledInit() {
+//        robotContainer.elevator.setBrakeMode(false);
         robotContainer.leds.setPattern(Leds.Zone.ELEVATOR_BACK, new LedPatternRainbow(1));
     }
 
@@ -153,6 +154,9 @@ public class Robot extends LoggedRobot {
         // continue until interrupted by another command, remove
         // this line or comment it out.
 
+        // TODO: 2/16/2024 add enabledInit()
+        robotContainer.drivetrain.zeroFieldOrientation();
+        robotContainer.elevator.setBrakeMode(true);
         robotContainer.leds.setPattern(Leds.Zone.ELEVATOR_BACK, LedPatternRSLState.matchingColors());
         if (autonomousCommand != null) {
             autonomousCommand.cancel();

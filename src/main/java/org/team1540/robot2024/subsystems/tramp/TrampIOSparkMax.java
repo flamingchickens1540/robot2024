@@ -15,7 +15,7 @@ public class TrampIOSparkMax implements TrampIO {
     public TrampIOSparkMax() {
         motor.setIdleMode(CANSparkMax.IdleMode.kBrake);
         //Potentially invert motor
-        motor.setSmartCurrentLimit(40);
+        motor.setSmartCurrentLimit(80);
         motor.enableVoltageCompensation(12);
     }
 
@@ -26,7 +26,7 @@ public class TrampIOSparkMax implements TrampIO {
 
     @Override
     public void updateInputs(TrampIOInputs inputs) {
-        inputs.breamBreakTripped = !(beamBreak.get()); //I think returns false when broken... Returns true when broken now.
+        inputs.noteInTramp = !(beamBreak.get()); //I think returns false when broken... Returns true when broken now.
         inputs.velocityRPM = motorEncoder.getVelocity();
         inputs.appliedVolts = motor.getAppliedOutput() * motor.getBusVoltage();
         inputs.currentAmps = motor.getOutputCurrent();
