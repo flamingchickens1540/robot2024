@@ -21,7 +21,7 @@ public class AmpLanePDEF extends AutoCommand {
                 PathHelper.fromChoreoPath("AmpLanePDEF.7")
         );
         addCommands(
-                getPath(0).getCommand(drivetrain),
+                getPath(0).getCommand(drivetrain, true),
                 new ShootSequence(shooter, indexer),
                 getPath(1).getCommand(drivetrain),
                 new IntakeCommand(indexer, () -> false, 100),//TODO: tune this

@@ -12,7 +12,7 @@ public class AmpLanePAB extends AutoCommand {
     public AmpLanePAB (Shooter shooter, Indexer indexer, Drivetrain drivetrain) {
         super("AmpLanePAB");
         addPath(
-                PathHelper.fromChoreoPath("AmpLanePAB.1"),
+                PathHelper.fromChoreoPath("AmpLanePAB.1", true, true),
                 PathHelper.fromChoreoPath("AmpLanePAB.2"),
                 PathHelper.fromChoreoPath("AmpLanePAB.3")
         );
@@ -22,8 +22,9 @@ public class AmpLanePAB extends AutoCommand {
                 new IntakeCommand(indexer, () -> false, 100), //TODO: Tune this
                 new ShootSequence(shooter, indexer),
                 getPath(1).getCommand(drivetrain),
-                new IntakeCommand(indexer, () -> false, 100),
                 getPath(2).getCommand(drivetrain),
+                new ShootSequence(shooter, indexer),
+                new IntakeCommand(indexer, () -> false, 100),
                 new ShootSequence(shooter, indexer)
         );
     }

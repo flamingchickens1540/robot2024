@@ -16,7 +16,7 @@ public class AmpLanePdSprint extends AutoCommand {
                 PathHelper.fromChoreoPath("AmpLanePd.2")
         );
         addCommands(
-                getPath(0).getCommand(drivetrain),
+                getPath(0).getCommand(drivetrain, true),
                 new ShootSequence(shooter, indexer),
                 getPath(0).getCommand(drivetrain),
                 new IntakeCommand(indexer, () -> false, 100) //TODO: tune this

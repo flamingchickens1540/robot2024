@@ -14,16 +14,14 @@ public class SourceLanePhSprint extends AutoCommand {
         addPath(
                 PathHelper.fromChoreoPath("SourceLanePhSprint.1"),
                 PathHelper.fromChoreoPath("SourceLanePhSprint.2"),
-                PathHelper.fromChoreoPath("SourceLanePhSprint.3"),
-                PathHelper.fromChoreoPath("SourceLanePhSprint.4")
+                PathHelper.fromChoreoPath("SourceLanePhSprint.3")
         );
         addCommands(
-                getPath(0).getCommand(drivetrain),
+                getPath(0).getCommand(drivetrain, true),
                 new ShootSequence(shooter, indexer),
                 getPath(1).getCommand(drivetrain),
                 getPath(2).getCommand(drivetrain),
-                new IntakeCommand(indexer, () -> false, 100),//TODO: tune this
-                getPath(3).getCommand(drivetrain)
+                new IntakeCommand(indexer, () -> false, 100)//TODO: tune this
         );
     }
 }

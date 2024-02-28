@@ -17,7 +17,7 @@ public class CenterLanePB extends AutoCommand {
                 PathHelper.fromChoreoPath("CenterLanePB.1")
         );
         addCommands(
-                getPath(0).getCommand(drivetrain),
+                getPath(0).getCommand(drivetrain, true),
                 new ShootSequence(shooter, indexer),
                 new IntakeCommand(indexer, () -> false, 100), //TODO: Tune this
                 new ShootSequence(shooter, indexer)
