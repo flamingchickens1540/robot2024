@@ -24,7 +24,6 @@ public class AprilTagVision extends SubsystemBase {
 
     private final Consumer<TimestampedVisionPose> visionPoseConsumer;
     private final Supplier<Double> elevatorHeightSupplierMeters;
-    private final VisionPoseAcceptor poseAcceptor;
 
     private final TimestampedVisionPose frontPose = new TimestampedVisionPose();
     private final TimestampedVisionPose rearPose = new TimestampedVisionPose();
@@ -35,8 +34,7 @@ public class AprilTagVision extends SubsystemBase {
             AprilTagVisionIO frontCameraIO,
             AprilTagVisionIO rearCameraIO,
             Consumer<TimestampedVisionPose> visionPoseConsumer,
-            Supplier<Double> elevatorHeightSupplierMeters,
-            VisionPoseAcceptor poseAcceptor) {
+            Supplier<Double> elevatorHeightSupplierMeters) {
         if (hasInstance) throw new IllegalStateException("Instance of vision already exists");
         hasInstance = true;
 
@@ -44,12 +42,10 @@ public class AprilTagVision extends SubsystemBase {
         this.rearCameraIO = rearCameraIO;
         this.visionPoseConsumer = visionPoseConsumer;
         this.elevatorHeightSupplierMeters = elevatorHeightSupplierMeters;
-        this.poseAcceptor = poseAcceptor;
     }
 
     public static AprilTagVision createReal(Consumer<TimestampedVisionPose> visionPoseConsumer,
-                                            Supplier<Double> elevatorHeightSupplierMeters,
-                                            VisionPoseAcceptor poseAcceptor) {
+                                            Supplier<Double> elevatorHeightSupplierMeters) {
         if (Constants.currentMode != Constants.Mode.REAL) {
             DriverStation.reportWarning("Using real vision on simulated robot", false);
         }
@@ -57,14 +53,12 @@ public class AprilTagVision extends SubsystemBase {
                 new AprilTagVisionIOLimelight(FRONT_CAMERA_NAME, FRONT_CAMERA_POSE),
                 new AprilTagVisionIOLimelight(REAR_CAMERA_NAME, REAR_CAMERA_POSE),
                 visionPoseConsumer,
-                elevatorHeightSupplierMeters,
-                poseAcceptor);
+                elevatorHeightSupplierMeters);
     }
 
     public static AprilTagVision createSim(Consumer<TimestampedVisionPose> visionPoseConsumer,
                                            Supplier<Pose2d> drivetrainPoseSupplier,
-                                           Supplier<Double> elevatorHeightSupplierMeters,
-                                           VisionPoseAcceptor poseAcceptor) {
+                                           Supplier<Double> elevatorHeightSupplierMeters) {
         if (Constants.currentMode == Constants.Mode.REAL) {
             DriverStation.reportWarning("Using simulated vision on real robot", false);
         }
@@ -72,8 +66,7 @@ public class AprilTagVision extends SubsystemBase {
                 new AprilTagVisionIOSim(FRONT_CAMERA_NAME, FRONT_CAMERA_POSE, drivetrainPoseSupplier),
                 new AprilTagVisionIOSim(REAR_CAMERA_NAME, REAR_CAMERA_POSE, drivetrainPoseSupplier),
                 visionPoseConsumer,
-                elevatorHeightSupplierMeters,
-                poseAcceptor);
+                elevatorHeightSupplierMeters);
     }
 
     public static AprilTagVision createDummy() {
@@ -84,8 +77,7 @@ public class AprilTagVision extends SubsystemBase {
                 new AprilTagVisionIO() {},
                 new AprilTagVisionIO() {},
                 (pose) -> {},
-                () -> 0.0,
-                new VisionPoseAcceptor(ChassisSpeeds::new, () -> 0.0));
+                () -> 0.0);
     }
 
     @Override
@@ -121,7 +113,7 @@ public class AprilTagVision extends SubsystemBase {
             pose.hasTargets = cameraInputs.hasTargets;
             pose.primaryTagID = cameraInputs.primaryTagID;
             pose.primaryTagPose = cameraInputs.primaryTagPoseMeters.toPose2d();
-            if (poseAcceptor.shouldAcceptVision(pose)) visionPoseConsumer.accept(pose);
+            visionPoseConsumer.accept(pose);
         }
     }
 }

@@ -17,7 +17,7 @@ import edu.wpi.first.wpilibj.DriverStation;
  * constants are needed, to reduce verbosity.
  */
 public final class Constants {
-    public static final boolean IS_COMPETITION_ROBOT = true; // Objects.equals(RobotController.getComments(), "comp");
+    public static final boolean IS_COMPETITION_ROBOT = false; // Objects.equals(RobotController.getComments(), "comp");
     // Whether to pull PID constants from SmartDashboard
     private static final boolean tuningMode = true; // TODO: DO NOT SET TO TRUE FOR COMP
     private static final Mode simMode = Mode.SIM; // Can also be Mode.REPLAY
@@ -62,7 +62,7 @@ public final class Constants {
         public static final double DRIVE_GEAR_RATIO = (50.0 / 14.0) * (17.0 / 27.0) * (45.0 / 15.0);
         public static final double TURN_GEAR_RATIO = 150.0 / 7.0;
         public static final boolean IS_TURN_MOTOR_INVERTED = true;
-        public static final double WHEEL_RADIUS = Units.inchesToMeters(2.0);
+        public static final double WHEEL_RADIUS = Units.inchesToMeters(1.967);
 
         public static final double MAX_LINEAR_SPEED = Units.feetToMeters(16);
         public static final double TRACK_WIDTH_X = Units.inchesToMeters(18.75);

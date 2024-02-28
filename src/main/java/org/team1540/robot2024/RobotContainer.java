@@ -62,35 +62,35 @@ public class RobotContainer {
         switch (Constants.currentMode) {
             case REAL:
                 // Real robot, instantiate hardware IO implementations
-                drivetrain = Drivetrain.createReal(odometrySignalRefresher);
+                elevator = Elevator.createReal();
+                drivetrain = Drivetrain.createReal(odometrySignalRefresher,elevator::getVelocity);
                 tramp = Tramp.createReal();
                 shooter = Shooter.createReal();
-                elevator = Elevator.createReal();
                 indexer = Indexer.createReal();
                 aprilTagVision = AprilTagVision.createReal(
                         drivetrain::addVisionMeasurement,
-                        elevator::getPosition,
-                        new VisionPoseAcceptor(drivetrain::getChassisSpeeds, elevator::getVelocity));
+                        elevator::getPosition);
                 break;
             case SIM:
                 // Sim robot, instantiate physics sim IO implementations
-                drivetrain = Drivetrain.createSim();
+                elevator = Elevator.createSim();
+                drivetrain = Drivetrain.createSim(elevator::getVelocity);
                 tramp = Tramp.createSim();
                 shooter = Shooter.createSim();
-                elevator = Elevator.createSim();
+
                 indexer = Indexer.createSim();
                 aprilTagVision = AprilTagVision.createSim(
                         drivetrain::addVisionMeasurement,
                         drivetrain::getPose,
-                        elevator::getPosition,
-                        new VisionPoseAcceptor(drivetrain::getChassisSpeeds, elevator::getVelocity));
+                        elevator::getPosition);
                 break;
             default:
                 // Replayed robot, disable IO implementations
+                elevator = Elevator.createDummy();
                 drivetrain = Drivetrain.createDummy();
                 tramp = Tramp.createDummy();
                 shooter = Shooter.createDummy();
-                elevator = Elevator.createDummy();
+
                 indexer = Indexer.createDummy();
                 aprilTagVision = AprilTagVision.createDummy();
                 break;
@@ -149,7 +149,7 @@ public class RobotContainer {
         copilot.povDown().onTrue(indexer.commandRunIntake(-1));
         copilot.povUp().whileTrue(new ClimbSequence(drivetrain, elevator, null));
         copilot.povLeft().whileTrue(new TrapAndClimbSequence(drivetrain, elevator, null, tramp));
-        copilot.povCenter().whileTrue(new TrampShoot(tramp));
+//        copilot.povCenter().whileTrue(new TrampShoot(tramp));
         copilot.povRight().whileTrue(new InstantCommand(() -> tramp.setPercent(1))).onFalse(new InstantCommand(tramp::stop));
 //        copilot.leftBumper().onTrue(new ElevatorSetpointCommand(elevator, ElevatorState.BOTTOM));
 //        copilot.a().onTrue(new ShootSequence(shooter, indexer))
@@ -208,7 +208,7 @@ public class RobotContainer {
         AutoManager.getInstance().addAuto(new DriveSinglePath("AmpLaneTaxi", drivetrain));
         AutoManager.getInstance().addAuto(new DriveSinglePath("AmpLaneSprint", drivetrain));
         AutoManager.getInstance().addDefaultAuto(new DriveSinglePath("CenterLaneTaxi", drivetrain));
-        AutoManager.getInstance().addAuto(new DriveSinglePath("CenterLaneSprint", drivetrain));
+        AutoManager.getInstance().addAuto(new DriveSinglePath("CenterLaneSprint", drivetrain, true, true));
         AutoManager.getInstance().addAuto(new DriveSinglePath("SourceLaneTaxi", drivetrain));
         AutoManager.getInstance().addAuto(new DriveSinglePath("SourceLaneSprint", drivetrain));
         AutoManager.getInstance().addAuto(new DriveSinglePath("SQUARFE", drivetrain));
@@ -218,6 +218,8 @@ public class RobotContainer {
         AutoManager.getInstance().addAuto(new CenterLanePCBFSprint(drivetrain, shooter, indexer));
         AutoManager.getInstance().addAuto(new SourceLanePHGSprint(drivetrain, shooter, indexer));
         AutoManager.getInstance().addAuto(new AmpLanePSprint(drivetrain, shooter, indexer));
+        AutoManager.getInstance().addAuto(new CenterLaneSprintBonus(drivetrain));
+        AutoManager.getInstance().addAuto(new StraightForward(drivetrain));
     }
 
     /**

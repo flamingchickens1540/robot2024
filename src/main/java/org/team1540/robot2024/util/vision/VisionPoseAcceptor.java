@@ -1,6 +1,7 @@
 package org.team1540.robot2024.util.vision;
 
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
+import edu.wpi.first.wpilibj.RobotState;
 import edu.wpi.first.wpilibj.Timer;
 
 import java.util.function.Supplier;
@@ -22,7 +23,7 @@ public class VisionPoseAcceptor {
         ChassisSpeeds robotVelocity = robotVelocitySupplier.get();
         double elevatorVelocity = elevatorVelocitySupplier.get();
         // Do not accept poses that have too much delay
-        if (Timer.getFPGATimestamp() - visionPose.timestampSecs >= MAX_VISION_DELAY_SECS) return false;
+//        if (Timer.getFPGATimestamp() - visionPose.timestampSecs >= MAX_VISION_DELAY_SECS) return false;
 
         // Do not accept poses that see too little tags
         if (!visionPose.hasTargets) return false;

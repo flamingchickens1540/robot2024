@@ -14,11 +14,16 @@ import org.team1540.robot2024.util.vision.AprilTagsCrescendo;
 
 import java.util.function.Supplier;
 
-public class ClimbSequence extends SequentialCommandGroup {
-    public ClimbSequence(Drivetrain drivetrain, Elevator elevator, Hooks hooks) { //TODO: Write servos no idea how they are supposed to work for now, add them somewhere :D
+public class ClimbSequence extends ParallelCommandGroup {
+    private final Drivetrain drivetrain;
+
+    public ClimbSequence(Drivetrain drivetrain, Elevator elevator, Hooks hooks) {
+        this.drivetrain = drivetrain;
 //        PathHelper pathHelper = PathHelper.fromChoreoPath("Tag14");
 //        PathHelper.fromChoreoPath("Tag14").getPath().getStartingDifferentialPose()
         addCommands(
+                Commands.startEnd(() -> {}, drivetrain::unblockTags),
+                Commands.sequence(
                 new ParallelCommandGroup(
                         new ElevatorSetpointCommand(elevator, ElevatorState.BOTTOM),
                         new SequentialCommandGroup(
@@ -33,6 +38,7 @@ public class ClimbSequence extends SequentialCommandGroup {
                 //TODO: Put whatever drive/alignment command we plan on using here
 //                new ElevatorSetpointCommand(elevator, ElevatorState.BOTTOM)
 //                hooks.deployHooksCommand() //TODO: Deploy hooks
+                )
         );
     }
 
@@ -43,14 +49,16 @@ public class ClimbSequence extends SequentialCommandGroup {
                 AprilTagsCrescendo.getInstance().getTag(AprilTagsCrescendo.Tags.CLIMB_AMP).getTranslation().toTranslation2d());
         double source = position.get().getTranslation().getDistance(
                 AprilTagsCrescendo.getInstance().getTag(AprilTagsCrescendo.Tags.CLIMB_SOURCE).getTranslation().toTranslation2d());
+        Command pathCmd;
         if(far < amp && far < source){
-            return AutoBuilder.pathfindThenFollowPath(PathHelper.fromChoreoPath("Tag14").getPath(), Constants.Auto.PATH_CONSTRAINTS);
+            pathCmd= AutoBuilder.pathfindThenFollowPath(PathHelper.fromChoreoPath("Tag14").getPath(), Constants.Auto.PATH_CONSTRAINTS);
         }
         else if(amp < source){
-            return AutoBuilder.pathfindThenFollowPath(PathHelper.fromChoreoPath("Tag15").getPath(), Constants.Auto.PATH_CONSTRAINTS);
+            pathCmd= AutoBuilder.pathfindThenFollowPath(PathHelper.fromChoreoPath("Tag15").getPath(), Constants.Auto.PATH_CONSTRAINTS);
         }
         else{
-            return AutoBuilder.pathfindThenFollowPath(PathHelper.fromChoreoPath("Tag16").getPath(), Constants.Auto.PATH_CONSTRAINTS);
+            pathCmd= AutoBuilder.pathfindThenFollowPath(PathHelper.fromChoreoPath("Tag16").getPath(), Constants.Auto.PATH_CONSTRAINTS);
         }
+        return Commands.runOnce(drivetrain::blockTags).andThen(pathCmd).andThen(Commands.runOnce(drivetrain::unblockTags));
     }
 }

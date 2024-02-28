@@ -41,13 +41,13 @@ public class AprilTagsCrescendo {
         return tags;
     }
 
-    public static Pose3d getTag(int tagID){
+    public Pose3d getTag(int tagID){
         return tags.getTagPose(tagID).get();
     }
-    public static Pose3d getTag(Tags tag){
+    public Pose3d getTag(Tags tag){
         return getTag(tag, DriverStation.getAlliance().orElse(null));
     }
-    public static Pose3d getTag(Tags tag, DriverStation.Alliance alliance){
+    public Pose3d getTag(Tags tag, DriverStation.Alliance alliance){
         return getTag(alliance == DriverStation.Alliance.Red ? tag.red : tag.blue);
     }
 }

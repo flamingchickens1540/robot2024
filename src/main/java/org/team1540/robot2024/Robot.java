@@ -14,6 +14,7 @@ import org.team1540.robot2024.subsystems.led.*;
 import org.team1540.robot2024.subsystems.led.patterns.*;
 import org.team1540.robot2024.util.LoggedTunableNumber;
 import org.team1540.robot2024.util.MechanismVisualiser;
+import org.team1540.robot2024.util.vision.AprilTagsCrescendo;
 
 /**
  * The VM is configured to automatically run this class, and to call the functions corresponding to
@@ -82,6 +83,7 @@ public class Robot extends LoggedRobot {
         // Instantiate our RobotContainer. This will perform all our button bindings,
         // and put our autonomous chooser on the dashboard.
         robotContainer = new RobotContainer();
+        AprilTagsCrescendo.getInstance().getTag(1);
     }
 
     /**
@@ -108,6 +110,7 @@ public class Robot extends LoggedRobot {
     @Override
     public void disabledInit() {
 //        robotContainer.elevator.setBrakeMode(false);
+        robotContainer.drivetrain.unblockTags();
         robotContainer.leds.setPattern(Leds.Zone.ELEVATOR_BACK, new LedPatternRainbow(1));
     }
 
@@ -129,6 +132,7 @@ public class Robot extends LoggedRobot {
     @Override
     public void autonomousInit() {
         enabledInit();
+        robotContainer.drivetrain.blockTags();
         autonomousCommand = robotContainer.getAutonomousCommand();
         // schedule the autonomous command (example)
         if (autonomousCommand != null) {

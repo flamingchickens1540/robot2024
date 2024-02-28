@@ -15,7 +15,7 @@ public class TrapAndClimbSequence extends SequentialCommandGroup {
 
     public TrapAndClimbSequence(Drivetrain drivetrain, Elevator elevator, Hooks hooks, Tramp tramp) {
         addCommands(
-                new ClimbSequence(drivetrain, elevator, hooks), //Climb
+//                new ClimbSequence(drivetrain, elevator, hooks), //Climb
                 new WaitCommand(0.1), //TODO: Perhaps remove this or change it depending on how climbing turns out to be
                 new ElevatorSetpointCommand(elevator, ElevatorState.TOP),
                 new ParallelDeadlineGroup(
