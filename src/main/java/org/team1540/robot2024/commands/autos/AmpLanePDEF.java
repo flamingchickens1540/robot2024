@@ -24,15 +24,15 @@ public class AmpLanePDEF extends AutoCommand {
                 getPath(0).getCommand(drivetrain, true),
                 new ShootSequence(shooter, indexer),
                 getPath(1).getCommand(drivetrain),
-                new IntakeCommand(indexer, () -> false, 100),//TODO: tune this
+                new IntakeCommand(indexer, () -> false, 1),//TODO: tune this
                 getPath(2).getCommand(drivetrain),
                 new ShootSequence(shooter, indexer),
                 getPath(3).getCommand(drivetrain),
-                new IntakeCommand(indexer, () -> false, 100),
+                new IntakeCommand(indexer, () -> false, 1),
                 getPath(4).getCommand(drivetrain),
                 new ShootSequence(shooter, indexer),
                 getPath(5).getCommand(drivetrain),
-                new IntakeCommand(indexer, () -> false, 100),
+                new IntakeCommand(indexer, () -> false, 1),
                 getPath(6).getCommand(drivetrain),
                 new ShootSequence(shooter, indexer)
         );

@@ -21,7 +21,7 @@ public class SourceLanePhSprint extends AutoCommand {
                 new ShootSequence(shooter, indexer),
                 getPath(1).getCommand(drivetrain),
                 getPath(2).getCommand(drivetrain),
-                new IntakeCommand(indexer, () -> false, 100)//TODO: tune this
+                new IntakeCommand(indexer, () -> false, 1)//TODO: tune this
         );
     }
 }

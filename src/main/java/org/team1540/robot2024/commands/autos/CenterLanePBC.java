@@ -19,11 +19,11 @@ public class CenterLanePBC extends AutoCommand {
         addCommands(
                 getPath(0).getCommand(drivetrain, true),
                 new ShootSequence(shooter, indexer),
-                new IntakeCommand(indexer, () -> false, 100), //TODO: tune this
+                new IntakeCommand(indexer, () -> false, 1), //TODO: tune this
                 new ShootSequence(shooter, indexer),
                 getPath(1).getCommand(drivetrain),
                 getPath(2).getCommand(drivetrain),
-                new IntakeCommand(indexer, () -> false, 100),
+                new IntakeCommand(indexer, () -> false, 1),
                 getPath(3).getCommand(drivetrain),
                 new ShootSequence(shooter, indexer)
         );

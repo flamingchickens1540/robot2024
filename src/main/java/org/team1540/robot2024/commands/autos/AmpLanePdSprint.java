@@ -19,7 +19,7 @@ public class AmpLanePdSprint extends AutoCommand {
                 getPath(0).getCommand(drivetrain, true),
                 new ShootSequence(shooter, indexer),
                 getPath(0).getCommand(drivetrain),
-                new IntakeCommand(indexer, () -> false, 100) //TODO: tune this
+                new IntakeCommand(indexer, () -> false, 1) //TODO: tune this
         );
     }
 }
