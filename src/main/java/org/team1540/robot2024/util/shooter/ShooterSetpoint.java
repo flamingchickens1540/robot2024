@@ -1,4 +1,4 @@
-package org.team1540.robot2024.util;
+package org.team1540.robot2024.util.shooter;
 
 import edu.wpi.first.math.geometry.Rotation2d;
 

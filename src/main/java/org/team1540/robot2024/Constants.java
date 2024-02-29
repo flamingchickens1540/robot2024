@@ -7,7 +7,7 @@ import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Rotation3d;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.DriverStation;
-import org.team1540.robot2024.util.ShooterSetpoint;
+import org.team1540.robot2024.util.shooter.ShooterSetpoint;
 
 /**
  * The Constants class provides a convenient place for teams to hold robot-wide numerical or boolean
