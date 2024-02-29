@@ -41,11 +41,13 @@ public class ClimbSequence extends ParallelCommandGroup {
                         new SequentialCommandGroup(
 //                                pathHelper.resetToInitialPose(drivetrain),
                                 new ProxyCommand(() -> climbPath(drivetrain::getPose))//                                pathHelper.getCommand(drivetrain)
-                        )
+                        ),
+                        Commands.runOnce(() -> drivetrain.setBrakeMode(false))
                         //TODO: Put whatever drive/alignment command we plan on using here
                 ),
                 Commands.waitSeconds(1),
 //                new ElevatorSetpointCommand(elevator, ElevatorState.CLIMB),
+//                        Commands.runOnce(() -> drivetrain.setBrakeMode(true)),
                 Commands.waitSeconds(1)
                 //TODO: Put whatever drive/alignment command we plan on using here
 //                new ElevatorSetpointCommand(elevator, ElevatorState.BOTTOM)

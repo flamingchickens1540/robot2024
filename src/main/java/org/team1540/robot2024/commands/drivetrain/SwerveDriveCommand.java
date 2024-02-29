@@ -11,14 +11,18 @@ public class SwerveDriveCommand extends Command {
     private static final double deadzone = 0.03;
 
     public SwerveDriveCommand(Drivetrain drivetrain, CommandXboxController controller) {
+
         this.drivetrain = drivetrain;
         this.controller = controller;
         addRequirements(drivetrain);
     }
 
     @Override
+    public void initialize() {
+    }
+
+    @Override
     public void execute() {
-        // TODO: Try using a hole-less deadband here and see what William thinks
         double xPercent   = JoystickUtils.squaredSmartDeadzone(-controller.getLeftY(), deadzone);
         double yPercent   = JoystickUtils.squaredSmartDeadzone(-controller.getLeftX(), deadzone);
         double rotPercent = JoystickUtils.squaredSmartDeadzone(-controller.getRightX(), deadzone);

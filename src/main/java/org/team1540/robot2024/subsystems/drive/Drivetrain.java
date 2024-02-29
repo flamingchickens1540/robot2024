@@ -1,5 +1,6 @@
 package org.team1540.robot2024.subsystems.drive;
 
+import com.ctre.phoenix6.signals.NeutralModeValue;
 import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.pathfinding.Pathfinding;
 import com.pathplanner.lib.util.HolonomicPathFollowerConfig;
@@ -128,6 +129,7 @@ public class Drivetrain extends SubsystemBase {
                 elevatorVelocitySupplier);
     }
 
+
     public static Drivetrain createDummy() {
         if (Constants.currentMode == Constants.Mode.REAL) {
             DriverStation.reportWarning("Using dummy drivetrain on real robot", false);
@@ -225,6 +227,13 @@ public class Drivetrain extends SubsystemBase {
     public void stop() {
         runVelocity(new ChassisSpeeds());
     }
+
+    public void setBrakeMode(boolean enabled) {
+        for (Module module : modules) {
+            module.setBrakeMode(enabled);
+        }
+    }
+
 
     /**
      * Stops the drive and turns the modules to an X arrangement to resist movement. The modules will

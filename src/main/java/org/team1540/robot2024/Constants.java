@@ -151,7 +151,7 @@ public final class Constants {
             public static final int CANCODER_ID = 10;
 
             // TODO: figure this out
-            public static final double CANCODER_OFFSET_ROTS = -0.22314;
+            public static final double CANCODER_OFFSET_ROTS = -0.2502;
             // TODO: determine ratios
             public static final double CANCODER_TO_PIVOT = 54.0 / 30.0;
             public static final double MOTOR_TO_CANCODER = 56.0;

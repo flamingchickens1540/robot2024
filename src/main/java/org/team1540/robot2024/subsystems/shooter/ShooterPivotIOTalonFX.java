@@ -32,18 +32,19 @@ public class ShooterPivotIOTalonFX implements ShooterPivotIO {
         TalonFXConfiguration motorConfig = new TalonFXConfiguration();
 
         // TODO: find invert
-        motorConfig.MotorOutput.NeutralMode = NeutralModeValue.Brake;
+        motorConfig.MotorOutput.NeutralMode = NeutralModeValue.Coast;
         motorConfig.MotorOutput.Inverted = InvertedValue.Clockwise_Positive;
 
-//        motorConfig.Feedback.FeedbackSensorSource = FeedbackSensorSourceValue.RemoteCANcoder;
+        motorConfig.Feedback.FeedbackSensorSource = FeedbackSensorSourceValue.RotorSensor;
 //        motorConfig.Feedback.FeedbackRemoteSensorID = CANCODER_ID;
-//        motorConfig.Feedback.SensorToMechanismRatio = CANCODER_TO_PIVOT;
-//        motorConfig.Feedback.RotorToSensorRatio = MOTOR_TO_CANCODER;
+        motorConfig.Feedback.SensorToMechanismRatio = CANCODER_TO_PIVOT*MOTOR_TO_CANCODER;
+        motorConfig.Feedback.RotorToSensorRatio = 1;
+
 
         motorConfig.SoftwareLimitSwitch.ForwardSoftLimitEnable = true;
-        motorConfig.SoftwareLimitSwitch.ForwardSoftLimitThreshold = MAX_ANGLE.getRotations();
+        motorConfig.SoftwareLimitSwitch.ForwardSoftLimitThreshold = 0.01; //MAX_ANGLE.getRotations();
         motorConfig.SoftwareLimitSwitch.ReverseSoftLimitEnable = true;
-        motorConfig.SoftwareLimitSwitch.ReverseSoftLimitThreshold = MIN_ANGLE.getRotations();
+        motorConfig.SoftwareLimitSwitch.ReverseSoftLimitThreshold = 0.1; //MIN_ANGLE.getRotations();
 
         motorConfig.Slot0.kP = KP;
         motorConfig.Slot0.kI = KI;
@@ -58,7 +59,7 @@ public class ShooterPivotIOTalonFX implements ShooterPivotIO {
         motorConfig.MotionMagic.MotionMagicJerk = JERK_RPS3;
 
         CANcoderConfiguration cancoderConfig = new CANcoderConfiguration();
-        cancoderConfig.MagnetSensor.MagnetOffset = CANCODER_OFFSET_ROTS;
+//        cancoderConfig.MagnetSensor.MagnetOffset = CANCODER_OFFSET_ROTS;
         // TODO: find invert
         cancoderConfig.MagnetSensor.SensorDirection = SensorDirectionValue.CounterClockwise_Positive;
         cancoderConfig.MagnetSensor.AbsoluteSensorRange = AbsoluteSensorRangeValue.Unsigned_0To1;
@@ -76,12 +77,14 @@ public class ShooterPivotIOTalonFX implements ShooterPivotIO {
 
         motor.optimizeBusUtilization();
         cancoder.optimizeBusUtilization();
+        motor.setPosition(0);
     }
 
     @Override
     public void updateInputs(ShooterPivotIOInputs inputs) {
         BaseStatusSignal.refreshAll(position, absolutePosition, velocity, appliedVoltage, current);
         System.out.println(position.getValueAsDouble());
+//        motor.setPosition(absolutePosition.getValueAsDouble() * MOTOR_TO_CANCODER);
         inputs.position = Rotation2d.fromRotations(position.getValueAsDouble());
         inputs.absolutePosition = Rotation2d.fromRotations(absolutePosition.getValueAsDouble() / CANCODER_TO_PIVOT);
         inputs.velocityRPS = velocity.getValueAsDouble();
@@ -91,13 +94,18 @@ public class ShooterPivotIOTalonFX implements ShooterPivotIO {
 
     @Override
     public void setPosition(Rotation2d position) {
-        motor.setControl(positionCtrlReq.withPosition(position.getRotations()));
+//        motor.setControl(positionCtrlReq.withPosition(position.getRotations())
+//                .withLimitReverseMotion(absolutePosition.getValueAsDouble() < 0.3)
+//                .withLimitForwardMotion(absolutePosition.getValueAsDouble() > 0.54));
     }
 
     @Override
     public void setVoltage(double volts) {
 //        System.out.println("SETTING "+volts);
-        motor.setControl(voltageCtrlReq.withOutput(volts));
+//        System.out.println(absolutePosition.getValueAsDouble());
+        motor.setControl(voltageCtrlReq.withOutput(volts)
+                .withLimitReverseMotion(absolutePosition.getValueAsDouble() < 0.03)
+                .withLimitForwardMotion(absolutePosition.getValueAsDouble() > 0.2));
     }
 
     @Override

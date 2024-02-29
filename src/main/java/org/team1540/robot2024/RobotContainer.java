@@ -142,7 +142,10 @@ public class RobotContainer {
 
         driver.x().onTrue(Commands.runOnce(drivetrain::stopWithX, drivetrain));
 //        driver.y().toggleOnTrue(new DriveWithSpeakerTargetingCommand(drivetrain, driver));
-        driver.y().onTrue(Commands.runOnce(drivetrain::zeroFieldOrientationManual).ignoringDisable(true));
+        driver.y().onTrue(Commands.runOnce(() -> {
+            drivetrain.zeroFieldOrientationManual();
+            drivetrain.setBrakeMode(true);
+        }).ignoringDisable(true));
 
         driver.a().whileTrue(new DriveWithSpeakerTargetingCommand(drivetrain, driver));
 
