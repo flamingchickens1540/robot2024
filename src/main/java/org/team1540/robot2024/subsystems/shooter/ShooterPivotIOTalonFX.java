@@ -11,6 +11,7 @@ import com.ctre.phoenix6.hardware.CANcoder;
 import com.ctre.phoenix6.hardware.TalonFX;
 import com.ctre.phoenix6.signals.*;
 import edu.wpi.first.math.geometry.Rotation2d;
+import org.team1540.robot2024.Constants;
 
 import static org.team1540.robot2024.Constants.Shooter.Pivot.*;
 
@@ -32,12 +33,12 @@ public class ShooterPivotIOTalonFX implements ShooterPivotIO {
 
         // TODO: find invert
         motorConfig.MotorOutput.NeutralMode = NeutralModeValue.Brake;
-        motorConfig.MotorOutput.Inverted = InvertedValue.CounterClockwise_Positive;
+        motorConfig.MotorOutput.Inverted = InvertedValue.Clockwise_Positive;
 
-        motorConfig.Feedback.FeedbackSensorSource = FeedbackSensorSourceValue.FusedCANcoder;
-        motorConfig.Feedback.FeedbackRemoteSensorID = CANCODER_ID;
-        motorConfig.Feedback.SensorToMechanismRatio = CANCODER_TO_PIVOT;
-        motorConfig.Feedback.RotorToSensorRatio = MOTOR_TO_CANCODER;
+//        motorConfig.Feedback.FeedbackSensorSource = FeedbackSensorSourceValue.RemoteCANcoder;
+//        motorConfig.Feedback.FeedbackRemoteSensorID = CANCODER_ID;
+//        motorConfig.Feedback.SensorToMechanismRatio = CANCODER_TO_PIVOT;
+//        motorConfig.Feedback.RotorToSensorRatio = MOTOR_TO_CANCODER;
 
         motorConfig.SoftwareLimitSwitch.ForwardSoftLimitEnable = true;
         motorConfig.SoftwareLimitSwitch.ForwardSoftLimitThreshold = MAX_ANGLE.getRotations();
@@ -64,7 +65,7 @@ public class ShooterPivotIOTalonFX implements ShooterPivotIO {
 
         cancoder.getConfigurator().apply(cancoderConfig);
         motor.getConfigurator().apply(motorConfig);
-
+        motor.setPosition(absolutePosition.getValue()*MOTOR_TO_CANCODER);
         BaseStatusSignal.setUpdateFrequencyForAll(
                 50,
                 position,
@@ -79,6 +80,8 @@ public class ShooterPivotIOTalonFX implements ShooterPivotIO {
 
     @Override
     public void updateInputs(ShooterPivotIOInputs inputs) {
+        BaseStatusSignal.refreshAll(position, absolutePosition, velocity, appliedVoltage, current);
+        System.out.println(position.getValueAsDouble());
         inputs.position = Rotation2d.fromRotations(position.getValueAsDouble());
         inputs.absolutePosition = Rotation2d.fromRotations(absolutePosition.getValueAsDouble() / CANCODER_TO_PIVOT);
         inputs.velocityRPS = velocity.getValueAsDouble();
@@ -93,6 +96,7 @@ public class ShooterPivotIOTalonFX implements ShooterPivotIO {
 
     @Override
     public void setVoltage(double volts) {
+//        System.out.println("SETTING "+volts);
         motor.setControl(voltageCtrlReq.withOutput(volts));
     }
 

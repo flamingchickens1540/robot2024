@@ -13,6 +13,8 @@ import org.team1540.robot2024.commands.climb.ScoreInTrap;
 import org.team1540.robot2024.commands.climb.TrapAndClimbSequence;
 import org.team1540.robot2024.commands.drivetrain.DriveWithSpeakerTargetingCommand;
 import org.team1540.robot2024.commands.drivetrain.SwerveDriveCommand;
+import org.team1540.robot2024.commands.indexer.IntakeAndFeed;
+import org.team1540.robot2024.commands.shooter.ManualPivotCommand;
 import org.team1540.robot2024.commands.tramp.TrampScoreSequence;
 import org.team1540.robot2024.commands.elevator.ElevatorManualCommand;
 import org.team1540.robot2024.commands.indexer.IntakeCommand;
@@ -136,7 +138,7 @@ public class RobotContainer {
     private void configureButtonBindings() {
         drivetrain.setDefaultCommand(new SwerveDriveCommand(drivetrain, driver));
         elevator.setDefaultCommand(new ElevatorManualCommand(elevator, copilot));
-//        shooter.setDefaultCommand(new TuneShooterCommand(shooter));
+        shooter.setDefaultCommand(new ManualPivotCommand(shooter, copilot));
 
         driver.x().onTrue(Commands.runOnce(drivetrain::stopWithX, drivetrain));
 //        driver.y().toggleOnTrue(new DriveWithSpeakerTargetingCommand(drivetrain, driver));
@@ -146,8 +148,9 @@ public class RobotContainer {
 
 
         copilot.rightBumper().whileTrue(new IntakeCommand(indexer, tramp::isNoteStaged, 1));
-        copilot.povDown().onTrue(indexer.commandRunIntake(-1));
-        copilot.povUp().whileTrue(new ClimbSequence(drivetrain, elevator, null));
+//        copilot.rightBumper().whileTrue(new IntakeAndFeed(indexer, () -> 1, () -> 1));
+        copilot.povDown().whileTrue(indexer.commandRunIntake(-1));
+        copilot.povUp().whileTrue(new ClimbSequence(drivetrain, elevator, null, tramp, indexer));
         copilot.povLeft().whileTrue(new TrapAndClimbSequence(drivetrain, elevator, null, tramp));
 //        copilot.povCenter().whileTrue(new TrampShoot(tramp));
         copilot.povRight().whileTrue(new InstantCommand(() -> tramp.setPercent(1))).onFalse(new InstantCommand(tramp::stop));
@@ -155,6 +158,7 @@ public class RobotContainer {
 //        copilot.a().onTrue(new ShootSequence(shooter, indexer))
 //                .onFalse(Commands.runOnce(shooter::stopFlywheels, shooter));
         copilot.x().whileTrue(new ShootSequence(shooter, indexer));
+        copilot.leftStick().onTrue(Commands.runOnce(() -> tramp.setDistanceToGo(1), tramp));
 
         copilot.a().whileTrue(new TrampStageSequence(indexer, tramp, elevator));
         copilot.b().onTrue(new PrepareShooterCommand(shooter));

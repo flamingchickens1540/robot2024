@@ -54,8 +54,8 @@ public class Shooter extends SubsystemBase {
         if (Constants.currentMode != Constants.Mode.REAL) {
             DriverStation.reportWarning("Using real shooter on simulated robot", false);
         }
-//        return new Shooter(new ShooterPivotIOTalonFX(), new FlywheelsIOTalonFX());
-        return new Shooter(new ShooterPivotIO() {}, new FlywheelsIOTalonFX());
+        return new Shooter(new ShooterPivotIOTalonFX(), new FlywheelsIOTalonFX());
+//        return new Shooter(new ShooterPivotIO() {}, new FlywheelsIOTalonFX());
     }
 
     public static Shooter createSim() {

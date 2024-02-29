@@ -7,6 +7,7 @@ import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Rotation3d;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.DriverStation;
+import org.team1540.robot2024.util.ShooterSetpoint;
 
 /**
  * The Constants class provides a convenient place for teams to hold robot-wide numerical or boolean
@@ -17,7 +18,7 @@ import edu.wpi.first.wpilibj.DriverStation;
  * constants are needed, to reduce verbosity.
  */
 public final class Constants {
-    public static final boolean IS_COMPETITION_ROBOT = false; // Objects.equals(RobotController.getComments(), "comp");
+    public static final boolean IS_COMPETITION_ROBOT = true; // Objects.equals(RobotController.getComments(), "comp");
     // Whether to pull PID constants from SmartDashboard
     private static final boolean tuningMode = true; // TODO: DO NOT SET TO TRUE FOR COMP
     private static final Mode simMode = Mode.SIM; // Can also be Mode.REPLAY
@@ -59,7 +60,7 @@ public final class Constants {
     }
 
     public static class Drivetrain {
-        public static final double DRIVE_GEAR_RATIO = (50.0 / 14.0) * (17.0 / 27.0) * (45.0 / 15.0);
+        public static final double DRIVE_GEAR_RATIO = (50.0 / 14.0) * (16.0 / 28.0) * (45.0 / 15.0);
         public static final double TURN_GEAR_RATIO = 150.0 / 7.0;
         public static final boolean IS_TURN_MOTOR_INVERTED = true;
         public static final double WHEEL_RADIUS = Units.inchesToMeters(1.967);
@@ -81,7 +82,7 @@ public final class Constants {
     }
 
     public static class Indexer {
-        public static final int BEAM_BREAK_ID = 8;
+        public static final int BEAM_BREAK_ID = IS_COMPETITION_ROBOT ? 7 : 8;
         public static final int INTAKE_ID = 13;
         public static final int FEEDER_ID = 15;
 
@@ -147,20 +148,20 @@ public final class Constants {
         public static class Pivot {
             // TODO: determine ids
             public static final int MOTOR_ID = 9;
-            public static final int CANCODER_ID = 0;
+            public static final int CANCODER_ID = 10;
 
             // TODO: figure this out
-            public static final double CANCODER_OFFSET_ROTS = 0;
+            public static final double CANCODER_OFFSET_ROTS = -0.22314;
             // TODO: determine ratios
-            public static final double CANCODER_TO_PIVOT = 60.0 / 20.0;
-            public static final double MOTOR_TO_CANCODER = 33.0;
+            public static final double CANCODER_TO_PIVOT = 54.0 / 30.0;
+            public static final double MOTOR_TO_CANCODER = 56.0;
             public static final double TOTAL_GEAR_RATIO = MOTOR_TO_CANCODER * CANCODER_TO_PIVOT;
             public static final double SIM_LENGTH_METERS = Units.inchesToMeters(12.910);
             // TODO: find the moi
             public static final double SIM_MOI = 0.04064471269;
 
-            public static final Rotation2d MAX_ANGLE = Rotation2d.fromDegrees(60.0);
-            public static final Rotation2d MIN_ANGLE = Rotation2d.fromDegrees(8.0);
+            public static final Rotation2d MAX_ANGLE = Rotation2d.fromRotations(-0.4365);
+            public static final Rotation2d MIN_ANGLE = Rotation2d.fromRotations(-0.55);
 
             // TODO: tune pid
             public static final double KP = 0.1;
@@ -180,6 +181,10 @@ public final class Constants {
             public static final double CRUISE_VELOCITY_RPS = 1.0;
             public static final double MAX_ACCEL_RPS2 = 10.0;
             public static final double JERK_RPS3 = 2000;
+
+
+            public static final ShooterSetpoint HUB_SHOOT = new ShooterSetpoint(0.172607, 4000,4000);
+
 
             public static final Rotation2d ERROR_TOLERANCE = Rotation2d.fromDegrees(0.2);
         }
@@ -231,7 +236,7 @@ public final class Constants {
             /**
              * At height for top of initial climb :D
              */
-            AMP(0.2); //TODO: Find these values :D
+            AMP(0.3); //TODO: Find these values :D
 
             public final double heightMeters;
 
