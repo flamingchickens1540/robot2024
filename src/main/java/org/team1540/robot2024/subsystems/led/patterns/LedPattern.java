@@ -18,17 +18,17 @@ public abstract class LedPattern {
     public void setLength(int length) {}
 
     protected static int getHue(Color color) {
-        final int red = (int) color.red * 255;
-        final int green = (int) color.green * 255;
-        final int blue = (int) color.blue * 255;
-        float min = Math.min(Math.min(red, green), blue);
-        float max = Math.max(Math.max(red, green), blue);
+        final double red = color.red;
+        final double green = color.green;
+        final double blue = color.blue;
+        double min = Math.min(Math.min(red, green), blue);
+        double max = Math.max(Math.max(red, green), blue);
 
         if (min == max) {
             return 0;
         }
 
-        float hue = 0f;
+        double hue;
         if (max == red) {
             hue = (green - blue) / (max - min);
 
@@ -39,9 +39,9 @@ public abstract class LedPattern {
             hue = 4f + (red - green) / (max - min);
         }
 
-        hue = hue * 60;
-        if (hue < 0) hue = hue + 360;
+        hue = -hue * 60;
+        if (hue > 0) hue = hue - 360;
 
-        return Math.round(hue);
+        return (int) Math.round(hue);
     }
 }
