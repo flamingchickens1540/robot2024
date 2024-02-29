@@ -110,6 +110,7 @@ public class Robot extends LoggedRobot {
     @Override
     public void disabledInit() {
 //        robotContainer.elevator.setBrakeMode(false);
+        robotContainer.shooter.setPivotBrakeMode(false);
         robotContainer.drivetrain.unblockTags();
         robotContainer.leds.setPattern(Leds.Zone.ELEVATOR_BACK, new LedPatternRainbow(1));
     }
@@ -124,6 +125,7 @@ public class Robot extends LoggedRobot {
     public void enabledInit() {
         robotContainer.leds.setPattern(Leds.Zone.ELEVATOR_BACK,LedPatternRSLState.matchingColors());
         robotContainer.elevator.setBrakeMode(true);
+        robotContainer.shooter.setPivotBrakeMode(true);
     }
 
     /**

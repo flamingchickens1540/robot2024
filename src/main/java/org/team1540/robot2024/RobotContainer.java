@@ -1,5 +1,6 @@
 package org.team1540.robot2024;
 
+import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.RobotController;
 import edu.wpi.first.wpilibj.util.Color;
@@ -149,7 +150,7 @@ public class RobotContainer {
 
         driver.a().whileTrue(new DriveWithSpeakerTargetingCommand(drivetrain, driver));
 
-
+        copilot.back().whileTrue(new StartEndCommand(() -> shooter.setPivotPosition(Rotation2d.fromRotations(0.05)),shooter::stopPivot, shooter));
         copilot.rightBumper().whileTrue(new IntakeCommand(indexer, tramp::isNoteStaged, 1));
 //        copilot.rightBumper().whileTrue(new IntakeAndFeed(indexer, () -> 1, () -> 1));
         copilot.povDown().whileTrue(indexer.commandRunIntake(-1));

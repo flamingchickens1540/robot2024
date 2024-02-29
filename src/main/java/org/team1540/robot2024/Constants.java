@@ -160,16 +160,16 @@ public final class Constants {
             // TODO: find the moi
             public static final double SIM_MOI = 0.04064471269;
 
-            public static final Rotation2d MAX_ANGLE = Rotation2d.fromRotations(-0.4365);
-            public static final Rotation2d MIN_ANGLE = Rotation2d.fromRotations(-0.55);
+            public static final Rotation2d MAX_ANGLE = Rotation2d.fromRotations(0.1);
+            public static final Rotation2d MIN_ANGLE = Rotation2d.fromRotations(0.01);
 
             // TODO: tune pid
-            public static final double KP = 0.1;
-            public static final double KI = 0.0;
+            public static final double KP = 80.0;
+            public static final double KI = 40.0;
             public static final double KD = 0.0;
             public static final double KS = 0.0;
-            public static final double KG = 0.1;
-            public static final double KV = 0.1;
+            public static final double KG = 0.0;
+            public static final double KV = 0.0;
 
             public static final double SIM_KP = 254;
             public static final double SIM_KI = 0.0;
