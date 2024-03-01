@@ -71,8 +71,9 @@ public class PathHelper {
                 AutoBuilder.pathfindThenFollowPath(path, Constants.Auto.PATH_CONSTRAINTS),
                 AutoBuilder.followPath(path),
                 () -> drivetrain.getPose().getTranslation().getDistance((startingPose.get()).getTranslation()) > 1 && shouldRealign); //TODO tune this distance
+        command.addRequirements(drivetrain); //FIXME COuld cause problems if we did things wrong but it shouldnt.
         Command resetCommand = new InstantCommand(() -> drivetrain.setPose(startingPose.get()));
-        return isResetting ? resetCommand.andThen(command) : command;
+        return (isResetting ? resetCommand.andThen(command) : command);
     }
 
     public Command resetToInitialPose(Drivetrain drivetrain){

@@ -1,6 +1,5 @@
 package org.team1540.robot2024;
 
-import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.RobotController;
 import edu.wpi.first.wpilibj.util.Color;
 import edu.wpi.first.wpilibj2.command.*;
@@ -9,11 +8,9 @@ import edu.wpi.first.wpilibj2.command.button.Trigger;
 
 import org.team1540.robot2024.commands.FeedForwardCharacterization;
 import org.team1540.robot2024.commands.climb.ClimbSequence;
-import org.team1540.robot2024.commands.climb.ScoreInTrap;
 import org.team1540.robot2024.commands.climb.TrapAndClimbSequence;
 import org.team1540.robot2024.commands.drivetrain.DriveWithSpeakerTargetingCommand;
 import org.team1540.robot2024.commands.drivetrain.SwerveDriveCommand;
-import org.team1540.robot2024.commands.indexer.IntakeAndFeed;
 import org.team1540.robot2024.commands.shooter.ManualPivotCommand;
 import org.team1540.robot2024.commands.tramp.TrampScoreSequence;
 import org.team1540.robot2024.commands.elevator.ElevatorManualCommand;
@@ -21,13 +18,11 @@ import org.team1540.robot2024.commands.indexer.IntakeCommand;
 import org.team1540.robot2024.commands.shooter.PrepareShooterCommand;
 import org.team1540.robot2024.commands.shooter.ShootSequence;
 import org.team1540.robot2024.commands.autos.*;
-import org.team1540.robot2024.commands.tramp.TrampShoot;
 import org.team1540.robot2024.commands.tramp.TrampStageSequence;
 import org.team1540.robot2024.subsystems.drive.*;
 import org.team1540.robot2024.subsystems.elevator.Elevator;
 import org.team1540.robot2024.subsystems.indexer.Indexer;
 import org.team1540.robot2024.subsystems.led.Leds;
-import org.team1540.robot2024.subsystems.led.patterns.LedPatternFlame;
 import org.team1540.robot2024.subsystems.led.patterns.LedPatternRSLState;
 import org.team1540.robot2024.subsystems.shooter.*;
 import org.team1540.robot2024.subsystems.tramp.Tramp;
@@ -35,7 +30,6 @@ import org.team1540.robot2024.subsystems.vision.AprilTagVision;
 import org.team1540.robot2024.util.auto.AutoCommand;
 import org.team1540.robot2024.util.auto.AutoManager;
 import org.team1540.robot2024.util.PhoenixTimeSyncSignalRefresher;
-import org.team1540.robot2024.util.vision.VisionPoseAcceptor;
 
 
 import static org.team1540.robot2024.Constants.SwerveConfig;
@@ -210,23 +204,21 @@ public class RobotContainer {
             );
         }
 
-        AutoManager.getInstance().addAuto(new AmpLanePABCSprint(drivetrain, shooter, indexer));
-        AutoManager.getInstance().addAuto(new SourceLanePHGFSprint(drivetrain));
+
         AutoManager.getInstance().addAuto(new DriveSinglePath("AmpLaneTaxi", drivetrain));
         AutoManager.getInstance().addAuto(new DriveSinglePath("AmpLaneSprint", drivetrain));
+        AutoManager.getInstance().addAuto(new AmpLanePSubASubDSubESub(drivetrain, shooter, indexer));
         AutoManager.getInstance().addDefaultAuto(new DriveSinglePath("CenterLaneTaxi", drivetrain));
         AutoManager.getInstance().addAuto(new DriveSinglePath("CenterLaneSprint", drivetrain, true, true));
+        AutoManager.getInstance().addAuto(new CenterLanePSubCSubBSubASubFSub(drivetrain, shooter, indexer));
         AutoManager.getInstance().addAuto(new DriveSinglePath("SourceLaneTaxi", drivetrain));
         AutoManager.getInstance().addAuto(new DriveSinglePath("SourceLaneSprint", drivetrain));
-        AutoManager.getInstance().addAuto(new DriveSinglePath("SQUARFE", drivetrain));
-        AutoManager.getInstance().addAuto(new DriveSinglePath("SQUARFE (1)", drivetrain));
+        AutoManager.getInstance().addAuto(new SourceLanePSubHSubGSub(drivetrain, shooter, indexer));
         AutoManager.getInstance().addAuto(new AutoCommand("Dwayne :skull:"));
-        AutoManager.getInstance().addAuto(new AmpLanePADESprint(drivetrain, shooter, indexer));
-        AutoManager.getInstance().addAuto(new CenterLanePCBFSprint(drivetrain, shooter, indexer));
-        AutoManager.getInstance().addAuto(new SourceLanePHGSprint(drivetrain, shooter, indexer));
-        AutoManager.getInstance().addAuto(new AmpLanePSprint(drivetrain, shooter, indexer));
-        AutoManager.getInstance().addAuto(new CenterLaneSprintBonus(drivetrain));
-        AutoManager.getInstance().addAuto(new StraightForward(drivetrain));
+//        AutoManager.getInstance().addAuto(new AmpLanePADESprint(drivetrain, shooter, indexer));
+//        AutoManager.getInstance().addAuto(new CenterLanePCBFSprint(drivetrain, shooter, indexer));
+//        AutoManager.getInstance().addAuto(new SourceLanePHGSprint(drivetrain, shooter, indexer));
+//        AutoManager.getInstance().addAuto(new AmpLanePSprint(drivetrain, shooter, indexer));
     }
 
     /**
