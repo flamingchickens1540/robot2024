@@ -28,7 +28,7 @@ public class ShooterPivotIOTalonFX implements ShooterPivotIO {
     private final StatusSignal<ForwardLimitValue> forwardLimit = motor.getForwardLimit();
     private final StatusSignal<ReverseLimitValue> reverseLimit = motor.getReverseLimit();
 
-    private final PositionVoltage positionCtrlReq = new PositionVoltage(0).withSlot(0);
+    private final MotionMagicVoltage positionCtrlReq = new MotionMagicVoltage(0).withSlot(0);
     private final VoltageOut voltageCtrlReq = new VoltageOut(0);
 
     public ShooterPivotIOTalonFX() {
