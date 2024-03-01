@@ -10,6 +10,8 @@ import org.team1540.robot2024.subsystems.shooter.Shooter;
 import org.team1540.robot2024.util.auto.AutoCommand;
 import org.team1540.robot2024.util.auto.PathHelper;
 
+import static org.team1540.robot2024.Constants.Shooter.Pivot.HUB_SHOOT;
+
 public class SourceLanePSubHSubGSub extends AutoCommand {
 
     public SourceLanePSubHSubGSub(Drivetrain drivetrain, Shooter shooter, Indexer indexer ) {
@@ -24,13 +26,13 @@ public class SourceLanePSubHSubGSub extends AutoCommand {
                 new ParallelCommandGroup(
                         new IntakeCommand(indexer, ()->false, 1).withTimeout(5),
                         getPath(0).getCommand(drivetrain),
-                        new PrepareShooterCommand(shooter)
+                        new PrepareShooterCommand(shooter, HUB_SHOOT)
                 ),
                 new ShootSequence(shooter, indexer),
                 new ParallelCommandGroup(
                         new IntakeCommand(indexer, ()->false, 1).withTimeout(5),
                         getPath(1).getCommand(drivetrain),
-                        new PrepareShooterCommand(shooter)
+                        new PrepareShooterCommand(shooter, HUB_SHOOT)
                 ),
                 new ShootSequence(shooter, indexer)
         );

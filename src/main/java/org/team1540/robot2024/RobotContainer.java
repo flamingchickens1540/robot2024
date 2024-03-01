@@ -222,10 +222,12 @@ public class RobotContainer {
         AutoManager.getInstance().addAuto(new AmpLanePSubASubDSubESub(drivetrain, shooter, indexer));
         AutoManager.getInstance().addDefaultAuto(new DriveSinglePath("CenterLaneTaxi", drivetrain));
         AutoManager.getInstance().addAuto(new DriveSinglePath("CenterLaneSprint", drivetrain, true, true));
+        AutoManager.getInstance().addAuto(new CenterLanePSubSprint(drivetrain, shooter, indexer));
         AutoManager.getInstance().addAuto(new CenterLanePSubCSubBSubASubFSub(drivetrain, shooter, indexer));
         AutoManager.getInstance().addAuto(new DriveSinglePath("SourceLaneTaxi", drivetrain));
         AutoManager.getInstance().addAuto(new DriveSinglePath("SourceLaneSprint", drivetrain));
         AutoManager.getInstance().addAuto(new SourceLanePSubHSubGSub(drivetrain, shooter, indexer));
+        AutoManager.getInstance().addAuto(new AutoCommand("SubwooferShot", new ShootSequence(shooter, indexer)));
         AutoManager.getInstance().addAuto(new AutoCommand("Dwayne :skull:"));
 //        AutoManager.getInstance().addAuto(new AmpLanePADESprint(drivetrain, shooter, indexer));
 //        AutoManager.getInstance().addAuto(new CenterLanePCBFSprint(drivetrain, shooter, indexer));
