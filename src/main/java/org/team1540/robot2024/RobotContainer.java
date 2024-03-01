@@ -175,8 +175,8 @@ public class RobotContainer {
 //        copilot.leftTrigger(0.5).whileTrue(new ElevatorSetpointCommand(elevator, ElevatorState.CLIMB));
 
 
-        new Trigger(indexer::isNoteStaged).onTrue(CommandUtils.rumbleCommand(driver.getHID(), 0.3, 1));
-        new Trigger(indexer::isNoteStaged).and(intakeCommand::isScheduled).onTrue(CommandUtils.rumbleCommand(driver.getHID(), 0.4, 0.4));
+        new Trigger(indexer::isNoteStaged).onTrue(CommandUtils.rumbleCommand(driver.getHID(), 0.6, 0.5));
+        new Trigger(indexer::isNoteStaged).and(intakeCommand::isScheduled).onTrue(CommandUtils.rumbleCommand(driver.getHID(), 0.3, 0.4));
 
         new Trigger(RobotController::getUserButton).toggleOnTrue(Commands.startEnd(
                 () -> {
