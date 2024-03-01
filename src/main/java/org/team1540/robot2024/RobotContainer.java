@@ -16,6 +16,7 @@ import org.team1540.robot2024.commands.climb.TrapAndClimbSequence;
 import org.team1540.robot2024.commands.drivetrain.DriveWithSpeakerTargetingCommand;
 import org.team1540.robot2024.commands.drivetrain.SwerveDriveCommand;
 import org.team1540.robot2024.commands.indexer.IntakeAndFeed;
+import org.team1540.robot2024.commands.indexer.StageTrampCommand;
 import org.team1540.robot2024.commands.shooter.ManualPivotCommand;
 import org.team1540.robot2024.commands.tramp.TrampScoreSequence;
 import org.team1540.robot2024.commands.elevator.ElevatorManualCommand;
@@ -151,27 +152,27 @@ public class RobotContainer {
             drivetrain.setBrakeMode(true);
         }).ignoringDisable(true));
 
-        driver.a().whileTrue(new DriveWithSpeakerTargetingCommand(drivetrain, driver));
+//        driver.a().whileTrue(new DriveWithSpeakerTargetingCommand(drivetrain, driver));
 
-        copilot.back().whileTrue(new StartEndCommand(() -> shooter.setPivotPosition(Rotation2d.fromRotations(0.05)),shooter::stopPivot, shooter));
+
+        copilot.leftBumper().whileTrue(new TrampScoreSequence(tramp, indexer, elevator));
         copilot.rightBumper().whileTrue(new IntakeCommand(indexer, tramp::isNoteStaged, 1));
-//        copilot.rightBumper().whileTrue(new IntakeAndFeed(indexer, () -> 1, () -> 1));
-        copilot.povDown().whileTrue(indexer.commandRunIntake(-1));
-        copilot.povUp().whileTrue(new ClimbSequence(drivetrain, elevator, null, tramp, indexer));
-        copilot.povLeft().whileTrue(new TrapAndClimbSequence(drivetrain, elevator, null, tramp));
-//        copilot.povCenter().whileTrue(new TrampShoot(tramp));
-        copilot.povRight().whileTrue(new InstantCommand(() -> tramp.setPercent(1))).onFalse(new InstantCommand(tramp::stop));
-//        copilot.leftBumper().onTrue(new ElevatorSetpointCommand(elevator, ElevatorState.BOTTOM));
-//        copilot.a().onTrue(new ShootSequence(shooter, indexer))
-//                .onFalse(Commands.runOnce(shooter::stopFlywheels, shooter));
-        copilot.x().whileTrue(new ShootSequence(shooter, indexer, HUB_SHOOT));
-        copilot.leftStick().onTrue(Commands.runOnce(() -> tramp.setDistanceToGo(1), tramp));
 
+        copilot.povDown().whileTrue(indexer.commandRunIntake(-1));
+        copilot.povUp().whileTrue(new ClimbSequence(drivetrain, elevator, null, tramp, indexer, shooter));
+        copilot.povRight().whileTrue(Commands.startEnd(() -> tramp.setPercent(1), tramp::stop, tramp));
+
+        copilot.rightTrigger(0.95).whileTrue(Commands.startEnd(() -> tramp.setPercent(1), tramp::stop, tramp));
+        copilot.leftTrigger(0.95).whileTrue(new ClimbSequence(drivetrain, elevator, null, tramp, indexer, shooter));
+
+
+        copilot.x().whileTrue(new ShootSequence(shooter, indexer, HUB_SHOOT));
         copilot.a().whileTrue(new TrampStageSequence(indexer, tramp, elevator));
         copilot.b().onTrue(new PrepareShooterCommand(shooter, HUB_SHOOT));
-//        copilot.rightTrigger(0.5).whileTrue(new ElevatorSetpointCommand(elevator, ElevatorState.BOTTOM));
+        copilot.y().whileTrue(new StageTrampCommand(tramp, indexer));
+
 //        copilot.leftTrigger(0.5).whileTrue(new ElevatorSetpointCommand(elevator, ElevatorState.CLIMB));
-        copilot.leftBumper().whileTrue(new TrampScoreSequence(tramp, indexer, elevator));
+
 
         new Trigger(indexer::isNoteStaged).onTrue(
                 CommandUtils.startStopTimed(
