@@ -32,6 +32,7 @@ import org.team1540.robot2024.subsystems.indexer.Indexer;
 import org.team1540.robot2024.subsystems.led.Leds;
 import org.team1540.robot2024.subsystems.led.patterns.LedPatternFlame;
 import org.team1540.robot2024.subsystems.led.patterns.LedPatternRSLState;
+import org.team1540.robot2024.subsystems.led.patterns.LedPatternWave;
 import org.team1540.robot2024.subsystems.shooter.*;
 import org.team1540.robot2024.subsystems.tramp.Tramp;
 import org.team1540.robot2024.subsystems.vision.AprilTagVision;
@@ -162,6 +163,11 @@ public class RobotContainer {
         copilot.povDown().whileTrue(indexer.commandRunIntake(-1));
         copilot.povUp().whileTrue(new ClimbSequence(drivetrain, elevator, null, tramp, indexer, shooter));
         copilot.povRight().whileTrue(Commands.startEnd(() -> tramp.setPercent(1), tramp::stop, tramp));
+        copilot.povLeft().onTrue(CommandUtils.startStopTimed(
+                () -> leds.setPatternAll(() -> new LedPatternWave(DriverStation.getAlliance().orElse(DriverStation.Alliance.Red) == DriverStation.Alliance.Red ? 0: 216), Leds.PatternCriticality.HIGH),
+                () -> leds.setPatternAll(() -> new LedPatternWave(DriverStation.getAlliance().orElse(DriverStation.Alliance.Red) == DriverStation.Alliance.Red ? 0: 216), Leds.PatternCriticality.HIGH),
+                5
+        ));
 
         copilot.rightTrigger(0.95).whileTrue(Commands.startEnd(() -> tramp.setPercent(1), tramp::stop, tramp));
         copilot.leftTrigger(0.95).whileTrue(new ClimbSequence(drivetrain, elevator, null, tramp, indexer, shooter));

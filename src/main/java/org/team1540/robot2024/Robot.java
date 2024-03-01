@@ -123,7 +123,7 @@ public class Robot extends LoggedRobot {
     }
 
     public void enabledInit() {
-        robotContainer.leds.setPattern(Leds.Zone.ELEVATOR_BACK,LedPatternRSLState.matchingColors());
+//        robotContainer.leds.setPattern(Leds.Zone.ELEVATOR_BACK,LedPatternRSLState.matchingColors());
         robotContainer.elevator.setBrakeMode(true);
         robotContainer.shooter.setPivotBrakeMode(true);
     }
@@ -134,6 +134,7 @@ public class Robot extends LoggedRobot {
     @Override
     public void autonomousInit() {
         enabledInit();
+        robotContainer.leds.setPatternAll(LedPatternFlame::new, Leds.PatternCriticality.HIGH);
         robotContainer.drivetrain.blockTags();
         autonomousCommand = robotContainer.getAutonomousCommand();
         // schedule the autonomous command (example)
@@ -155,6 +156,7 @@ public class Robot extends LoggedRobot {
     @Override
     public void teleopInit() {
         enabledInit();
+        robotContainer.leds.setPatternAll(() -> new LedPatternRainbow(2), Leds.PatternCriticality.HIGH);
         robotContainer.drivetrain.zeroFieldOrientation();// TODO: remove this once odometry / startup zero is good
 
         if (autonomousCommand != null) {
