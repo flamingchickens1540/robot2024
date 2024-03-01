@@ -1,5 +1,8 @@
 package org.team1540.robot2024;
 
+import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.RobotController;
 import edu.wpi.first.wpilibj.util.Color;
 import edu.wpi.first.wpilibj2.command.*;
@@ -27,11 +30,13 @@ import org.team1540.robot2024.subsystems.led.patterns.LedPatternRSLState;
 import org.team1540.robot2024.subsystems.shooter.*;
 import org.team1540.robot2024.subsystems.tramp.Tramp;
 import org.team1540.robot2024.subsystems.vision.AprilTagVision;
+import org.team1540.robot2024.util.CommandUtils;
 import org.team1540.robot2024.util.auto.AutoCommand;
 import org.team1540.robot2024.util.auto.AutoManager;
 import org.team1540.robot2024.util.PhoenixTimeSyncSignalRefresher;
 
 
+import static org.team1540.robot2024.Constants.Shooter.Pivot.HUB_SHOOT;
 import static org.team1540.robot2024.Constants.SwerveConfig;
 import static org.team1540.robot2024.Constants.isTuningMode;
 
@@ -143,7 +148,7 @@ public class RobotContainer {
 
         driver.a().whileTrue(new DriveWithSpeakerTargetingCommand(drivetrain, driver));
 
-
+        copilot.back().whileTrue(new StartEndCommand(() -> shooter.setPivotPosition(Rotation2d.fromRotations(0.05)),shooter::stopPivot, shooter));
         copilot.rightBumper().whileTrue(new IntakeCommand(indexer, tramp::isNoteStaged, 1));
 //        copilot.rightBumper().whileTrue(new IntakeAndFeed(indexer, () -> 1, () -> 1));
         copilot.povDown().whileTrue(indexer.commandRunIntake(-1));
@@ -154,14 +159,21 @@ public class RobotContainer {
 //        copilot.leftBumper().onTrue(new ElevatorSetpointCommand(elevator, ElevatorState.BOTTOM));
 //        copilot.a().onTrue(new ShootSequence(shooter, indexer))
 //                .onFalse(Commands.runOnce(shooter::stopFlywheels, shooter));
-        copilot.x().whileTrue(new ShootSequence(shooter, indexer));
+        copilot.x().whileTrue(new ShootSequence(shooter, indexer, HUB_SHOOT));
         copilot.leftStick().onTrue(Commands.runOnce(() -> tramp.setDistanceToGo(1), tramp));
 
         copilot.a().whileTrue(new TrampStageSequence(indexer, tramp, elevator));
-        copilot.b().onTrue(new PrepareShooterCommand(shooter));
+        copilot.b().onTrue(new PrepareShooterCommand(shooter, HUB_SHOOT));
 //        copilot.rightTrigger(0.5).whileTrue(new ElevatorSetpointCommand(elevator, ElevatorState.BOTTOM));
 //        copilot.leftTrigger(0.5).whileTrue(new ElevatorSetpointCommand(elevator, ElevatorState.CLIMB));
         copilot.leftBumper().whileTrue(new TrampScoreSequence(tramp, indexer, elevator));
+
+        new Trigger(indexer::isNoteStaged).onTrue(
+                CommandUtils.startStopTimed(
+                        () -> driver.getHID().setRumble(GenericHID.RumbleType.kBothRumble, 0.3),
+                        () -> driver.getHID().setRumble(GenericHID.RumbleType.kBothRumble, 0),
+                        1)
+        );
 
         new Trigger(RobotController::getUserButton).toggleOnTrue(Commands.startEnd(
                 () -> {

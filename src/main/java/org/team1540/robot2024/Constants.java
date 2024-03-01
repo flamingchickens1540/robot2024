@@ -142,7 +142,7 @@ public final class Constants {
             public static final double KS = 0.26925;
             public static final double KV = 0.07485; // TODO: this is what recalc says, may have to tune
 
-            public static final double ERROR_TOLERANCE_RPM = 50;
+            public static final double ERROR_TOLERANCE_RPM = 100;
         }
 
         public static class Pivot {
@@ -160,16 +160,16 @@ public final class Constants {
             // TODO: find the moi
             public static final double SIM_MOI = 0.04064471269;
 
-            public static final Rotation2d MAX_ANGLE = Rotation2d.fromRotations(-0.4365);
-            public static final Rotation2d MIN_ANGLE = Rotation2d.fromRotations(-0.55);
+            public static final Rotation2d MAX_ANGLE = Rotation2d.fromRotations(0.14);
+            public static final Rotation2d MIN_ANGLE = Rotation2d.fromRotations(0.01);
 
             // TODO: tune pid
-            public static final double KP = 0.1;
-            public static final double KI = 0.0;
+            public static final double KP = 80.0;
+            public static final double KI = 40.0;
             public static final double KD = 0.0;
             public static final double KS = 0.0;
-            public static final double KG = 0.1;
-            public static final double KV = 0.1;
+            public static final double KG = 0.0;
+            public static final double KV = 0.0;
 
             public static final double SIM_KP = 254;
             public static final double SIM_KI = 0.0;
@@ -179,14 +179,14 @@ public final class Constants {
             public static final double SIM_KV = 0.187;
 
             public static final double CRUISE_VELOCITY_RPS = 1.0;
-            public static final double MAX_ACCEL_RPS2 = 10.0;
+            public static final double MAX_ACCEL_RPS2 = 0.8;
             public static final double JERK_RPS3 = 2000;
 
 
-            public static final ShooterSetpoint HUB_SHOOT = new ShooterSetpoint(0.172607, 4000,4000);
+            public static final ShooterSetpoint HUB_SHOOT = new ShooterSetpoint(0.12, 4000,4000);
 
 
-            public static final Rotation2d ERROR_TOLERANCE = Rotation2d.fromDegrees(0.2);
+            public static final Rotation2d ERROR_TOLERANCE = Rotation2d.fromDegrees(0.7);
         }
     }
 

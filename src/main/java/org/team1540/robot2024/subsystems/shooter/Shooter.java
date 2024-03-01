@@ -94,11 +94,13 @@ public class Shooter extends SubsystemBase {
             pivotIO.configPID(pivotKP.get(), pivotKI.get(), pivotKD.get());
         }
 
+        System.out.println("PIVOT "+isPivotAtSetpoint()+" SHOOTER"+areFlywheelsSpunUp());
         // Add values to filters
         leftSpeedFilter.add(getLeftFlywheelSpeed());
         rightSpeedFilter.add(getRightFlywheelSpeed());
         pivotPositionFilter.add(getPivotPosition().getRotations());
-        Logger.recordOutput("Shooter/Pivot/Setpoint", pivotSetpoint.getDegrees());
+        Logger.recordOutput("Shooter/Pivot/Setpoint", pivotSetpoint);
+        Logger.recordOutput("Shooter/Pivot/Error", pivotSetpoint.getDegrees() - pivotInputs.position.getDegrees());
     }
 
     /**
@@ -140,6 +142,7 @@ public class Shooter extends SubsystemBase {
                         Pivot.MAX_ANGLE.getRotations()
                 )
         );
+        System.out.println(pivotSetpoint);
         pivotPositionFilter.clear();
         pivotIO.setPosition(pivotSetpoint);
     }
