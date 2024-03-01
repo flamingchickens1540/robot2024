@@ -12,6 +12,7 @@ import org.team1540.robot2024.subsystems.drive.Drivetrain;
 import org.team1540.robot2024.subsystems.elevator.Elevator;
 import org.team1540.robot2024.subsystems.fakesubsystems.Hooks;
 import org.team1540.robot2024.subsystems.indexer.Indexer;
+import org.team1540.robot2024.subsystems.shooter.Shooter;
 import org.team1540.robot2024.subsystems.tramp.Tramp;
 import org.team1540.robot2024.util.auto.PathHelper;
 import org.team1540.robot2024.util.vision.AprilTagsCrescendo;
@@ -26,12 +27,14 @@ public class ClimbSequence extends ParallelCommandGroup {
             1,
             0.3);
 
-    public ClimbSequence(Drivetrain drivetrain, Elevator elevator, Hooks hooks, Tramp tramp, Indexer indexer) {
+    public ClimbSequence(Drivetrain drivetrain, Elevator elevator, Hooks hooks, Tramp tramp, Indexer indexer, Shooter shooter) {
         this.drivetrain = drivetrain;
         addCommands(
                 Commands.startEnd(drivetrain::blockTags,drivetrain::unblockTags),
+                Commands.startEnd(() -> shooter.setPivotBrakeMode(false), () -> shooter.setPivotBrakeMode(true), shooter),
                 Commands.sequence(
                 new ParallelCommandGroup(
+
                         new SequentialCommandGroup(
                                 new ElevatorSetpointCommand(elevator, ElevatorState.BOTTOM),
                                 new StageTrampCommand(tramp, indexer).onlyIf(indexer::isNoteStaged)
