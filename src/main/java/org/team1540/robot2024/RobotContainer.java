@@ -141,6 +141,11 @@ public class RobotContainer {
     }
 
     private void configureButtonBindings() {
+        Command rumbleDriver = CommandUtils.startStopTimed(
+                () -> driver.getHID().setRumble(GenericHID.RumbleType.kBothRumble, 0.3),
+                () -> driver.getHID().setRumble(GenericHID.RumbleType.kBothRumble, 0),
+                1);
+
         drivetrain.setDefaultCommand(new SwerveDriveCommand(drivetrain, driver));
         elevator.setDefaultCommand(new ElevatorManualCommand(elevator, copilot));
         shooter.setDefaultCommand(new ManualPivotCommand(shooter, copilot));
@@ -174,12 +179,7 @@ public class RobotContainer {
 //        copilot.leftTrigger(0.5).whileTrue(new ElevatorSetpointCommand(elevator, ElevatorState.CLIMB));
 
 
-        new Trigger(indexer::isNoteStaged).onTrue(
-                CommandUtils.startStopTimed(
-                        () -> driver.getHID().setRumble(GenericHID.RumbleType.kBothRumble, 0.3),
-                        () -> driver.getHID().setRumble(GenericHID.RumbleType.kBothRumble, 0),
-                        1)
-        );
+        new Trigger(indexer::isNoteStaged).onTrue(rumbleDriver);
 
         new Trigger(RobotController::getUserButton).toggleOnTrue(Commands.startEnd(
                 () -> {
