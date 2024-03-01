@@ -141,11 +141,6 @@ public class RobotContainer {
     }
 
     private void configureButtonBindings() {
-        Command rumbleDriver = CommandUtils.startStopTimed(
-                () -> driver.getHID().setRumble(GenericHID.RumbleType.kBothRumble, 0.3),
-                () -> driver.getHID().setRumble(GenericHID.RumbleType.kBothRumble, 0),
-                1);
-
         drivetrain.setDefaultCommand(new SwerveDriveCommand(drivetrain, driver));
         elevator.setDefaultCommand(new ElevatorManualCommand(elevator, copilot));
         shooter.setDefaultCommand(new ManualPivotCommand(shooter, copilot));
@@ -161,7 +156,8 @@ public class RobotContainer {
 
 
         copilot.leftBumper().whileTrue(new TrampScoreSequence(tramp, indexer, elevator));
-        copilot.rightBumper().whileTrue(new IntakeCommand(indexer, tramp::isNoteStaged, 1));
+        Command intakeCommand = new IntakeCommand(indexer, tramp::isNoteStaged, 1);
+        copilot.rightBumper().whileTrue(intakeCommand);
 
         copilot.povDown().whileTrue(indexer.commandRunIntake(-1));
         copilot.povUp().whileTrue(new ClimbSequence(drivetrain, elevator, null, tramp, indexer, shooter));
@@ -179,7 +175,8 @@ public class RobotContainer {
 //        copilot.leftTrigger(0.5).whileTrue(new ElevatorSetpointCommand(elevator, ElevatorState.CLIMB));
 
 
-        new Trigger(indexer::isNoteStaged).onTrue(rumbleDriver);
+        new Trigger(indexer::isNoteStaged).onTrue(CommandUtils.rumbleCommand(driver.getHID(), 0.3, 1));
+        new Trigger(indexer::isNoteStaged).and(intakeCommand::isScheduled).onTrue(CommandUtils.rumbleCommand(driver.getHID(), 0.4, 0.4));
 
         new Trigger(RobotController::getUserButton).toggleOnTrue(Commands.startEnd(
                 () -> {
