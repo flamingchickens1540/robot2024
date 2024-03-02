@@ -94,7 +94,6 @@ public class Shooter extends SubsystemBase {
             pivotIO.configPID(pivotKP.get(), pivotKI.get(), pivotKD.get());
         }
 
-        System.out.println("PIVOT "+isPivotAtSetpoint()+" SHOOTER"+areFlywheelsSpunUp());
         // Add values to filters
         leftSpeedFilter.add(getLeftFlywheelSpeed());
         rightSpeedFilter.add(getRightFlywheelSpeed());

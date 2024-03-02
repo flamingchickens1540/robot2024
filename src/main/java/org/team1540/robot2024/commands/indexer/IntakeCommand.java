@@ -10,11 +10,20 @@ import java.util.function.DoubleSupplier;
 public class IntakeCommand extends Command {
     private final Indexer indexer;
     private final double percent;
+    private final boolean shouldUseBeambreak;
     private final BooleanSupplier noteInTramp;
     public IntakeCommand(Indexer indexer, BooleanSupplier noteInTramp, double percent) {
         this.indexer = indexer;
         this.noteInTramp = noteInTramp;
         this.percent = percent;
+        this.shouldUseBeambreak = true;
+        addRequirements(indexer);
+    }
+    public IntakeCommand(Indexer indexer, BooleanSupplier noteInTramp, double percent, boolean shouldUseBeambreak) {
+        this.indexer = indexer;
+        this.noteInTramp = noteInTramp;
+        this.percent = percent;
+        this.shouldUseBeambreak = shouldUseBeambreak;
         addRequirements(indexer);
     }
 
@@ -25,7 +34,7 @@ public class IntakeCommand extends Command {
 
     @Override
     public boolean isFinished() {
-        return noteInTramp.getAsBoolean() || indexer.isNoteStaged();
+        return shouldUseBeambreak && (noteInTramp.getAsBoolean() || indexer.isNoteStaged());
     }
 
     @Override

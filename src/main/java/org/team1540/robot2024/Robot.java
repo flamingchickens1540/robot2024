@@ -80,9 +80,12 @@ public class Robot extends LoggedRobot {
         Logger.start();
 
         DriverStation.silenceJoystickConnectionWarning(true);
+
         // Instantiate our RobotContainer. This will perform all our button bindings,
         // and put our autonomous chooser on the dashboard.
         robotContainer = new RobotContainer();
+
+        robotContainer.shooter.setPivotBrakeMode(false);
         AprilTagsCrescendo.getInstance().getTag(1);
     }
 
@@ -125,7 +128,7 @@ public class Robot extends LoggedRobot {
     public void enabledInit() {
 //        robotContainer.leds.setPattern(Leds.Zone.ELEVATOR_BACK,LedPatternRSLState.matchingColors());
         robotContainer.elevator.setBrakeMode(true);
-        robotContainer.shooter.setPivotBrakeMode(true);
+//        robotContainer.shooter.setPivotBrakeMode(false);
     }
 
     /**

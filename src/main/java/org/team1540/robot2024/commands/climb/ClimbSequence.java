@@ -31,7 +31,7 @@ public class ClimbSequence extends ParallelCommandGroup {
         this.drivetrain = drivetrain;
         addCommands(
                 Commands.startEnd(drivetrain::blockTags,drivetrain::unblockTags),
-                Commands.startEnd(() -> shooter.setPivotBrakeMode(false), () -> shooter.setPivotBrakeMode(true), shooter),
+//                Commands.startEnd(() -> shooter.setPivotBrakeMode(false), () -> shooter.setPivotBrakeMode(true), shooter),
                 Commands.sequence(
                 new ParallelCommandGroup(
 

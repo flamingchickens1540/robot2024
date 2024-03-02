@@ -11,7 +11,7 @@ public class CenterLanePSubSprint extends AutoCommand {
 
 
     public CenterLanePSubSprint(Drivetrain drivetrain, Shooter shooter, Indexer indexer) {
-        super("CenterLanPSubSprint");
+        super("CenterLanePSubSprint");
         addPath(
                 PathHelper.fromChoreoPath("CenterLaneSprint", true, true)
         );

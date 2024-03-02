@@ -161,7 +161,7 @@ public class RobotContainer {
         copilot.rightBumper().whileTrue(intakeCommand);
 
         copilot.povDown().whileTrue(indexer.commandRunIntake(-1));
-        copilot.povUp().whileTrue(new ClimbSequence(drivetrain, elevator, null, tramp, indexer, shooter));
+        copilot.povUp().whileTrue(new IntakeCommand(indexer, tramp::isNoteStaged, 1, false));
         copilot.povRight().whileTrue(Commands.startEnd(() -> tramp.setPercent(1), tramp::stop, tramp));
         copilot.povLeft().onTrue(CommandUtils.startStopTimed(
                 () -> leds.setPatternAll(() -> new LedPatternWave(DriverStation.getAlliance().orElse(DriverStation.Alliance.Red) == DriverStation.Alliance.Red ? 0: 216), Leds.PatternCriticality.HIGH),
@@ -228,11 +228,12 @@ public class RobotContainer {
 
         AutoManager.getInstance().addAuto(new DriveSinglePath("AmpLaneTaxi", drivetrain));
         AutoManager.getInstance().addAuto(new DriveSinglePath("AmpLaneSprint", drivetrain));
-        AutoManager.getInstance().addAuto(new AmpLanePSubASubDSubESub(drivetrain, shooter, indexer));
+//        AutoManager.getInstance().addAuto(new AmpLanePSubASubDSubESub(drivetrain, shooter, indexer));
         AutoManager.getInstance().addDefaultAuto(new DriveSinglePath("CenterLaneTaxi", drivetrain));
         AutoManager.getInstance().addAuto(new DriveSinglePath("CenterLaneSprint", drivetrain, true, true));
         AutoManager.getInstance().addAuto(new CenterLanePSubSprint(drivetrain, shooter, indexer));
         AutoManager.getInstance().addAuto(new CenterLanePSubCSubBSubASubFSub(drivetrain, shooter, indexer));
+        AutoManager.getInstance().addAuto(new CenterLanePSubCSubBSubFSub(drivetrain, shooter, indexer));
         AutoManager.getInstance().addAuto(new DriveSinglePath("SourceLaneTaxi", drivetrain));
         AutoManager.getInstance().addAuto(new DriveSinglePath("SourceLaneSprint", drivetrain));
         AutoManager.getInstance().addAuto(new SourceLanePSubHSubGSub(drivetrain, shooter, indexer));
