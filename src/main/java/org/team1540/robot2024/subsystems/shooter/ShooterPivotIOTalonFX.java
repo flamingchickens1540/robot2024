@@ -102,14 +102,6 @@ public class ShooterPivotIOTalonFX implements ShooterPivotIO {
 
     @Override
     public void setPosition(Rotation2d position) {
-        System.out.println(position.getRotations()+" "+this.position.getValueAsDouble());
-        System.out.println(position.getRotations()+" "+this.position.getValueAsDouble());
-        System.out.println(position.getRotations()+" "+this.position.getValueAsDouble());
-        System.out.println(position.getRotations()+" "+this.position.getValueAsDouble());
-        System.out.println(position.getRotations()+" "+this.position.getValueAsDouble());
-        System.out.println(position.getRotations()+" "+this.position.getValueAsDouble());
-        System.out.println(position.getRotations()+" "+this.position.getValueAsDouble());
-        System.out.println(position.getRotations()+" "+this.position.getValueAsDouble());
         motor.setControl(positionCtrlReq.withPosition(position.getRotations()));
 //                .withLimitReverseMotion(absolutePosition.getValueAsDouble() < 0.3)
 //                .withLimitForwardMotion(absolutePosition.getValueAsDouble() > 0.54));

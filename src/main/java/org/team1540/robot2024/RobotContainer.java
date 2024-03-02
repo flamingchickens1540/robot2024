@@ -30,9 +30,7 @@ import org.team1540.robot2024.subsystems.drive.*;
 import org.team1540.robot2024.subsystems.elevator.Elevator;
 import org.team1540.robot2024.subsystems.indexer.Indexer;
 import org.team1540.robot2024.subsystems.led.Leds;
-import org.team1540.robot2024.subsystems.led.patterns.LedPatternFlame;
-import org.team1540.robot2024.subsystems.led.patterns.LedPatternRSLState;
-import org.team1540.robot2024.subsystems.led.patterns.LedPatternWave;
+import org.team1540.robot2024.subsystems.led.patterns.*;
 import org.team1540.robot2024.subsystems.shooter.*;
 import org.team1540.robot2024.subsystems.tramp.Tramp;
 import org.team1540.robot2024.subsystems.vision.AprilTagVision;
@@ -181,7 +179,10 @@ public class RobotContainer {
 //        copilot.leftTrigger(0.5).whileTrue(new ElevatorSetpointCommand(elevator, ElevatorState.CLIMB));
 
 
-        new Trigger(indexer::isNoteStaged).onTrue(CommandUtils.rumbleCommand(driver.getHID(), 0.6, 0.5));
+        new Trigger(indexer::isNoteStaged)
+                .onTrue(CommandUtils.rumbleCommand(driver.getHID(), 0.6, 0.5))
+                .whileTrue(Commands.startEnd(() -> leds.setPattern(Leds.Zone.ELEVATOR_BACK, new LedPatternWave(0)), () -> leds.setPattern(Leds.Zone.ELEVATOR_BACK, new LedPatternRainbow(2))));
+
         new Trigger(indexer::isNoteStaged).and(intakeCommand::isScheduled).onTrue(CommandUtils.rumbleCommand(driver.getHID(), 0.3, 0.4));
 
         new Trigger(RobotController::getUserButton).toggleOnTrue(Commands.startEnd(

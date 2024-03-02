@@ -183,7 +183,7 @@ public final class Constants {
             public static final double JERK_RPS3 = 2000;
 
 
-            public static final ShooterSetpoint HUB_SHOOT = new ShooterSetpoint(0.12, 4000,4000);
+            public static final ShooterSetpoint HUB_SHOOT = new ShooterSetpoint(0.128, 4800,4000);
 
 
             public static final Rotation2d ERROR_TOLERANCE = Rotation2d.fromDegrees(0.7);

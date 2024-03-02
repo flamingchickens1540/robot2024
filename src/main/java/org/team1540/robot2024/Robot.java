@@ -137,7 +137,7 @@ public class Robot extends LoggedRobot {
     @Override
     public void autonomousInit() {
         enabledInit();
-        robotContainer.leds.setPatternAll(LedPatternFlame::new, Leds.PatternCriticality.HIGH);
+//        robotContainer.leds.setPatternAll(LedPatternFlame::new, Leds.PatternCriticality.HIGH);
         robotContainer.drivetrain.blockTags();
         autonomousCommand = robotContainer.getAutonomousCommand();
         // schedule the autonomous command (example)

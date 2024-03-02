@@ -27,14 +27,14 @@ public class CenterLanePSubCSubBSubFSub extends AutoCommand {
                 new ShootSequence(shooter, indexer),
                 new ParallelCommandGroup(
                         new IntakeCommand(indexer, ()->false, 1),
-                        getPath(0).getCommand(drivetrain),
-                        new PrepareShooterCommand(shooter, HUB_SHOOT)
+                        getPath(0).getCommand(drivetrain)
+//                        new PrepareShooterCommand(shooter, HUB_SHOOT)
                 ),
                 new ShootSequence(shooter, indexer),
                 new ParallelCommandGroup(
                         new IntakeCommand(indexer, ()->false, 1).withTimeout(1.5),
-                        getPath(1).getCommand(drivetrain),
-                        new PrepareShooterCommand(shooter, HUB_SHOOT)
+                        getPath(1).getCommand(drivetrain)
+//                        new PrepareShooterCommand(shooter, HUB_SHOOT)
                 ),
                 new ShootSequence(shooter, indexer),
 //                new ParallelCommandGroup(
@@ -45,8 +45,8 @@ public class CenterLanePSubCSubBSubFSub extends AutoCommand {
 //                new ShootSequence(shooter, indexer),
                 new ParallelCommandGroup(
                         new IntakeCommand(indexer, ()->false, 1).withTimeout(5),
-                        getPath(3).getCommand(drivetrain),
-                        new PrepareShooterCommand(shooter, HUB_SHOOT)
+                        getPath(3).getCommand(drivetrain)
+//                        new PrepareShooterCommand(shooter, HUB_SHOOT)
                 ),
                 new ShootSequence(shooter, indexer)
         );
