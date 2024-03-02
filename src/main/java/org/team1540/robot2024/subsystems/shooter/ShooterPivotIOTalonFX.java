@@ -61,6 +61,11 @@ public class ShooterPivotIOTalonFX implements ShooterPivotIO {
         motorConfig.MotionMagic.MotionMagicAcceleration = MAX_ACCEL_RPS2;
         motorConfig.MotionMagic.MotionMagicJerk = JERK_RPS3;
 
+        motorConfig.CurrentLimits.SupplyCurrentLimitEnable = true;
+        motorConfig.CurrentLimits.SupplyCurrentLimit = 10;
+        motorConfig.CurrentLimits.SupplyCurrentThreshold = 0.1;
+        motorConfig.CurrentLimits.SupplyTimeThreshold = 15;
+
         CANcoderConfiguration cancoderConfig = new CANcoderConfiguration();
 //        cancoderConfig.MagnetSensor.MagnetOffset = CANCODER_OFFSET_ROTS;
         // TODO: find invert
@@ -88,8 +93,6 @@ public class ShooterPivotIOTalonFX implements ShooterPivotIO {
     @Override
     public void updateInputs(ShooterPivotIOInputs inputs) {
         BaseStatusSignal.refreshAll(position, absolutePosition, velocity, appliedVoltage, current, forwardLimit, reverseLimit);
-//        System.out.println(position.getValueAsDouble());
-//        motor.setPosition(absolutePosition.getValueAsDouble() * MOTOR_TO_CANCODER);
         inputs.isAtForwardLimit = forwardLimit.getValue() == ForwardLimitValue.ClosedToGround;
         inputs.isAtReverseLimit = reverseLimit.getValue() == ReverseLimitValue.ClosedToGround;
         inputs.position = Rotation2d.fromRotations(position.getValueAsDouble());
@@ -103,14 +106,10 @@ public class ShooterPivotIOTalonFX implements ShooterPivotIO {
     @Override
     public void setPosition(Rotation2d position) {
         motor.setControl(positionCtrlReq.withPosition(position.getRotations()));
-//                .withLimitReverseMotion(absolutePosition.getValueAsDouble() < 0.3)
-//                .withLimitForwardMotion(absolutePosition.getValueAsDouble() > 0.54));
     }
 
     @Override
     public void setVoltage(double volts) {
-//        System.out.println("SETTING "+volts);
-//        System.out.println(absolutePosition.getValueAsDouble());
         motor.setControl(voltageCtrlReq.withOutput(volts));
     }
 
@@ -127,5 +126,9 @@ public class ShooterPivotIOTalonFX implements ShooterPivotIO {
         pidConfigs.kI = kI;
         pidConfigs.kD = kD;
         motor.getConfigurator().apply(pidConfigs);
+    }
+    @Override
+    public void setEncoderPosition(double rots) {
+        motor.setPosition(rots);
     }
 }

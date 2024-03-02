@@ -12,6 +12,7 @@ public interface FlywheelsIO {
         public double rightAppliedVolts = 0.0;
         public double rightCurrentAmps = 0.0;
         public double rightVelocityRPM = 0.0;
+
     }
 
     /**

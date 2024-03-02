@@ -17,6 +17,7 @@ import org.team1540.robot2024.commands.drivetrain.DriveWithSpeakerTargetingComma
 import org.team1540.robot2024.commands.drivetrain.SwerveDriveCommand;
 import org.team1540.robot2024.commands.indexer.IntakeAndFeed;
 import org.team1540.robot2024.commands.indexer.StageTrampCommand;
+import org.team1540.robot2024.commands.shooter.HoldPivotCommand;
 import org.team1540.robot2024.commands.shooter.ManualPivotCommand;
 import org.team1540.robot2024.commands.tramp.TrampScoreSequence;
 import org.team1540.robot2024.commands.elevator.ElevatorManualCommand;
@@ -140,9 +141,10 @@ public class RobotContainer {
     }
 
     private void configureButtonBindings() {
+        ManualPivotCommand manualPivotCommand = new ManualPivotCommand(shooter, copilot);
         drivetrain.setDefaultCommand(new SwerveDriveCommand(drivetrain, driver));
         elevator.setDefaultCommand(new ElevatorManualCommand(elevator, copilot));
-        shooter.setDefaultCommand(new ManualPivotCommand(shooter, copilot));
+        shooter.setDefaultCommand(manualPivotCommand);
 
         driver.x().onTrue(Commands.runOnce(drivetrain::stopWithX, drivetrain));
 //        driver.y().toggleOnTrue(new DriveWithSpeakerTargetingCommand(drivetrain, driver));

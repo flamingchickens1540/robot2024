@@ -17,14 +17,18 @@ public class ShootSequence extends ParallelRaceGroup {
 
     public ShootSequence(Shooter shooter, Indexer indexer, ShooterSetpoint setpoint) {
         addCommands(
-                new PrepareShooterCommand(shooter, setpoint),
+                Commands.sequence(
+                        Commands.runOnce(shooter::zeroPivot),
+                        new PrepareShooterCommand(shooter, setpoint)
+                ),
+
                 Commands.sequence(
 //                        Commands.sequence(
 //                                Commands.waitSeconds(1.5)
 //                                Commands.waitUntil(() -> shooter.isPivotAtSetpoint() && shooter.areFlywheelsSpunUp())
                         // ) .withTimeout(1.5),
-                        Commands.waitSeconds(1.5),
-                        new IntakeAndFeed(indexer, () -> 1, () -> 0.5).withTimeout(3)
+                        Commands.waitSeconds(1),
+                        new IntakeAndFeed(indexer, () -> 1, () -> 0.5).withTimeout(0.5)
                 )
 
                 // TODO: Add a wait for having completed the shot (steady then current spike/velocity dip and then back down?)

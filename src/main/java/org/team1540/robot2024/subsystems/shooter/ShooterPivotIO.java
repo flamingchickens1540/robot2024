@@ -39,4 +39,6 @@ public interface ShooterPivotIO {
      * Configures the PID controller
      */
     default void configPID(double kP, double kI, double kD) {}
+
+    default void setEncoderPosition(double rots) {}
 }

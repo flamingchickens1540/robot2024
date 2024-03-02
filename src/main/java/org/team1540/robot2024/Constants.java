@@ -49,7 +49,7 @@ public final class Constants {
 
     public static class SwerveConfig {
         public static final String CAN_BUS  = IS_COMPETITION_ROBOT ? "swerve" : "swerve";
-        public static final double CAN_UPDATE_FREQUENCY_HZ = 100.0;
+        public static final double CAN_UPDATE_FREQUENCY_HZ = 200.0;
 
         public static final int FRONT_LEFT  = IS_COMPETITION_ROBOT ? 9 : 1;
         public static final int FRONT_RIGHT = IS_COMPETITION_ROBOT ? 2 : 7;
@@ -248,7 +248,7 @@ public final class Constants {
 
     public static class Tramp {
         public static final int BEAM_BREAK_CHANNEL = 9;
-        public static final double GEAR_RATIO = 3.0;
+        public static final double GEAR_RATIO = 9.0;
         public static final double TRAP_SCORING_TIME_SECONDS = 1.114; //TODO: Find these values :D
         public static final int MOTOR_ID = 17;
     }

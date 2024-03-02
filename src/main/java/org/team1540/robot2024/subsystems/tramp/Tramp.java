@@ -25,7 +25,7 @@ public class Tramp extends SubsystemBase {
         if (Constants.currentMode != Constants.Mode.REAL) {
             DriverStation.reportWarning("Using real tramp on simulated robot", false);
         }
-        return new Tramp(new TrampIOSparkMax());
+        return new Tramp(new TrampIOTalonFX());
     }
 
     public static Tramp createSim() {
