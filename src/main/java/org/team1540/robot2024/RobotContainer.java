@@ -180,7 +180,7 @@ public class RobotContainer {
 
 
         new Trigger(indexer::isNoteStaged)
-                .onTrue(CommandUtils.rumbleCommand(driver.getHID(), 0.6, 0.5))
+                .onTrue(CommandUtils.rumbleCommand(driver.getHID(), 0.8, 1))
                 .whileTrue(Commands.startEnd(() -> leds.setPattern(Leds.Zone.ELEVATOR_BACK, new LedPatternWave(0)), () -> leds.setPattern(Leds.Zone.ELEVATOR_BACK, new LedPatternRainbow(2))));
 
         new Trigger(indexer::isNoteStaged).and(intakeCommand::isScheduled).onTrue(CommandUtils.rumbleCommand(driver.getHID(), 0.3, 0.4));
