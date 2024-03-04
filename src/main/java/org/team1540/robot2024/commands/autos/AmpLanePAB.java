@@ -17,14 +17,13 @@ public class AmpLanePAB extends AutoCommand {
                 PathHelper.fromChoreoPath("AmpLanePAB.3")
         );
         addCommands(
-                getPath(0).getCommand(drivetrain),
                 new ShootSequence(shooter, indexer),
-                new IntakeCommand(indexer, () -> false, 100), //TODO: Tune this
+                getPath(0).getCommand(drivetrain),
+                new IntakeCommand(indexer, () -> false, 1),
                 new ShootSequence(shooter, indexer),
                 getPath(1).getCommand(drivetrain),
+                new IntakeCommand(indexer, () -> false, 1),
                 getPath(2).getCommand(drivetrain),
-                new ShootSequence(shooter, indexer),
-                new IntakeCommand(indexer, () -> false, 100),
                 new ShootSequence(shooter, indexer)
         );
     }
