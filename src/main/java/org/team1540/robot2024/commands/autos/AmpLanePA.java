@@ -17,9 +17,9 @@ public class AmpLanePA extends AutoCommand {
                 PathHelper.fromChoreoPath("AmpLanePA.1")
         );
         addCommands(
-                getPath(0).getCommand(drivetrain),
                 new ShootSequence(shooter, indexer),
-                new IntakeCommand(indexer, () -> false, 100), //TODO: Tune this
+                getPath(0).getCommand(drivetrain),
+                new IntakeCommand(indexer, () -> false, 1),
                 new ShootSequence(shooter, indexer)
         );
     }
