@@ -589,17 +589,8 @@
         "CenterLaneP": {
             "waypoints": [
                 {
-                    "x": 0.9670553803443909,
-                    "y": 3.8869903087615967,
-                    "heading": 0,
-                    "isInitialGuess": false,
-                    "translationConstrained": true,
-                    "headingConstrained": true,
-                    "controlIntervalCount": 10
-                },
-                {
-                    "x": 1.7619891166687012,
-                    "y": 5.447951316833496,
+                    "x": 1.4744118452072144,
+                    "y": 5.486110687255859,
                     "heading": 0,
                     "isInitialGuess": false,
                     "translationConstrained": true,
@@ -719,7 +710,8 @@
                     "scope": [
                         "last"
                     ],
-                    "type": "StopPoint"
+                    "type": "StopPoint",
+                    "direction": 0
                 }
             ],
             "usesControlIntervalGuessing": true,
