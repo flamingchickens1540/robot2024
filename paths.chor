@@ -833,7 +833,7 @@
             "usesDefaultFieldObstacles": true,
             "circleObstacles": []
         },
-        "AmpLanePBDEF": {
+        "AmpLanePADEF": {
             "waypoints": [
                 {
                     "x": 1.0799212455749512,
