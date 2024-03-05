@@ -12,14 +12,13 @@ public class AmpLanePdSprint extends AutoCommand {
     public AmpLanePdSprint (Drivetrain drivetrain, Shooter shooter, Indexer indexer) {
         super("AmpLanePdSprint");
         addPath(
-                PathHelper.fromChoreoPath("AmpLanePd.1"),
+                PathHelper.fromChoreoPath("AmpLanePd.1", true, true),
                 PathHelper.fromChoreoPath("AmpLanePd.2")
         );
         addCommands(
-                getPath(0).getCommand(drivetrain, true),
                 new ShootSequence(shooter, indexer),
-                getPath(0).getCommand(drivetrain),
-                new IntakeCommand(indexer, () -> false, 1) //TODO: tune this
+                getPath(0).getCommand(drivetrain, true),
+                new IntakeCommand(indexer, () -> false, 1)
         );
     }
 }

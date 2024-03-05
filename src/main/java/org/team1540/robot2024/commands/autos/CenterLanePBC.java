@@ -12,19 +12,16 @@ public class CenterLanePBC extends AutoCommand {
     public CenterLanePBC (Drivetrain drivetrain, Shooter shooter, Indexer indexer) {
         super("CenterLanePBC");
         addPath(
-                PathHelper.fromChoreoPath("CenterLanePBC.1"),
-                PathHelper.fromChoreoPath("CenterLanePBC.2"),
-                PathHelper.fromChoreoPath("CenterLanePBC.3")
+                PathHelper.fromChoreoPath("CenterLanePBC.1", true, true),
+                PathHelper.fromChoreoPath("CenterLanePBC.2")
         );
         addCommands(
-                getPath(0).getCommand(drivetrain, true),
                 new ShootSequence(shooter, indexer),
-                new IntakeCommand(indexer, () -> false, 1), //TODO: tune this
+                getPath(0).getCommand(drivetrain, true),
+                new IntakeCommand(indexer, () -> false, 1),
                 new ShootSequence(shooter, indexer),
                 getPath(1).getCommand(drivetrain),
-                getPath(2).getCommand(drivetrain),
                 new IntakeCommand(indexer, () -> false, 1),
-                getPath(3).getCommand(drivetrain),
                 new ShootSequence(shooter, indexer)
         );
     }

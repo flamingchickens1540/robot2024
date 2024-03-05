@@ -18,7 +18,7 @@ public class AmpLanePAB extends AutoCommand {
         );
         addCommands(
                 new ShootSequence(shooter, indexer),
-                getPath(0).getCommand(drivetrain),
+                getPath(0).getCommand(drivetrain, true),
                 new IntakeCommand(indexer, () -> false, 1),
                 new ShootSequence(shooter, indexer),
                 getPath(1).getCommand(drivetrain),

@@ -12,7 +12,7 @@ public class AmpLanePBDEF extends AutoCommand {
     public AmpLanePBDEF(Drivetrain drivetrain, Shooter shooter, Indexer indexer) {
         super("AmpLanePDEF");
         addPath(
-                PathHelper.fromChoreoPath("AmpLanePDEF.1"),
+                PathHelper.fromChoreoPath("AmpLanePDEF.1", true, true),
                 PathHelper.fromChoreoPath("AmpLanePDEF.2"),
                 PathHelper.fromChoreoPath("AmpLanePDEF.3"),
                 PathHelper.fromChoreoPath("AmpLanePDEF.4"),
@@ -22,7 +22,7 @@ public class AmpLanePBDEF extends AutoCommand {
         );
         addCommands(
                 new ShootSequence(shooter, indexer),
-                getPath(0).getCommand(drivetrain),
+                getPath(0).getCommand(drivetrain, true),
                 new IntakeCommand(indexer, () -> false, 1),
                 new ShootSequence(shooter, indexer),
                 getPath(1).getCommand(drivetrain),

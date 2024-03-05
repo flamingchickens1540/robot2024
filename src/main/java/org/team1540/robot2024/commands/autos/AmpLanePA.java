@@ -14,11 +14,11 @@ public class AmpLanePA extends AutoCommand {
     public AmpLanePA (Drivetrain drivetrain, Shooter shooter, Indexer indexer) {
         super("AmpLanePA");
         addPath(
-                PathHelper.fromChoreoPath("AmpLanePA.1")
+                PathHelper.fromChoreoPath("AmpLanePA.1", true, true)
         );
         addCommands(
                 new ShootSequence(shooter, indexer),
-                getPath(0).getCommand(drivetrain),
+                getPath(0).getCommand(drivetrain, true),
                 new IntakeCommand(indexer, () -> false, 1),
                 new ShootSequence(shooter, indexer)
         );
