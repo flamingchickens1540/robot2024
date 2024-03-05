@@ -226,13 +226,9 @@ public final class Constants {
              */
             BOTTOM(MINIMUM_HEIGHT),
             /**
-             * At height for top of initial climb :D
+             * At height for aligning for climbing
              */
-            CLIMB(CHAIN_HEIGHT_METERS + 0.1 - (CLIMBING_HOOKS_MINIMUM_HEIGHT - MINIMUM_HEIGHT)), //TODO: Find these values :D
-            /**
-             * At height for trap doing :D
-             */
-            TRAP(0.4), //TODO: Find these values :D
+            CLIMB(0.1),
             /**
              * At height for top of initial climb :D
              */
