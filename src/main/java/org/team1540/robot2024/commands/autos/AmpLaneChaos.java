@@ -14,14 +14,34 @@ public class AmpLaneChaos extends AutoCommand {
         addPath(
                 PathHelper.fromChoreoPath("AmpLaneChaos.1", true, true),
                 PathHelper.fromChoreoPath("AmpLaneChaos.2"),
-                PathHelper.fromChoreoPath("AmpLaneChaos.3")
+                PathHelper.fromChoreoPath("AmpLaneChaos.3"),
+                PathHelper.fromChoreoPath("AmpLaneChaos.4"),
+                PathHelper.fromChoreoPath("AmpLaneChaos.5"),
+                PathHelper.fromChoreoPath("AmpLaneChaos.6"),
+                PathHelper.fromChoreoPath("AmpLaneChaos.7"),
+                PathHelper.fromChoreoPath("AmpLaneChaos.8")
         );
         addCommands(
                 getPath(0).getCommand(drivetrain),
-                getPath(1).getCommand(drivetrain),
                 new IntakeCommand(indexer, () -> false, 1),
-                getPath(2).getCommand(drivetrain),
+                getPath(1).getCommand(drivetrain),
+                new IntakeCommand(indexer, () -> false, -1),
+                getPath(0).getCommand(drivetrain),
+                new IntakeCommand(indexer, () -> false, 1),
+                getPath(1).getCommand(drivetrain),
+                new IntakeCommand(indexer, () -> false, -1),
+                getPath(0).getCommand(drivetrain),
+                new IntakeCommand(indexer, () -> false, 1),
+                getPath(1).getCommand(drivetrain),
+                new IntakeCommand(indexer, () -> false, -1),
+                getPath(0).getCommand(drivetrain),
+                new IntakeCommand(indexer, () -> false, 1),
+                getPath(1).getCommand(drivetrain),
+                new IntakeCommand(indexer, () -> false, -1),
+                getPath(0).getCommand(drivetrain),
+                new IntakeCommand(indexer, () -> false, 1),
+                getPath(1).getCommand(drivetrain),
                 new ShootSequence(shooter, indexer)
-        );
+                );
     }
 }
