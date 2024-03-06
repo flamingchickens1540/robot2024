@@ -11664,7 +11664,7 @@
                     "controlIntervalCount": 23
                 },
                 {
-                    "x": 2.462606430053711,
+                    "x": 2.5,
                     "y": 5.547596454620361,
                     "heading": 0,
                     "isInitialGuess": false,
@@ -12634,37 +12634,43 @@
                     "scope": [
                         "first"
                     ],
-                    "type": "StopPoint"
+                    "type": "StopPoint",
+                    "direction": 0
                 },
                 {
                     "scope": [
                         "last"
                     ],
-                    "type": "StopPoint"
+                    "type": "StopPoint",
+                    "direction": 0
                 },
                 {
                     "scope": [
                         0
                     ],
-                    "type": "StopPoint"
+                    "type": "StopPoint",
+                    "direction": 0
                 },
                 {
                     "scope": [
                         1
                     ],
-                    "type": "StopPoint"
+                    "type": "StopPoint",
+                    "direction": 0
                 },
                 {
                     "scope": [
                         2
                     ],
-                    "type": "StopPoint"
+                    "type": "StopPoint",
+                    "direction": 0
                 },
                 {
                     "scope": [
                         3
                     ],
-                    "type": "StopPoint"
+                    "type": "StopPoint",
+                    "direction": 0
                 }
             ],
             "usesControlIntervalGuessing": true,
