@@ -163,6 +163,8 @@ public final class Constants {
             public static final Rotation2d MAX_ANGLE = Rotation2d.fromRotations(0.14);
             public static final Rotation2d MIN_ANGLE = Rotation2d.fromRotations(0.01);
 
+            public static final Rotation2d REAL_ZEROED_ANGLE = Rotation2d.fromDegrees(16); //TODO Need this number
+
             // TODO: tune pid
             public static final double KP = 80.0;
             public static final double KI = 40.0;

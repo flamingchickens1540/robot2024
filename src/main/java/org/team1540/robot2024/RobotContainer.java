@@ -39,6 +39,8 @@ import org.team1540.robot2024.util.CommandUtils;
 import org.team1540.robot2024.util.auto.AutoCommand;
 import org.team1540.robot2024.util.auto.AutoManager;
 import org.team1540.robot2024.util.PhoenixTimeSyncSignalRefresher;
+import org.team1540.robot2024.util.shooter.ShooterSetpoint;
+import org.team1540.robot2024.util.vision.AprilTagsCrescendo;
 import org.team1540.robot2024.util.vision.VisionPoseAcceptor;
 
 
@@ -163,17 +165,27 @@ public class RobotContainer {
         copilot.povDown().whileTrue(indexer.commandRunIntake(-1));
         copilot.povUp().whileTrue(new IntakeCommand(indexer, tramp::isNoteStaged, 1, false));
         copilot.povRight().whileTrue(Commands.startEnd(() -> tramp.setPercent(1), tramp::stop, tramp));
-        copilot.povLeft().onTrue(CommandUtils.startStopTimed(
-                () -> leds.setPatternAll(() -> new LedPatternWave(DriverStation.getAlliance().orElse(DriverStation.Alliance.Red) == DriverStation.Alliance.Red ? 0: 216), Leds.PatternCriticality.HIGH),
-                () -> leds.setPatternAll(() -> new LedPatternWave(DriverStation.getAlliance().orElse(DriverStation.Alliance.Red) == DriverStation.Alliance.Red ? 0: 216), Leds.PatternCriticality.HIGH),
-                5
-        ));
+//        copilot.povLeft().onTrue(CommandUtils.startStopTimed(
+//                () -> leds.setPatternAll(() -> new LedPatternWave(DriverStation.getAlliance().orElse(DriverStation.Alliance.Red) == DriverStation.Alliance.Red ? 0: 216), Leds.PatternCriticality.HIGH),
+//                () -> leds.setPatternAll(() -> new LedPatternWave(DriverStation.getAlliance().orElse(DriverStation.Alliance.Red) == DriverStation.Alliance.Red ? 0: 216), Leds.PatternCriticality.HIGH),
+//                5
+//        ));
+        copilot.povLeft().whileTrue(new ShootSequence(shooter, indexer, ()->{
+            ShooterSetpoint setpoint = new ShooterSetpoint(
+                    Rotation2d.fromRadians(
+                            Math.atan2(1.892681, drivetrain.getPose().getTranslation().getDistance(
+                                    AprilTagsCrescendo.getInstance().getTag(AprilTagsCrescendo.Tags.SPEAKER_CENTER).toPose2d().getTranslation()
+                            ))).minus(Constants.Shooter.Pivot.REAL_ZEROED_ANGLE),
+                    8000, 7000
+            );
+            return setpoint;
+        }));
 
         copilot.rightTrigger(0.95).whileTrue(Commands.startEnd(() -> tramp.setPercent(1), tramp::stop, tramp));
         copilot.leftTrigger(0.95).whileTrue(new ClimbSequence(drivetrain, elevator, null, tramp, indexer, shooter));
 
 
-        copilot.x().whileTrue(new ShootSequence(shooter, indexer, HUB_SHOOT));
+        copilot.x().whileTrue(new ShootSequence(shooter, indexer));
         copilot.a().whileTrue(new TrampStageSequence(indexer, tramp, elevator));
         copilot.b().onTrue(new PrepareShooterCommand(shooter, HUB_SHOOT));
         copilot.y().whileTrue(new StageTrampCommand(tramp, indexer));
@@ -231,7 +243,7 @@ public class RobotContainer {
 
         AutoManager.getInstance().addAuto(new DriveSinglePath("AmpLaneTaxi", drivetrain));
         AutoManager.getInstance().addAuto(new DriveSinglePath("AmpLaneSprint", drivetrain));
-//        AutoManager.getInstance().addAuto(new AmpLanePSubASubDSubESub(drivetrain, shooter, indexer));
+        AutoManager.getInstance().addAuto(new AmpLanePSubASubDSubESub(drivetrain, shooter, indexer));
         AutoManager.getInstance().addDefaultAuto(new DriveSinglePath("CenterLaneTaxi", drivetrain));
         AutoManager.getInstance().addAuto(new DriveSinglePath("CenterLaneSprint", drivetrain, true, true));
         AutoManager.getInstance().addAuto(new CenterLanePSubSprint(drivetrain, shooter, indexer));
