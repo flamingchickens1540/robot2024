@@ -7,19 +7,21 @@ import org.team1540.robot2024.subsystems.indexer.Indexer;
 import org.team1540.robot2024.subsystems.shooter.Shooter;
 import org.team1540.robot2024.util.shooter.ShooterSetpoint;
 
+import java.util.function.Supplier;
+
 import static org.team1540.robot2024.Constants.Shooter.Pivot.HUB_SHOOT;
 
 public class ShootSequence extends ParallelRaceGroup {
 
     public ShootSequence(Shooter shooter, Indexer indexer) {
-        this(shooter, indexer, HUB_SHOOT);
+        this(shooter, indexer, ()->HUB_SHOOT);
     }
 
-    public ShootSequence(Shooter shooter, Indexer indexer, ShooterSetpoint setpoint) {
+    public ShootSequence(Shooter shooter, Indexer indexer, Supplier<ShooterSetpoint> setpoint) {
         addCommands(
                 Commands.sequence(
 //                        Commands.runOnce(shooter::zeroPivot),
-                        new PrepareShooterCommand(shooter, setpoint)
+                        new PrepareShooterCommand(shooter, setpoint.get())
                 ),
 
                 Commands.sequence(

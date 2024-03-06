@@ -46,8 +46,7 @@ public class PathHelper {
         this.isResetting = shouldReset;
         this.canFlip = canFlip;
         this.path = isChoreo ? PathPlannerPath.fromChoreoTrajectory(pathname) : PathPlannerPath.fromPathFile(pathname);
-        Rotation2d rotation = path.getPoint(0).rotationTarget == null ? new Rotation2d() : path.getPoint(0).rotationTarget.getTarget();
-        this.initialPose = new Pose2d(path.getPoint(0).position, rotation);
+        this.initialPose = path.getStartingDifferentialPose();
     }
 
     public boolean getIsResetting() {
@@ -56,7 +55,7 @@ public class PathHelper {
 
     public Pose2d getInitialPose() {
         BooleanSupplier shouldFlip = () -> DriverStation.getAlliance().orElse(null) == DriverStation.Alliance.Red;
-        System.out.println(DriverStation.getAlliance().orElse(null) + " " + shouldFlip.getAsBoolean());
+//        System.out.println(DriverStation.getAlliance().orElse(null) + " " + shouldFlip.getAsBoolean());
         return shouldFlip.getAsBoolean() ? GeometryUtil.flipFieldPose(initialPose) : initialPose;
     }
 

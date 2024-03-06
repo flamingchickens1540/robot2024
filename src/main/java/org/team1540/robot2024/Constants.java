@@ -163,6 +163,10 @@ public final class Constants {
             public static final Rotation2d MAX_ANGLE = Rotation2d.fromRotations(0.14);
             public static final Rotation2d MIN_ANGLE = Rotation2d.fromRotations(0.01);
 
+            public static final Rotation2d REAL_ZEROED_ANGLE = Rotation2d.fromDegrees(16); //TODO Need this number
+
+            public static final double PIVOT_HEIGHT = Units.inchesToMeters(14.5);
+
             // TODO: tune pid
             public static final double KP = 80.0;
             public static final double KI = 40.0;
@@ -227,13 +231,9 @@ public final class Constants {
              */
             BOTTOM(MINIMUM_HEIGHT),
             /**
-             * At height for top of initial climb :D
+             * At height for aligning for climbing
              */
-            CLIMB(CHAIN_HEIGHT_METERS + 0.1 - (CLIMBING_HOOKS_MINIMUM_HEIGHT - MINIMUM_HEIGHT)), //TODO: Find these values :D
-            /**
-             * At height for trap doing :D
-             */
-            TRAP(0.4), //TODO: Find these values :D
+            CLIMB(0.1),
             /**
              * At height for top of initial climb :D
              */
@@ -262,6 +262,7 @@ public final class Constants {
 
         public static final Pose2d SPEAKER_POSE =
                 new Pose2d(Units.inchesToMeters(8.861), Units.inchesToMeters(218), new Rotation2d());
+        public static final Double SPEAKER_CENTER_HEIGHT = Units.inchesToMeters(80.4375);
     }
 
     public static boolean isTuningMode() {
