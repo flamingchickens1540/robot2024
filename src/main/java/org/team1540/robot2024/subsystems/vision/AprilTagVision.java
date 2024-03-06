@@ -50,8 +50,8 @@ public class AprilTagVision extends SubsystemBase {
             DriverStation.reportWarning("Using real vision on simulated robot", false);
         }
         return new AprilTagVision(
-                new AprilTagVisionIOLimelight(FRONT_CAMERA_NAME, FRONT_CAMERA_POSE),
-                new AprilTagVisionIOLimelight(REAR_CAMERA_NAME, REAR_CAMERA_POSE),
+                new AprilTagVisionIOPhoton(FRONT_CAMERA_NAME, FRONT_CAMERA_POSE),
+                new AprilTagVisionIOPhoton(REAR_CAMERA_NAME, REAR_CAMERA_POSE),
                 visionPoseConsumer,
                 elevatorHeightSupplierMeters);
     }

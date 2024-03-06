@@ -7,7 +7,7 @@ import edu.wpi.first.wpilibj.DriverStation;
 
 public class AprilTagsCrescendo {
     private static AprilTagsCrescendo instance;
-    private static AprilTagFieldLayout tags;
+    public static AprilTagFieldLayout tags;
     public enum Tags {
         SOURCE_INNER(1, 10),
         SOURCE_OUTER(2, 9),
@@ -37,7 +37,7 @@ public class AprilTagsCrescendo {
         tags = AprilTagFields.k2024Crescendo.loadAprilTagLayoutField();
     }
 
-    public static AprilTagFieldLayout getTags() {
+    public AprilTagFieldLayout getTags() {
         return tags;
     }
 
