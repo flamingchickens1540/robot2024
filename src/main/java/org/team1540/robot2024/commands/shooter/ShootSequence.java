@@ -18,7 +18,7 @@ public class ShootSequence extends ParallelRaceGroup {
     public ShootSequence(Shooter shooter, Indexer indexer, ShooterSetpoint setpoint) {
         addCommands(
                 Commands.sequence(
-                        Commands.runOnce(shooter::zeroPivot),
+//                        Commands.runOnce(shooter::zeroPivot),
                         new PrepareShooterCommand(shooter, setpoint)
                 ),
 

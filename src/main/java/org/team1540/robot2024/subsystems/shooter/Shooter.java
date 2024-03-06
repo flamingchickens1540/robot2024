@@ -147,6 +147,13 @@ public class Shooter extends SubsystemBase {
         pivotPositionFilter.clear();
         pivotIO.setPosition(pivotSetpoint);
     }
+    /**
+     * Sets the position of the pivot, using parallel to the floor as 0
+     */
+    public void holdPivotPosition() {
+//        pivotPositionFilter.clear();
+        pivotIO.setPosition(pivotSetpoint);
+    }
 
     /**
      * Sets the voltage to the pivot

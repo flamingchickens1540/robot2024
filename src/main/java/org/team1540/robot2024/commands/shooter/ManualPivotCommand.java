@@ -20,7 +20,9 @@ public class ManualPivotCommand extends Command {
     @Override
     public void execute() {
 
-        shooter.setPivotVolts(JoystickUtils.smartDeadzone(controller.getLeftY()*8, 0.1));
+//        shooter.setPivotVolts(JoystickUtils.smartDeadzone(controller.getLeftY()*8, 0.1));
+
+        shooter.holdPivotPosition();
     }
 
     @Override

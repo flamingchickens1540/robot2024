@@ -17,13 +17,10 @@ import org.team1540.robot2024.commands.drivetrain.DriveWithSpeakerTargetingComma
 import org.team1540.robot2024.commands.drivetrain.SwerveDriveCommand;
 import org.team1540.robot2024.commands.indexer.IntakeAndFeed;
 import org.team1540.robot2024.commands.indexer.StageTrampCommand;
-import org.team1540.robot2024.commands.shooter.HoldPivotCommand;
-import org.team1540.robot2024.commands.shooter.ManualPivotCommand;
+import org.team1540.robot2024.commands.shooter.*;
 import org.team1540.robot2024.commands.tramp.TrampScoreSequence;
 import org.team1540.robot2024.commands.elevator.ElevatorManualCommand;
 import org.team1540.robot2024.commands.indexer.IntakeCommand;
-import org.team1540.robot2024.commands.shooter.PrepareShooterCommand;
-import org.team1540.robot2024.commands.shooter.ShootSequence;
 import org.team1540.robot2024.commands.autos.*;
 import org.team1540.robot2024.commands.tramp.TrampShoot;
 import org.team1540.robot2024.commands.tramp.TrampStageSequence;
@@ -43,6 +40,7 @@ import org.team1540.robot2024.util.vision.VisionPoseAcceptor;
 
 
 import static org.team1540.robot2024.Constants.Shooter.Pivot.HUB_SHOOT;
+import static org.team1540.robot2024.Constants.Shooter.Pivot.PODIUM_SHOOT;
 import static org.team1540.robot2024.Constants.SwerveConfig;
 import static org.team1540.robot2024.Constants.isTuningMode;
 
@@ -175,7 +173,8 @@ public class RobotContainer {
 
         copilot.x().whileTrue(new ShootSequence(shooter, indexer, HUB_SHOOT));
         copilot.a().whileTrue(new TrampStageSequence(indexer, tramp, elevator));
-        copilot.b().onTrue(new PrepareShooterCommand(shooter, HUB_SHOOT));
+//        copilot.b().whileTrue(new ShootSequence(shooter, indexer, PODIUM_SHOOT));
+        copilot.b().whileTrue(new TuneShooterCommand(shooter, indexer));
         copilot.y().whileTrue(new StageTrampCommand(tramp, indexer));
 
 //        copilot.leftTrigger(0.5).whileTrue(new ElevatorSetpointCommand(elevator, ElevatorState.CLIMB));

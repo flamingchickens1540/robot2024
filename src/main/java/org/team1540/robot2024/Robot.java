@@ -1,5 +1,6 @@
 package org.team1540.robot2024;
 
+import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.util.Color;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -115,6 +116,7 @@ public class Robot extends LoggedRobot {
 //        robotContainer.elevator.setBrakeMode(false);
         robotContainer.shooter.setPivotBrakeMode(false);
         robotContainer.drivetrain.unblockTags();
+        robotContainer.shooter.setPivotPosition(new Rotation2d());
         robotContainer.leds.setPattern(Leds.Zone.ELEVATOR_BACK, new LedPatternRainbow(1));
     }
 
@@ -128,7 +130,7 @@ public class Robot extends LoggedRobot {
     public void enabledInit() {
 //        robotContainer.leds.setPattern(Leds.Zone.ELEVATOR_BACK,LedPatternRSLState.matchingColors());
         robotContainer.elevator.setBrakeMode(true);
-        robotContainer.shooter.setPivotBrakeMode(false);
+        robotContainer.shooter.setPivotBrakeMode(true);
     }
 
     /**

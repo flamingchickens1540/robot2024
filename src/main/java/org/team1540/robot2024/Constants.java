@@ -20,7 +20,7 @@ import org.team1540.robot2024.util.shooter.ShooterSetpoint;
 public final class Constants {
     public static final boolean IS_COMPETITION_ROBOT = true; // Objects.equals(RobotController.getComments(), "comp");
     // Whether to pull PID constants from SmartDashboard
-    private static final boolean tuningMode = false; // TODO: DO NOT SET TO TRUE FOR COMP
+    private static final boolean tuningMode = true; // TODO: DO NOT SET TO TRUE FOR COMP
     private static final Mode simMode = Mode.SIM; // Can also be Mode.REPLAY
 
     public static final Mode currentMode = Robot.isReal() ? Mode.REAL : simMode;
@@ -184,6 +184,7 @@ public final class Constants {
 
 
             public static final ShooterSetpoint HUB_SHOOT = new ShooterSetpoint(0.125, 4800,4000);
+            public static final ShooterSetpoint PODIUM_SHOOT = new ShooterSetpoint(0.6, 6000,5000);
 
 
             public static final Rotation2d ERROR_TOLERANCE = Rotation2d.fromDegrees(0.7);
