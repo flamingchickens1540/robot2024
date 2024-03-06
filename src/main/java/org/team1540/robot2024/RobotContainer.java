@@ -153,8 +153,9 @@ public class RobotContainer {
             drivetrain.zeroFieldOrientationManual();
             drivetrain.setBrakeMode(true);
         }).ignoringDisable(true));
-
-//        driver.a().whileTrue(new DriveWithSpeakerTargetingCommand(drivetrain, driver));
+        Command targetDrive = new AutoShootPrepare(driver.getHID(), drivetrain, shooter);
+        driver.a().toggleOnTrue(targetDrive);
+        driver.rightStick().onTrue(Commands.runOnce(targetDrive::cancel));
 
 
         copilot.leftBumper().whileTrue(new TrampScoreSequence(tramp, indexer, elevator));
@@ -187,7 +188,8 @@ public class RobotContainer {
         copilot.x().whileTrue(new ShootSequence(shooter, indexer));
         copilot.a().whileTrue(new TrampStageSequence(indexer, tramp, elevator));
 //        copilot.b().whileTrue(new ShootSequence(shooter, indexer, PODIUM_SHOOT));
-        copilot.b().whileTrue(new TuneShooterCommand(shooter, indexer));
+//        copilot.b().whileTrue(new TuneShooterCommand(shooter, indexer));
+        copilot.b().whileTrue(new IntakeAndFeed(indexer, () -> 1, () -> 0.5));
         copilot.y().whileTrue(new StageTrampCommand(tramp, indexer));
 
 //        copilot.leftTrigger(0.5).whileTrue(new ElevatorSetpointCommand(elevator, ElevatorState.CLIMB));

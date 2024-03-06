@@ -1,7 +1,9 @@
 package org.team1540.robot2024.commands.shooter;
 
 import edu.wpi.first.wpilibj2.command.Commands;
+import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.ParallelRaceGroup;
+import edu.wpi.first.wpilibj2.command.PrintCommand;
 import org.team1540.robot2024.commands.indexer.IntakeAndFeed;
 import org.team1540.robot2024.subsystems.indexer.Indexer;
 import org.team1540.robot2024.subsystems.shooter.Shooter;
@@ -21,7 +23,8 @@ public class ShootSequence extends ParallelRaceGroup {
         addCommands(
                 Commands.sequence(
 //                        Commands.runOnce(shooter::zeroPivot),
-                        new PrepareShooterCommand(shooter, setpoint.get())
+
+                        new PrepareShooterCommand(shooter, setpoint)
                 ),
 
                 Commands.sequence(

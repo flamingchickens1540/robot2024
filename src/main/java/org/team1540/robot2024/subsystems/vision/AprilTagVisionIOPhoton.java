@@ -27,7 +27,7 @@ public class AprilTagVisionIOPhoton implements AprilTagVisionIO {
                 PhotonPoseEstimator.PoseStrategy.MULTI_TAG_PNP_ON_COPROCESSOR,
                 camera,
                 cameraTransform);
-        photonEstimator.setMultiTagFallbackStrategy(PhotonPoseEstimator.PoseStrategy.CLOSEST_TO_LAST_POSE);
+        photonEstimator.setMultiTagFallbackStrategy(PhotonPoseEstimator.PoseStrategy.LOWEST_AMBIGUITY);
         lastEstimatedPose = new Pose3d();
     }
 

@@ -6,6 +6,7 @@ import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import org.littletonrobotics.junction.Logger;
@@ -16,7 +17,7 @@ import static org.team1540.robot2024.Constants.Targeting.*;
 
 public class DriveWithSpeakerTargetingCommand extends Command {
     private final Drivetrain drivetrain;
-    private final CommandXboxController controller;
+    private final XboxController controller;
 
     private final PIDController rotController = new PIDController(ROT_KP, ROT_KI, ROT_KD);
 
@@ -27,7 +28,7 @@ public class DriveWithSpeakerTargetingCommand extends Command {
     private boolean isFlipped;
     private Pose2d speakerPose;
 
-    public DriveWithSpeakerTargetingCommand(Drivetrain drivetrain, CommandXboxController controller) {
+    public DriveWithSpeakerTargetingCommand(Drivetrain drivetrain, XboxController controller) {
         this.drivetrain = drivetrain;
         this.controller = controller;
         rotController.enableContinuousInput(-Math.PI, Math.PI);

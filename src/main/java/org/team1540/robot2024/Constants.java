@@ -153,7 +153,7 @@ public final class Constants {
             // TODO: figure this out
             public static final double CANCODER_OFFSET_ROTS = -0.2502;
             // TODO: determine ratios
-            public static final double CANCODER_TO_PIVOT = 54.0 / 30.0;
+            public static final double CANCODER_TO_PIVOT = 28.0 / 15.0;
             public static final double MOTOR_TO_CANCODER = 56.0;
             public static final double TOTAL_GEAR_RATIO = MOTOR_TO_CANCODER * CANCODER_TO_PIVOT;
             public static final double SIM_LENGTH_METERS = Units.inchesToMeters(12.910);
@@ -163,9 +163,9 @@ public final class Constants {
             public static final Rotation2d MAX_ANGLE = Rotation2d.fromRotations(0.14);
             public static final Rotation2d MIN_ANGLE = Rotation2d.fromRotations(0.01);
 
-            public static final Rotation2d REAL_ZEROED_ANGLE = Rotation2d.fromDegrees(16); //TODO Need this number
+            public static final Rotation2d REAL_ZEROED_ANGLE = Rotation2d.fromDegrees(7.5); //TODO Need this number
 
-            public static final double PIVOT_HEIGHT = Units.inchesToMeters(14.5);
+            public static final double PIVOT_HEIGHT = Units.inchesToMeters(10.5);
 
             // TODO: tune pid
             public static final double KP = 80.0;
@@ -188,7 +188,7 @@ public final class Constants {
 
 
             public static final ShooterSetpoint HUB_SHOOT = new ShooterSetpoint(0.125, 4800,4000);
-            public static final ShooterSetpoint PODIUM_SHOOT = new ShooterSetpoint(0.6, 6000,5000);
+            public static final ShooterSetpoint PODIUM_SHOOT = new ShooterSetpoint(0.07, 6000,5000);
 
 
             public static final Rotation2d ERROR_TOLERANCE = Rotation2d.fromDegrees(0.7);

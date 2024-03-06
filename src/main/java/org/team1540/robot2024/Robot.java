@@ -125,6 +125,10 @@ public class Robot extends LoggedRobot {
      */
     @Override
     public void disabledPeriodic() {
+        System.out.println(Rotation2d.fromRadians(
+                Math.atan2(Constants.Targeting.SPEAKER_CENTER_HEIGHT - Constants.Shooter.Pivot.PIVOT_HEIGHT, robotContainer.drivetrain.getPose().getTranslation().getDistance(
+                        AprilTagsCrescendo.getInstance().getTag(AprilTagsCrescendo.Tags.SPEAKER_CENTER).toPose2d().getTranslation()
+                ))).minus(Constants.Shooter.Pivot.REAL_ZEROED_ANGLE).getDegrees());
     }
 
     public void enabledInit() {
