@@ -61,13 +61,13 @@ public class ClimbAlignment extends ParallelRaceGroup {
                 AprilTagsCrescendo.getInstance().getTag(AprilTagsCrescendo.Tags.CLIMB_SOURCE).getTranslation().toTranslation2d());
         Command pathCmd;
         if(far < amp && far < source){
-            pathCmd= AutoBuilder.pathfindThenFollowPath(PathHelper.fromChoreoPath("Tag14" + index).getPath(), STAGE_PATH_CONSTRAINTS);
+            pathCmd= AutoBuilder.pathfindThenFollowPath(PathHelper.fromChoreoPath("Tag14." + index).getPath(), STAGE_PATH_CONSTRAINTS);
         }
         else if(amp < source){
-            pathCmd= AutoBuilder.pathfindThenFollowPath(PathHelper.fromChoreoPath("Tag15" + index).getPath(), STAGE_PATH_CONSTRAINTS);
+            pathCmd= AutoBuilder.pathfindThenFollowPath(PathHelper.fromChoreoPath("Tag15." + index).getPath(), STAGE_PATH_CONSTRAINTS);
         }
         else{
-            pathCmd= AutoBuilder.pathfindThenFollowPath(PathHelper.fromChoreoPath("Tag16" + index).getPath(), STAGE_PATH_CONSTRAINTS);
+            pathCmd= AutoBuilder.pathfindThenFollowPath(PathHelper.fromChoreoPath("Tag16." + index).getPath(), STAGE_PATH_CONSTRAINTS);
         }
         return Commands.runOnce(drivetrain::blockTags).andThen(pathCmd).andThen(Commands.runOnce(drivetrain::unblockTags));
     }
