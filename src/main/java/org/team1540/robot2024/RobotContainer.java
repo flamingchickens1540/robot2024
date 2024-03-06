@@ -1,6 +1,7 @@
 package org.team1540.robot2024;
 
 import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.RobotController;
@@ -173,7 +174,7 @@ public class RobotContainer {
         copilot.povLeft().whileTrue(new ShootSequence(shooter, indexer, ()->{
             ShooterSetpoint setpoint = new ShooterSetpoint(
                     Rotation2d.fromRadians(
-                            Math.atan2(1.892681, drivetrain.getPose().getTranslation().getDistance(
+                            Math.atan2(Constants.Targeting.SPEAKER_CENTER_HEIGHT - Constants.Shooter.Pivot.PIVOT_HEIGHT, drivetrain.getPose().getTranslation().getDistance(
                                     AprilTagsCrescendo.getInstance().getTag(AprilTagsCrescendo.Tags.SPEAKER_CENTER).toPose2d().getTranslation()
                             ))).minus(Constants.Shooter.Pivot.REAL_ZEROED_ANGLE),
                     8000, 7000

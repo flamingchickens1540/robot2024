@@ -165,6 +165,8 @@ public final class Constants {
 
             public static final Rotation2d REAL_ZEROED_ANGLE = Rotation2d.fromDegrees(16); //TODO Need this number
 
+            public static final double PIVOT_HEIGHT = Units.inchesToMeters(14.5);
+
             // TODO: tune pid
             public static final double KP = 80.0;
             public static final double KI = 40.0;
@@ -259,6 +261,7 @@ public final class Constants {
 
         public static final Pose2d SPEAKER_POSE =
                 new Pose2d(Units.inchesToMeters(8.861), Units.inchesToMeters(218), new Rotation2d());
+        public static final Double SPEAKER_CENTER_HEIGHT = Units.inchesToMeters(80.4375);
     }
 
     public static boolean isTuningMode() {
