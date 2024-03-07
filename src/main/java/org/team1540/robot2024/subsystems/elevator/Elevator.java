@@ -105,6 +105,14 @@ public class Elevator extends SubsystemBase {
         io.setBrakeMode(isBrakeMode);
     }
 
+    public boolean getUpperLimit(){
+        return inputs.atUpperLimit;
+    }
+
+    public boolean getLowerLimit(){
+        return inputs.atLowerLimit;
+    }
+
     public void holdPosition() {
         setElevatorPosition(inputs.positionMeters);
     }

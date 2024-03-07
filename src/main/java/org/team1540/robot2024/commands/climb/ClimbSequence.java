@@ -4,6 +4,7 @@ import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.path.PathConstraints;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.wpilibj2.command.*;
+import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import org.team1540.robot2024.Constants;
 import org.team1540.robot2024.Constants.Elevator.ElevatorState;
 import org.team1540.robot2024.commands.elevator.ElevatorSetpointCommand;
@@ -26,14 +27,19 @@ public class ClimbSequence extends ParallelRaceGroup {
             1,
             0.3);
 
-    public ClimbSequence(Drivetrain drivetrain, Elevator elevator, Hooks hooks, Tramp tramp, Indexer indexer, Shooter shooter) {
+    public ClimbSequence(Drivetrain drivetrain, Elevator elevator, Hooks hooks, Tramp tramp, Indexer indexer, Shooter shooter, CommandXboxController controller) {
         addCommands(
-//                Commands.startEnd(() -> shooter.setPivotBrakeMode(false), () -> shooter.setPivotBrakeMode(true), shooter),
+                Commands.startEnd(() -> {
+                    shooter.stopPivot();
+                    shooter.setPivotBrakeMode(false);
+                }, () -> shooter.setPivotBrakeMode(true), shooter),
                 Commands.sequence(
-                        new ClimbAlignment(drivetrain, elevator, hooks, tramp, indexer, shooter),
+//                        new ClimbAlignment(drivetrain, elevator, hooks, tramp, indexer, shooter),
+//                        Commands.waitUntil(controller.a()),
                         new ElevatorSetpointCommand(elevator, ElevatorState.TOP),
                         Commands.waitSeconds(5), //Confirm that nothing will break. Also might need to be tuned if chain does weird things
-                        new ElevatorSetpointCommand(elevator, ElevatorState.BOTTOM)
+//                        new ElevatorSetpointCommand(elevator, ElevatorState.BOTTOM)
+                        Commands.startEnd(()->elevator.setVoltage(-10), elevator::holdPosition, elevator).until(elevator::getLowerLimit)
                 )
 //                new ElevatorSetpointCommand(elevator, ElevatorState.CLIMB),
 //                        Commands.runOnce(() -> drivetrain.setBrakeMode(true)),

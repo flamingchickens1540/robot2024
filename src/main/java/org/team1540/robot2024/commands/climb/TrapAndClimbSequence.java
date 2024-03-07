@@ -17,7 +17,7 @@ public class TrapAndClimbSequence extends SequentialCommandGroup {
 
     public TrapAndClimbSequence(Drivetrain drivetrain, Elevator elevator, Hooks hooks, Tramp tramp, Indexer indexer, Shooter shooter) {
         addCommands(
-                new ClimbSequence(drivetrain, elevator, hooks, tramp, indexer, shooter),
+//                new ClimbSequence(drivetrain, elevator, hooks, tramp, indexer, shooter),
                 Commands.waitSeconds(5), //Confirm that nothing will break
                 new ElevatorSetpointCommand(elevator, ElevatorState.TOP),
                 Commands.runOnce(()->tramp.setDistanceToGo(3))

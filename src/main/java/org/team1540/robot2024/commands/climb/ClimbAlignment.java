@@ -40,7 +40,7 @@ public class ClimbAlignment extends ParallelRaceGroup {
                     ),
                     Commands.runOnce(() -> drivetrain.setBrakeMode(false)),
                     Commands.waitSeconds(5), //Confirm that nothing will break
-                    new ElevatorSetpointCommand(elevator, Constants.Elevator.ElevatorState.CLIMB),
+                    new ElevatorSetpointCommand(elevator, Constants.Elevator.ElevatorState.TOP),
                     Commands.runOnce(() -> drivetrain.setBrakeMode(true)),
                     Commands.waitSeconds(5), //Confirm that nothing will break
                     new ProxyCommand(() -> climbPath(drivetrain::getPose, 2))

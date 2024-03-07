@@ -181,7 +181,7 @@ public class RobotContainer {
         }));
 
         copilot.rightTrigger(0.95).whileTrue(Commands.startEnd(() -> tramp.setPercent(1), tramp::stop, tramp));
-        copilot.leftTrigger(0.95).whileTrue(new ClimbSequence(drivetrain, elevator, null, tramp, indexer, shooter));
+        copilot.leftTrigger(0.95).whileTrue(new TrapAndClimbSequence(drivetrain, elevator, null, tramp, indexer, shooter));
 
 
         copilot.x().whileTrue(new ShootSequence(shooter, indexer));

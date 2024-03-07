@@ -8,10 +8,7 @@ import org.team1540.robot2024.subsystems.tramp.Tramp;
 public class TrampShoot extends SequentialCommandGroup {
     public TrampShoot(Tramp tramp) {
         addCommands(
-                Commands.parallel(
-                        Commands.waitUntil(() -> !tramp.isNoteStaged()).withTimeout(10),
-                        tramp.commandRun(1)
-                ),
+                tramp.commandRun(1).onlyWhile(tramp::isNoteStaged),
                 Commands.runOnce(()->tramp.setDistanceToGo(1))
         );
     }

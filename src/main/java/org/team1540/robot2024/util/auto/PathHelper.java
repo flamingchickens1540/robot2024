@@ -46,7 +46,7 @@ public class PathHelper {
         this.isResetting = shouldReset;
         this.canFlip = canFlip;
         this.path = isChoreo ? PathPlannerPath.fromChoreoTrajectory(pathname) : PathPlannerPath.fromPathFile(pathname);
-        this.initialPose = path.getStartingDifferentialPose();
+        this.initialPose = path.getPreviewStartingHolonomicPose();
     }
 
     public boolean getIsResetting() {
