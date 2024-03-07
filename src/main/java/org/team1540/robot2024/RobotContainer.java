@@ -144,9 +144,10 @@ public class RobotContainer {
             drivetrain.setBrakeMode(true);
         }).ignoringDisable(true));
         Command targetDrive = new AutoShootPrepare(driver.getHID(), drivetrain, shooter);
+        Command overStageDrive = new OverStageShootPrepare(driver.getHID(), drivetrain, shooter);
         driver.a().toggleOnTrue(targetDrive);
-        driver.rightStick().onTrue(Commands.runOnce(targetDrive::cancel));
-
+        driver.b().toggleOnTrue(overStageDrive);
+        driver.rightStick().onTrue(Commands.runOnce(targetDrive::cancel).andThen(Commands.runOnce(overStageDrive::cancel)));
 
         copilot.leftBumper().whileTrue(new TrampScoreSequence(tramp, indexer, elevator));
         Command intakeCommand = new IntakeCommand(indexer, tramp::isNoteStaged, 1);

@@ -263,7 +263,8 @@ public final class Constants {
 
         public static final Pose2d SPEAKER_POSE =
                 new Pose2d(Units.inchesToMeters(8.861), Units.inchesToMeters(218), new Rotation2d());
-        public static final Double SPEAKER_CENTER_HEIGHT = Units.inchesToMeters(80.4375);
+        public static final double SPEAKER_CENTER_HEIGHT = Units.inchesToMeters(80.4375);
+        public static final double STAGE_MAX_HEIGHT = Units.feetToMeters(7.365);
     }
 
     public static boolean isTuningMode() {

@@ -59,6 +59,12 @@ public class PathHelper {
         return shouldFlip.getAsBoolean() ? GeometryUtil.flipFieldPose(initialPose) : initialPose;
     }
 
+    public Pose2d getFinalPose(){
+        BooleanSupplier shouldFlip = () -> DriverStation.getAlliance().orElse(null) == DriverStation.Alliance.Red;
+        Pose2d endPose = path.getPathPoses().get(path.getPathPoses().size()-1);
+        return shouldFlip.getAsBoolean() ? GeometryUtil.flipFieldPose(endPose) : endPose;
+    }
+
     public PathPlannerPath getPath() {
         return path;
     }
