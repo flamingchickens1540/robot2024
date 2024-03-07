@@ -176,8 +176,7 @@ public class RobotContainer {
                             Math.atan2(Constants.Targeting.SPEAKER_CENTER_HEIGHT - Constants.Shooter.Pivot.PIVOT_HEIGHT, drivetrain.getPose().getTranslation().getDistance(
                                     AprilTagsCrescendo.getInstance().getTag(AprilTagsCrescendo.Tags.SPEAKER_CENTER).toPose2d().getTranslation()
                             ))).minus(Constants.Shooter.Pivot.REAL_ZEROED_ANGLE),
-                    8000, 7000
-            );
+                    8000, 6000);
             return setpoint;
         }));
 

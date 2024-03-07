@@ -1,13 +1,13 @@
 package org.team1540.robot2024.subsystems.vision;
 
-import edu.wpi.first.apriltag.AprilTagFieldLayout;
-import edu.wpi.first.apriltag.AprilTagFields;
 import edu.wpi.first.math.geometry.Pose3d;
 import edu.wpi.first.math.geometry.Transform3d;
 import org.photonvision.EstimatedRobotPose;
 import org.photonvision.PhotonCamera;
 import org.photonvision.PhotonPoseEstimator;
 import org.photonvision.targeting.PhotonPipelineResult;
+import org.photonvision.targeting.PhotonTrackedTarget;
+import org.team1540.robot2024.Constants;
 import org.team1540.robot2024.util.vision.AprilTagsCrescendo;
 
 import java.util.Optional;
@@ -33,10 +33,14 @@ public class AprilTagVisionIOPhoton implements AprilTagVisionIO {
 
     @Override
     public void updateInputs(AprilTagVisionIOInputs inputs) {
-        Optional<EstimatedRobotPose> estimatedPose = photonEstimator.update();
         PhotonPipelineResult latestResult = camera.getLatestResult();
+        Optional<EstimatedRobotPose> estimatedPose = photonEstimator.update(latestResult);
 
-        if (estimatedPose.isPresent()) {
+        double maxAmbiguityRatio = 0;
+        for (PhotonTrackedTarget target : latestResult.getTargets())
+            if (target.getPoseAmbiguity() > maxAmbiguityRatio) maxAmbiguityRatio = target.getPoseAmbiguity();
+
+        if (estimatedPose.isPresent() && maxAmbiguityRatio < Constants.Vision.MAX_AMBIGUITY_RATIO) {
             lastEstimatedPose = estimatedPose.get().estimatedPose;
             inputs.estimatedPoseMeters = lastEstimatedPose;
             inputs.lastMeasurementTimestampSecs = estimatedPose.get().timestampSeconds;

@@ -107,10 +107,11 @@ public final class Constants {
         //0.341306
         //0.609832
         // TODO: measure these offsets
-        public static final Pose3d FRONT_CAMERA_POSE = new Pose3d(0.0975290, 0, 0.665479, new Rotation3d(0, Math.toRadians(25), 0));
+        public static final Pose3d FRONT_CAMERA_POSE = new Pose3d(0.0975290, 0, 0.665479, new Rotation3d(0, Math.toRadians(-25), 0));
         public static final Pose3d REAR_CAMERA_POSE = new Pose3d(0.03639, 0, 0.715274, new Rotation3d(Math.PI, 0, Math.PI));
 
         // TODO: find these values
+        public static final double MAX_AMBIGUITY_RATIO = 0.3;
         public static final double MAX_VISION_DELAY_SECS = 0.08;
         public static final double MAX_ACCEPTED_ROT_SPEED_RAD_PER_SEC = 1.0;
         public static final double MAX_ACCEPTED_LINEAR_SPEED_MPS = 4.0;
