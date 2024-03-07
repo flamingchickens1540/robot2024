@@ -1,5 +1,6 @@
 package org.team1540.robot2024.commands.autos;
 
+import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import org.team1540.robot2024.commands.indexer.IntakeCommand;
 import org.team1540.robot2024.commands.shooter.ShootSequence;
 import org.team1540.robot2024.subsystems.drive.Drivetrain;
@@ -26,24 +27,34 @@ public class SourceLanePHGFED extends AutoCommand {
         addCommands(
                 new ShootSequence(shooter, indexer),
                 getPath(0).getCommand(drivetrain),
+                new ParallelCommandGroup(
                 new IntakeCommand(indexer, () -> false, 1),
-                getPath(1).getCommand(drivetrain),
+                getPath(1).getCommand(drivetrain)
+                ),
                 new ShootSequence(shooter, indexer),
                 getPath(0).getCommand(drivetrain),
+                new ParallelCommandGroup(
                 new IntakeCommand(indexer, () -> false, 1),
-                getPath(1).getCommand(drivetrain),
+                getPath(1).getCommand(drivetrain)
+                ),
                 new ShootSequence(shooter, indexer),
                 getPath(0).getCommand(drivetrain),
+                new ParallelCommandGroup(
                 new IntakeCommand(indexer, () -> false, 1),
-                getPath(1).getCommand(drivetrain),
+                getPath(1).getCommand(drivetrain)
+                ),
                 new ShootSequence(shooter, indexer),
                 getPath(0).getCommand(drivetrain),
+                new ParallelCommandGroup(
                 new IntakeCommand(indexer, () -> false, 1),
-                getPath(1).getCommand(drivetrain),
+                getPath(1).getCommand(drivetrain)
+                ),
                 new ShootSequence(shooter, indexer),
                 getPath(0).getCommand(drivetrain),
+                new ParallelCommandGroup(
                 new IntakeCommand(indexer, () -> false, 1),
-                getPath(1).getCommand(drivetrain),
+                getPath(1).getCommand(drivetrain)
+                ),
                 new ShootSequence(shooter, indexer)
         );
     }
