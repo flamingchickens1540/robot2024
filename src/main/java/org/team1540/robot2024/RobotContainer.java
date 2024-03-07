@@ -1,9 +1,6 @@
 package org.team1540.robot2024;
 
 import edu.wpi.first.math.geometry.Rotation2d;
-import edu.wpi.first.math.util.Units;
-import edu.wpi.first.wpilibj.DriverStation;
-import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.RobotController;
 import edu.wpi.first.wpilibj.util.Color;
 import edu.wpi.first.wpilibj2.command.*;
@@ -11,10 +8,7 @@ import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 
 import org.team1540.robot2024.commands.FeedForwardCharacterization;
-import org.team1540.robot2024.commands.climb.ClimbSequence;
-import org.team1540.robot2024.commands.climb.ScoreInTrap;
 import org.team1540.robot2024.commands.climb.TrapAndClimbSequence;
-import org.team1540.robot2024.commands.drivetrain.DriveWithSpeakerTargetingCommand;
 import org.team1540.robot2024.commands.drivetrain.SwerveDriveCommand;
 import org.team1540.robot2024.commands.indexer.IntakeAndFeed;
 import org.team1540.robot2024.commands.indexer.StageTrampCommand;
@@ -23,7 +17,6 @@ import org.team1540.robot2024.commands.tramp.TrampScoreSequence;
 import org.team1540.robot2024.commands.elevator.ElevatorManualCommand;
 import org.team1540.robot2024.commands.indexer.IntakeCommand;
 import org.team1540.robot2024.commands.autos.*;
-import org.team1540.robot2024.commands.tramp.TrampShoot;
 import org.team1540.robot2024.commands.tramp.TrampStageSequence;
 import org.team1540.robot2024.subsystems.drive.*;
 import org.team1540.robot2024.subsystems.elevator.Elevator;
@@ -39,11 +32,8 @@ import org.team1540.robot2024.util.auto.AutoManager;
 import org.team1540.robot2024.util.PhoenixTimeSyncSignalRefresher;
 import org.team1540.robot2024.util.shooter.ShooterSetpoint;
 import org.team1540.robot2024.util.vision.AprilTagsCrescendo;
-import org.team1540.robot2024.util.vision.VisionPoseAcceptor;
 
 
-import static org.team1540.robot2024.Constants.Shooter.Pivot.HUB_SHOOT;
-import static org.team1540.robot2024.Constants.Shooter.Pivot.PODIUM_SHOOT;
 import static org.team1540.robot2024.Constants.SwerveConfig;
 import static org.team1540.robot2024.Constants.isTuningMode;
 
@@ -105,7 +95,7 @@ public class RobotContainer {
         }
 
         // Set up FF characterization routines
-        AutoManager.getInstance().addAuto(
+        AutoManager.getInstance().add(
                 new AutoCommand(
                         "Drive FF Characterization",
                         new FeedForwardCharacterization(
@@ -114,7 +104,7 @@ public class RobotContainer {
                 )
         );
 
-        AutoManager.getInstance().addAuto(
+        AutoManager.getInstance().add(
                 new AutoCommand(
                         "Flywheels FF Characterization",
                         new FeedForwardCharacterization(
@@ -123,8 +113,8 @@ public class RobotContainer {
                 )
         );
 
-        AutoManager.getInstance().addDefaultAuto(new AmpLanePABCSprint(drivetrain, shooter, indexer));
-        AutoManager.getInstance().addAuto(new SourceLanePHGFSprint(drivetrain));
+        AutoManager.getInstance().addDefault(new AmpLanePABCSprint(drivetrain, shooter, indexer));
+        AutoManager.getInstance().add(new SourceLanePHGFSprint(drivetrain));
 
         configureAutoRoutines();
         // Configure the button bindings
@@ -220,9 +210,10 @@ public class RobotContainer {
     }
 
     private void configureAutoRoutines(){
+        AutoManager autos = AutoManager.getInstance();
         // Set up FF characterization routines
         if(isTuningMode()){
-            AutoManager.getInstance().addAuto(
+            AutoManager.getInstance().add(
                     new AutoCommand(
                             "Drive FF Characterization",
                             new FeedForwardCharacterization(
@@ -231,7 +222,7 @@ public class RobotContainer {
                     )
             );
 
-            AutoManager.getInstance().addAuto(
+            AutoManager.getInstance().add(
                     new AutoCommand(
                             "Flywheels FF Characterization",
                             new FeedForwardCharacterization(
@@ -240,27 +231,31 @@ public class RobotContainer {
                     )
             );
         }
+        autos.addDefault(new AutoCommand("Dwayne :skull:"));
+        autos.add(new AutoCommand("SubwooferShot", new ShootSequence(shooter, indexer)));
+        autos.add(new DriveSinglePath("AmpLaneTaxi", drivetrain));
+        autos.add(new DriveSinglePath("AmpLaneSprint", drivetrain));
+        autos.add(new AmpLanePSprint(drivetrain, shooter, indexer));
+        autos.add(new AmpLanePABCSprint(drivetrain, shooter, indexer));
+        autos.add(new AmpLanePADESprint(drivetrain, shooter, indexer));
+        autos.add(new DriveSinglePath("CenterLaneTaxi", drivetrain));
+        autos.add(new DriveSinglePath("CenterLaneSprint", drivetrain, true, true));
+        autos.add(new CenterLanePSubSprint(drivetrain, shooter, indexer));
+        autos.add(new CenterLanePCBAD(drivetrain, shooter, indexer));
+        autos.add(new CenterLanePCBAF(drivetrain, shooter, indexer));
+        autos.add(new CenterLanePCBFSprint(drivetrain, shooter, indexer));
+        autos.add(new CenterLanePBDA(drivetrain, shooter, indexer));
+        autos.add(new CenterLanePSubCSubBSubASubFSub(drivetrain, shooter, indexer));
+        autos.add(new CenterLanePSubCSubBSubFSub(drivetrain, shooter, indexer));
+        autos.add(new DriveSinglePath("SourceLaneTaxi", drivetrain));
+        autos.add(new DriveSinglePath("SourceLaneSprint", drivetrain));
+        autos.add(new SourceLanePHGSprint(drivetrain, shooter, indexer));
 
 
-        AutoManager.getInstance().addAuto(new DriveSinglePath("AmpLaneTaxi", drivetrain));
-        AutoManager.getInstance().addAuto(new DriveSinglePath("AmpLaneSprint", drivetrain));
-        AutoManager.getInstance().addAuto(new AmpLanePSubASubDSubESub(drivetrain, shooter, indexer));
-//        AutoManager.getInstance().addDefaultAuto(new DriveSinglePath("CenterLaneTaxi", drivetrain));
-        AutoManager.getInstance().addAuto(new DriveSinglePath("CenterLaneSprint", drivetrain, true, true));
-        AutoManager.getInstance().addAuto(new CenterLanePSubSprint(drivetrain, shooter, indexer));
-        AutoManager.getInstance().addAuto(new CenterLanePSubCSubBSubASubFSub(drivetrain, shooter, indexer));
-        AutoManager.getInstance().addAuto(new CenterLanePSubCSubBSubFSub(drivetrain, shooter, indexer));
-        AutoManager.getInstance().addAuto(new DriveSinglePath("SourceLaneTaxi", drivetrain));
-        AutoManager.getInstance().addAuto(new DriveSinglePath("SourceLaneSprint", drivetrain));
-        AutoManager.getInstance().addAuto(new SourceLanePSubHSubGSub(drivetrain, shooter, indexer));
-        AutoManager.getInstance().addAuto(new AutoCommand("SubwooferShot", new ShootSequence(shooter, indexer)));
-        AutoManager.getInstance().addAuto(new AutoCommand("Dwayne :skull:"));
-        AutoManager.getInstance().addAuto(new CenterLanePCBAF(drivetrain, shooter, indexer));
-        AutoManager.getInstance().addDefaultAuto(new CenterLanePBDA(drivetrain, shooter, indexer));
-//        AutoManager.getInstance().addAuto(new AmpLanePADESprint(drivetrain, shooter, indexer));
-//        AutoManager.getInstance().addAuto(new CenterLanePCBFSprint(drivetrain, shooter, indexer));
-//        AutoManager.getInstance().addAuto(new SourceLanePHGSprint(drivetrain, shooter, indexer));
-//        AutoManager.getInstance().addAuto(new AmpLanePSprint(drivetrain, shooter, indexer));
+
+
+
+
     }
 
     /**

@@ -15,6 +15,7 @@ import org.team1540.robot2024.subsystems.led.*;
 import org.team1540.robot2024.subsystems.led.patterns.*;
 import org.team1540.robot2024.util.LoggedTunableNumber;
 import org.team1540.robot2024.util.MechanismVisualiser;
+import org.team1540.robot2024.util.auto.AutoManager;
 import org.team1540.robot2024.util.vision.AprilTagsCrescendo;
 
 /**
@@ -126,6 +127,7 @@ public class Robot extends LoggedRobot {
      */
     @Override
     public void disabledPeriodic() {
+        AutoManager.getInstance().updateSelected();
     }
 
     public void enabledInit() {

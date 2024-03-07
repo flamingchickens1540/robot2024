@@ -1,6 +1,7 @@
 package org.team1540.robot2024.util.auto;
 
 import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.proto.Trajectory;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
@@ -93,5 +94,13 @@ public class AutoCommand extends SequentialCommandGroup {
                 drivetrain.commandStop(),
                 IntakeAndFeed.withDefaults(indexer).withTimeout(0.5)
         );
+    }
+
+    public List<Pose2d> toTrajectory() {
+        List<Pose2d> output = new ArrayList<>();
+        for (PathHelper path : getPaths()) {
+            output.addAll(path.path.getPathPoses());
+        }
+        return output;
     }
 }
