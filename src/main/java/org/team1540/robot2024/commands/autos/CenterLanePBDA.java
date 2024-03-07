@@ -2,6 +2,7 @@ package org.team1540.robot2024.commands.autos;
 
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
+import edu.wpi.first.wpilibj2.command.ParallelDeadlineGroup;
 import org.team1540.robot2024.commands.indexer.IntakeAndFeed;
 import org.team1540.robot2024.commands.indexer.IntakeCommand;
 import org.team1540.robot2024.commands.shooter.AutoShooterPrepare;
@@ -12,28 +13,28 @@ import org.team1540.robot2024.subsystems.shooter.Shooter;
 import org.team1540.robot2024.util.auto.AutoCommand;
 import org.team1540.robot2024.util.auto.PathHelper;
 
-public class AmpLanePADESprint extends AutoCommand {
-    public AmpLanePADESprint(Drivetrain drivetrain, Shooter shooter, Indexer indexer){
-        super("!AmpLanePADESprint");
+public class CenterLanePBDA extends AutoCommand {
 
+    public CenterLanePBDA(Drivetrain drivetrain, Shooter shooter, Indexer indexer) {
+        super("!CenterLanePBDA");
         addPath(
-                PathHelper.fromChoreoPath("AmpLanePADESprint.1", true, true),
-                PathHelper.fromChoreoPath("AmpLanePADESprint.2"),
-                PathHelper.fromChoreoPath("AmpLanePADESprint.3"),
-                PathHelper.fromChoreoPath("AmpLanePADESprint.4")
+                PathHelper.fromChoreoPath("CenterLanePBDA.1", true, true),
+                PathHelper.fromChoreoPath("CenterLanePBDA.2"),
+                PathHelper.fromChoreoPath("CenterLanePBDA.3")
         );
 
         addCommands(
+                new ShootSequence(shooter, indexer),
                 Commands.parallel(
                         new AutoShooterPrepare(drivetrain, shooter),
                         Commands.sequence(
                                 createSegmentSequence(drivetrain, indexer, 0),
-                                IntakeAndFeed.withDefaults(indexer).withTimeout(2),
                                 createSegmentSequence(drivetrain, indexer, 1),
                                 createSegmentSequence(drivetrain, indexer, 2)
                         )
-                ),
-                getPath(3).getCommand(drivetrain)
+                )
         );
+
+        addRequirements(drivetrain, shooter, indexer);
     }
 }

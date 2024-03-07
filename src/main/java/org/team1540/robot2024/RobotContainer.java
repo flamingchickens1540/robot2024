@@ -194,9 +194,9 @@ public class RobotContainer {
 //        copilot.leftTrigger(0.5).whileTrue(new ElevatorSetpointCommand(elevator, ElevatorState.CLIMB));
 
 
-        new Trigger(indexer::isNoteStaged)
+        new Trigger(indexer::isNoteStaged).debounce(0.1)
                 .onTrue(CommandUtils.rumbleCommand(driver.getHID(), 0.8, 1))
-                .whileTrue(Commands.startEnd(() -> leds.setPattern(Leds.Zone.ELEVATOR_BACK, new LedPatternWave(0)), () -> leds.setPattern(Leds.Zone.ELEVATOR_BACK, new LedPatternRainbow(2))));
+                .whileTrue(Commands.startEnd(() -> leds.setPattern(Leds.Zone.ELEVATOR_BACK, new LedPatternWave(0), Leds.PatternCriticality.EXTREME), () -> leds.clearPattern(Leds.Zone.ELEVATOR_BACK, Leds.PatternCriticality.EXTREME)));
 
         new Trigger(indexer::isNoteStaged).and(intakeCommand::isScheduled).onTrue(CommandUtils.rumbleCommand(driver.getHID(), 0.3, 0.4));
 
@@ -245,7 +245,7 @@ public class RobotContainer {
         AutoManager.getInstance().addAuto(new DriveSinglePath("AmpLaneTaxi", drivetrain));
         AutoManager.getInstance().addAuto(new DriveSinglePath("AmpLaneSprint", drivetrain));
         AutoManager.getInstance().addAuto(new AmpLanePSubASubDSubESub(drivetrain, shooter, indexer));
-        AutoManager.getInstance().addDefaultAuto(new DriveSinglePath("CenterLaneTaxi", drivetrain));
+//        AutoManager.getInstance().addDefaultAuto(new DriveSinglePath("CenterLaneTaxi", drivetrain));
         AutoManager.getInstance().addAuto(new DriveSinglePath("CenterLaneSprint", drivetrain, true, true));
         AutoManager.getInstance().addAuto(new CenterLanePSubSprint(drivetrain, shooter, indexer));
         AutoManager.getInstance().addAuto(new CenterLanePSubCSubBSubASubFSub(drivetrain, shooter, indexer));
@@ -255,6 +255,8 @@ public class RobotContainer {
         AutoManager.getInstance().addAuto(new SourceLanePSubHSubGSub(drivetrain, shooter, indexer));
         AutoManager.getInstance().addAuto(new AutoCommand("SubwooferShot", new ShootSequence(shooter, indexer)));
         AutoManager.getInstance().addAuto(new AutoCommand("Dwayne :skull:"));
+        AutoManager.getInstance().addAuto(new CenterLanePCBAF(drivetrain, shooter, indexer));
+        AutoManager.getInstance().addDefaultAuto(new CenterLanePBDA(drivetrain, shooter, indexer));
 //        AutoManager.getInstance().addAuto(new AmpLanePADESprint(drivetrain, shooter, indexer));
 //        AutoManager.getInstance().addAuto(new CenterLanePCBFSprint(drivetrain, shooter, indexer));
 //        AutoManager.getInstance().addAuto(new SourceLanePHGSprint(drivetrain, shooter, indexer));

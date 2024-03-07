@@ -2,7 +2,12 @@ package org.team1540.robot2024.util.auto;
 
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
+import org.team1540.robot2024.commands.indexer.IntakeAndFeed;
+import org.team1540.robot2024.commands.indexer.IntakeCommand;
+import org.team1540.robot2024.subsystems.drive.Drivetrain;
+import org.team1540.robot2024.subsystems.indexer.Indexer;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -70,5 +75,23 @@ public class AutoCommand extends SequentialCommandGroup {
 
     public void setPathIndex(int index){
         this.pathIndex = index;
+    }
+
+    /**
+     * Follows the path while intaking, then stops and runs the feeder
+     * @param drivetrain
+     * @param indexer
+     * @param pathIndex
+     * @return the commands to run in the segment
+     */
+    protected Command createSegmentSequence(Drivetrain drivetrain, Indexer indexer, int pathIndex) {
+        return Commands.sequence(
+                Commands.deadline(
+                        getPath(pathIndex).getCommand(drivetrain),
+                        new IntakeCommand(indexer, () -> false, 1)
+                ),
+                drivetrain.commandStop(),
+                IntakeAndFeed.withDefaults(indexer).withTimeout(0.5)
+        );
     }
 }
