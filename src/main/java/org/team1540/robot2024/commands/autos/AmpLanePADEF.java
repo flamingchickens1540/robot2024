@@ -1,5 +1,6 @@
 package org.team1540.robot2024.commands.autos;
 
+import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import org.team1540.robot2024.commands.indexer.IntakeCommand;
 import org.team1540.robot2024.commands.shooter.ShootSequence;
 import org.team1540.robot2024.subsystems.drive.Drivetrain;
@@ -26,16 +27,22 @@ public class AmpLanePADEF extends AutoCommand {
                 new IntakeCommand(indexer, () -> false, 1),
                 new ShootSequence(shooter, indexer),
                 getPath(1).getCommand(drivetrain),
+                new ParallelCommandGroup(
                 new IntakeCommand(indexer, () -> false, 1),
-                getPath(2).getCommand(drivetrain),
+                getPath(2).getCommand(drivetrain)
+                ),
                 new ShootSequence(shooter, indexer),
                 getPath(3).getCommand(drivetrain),
+                new ParallelCommandGroup(
                 new IntakeCommand(indexer, () -> false, 1),
-                getPath(2).getCommand(drivetrain),
+                getPath(2).getCommand(drivetrain)
+                ),
                 new ShootSequence(shooter, indexer),
                 getPath(3).getCommand(drivetrain),
+                new ParallelCommandGroup(
                 new IntakeCommand(indexer, () -> false, 1),
-                getPath(2).getCommand(drivetrain),
+                getPath(2).getCommand(drivetrain)
+                ),
                 new ShootSequence(shooter, indexer)
         );
     }
