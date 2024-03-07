@@ -17,7 +17,7 @@ import edu.wpi.first.wpilibj.DriverStation;
  * constants are needed, to reduce verbosity.
  */
 public final class Constants {
-    public static final boolean IS_COMPETITION_ROBOT = true;
+    public static final boolean IS_COMPETITION_ROBOT = true; // Objects.equals(RobotController.getComments(), "comp");
     // Whether to pull PID constants from SmartDashboard
     private static final boolean tuningMode = true; // TODO: DO NOT SET TO TRUE FOR COMP
     private static final Mode simMode = Mode.SIM; // Can also be Mode.REPLAY
@@ -48,12 +48,13 @@ public final class Constants {
 
     public static class SwerveConfig {
         public static final String CAN_BUS  = IS_COMPETITION_ROBOT ? "swerve" : "swerve";
-        public static final int FRONT_LEFT  = IS_COMPETITION_ROBOT ? 3 : 0;
-        public static final int FRONT_RIGHT = IS_COMPETITION_ROBOT ? 4 : 0;
-        public static final int BACK_LEFT   = IS_COMPETITION_ROBOT ? 7 : 0;
-        public static final int BACK_RIGHT  = IS_COMPETITION_ROBOT ? 1 : 0;
+        public static final double CAN_UPDATE_FREQUENCY_HZ = 250.0;
 
-        // TODO: set this id
+        public static final int FRONT_LEFT  = IS_COMPETITION_ROBOT ? 9 : 1;
+        public static final int FRONT_RIGHT = IS_COMPETITION_ROBOT ? 2 : 7;
+        public static final int BACK_LEFT   = IS_COMPETITION_ROBOT ? 5 : 4;
+        public static final int BACK_RIGHT  = IS_COMPETITION_ROBOT ? 6 : 3;
+
         public static final int PIGEON_ID = 9;
     }
 
@@ -105,8 +106,8 @@ public final class Constants {
         //0.341306
         //0.609832
         // TODO: measure these offsets
-        public static final Pose3d FRONT_CAMERA_POSE = new Pose3d(0.0975290, 0, 0.665479, new Rotation3d(0, Math.toRadians(-25), 0));
-        public static final Pose3d REAR_CAMERA_POSE = new Pose3d(0.03639, 0, 0.535274, new Rotation3d(0, 0, Math.PI));
+        public static final Pose3d FRONT_CAMERA_POSE = new Pose3d(0.0975290, 0, 0.665479, new Rotation3d(0, Math.toRadians(25), 0));
+        public static final Pose3d REAR_CAMERA_POSE = new Pose3d(0.03639, 0, 0.715274, new Rotation3d(0, 0, Math.PI));
 
         // TODO: find these values
         public static final double MAX_VISION_DELAY_SECS = 0.08;
@@ -134,8 +135,8 @@ public final class Constants {
             public static final double SIM_MOI = 4.08232288e-4;
 
             // TODO: if it's tuned in simulation, it's tuned in real life
-            public static final double KP = 0.1;
-            public static final double KI = 0.0;
+            public static final double KP = 0.53;
+            public static final double KI = 0.2;
             public static final double KD = 0.0;
             public static final double KS = 0.26925;
             public static final double KV = 0.07485; // TODO: this is what recalc says, may have to tune

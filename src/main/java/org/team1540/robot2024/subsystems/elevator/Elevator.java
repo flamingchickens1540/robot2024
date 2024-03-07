@@ -101,4 +101,8 @@ public class Elevator extends SubsystemBase {
     public void setBrakeMode(boolean isBrakeMode) {
         io.setBrakeMode(isBrakeMode);
     }
+
+    public void holdPosition() {
+        setElevatorPosition(inputs.positionMeters);
+    }
 }

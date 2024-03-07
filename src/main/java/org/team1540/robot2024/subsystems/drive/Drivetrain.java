@@ -34,6 +34,7 @@ public class Drivetrain extends SubsystemBase {
 
     private final SwerveDriveKinematics kinematics = new SwerveDriveKinematics(getModuleTranslations());
     private Rotation2d rawGyroRotation = new Rotation2d();
+    private Rotation2d fieldOrientationOffset = new Rotation2d();
     private boolean forceModuleAngleChange = false;
 
     private final SwerveDrivePoseEstimator poseEstimator;
@@ -169,7 +170,7 @@ public class Drivetrain extends SubsystemBase {
         Logger.recordOutput("SwerveStates/SetpointsOptimized", optimizedSetpointStates);
     }
 
-    public void drivePercent(double xPercent, double yPercent, double rotPercent, boolean isFlipped) {
+    public void drivePercent(double xPercent, double yPercent, double rotPercent, boolean fieldRelative) {
         Rotation2d linearDirection = new Rotation2d(xPercent, yPercent);
         double linearMagnitude = Math.hypot(xPercent, yPercent);
 
@@ -177,16 +178,18 @@ public class Drivetrain extends SubsystemBase {
                 new Pose2d(new Translation2d(), linearDirection)
                         .transformBy(new Transform2d(linearMagnitude, 0.0, new Rotation2d())).getTranslation();
 
-        // Convert to field relative
+        // Convert to chassis speeds
         runVelocity(
-                ChassisSpeeds.fromFieldRelativeSpeeds(
-                        linearVelocity.getX() * getMaxLinearSpeedMetersPerSec(),
-                        linearVelocity.getY() * getMaxLinearSpeedMetersPerSec(),
-                        rotPercent * getMaxAngularSpeedRadPerSec(),
-                        isFlipped
-                                ? getRotation().plus(Rotation2d.fromDegrees(180))
-                                : getRotation()
-                )
+                fieldRelative
+                        ? ChassisSpeeds.fromFieldRelativeSpeeds(
+                                linearVelocity.getX() * getMaxLinearSpeedMetersPerSec(),
+                                linearVelocity.getY() * getMaxLinearSpeedMetersPerSec(),
+                                rotPercent * getMaxAngularSpeedRadPerSec(),
+                                rawGyroRotation.minus(fieldOrientationOffset))
+                        : new ChassisSpeeds(
+                                linearVelocity.getX() * getMaxLinearSpeedMetersPerSec(),
+                                linearVelocity.getY() * getMaxLinearSpeedMetersPerSec(),
+                                rotPercent * getMaxAngularSpeedRadPerSec())
         );
     }
 
@@ -263,6 +266,16 @@ public class Drivetrain extends SubsystemBase {
         return getPose().getRotation();
     }
 
+    public void zeroFieldOrientationManual() {
+        fieldOrientationOffset = rawGyroRotation;
+    }
+
+    public void zeroFieldOrientation() {
+        boolean isFlipped = DriverStation.getAlliance().orElse(null) == DriverStation.Alliance.Red;
+        fieldOrientationOffset =
+                rawGyroRotation.minus(isFlipped ? getRotation().plus(Rotation2d.fromDegrees(180)) : getRotation());
+    }
+
     /**
      * Resets the current odometry pose.
      */
@@ -271,7 +284,7 @@ public class Drivetrain extends SubsystemBase {
     }
 
     public void addVisionMeasurement(TimestampedVisionPose visionPose) {
-        poseEstimator.addVisionMeasurement(visionPose.poseMeters(), visionPose.timestampSecs());
+        poseEstimator.addVisionMeasurement(visionPose.poseMeters, visionPose.timestampSecs);
     }
 
     public SwerveModulePosition[] getModulePositions() {
