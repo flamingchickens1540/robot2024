@@ -143,11 +143,18 @@ public class RobotContainer {
             drivetrain.zeroFieldOrientationManual();
             drivetrain.setBrakeMode(true);
         }).ignoringDisable(true));
+
+
         Command targetDrive = new AutoShootPrepare(driver.getHID(), drivetrain, shooter);
-        Command overStageDrive = new OverStageShootPrepare(driver.getHID(), drivetrain, shooter);
-        driver.a().toggleOnTrue(targetDrive);
-        driver.b().toggleOnTrue(overStageDrive);
-        driver.rightStick().onTrue(Commands.runOnce(targetDrive::cancel).andThen(Commands.runOnce(overStageDrive::cancel)));
+        Command overstageTargetDrive = new OverStageShootPrepare(driver.getHID(), drivetrain, shooter);
+
+
+        driver.rightBumper().toggleOnTrue(targetDrive);
+        driver.leftBumper().toggleOnTrue(overstageTargetDrive);
+        driver.rightStick().onTrue(Commands.runOnce(() -> {
+            targetDrive.cancel();
+            overstageTargetDrive.cancel();
+        }));
 
         copilot.leftBumper().whileTrue(new TrampScoreSequence(tramp, indexer, elevator));
         Command intakeCommand = new IntakeCommand(indexer, tramp::isNoteStaged, 1);
@@ -161,15 +168,12 @@ public class RobotContainer {
 //                () -> leds.setPatternAll(() -> new LedPatternWave(DriverStation.getAlliance().orElse(DriverStation.Alliance.Red) == DriverStation.Alliance.Red ? 0: 216), Leds.PatternCriticality.HIGH),
 //                5
 //        ));
-        copilot.povLeft().whileTrue(new ShootSequence(shooter, indexer, ()->{
-            ShooterSetpoint setpoint = new ShooterSetpoint(
-                    Rotation2d.fromRadians(
-                            Math.atan2(Constants.Targeting.SPEAKER_CENTER_HEIGHT - Constants.Shooter.Pivot.PIVOT_HEIGHT, drivetrain.getPose().getTranslation().getDistance(
-                                    AprilTagsCrescendo.getInstance().getTag(AprilTagsCrescendo.Tags.SPEAKER_CENTER).toPose2d().getTranslation()
-                            ))).minus(Constants.Shooter.Pivot.REAL_ZEROED_ANGLE),
-                    8000, 6000);
-            return setpoint;
-        }));
+        copilot.povLeft().whileTrue(new ShootSequence(shooter, indexer, ()-> new ShooterSetpoint(
+                Rotation2d.fromRadians(
+                        Math.atan2(Constants.Targeting.SPEAKER_CENTER_HEIGHT - Constants.Shooter.Pivot.PIVOT_HEIGHT, drivetrain.getPose().getTranslation().getDistance(
+                                AprilTagsCrescendo.getInstance().getTag(AprilTagsCrescendo.Tags.SPEAKER_CENTER).toPose2d().getTranslation()
+                        ))).minus(Constants.Shooter.Pivot.REAL_ZEROED_ANGLE),
+                8000, 6000)));
 
         copilot.rightTrigger(0.95).whileTrue(Commands.startEnd(() -> tramp.setPercent(1), tramp::stop, tramp));
         copilot.leftTrigger(0.95).whileTrue(new ClimbAlignment(drivetrain, elevator, null, tramp, indexer, shooter));
@@ -248,6 +252,7 @@ public class RobotContainer {
         autos.add(new DriveSinglePath("SourceLaneTaxi", drivetrain));
         autos.add(new DriveSinglePath("SourceLaneSprint", drivetrain));
         autos.add(new SourceLanePGHSprint(drivetrain, shooter, indexer));
+        autos.add(new SourceLanePHG(drivetrain, shooter, indexer));
 
 
 
