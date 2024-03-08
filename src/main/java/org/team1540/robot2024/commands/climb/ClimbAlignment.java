@@ -23,7 +23,7 @@ public class ClimbAlignment extends ParallelRaceGroup {
     private final Drivetrain drivetrain;
 
     public static final PathConstraints STAGE_PATH_CONSTRAINTS = new PathConstraints(
-            1.0, 0.5,
+            3.0, 1,
             1,
             0.3);
 
@@ -38,12 +38,12 @@ public class ClimbAlignment extends ParallelRaceGroup {
                             ),
                             new ProxyCommand(() -> climbPath(drivetrain::getPose, 1))
                     ),
-                    Commands.runOnce(() -> drivetrain.setBrakeMode(false)),
-                    Commands.waitSeconds(5), //Confirm that nothing will break
-                    new ElevatorSetpointCommand(elevator, Constants.Elevator.ElevatorState.TOP),
-                    Commands.runOnce(() -> drivetrain.setBrakeMode(true)),
-                    Commands.waitSeconds(5), //Confirm that nothing will break
-                    new ProxyCommand(() -> climbPath(drivetrain::getPose, 2))
+                    Commands.runOnce(() -> drivetrain.setBrakeMode(false))
+//                    Commands.waitSeconds(5), //Confirm that nothing will break
+//                    new ElevatorSetpointCommand(elevator, Constants.Elevator.ElevatorState.TOP),
+//                    Commands.runOnce(() -> drivetrain.setBrakeMode(true)),
+//                    Commands.waitSeconds(5), //Confirm that nothing will break
+//                    new ProxyCommand(() -> climbPath(drivetrain::getPose, 2))
                 ),
                 new StartEndCommand(()->{}, ()->{
                     drivetrain.setBrakeMode(true);

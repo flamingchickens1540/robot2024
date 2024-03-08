@@ -34,8 +34,8 @@ public class ClimbSequence extends ParallelRaceGroup {
                     shooter.setPivotBrakeMode(false);
                 }, () -> shooter.setPivotBrakeMode(true), shooter),
                 Commands.sequence(
-//                        new ClimbAlignment(drivetrain, elevator, hooks, tramp, indexer, shooter),
-//                        Commands.waitUntil(controller.a()),
+                        new ClimbAlignment(drivetrain, elevator, hooks, tramp, indexer, shooter),
+                        Commands.waitUntil(controller.a()),
                         new ElevatorSetpointCommand(elevator, ElevatorState.TOP),
                         Commands.waitSeconds(5), //Confirm that nothing will break. Also might need to be tuned if chain does weird things
 //                        new ElevatorSetpointCommand(elevator, ElevatorState.BOTTOM)

@@ -8,6 +8,7 @@ import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 
 import org.team1540.robot2024.commands.FeedForwardCharacterization;
+import org.team1540.robot2024.commands.climb.ClimbAlignment;
 import org.team1540.robot2024.commands.climb.TrapAndClimbSequence;
 import org.team1540.robot2024.commands.drivetrain.SwerveDriveCommand;
 import org.team1540.robot2024.commands.indexer.IntakeAndFeed;
@@ -172,7 +173,7 @@ public class RobotContainer {
         }));
 
         copilot.rightTrigger(0.95).whileTrue(Commands.startEnd(() -> tramp.setPercent(1), tramp::stop, tramp));
-        copilot.leftTrigger(0.95).whileTrue(new TrapAndClimbSequence(drivetrain, elevator, null, tramp, indexer, shooter));
+        copilot.leftTrigger(0.95).whileTrue(new ClimbAlignment(drivetrain, elevator, null, tramp, indexer, shooter));
 
 
         copilot.x().whileTrue(new ShootSequence(shooter, indexer));
