@@ -9,17 +9,14 @@ import org.team1540.robot2024.subsystems.shooter.Shooter;
 import org.team1540.robot2024.util.auto.AutoCommand;
 import org.team1540.robot2024.util.auto.PathHelper;
 
-public class AmpLanePADESprint extends AutoCommand {
-
-    public AmpLanePADESprint(Drivetrain drivetrain, Shooter shooter, Indexer indexer) {
-        super("!AmpLanePADESprint");
+public class SourceLanePGHSprint extends AutoCommand {
+    public SourceLanePGHSprint(Drivetrain drivetrain, Shooter shooter, Indexer indexer){
+        super("!SourceLanePGHSprint");
         addPath(
-                PathHelper.fromChoreoPath("AmpLanePADESprint.1", true, true),
-                PathHelper.fromChoreoPath("AmpLanePADESprint.2"),
-                PathHelper.fromChoreoPath("AmpLanePADESprint.3"),
-                PathHelper.fromChoreoPath("AmpLanePADESprint.4"),
-                PathHelper.fromChoreoPath("AmpLanePADESprint.5")
-
+                PathHelper.fromChoreoPath("SourceLanePGHSprint.1", true, true),
+                PathHelper.fromChoreoPath("SourceLanePGHSprint.2"),
+                PathHelper.fromChoreoPath("SourceLanePGHSprint.3"),
+                PathHelper.fromChoreoPath("SourceLanePGHSprint.4")
         );
 
         addCommands(
@@ -28,13 +25,11 @@ public class AmpLanePADESprint extends AutoCommand {
                         Commands.sequence(
                                 createSegmentSequence(drivetrain, indexer, 0),
                                 createSegmentSequence(drivetrain, indexer, 1),
-                                createSegmentSequence(drivetrain, indexer, 2),
-                                createSegmentSequence(drivetrain, indexer, 3)
+                                createSegmentSequence(drivetrain, indexer, 2)
                         )
                 ),
-                getPath(4).getCommand(drivetrain)
+                getPath(3).getCommand(drivetrain)
         );
-
-        addRequirements(drivetrain, shooter, indexer);
     }
+
 }

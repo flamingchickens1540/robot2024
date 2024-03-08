@@ -9,7 +9,6 @@ import edu.wpi.first.wpilibj2.command.button.Trigger;
 
 import org.team1540.robot2024.commands.FeedForwardCharacterization;
 import org.team1540.robot2024.commands.climb.ClimbAlignment;
-import org.team1540.robot2024.commands.climb.TrapAndClimbSequence;
 import org.team1540.robot2024.commands.drivetrain.SwerveDriveCommand;
 import org.team1540.robot2024.commands.indexer.IntakeAndFeed;
 import org.team1540.robot2024.commands.indexer.StageTrampCommand;
@@ -237,21 +236,18 @@ public class RobotContainer {
         autos.add(new AutoCommand("SubwooferShot", new ShootSequence(shooter, indexer)));
         autos.add(new DriveSinglePath("AmpLaneTaxi", drivetrain));
         autos.add(new DriveSinglePath("AmpLaneSprint", drivetrain));
-        autos.add(new AmpLanePSprint(drivetrain, shooter, indexer));
-        autos.add(new AmpLanePABCSprint(drivetrain, shooter, indexer));
         autos.add(new AmpLanePADESprint(drivetrain, shooter, indexer));
         autos.add(new DriveSinglePath("CenterLaneTaxi", drivetrain));
         autos.add(new DriveSinglePath("CenterLaneSprint", drivetrain, true, true));
         autos.add(new CenterLanePSubSprint(drivetrain, shooter, indexer));
-        autos.add(new CenterLanePCBAD(drivetrain, shooter, indexer));
-        autos.add(new CenterLanePCBAF(drivetrain, shooter, indexer));
-        autos.add(new CenterLanePCBFSprint(drivetrain, shooter, indexer));
+        autos.add(new CenterLanePCBADSprint(drivetrain, shooter, indexer));
+        autos.add(new CenterLanePCBAFSprint(drivetrain, shooter, indexer));
         autos.add(new CenterLanePBDA(drivetrain, shooter, indexer));
         autos.add(new CenterLanePSubCSubBSubASubFSub(drivetrain, shooter, indexer));
         autos.add(new CenterLanePSubCSubBSubFSub(drivetrain, shooter, indexer));
         autos.add(new DriveSinglePath("SourceLaneTaxi", drivetrain));
         autos.add(new DriveSinglePath("SourceLaneSprint", drivetrain));
-        autos.add(new SourceLanePHGSprint(drivetrain, shooter, indexer));
+        autos.add(new SourceLanePGHSprint(drivetrain, shooter, indexer));
 
 
 

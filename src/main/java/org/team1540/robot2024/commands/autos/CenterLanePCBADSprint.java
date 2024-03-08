@@ -9,16 +9,16 @@ import org.team1540.robot2024.subsystems.shooter.Shooter;
 import org.team1540.robot2024.util.auto.AutoCommand;
 import org.team1540.robot2024.util.auto.PathHelper;
 
-public class CenterLanePCBAD extends AutoCommand {
+public class CenterLanePCBADSprint extends AutoCommand {
 
-    public CenterLanePCBAD(Drivetrain drivetrain, Shooter shooter, Indexer indexer) {
-        super("!CenterLanePCBAD");
+    public CenterLanePCBADSprint(Drivetrain drivetrain, Shooter shooter, Indexer indexer) {
+        super("!CenterLanePCBADSprint");
         addPath(
-                PathHelper.fromChoreoPath("CenterLanePCBAD.1", true, true),
-                PathHelper.fromChoreoPath("CenterLanePCBAD.2"),
-                PathHelper.fromChoreoPath("CenterLanePCBAD.3"),
-                PathHelper.fromChoreoPath("CenterLanePCBAD.4"),
-                PathHelper.fromChoreoPath("CenterLanePCBAD.5")
+                PathHelper.fromChoreoPath("CenterLanePCBADSprint.1", true, true),
+                PathHelper.fromChoreoPath("CenterLanePCBADSprint.2"),
+                PathHelper.fromChoreoPath("CenterLanePCBADSprint.3"),
+                PathHelper.fromChoreoPath("CenterLanePCBADSprint.4"),
+                PathHelper.fromChoreoPath("CenterLanePCBADSprint.5")
         );
 
         addCommands(
@@ -29,10 +29,11 @@ public class CenterLanePCBAD extends AutoCommand {
                                 createSegmentSequence(drivetrain, indexer, 0),
                                 createSegmentSequence(drivetrain, indexer, 1),
                                 createSegmentSequence(drivetrain, indexer, 2),
-                                createSegmentSequence(drivetrain, indexer, 3),
-                                getPath(4).getCommand(drivetrain)
+                                createSegmentSequence(drivetrain, indexer, 3)
                         )
-                )
+                ),
+                getPath(4).getCommand(drivetrain)
+
         );
 
         addRequirements(drivetrain, shooter, indexer);
