@@ -3,36 +3,40 @@ package org.team1540.robot2024;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.RobotController;
 import edu.wpi.first.wpilibj.util.Color;
-import edu.wpi.first.wpilibj2.command.*;
+import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
-
 import org.team1540.robot2024.commands.FeedForwardCharacterization;
+import org.team1540.robot2024.commands.autos.*;
 import org.team1540.robot2024.commands.climb.ClimbAlignment;
 import org.team1540.robot2024.commands.drivetrain.SwerveDriveCommand;
-import org.team1540.robot2024.commands.indexer.IntakeAndFeed;
-import org.team1540.robot2024.commands.indexer.StageTrampCommand;
-import org.team1540.robot2024.commands.shooter.*;
-import org.team1540.robot2024.commands.tramp.TrampScoreSequence;
 import org.team1540.robot2024.commands.elevator.ElevatorManualCommand;
+import org.team1540.robot2024.commands.indexer.IntakeAndFeed;
 import org.team1540.robot2024.commands.indexer.IntakeCommand;
-import org.team1540.robot2024.commands.autos.*;
+import org.team1540.robot2024.commands.indexer.StageTrampCommand;
+import org.team1540.robot2024.commands.shooter.AutoShootPrepare;
+import org.team1540.robot2024.commands.shooter.ManualPivotCommand;
+import org.team1540.robot2024.commands.shooter.OverStageShootPrepare;
+import org.team1540.robot2024.commands.shooter.ShootSequence;
+import org.team1540.robot2024.commands.tramp.TrampScoreSequence;
 import org.team1540.robot2024.commands.tramp.TrampStageSequence;
-import org.team1540.robot2024.subsystems.drive.*;
+import org.team1540.robot2024.subsystems.drive.Drivetrain;
 import org.team1540.robot2024.subsystems.elevator.Elevator;
 import org.team1540.robot2024.subsystems.indexer.Indexer;
 import org.team1540.robot2024.subsystems.led.Leds;
-import org.team1540.robot2024.subsystems.led.patterns.*;
-import org.team1540.robot2024.subsystems.shooter.*;
+import org.team1540.robot2024.subsystems.led.patterns.LedPattern;
+import org.team1540.robot2024.subsystems.led.patterns.LedPatternRSLState;
+import org.team1540.robot2024.subsystems.led.patterns.LedPatternWave;
+import org.team1540.robot2024.subsystems.shooter.Shooter;
 import org.team1540.robot2024.subsystems.tramp.Tramp;
 import org.team1540.robot2024.subsystems.vision.AprilTagVision;
 import org.team1540.robot2024.util.CommandUtils;
+import org.team1540.robot2024.util.PhoenixTimeSyncSignalRefresher;
 import org.team1540.robot2024.util.auto.AutoCommand;
 import org.team1540.robot2024.util.auto.AutoManager;
-import org.team1540.robot2024.util.PhoenixTimeSyncSignalRefresher;
 import org.team1540.robot2024.util.shooter.ShooterSetpoint;
 import org.team1540.robot2024.util.vision.AprilTagsCrescendo;
-
 
 import static org.team1540.robot2024.Constants.SwerveConfig;
 import static org.team1540.robot2024.Constants.isTuningMode;
@@ -61,7 +65,7 @@ public class RobotContainer {
             case REAL:
                 // Real robot, instantiate hardware IO implementations
                 elevator = Elevator.createReal();
-                drivetrain = Drivetrain.createReal(odometrySignalRefresher,elevator::getVelocity);
+                drivetrain = Drivetrain.createReal(odometrySignalRefresher, elevator::getVelocity);
                 tramp = Tramp.createReal();
                 shooter = Shooter.createReal();
                 indexer = Indexer.createReal();
@@ -144,12 +148,13 @@ public class RobotContainer {
             drivetrain.setBrakeMode(true);
         }).ignoringDisable(true));
 
+        LedPattern lockedDrivePattern = new LedPatternWave(100);
+        LedPattern lockedOverstageDrivePattern = new LedPatternWave(280);
+        Command targetDrive = new AutoShootPrepare(driver.getHID(), drivetrain, shooter).alongWith(leds.commandShowPattern(lockedDrivePattern, Leds.PatternCriticality.DRIVER_LOCK));
+        Command overstageTargetDrive = new OverStageShootPrepare(driver.getHID(), drivetrain, shooter).alongWith(leds.commandShowPattern(lockedOverstageDrivePattern, Leds.PatternCriticality.DRIVER_LOCK));
 
-        Command targetDrive = new AutoShootPrepare(driver.getHID(), drivetrain, shooter);
-        Command overstageTargetDrive = new OverStageShootPrepare(driver.getHID(), drivetrain, shooter);
 
-
-        driver.rightBumper().whileTrue(targetDrive);
+        driver.rightBumper().toggleOnTrue(targetDrive);
 //        driver.leftBumper().toggleOnTrue(overstageTargetDrive);
         driver.rightStick().onTrue(Commands.runOnce(() -> {
             targetDrive.cancel();
@@ -168,7 +173,7 @@ public class RobotContainer {
 //                () -> leds.setPatternAll(() -> new LedPatternWave(DriverStation.getAlliance().orElse(DriverStation.Alliance.Red) == DriverStation.Alliance.Red ? 0: 216), Leds.PatternCriticality.HIGH),
 //                5
 //        ));
-        copilot.povLeft().whileTrue(new ShootSequence(shooter, indexer, ()-> new ShooterSetpoint(
+        copilot.povLeft().whileTrue(new ShootSequence(shooter, indexer, () -> new ShooterSetpoint(
                 Rotation2d.fromRadians(
                         Math.atan2(Constants.Targeting.SPEAKER_CENTER_HEIGHT - Constants.Shooter.Pivot.PIVOT_HEIGHT, drivetrain.getPose().getTranslation().getDistance(
                                 AprilTagsCrescendo.getInstance().getTag(AprilTagsCrescendo.Tags.SPEAKER_CENTER).toPose2d().getTranslation()
@@ -196,7 +201,7 @@ public class RobotContainer {
 
         new Trigger(indexer::isNoteStaged).debounce(0.1)
                 .onTrue(CommandUtils.rumbleCommand(driver.getHID(), 1, 1))
-                .whileTrue(Commands.startEnd(() -> leds.setPattern(Leds.Zone.ELEVATOR_BACK, new LedPatternWave(0), Leds.PatternCriticality.EXTREME), () -> leds.clearPattern(Leds.Zone.ELEVATOR_BACK, Leds.PatternCriticality.EXTREME)));
+                .whileTrue(Commands.startEnd(() -> leds.setPattern(Leds.Zone.ELEVATOR_BACK, new LedPatternWave(0), Leds.PatternCriticality.HAS_INTAKE), () -> leds.clearPattern(Leds.Zone.ELEVATOR_BACK, Leds.PatternCriticality.HAS_INTAKE)));
 
         new Trigger(indexer::isNoteStaged).and(intakeCommand::isScheduled).onTrue(CommandUtils.rumbleCommand(driver.getHID(), 0.3, 0.4));
 
@@ -206,7 +211,7 @@ public class RobotContainer {
                     leds.setPatternAll(() -> new LedPatternRSLState(Color.kMagenta), Leds.PatternCriticality.EXTREME);
                     Commands.sequence(
                             Commands.waitSeconds(5),
-                            Commands.runOnce(() ->leds.clearPatternAll(Leds.PatternCriticality.EXTREME))
+                            Commands.runOnce(() -> leds.clearPatternAll(Leds.PatternCriticality.EXTREME))
                     ).schedule();
                 },
                 () -> {
@@ -216,13 +221,12 @@ public class RobotContainer {
         ));
 
 
-
     }
 
-    private void configureAutoRoutines(){
+    private void configureAutoRoutines() {
         AutoManager autos = AutoManager.getInstance();
         // Set up FF characterization routines
-        if(isTuningMode()){
+        if (isTuningMode()) {
             AutoManager.getInstance().add(
                     new AutoCommand(
                             "Drive FF Characterization",
@@ -262,11 +266,9 @@ public class RobotContainer {
         autos.add(new SourceLanePHG(drivetrain, shooter, indexer));
 
 
-
-
-
-
     }
+
+
 
     /**
      * Use this to pass the autonomous command to the main {@link Robot} class.

@@ -2,6 +2,8 @@ package org.team1540.robot2024.subsystems.led;
 
 import edu.wpi.first.wpilibj.AddressableLED;
 import edu.wpi.first.wpilibj.AddressableLEDBuffer;
+import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import org.team1540.robot2024.subsystems.led.patterns.LedPattern;
 
@@ -74,7 +76,16 @@ public class Leds extends SubsystemBase {
         NORMAL,
         MID,
         HIGH,
+        HAS_INTAKE,
+        DRIVER_LOCK,
         EXTREME
+    }
+
+    public Command commandShowPattern(LedPattern pattern, Leds.PatternCriticality criticality) {
+        return Commands.startEnd(
+                () -> this.setPattern(Leds.Zone.ELEVATOR_BACK, pattern, criticality),
+                () -> this.clearPattern(Leds.Zone.ELEVATOR_BACK, criticality)
+        );
     }
 
 }
