@@ -13,26 +13,29 @@ import org.team1540.robot2024.util.auto.PathHelper;
 
 public class CenterLanePCBFSprint extends AutoCommand {
     public CenterLanePCBFSprint(Drivetrain drivetrain, Shooter shooter, Indexer indexer){
-        super("!CenterLanePCBFSprint");
+        super("!!CenterLanePCBFSprint");
 
         addPath(
                 PathHelper.fromChoreoPath("CenterLanePCBFSprint.1", true, true),
                 PathHelper.fromChoreoPath("CenterLanePCBFSprint.2"),
                 PathHelper.fromChoreoPath("CenterLanePCBFSprint.3"),
-                PathHelper.fromChoreoPath("CenterLanePCBFSprint.4")
+                PathHelper.fromChoreoPath("CenterLanePCBFSprint.4"),
+                PathHelper.fromChoreoPath("CenterLanePCBFSprint.5")
         );
 
         addCommands(
-                new ShootSequence(shooter, indexer),
+                ShootSequence.forAuto(shooter, indexer),
                 Commands.parallel(
                         new AutoShooterPrepare(drivetrain, shooter),
                         Commands.sequence(
                                 createSegmentSequence(drivetrain, indexer, 0),
                                 createSegmentSequence(drivetrain, indexer, 1),
-                                createSegmentSequence(drivetrain, indexer, 2)
+                                getPath(2).getCommand(drivetrain),
+                                Commands.runOnce(drivetrain::copyVisionPose),
+                                createSegmentSequence(drivetrain, indexer, 3)
                         )
                 ),
-                getPath(3).getCommand(drivetrain)
+                getPath(4).getCommand(drivetrain)
         );
     }
 }

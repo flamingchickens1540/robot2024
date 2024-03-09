@@ -7,6 +7,7 @@ import edu.wpi.first.wpilibj2.command.*;
 import org.team1540.robot2024.Constants;
 import org.team1540.robot2024.commands.elevator.ElevatorSetpointCommand;
 import org.team1540.robot2024.commands.indexer.StageTrampCommand;
+import org.team1540.robot2024.commands.shooter.PrepareShooterCommand;
 import org.team1540.robot2024.subsystems.drive.Drivetrain;
 import org.team1540.robot2024.subsystems.elevator.Elevator;
 import org.team1540.robot2024.subsystems.fakesubsystems.Hooks;
@@ -14,6 +15,7 @@ import org.team1540.robot2024.subsystems.indexer.Indexer;
 import org.team1540.robot2024.subsystems.shooter.Shooter;
 import org.team1540.robot2024.subsystems.tramp.Tramp;
 import org.team1540.robot2024.util.auto.PathHelper;
+import org.team1540.robot2024.util.shooter.ShooterSetpoint;
 import org.team1540.robot2024.util.vision.AprilTagsCrescendo;
 
 import java.util.function.Supplier;
@@ -36,7 +38,8 @@ public class ClimbAlignment extends ParallelRaceGroup {
                                     new ElevatorSetpointCommand(elevator, Constants.Elevator.ElevatorState.BOTTOM),
                                     new StageTrampCommand(tramp, indexer).onlyIf(indexer::isNoteStaged)
                             ),
-                            new ProxyCommand(() -> climbPath(drivetrain::getPose, 1))
+                            new PrepareShooterCommand(shooter, ()->new ShooterSetpoint(0,0,0))
+//                            new ProxyCommand(() -> climbPath(drivetrain::getPose, 1))
                     ),
                     Commands.runOnce(() -> drivetrain.setBrakeMode(false))
 //                    Commands.waitSeconds(5), //Confirm that nothing will break

@@ -131,7 +131,7 @@ public class Robot extends LoggedRobot {
     }
 
     public void enabledInit() {
-        robotContainer.leds.setPattern(Leds.Zone.ELEVATOR_BACK,flamePattern);
+//        robotContainer.leds.setPattern(Leds.Zone.ELEVATOR_BACK,flamePattern);
         robotContainer.elevator.setBrakeMode(true);
         robotContainer.shooter.setPivotBrakeMode(true);
     }

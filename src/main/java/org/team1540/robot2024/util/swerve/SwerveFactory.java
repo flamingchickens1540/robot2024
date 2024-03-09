@@ -64,8 +64,8 @@ public class SwerveFactory {
             TalonFXConfiguration turnConfig = new TalonFXConfiguration();
             CANcoderConfiguration canCoderConfig = new CANcoderConfiguration();
 
-            driveConfig.CurrentLimits.SupplyCurrentLimit = 60.0;
-            driveConfig.CurrentLimits.SupplyCurrentThreshold = 80.0;
+            driveConfig.CurrentLimits.SupplyCurrentLimit = 40.0;
+            driveConfig.CurrentLimits.SupplyCurrentThreshold = 60.0;
             driveConfig.CurrentLimits.SupplyTimeThreshold = 0.1;
             driveConfig.CurrentLimits.SupplyCurrentLimitEnable = true;
             driveConfig.MotorOutput.Inverted = InvertedValue.CounterClockwise_Positive;

@@ -22,7 +22,7 @@ public class OverStageShooterPrepare extends SequentialCommandGroup {
                                 Math.atan2(Constants.Targeting.STAGE_MAX_HEIGHT + 1.5 - Constants.Shooter.Pivot.PIVOT_HEIGHT, positionSupplier.get().getTranslation().getDistance(
                                         AprilTagsCrescendo.getInstance().getTag(AprilTagsCrescendo.Tags.CLIMB_FAR).toPose2d().getTranslation()
                                 ))).minus(Constants.Shooter.Pivot.REAL_ZEROED_ANGLE),
-                        4000, 4000)
+                        3000, 3000)
                 )
         );
     }

@@ -149,19 +149,19 @@ public class RobotContainer {
         Command overstageTargetDrive = new OverStageShootPrepare(driver.getHID(), drivetrain, shooter);
 
 
-        driver.rightBumper().toggleOnTrue(targetDrive);
-        driver.leftBumper().toggleOnTrue(overstageTargetDrive);
+        driver.rightBumper().whileTrue(targetDrive);
+//        driver.leftBumper().toggleOnTrue(overstageTargetDrive);
         driver.rightStick().onTrue(Commands.runOnce(() -> {
             targetDrive.cancel();
             overstageTargetDrive.cancel();
         }));
 
         copilot.leftBumper().whileTrue(new TrampScoreSequence(tramp, indexer, elevator));
-        Command intakeCommand = new IntakeCommand(indexer, tramp::isNoteStaged, 1);
+        Command intakeCommand = new IntakeCommand(indexer, tramp::isNoteStaged, 1, driver.getHID(), copilot.getHID());
         copilot.rightBumper().whileTrue(intakeCommand);
 
         copilot.povDown().whileTrue(indexer.commandRunIntake(-1));
-        copilot.povUp().whileTrue(new IntakeCommand(indexer, tramp::isNoteStaged, 1, false));
+        copilot.povUp().whileTrue(new IntakeCommand(indexer, tramp::isNoteStaged, 1, false, driver.getHID(), copilot.getHID()));
         copilot.povRight().whileTrue(Commands.startEnd(() -> tramp.setPercent(1), tramp::stop, tramp));
 //        copilot.povLeft().onTrue(CommandUtils.startStopTimed(
 //                () -> leds.setPatternAll(() -> new LedPatternWave(DriverStation.getAlliance().orElse(DriverStation.Alliance.Red) == DriverStation.Alliance.Red ? 0: 216), Leds.PatternCriticality.HIGH),
@@ -183,14 +183,19 @@ public class RobotContainer {
         copilot.a().whileTrue(new TrampStageSequence(indexer, tramp, elevator));
 //        copilot.b().whileTrue(new ShootSequence(shooter, indexer, PODIUM_SHOOT));
 //        copilot.b().whileTrue(new TuneShooterCommand(shooter, indexer));
-        copilot.b().whileTrue(new IntakeAndFeed(indexer, () -> 1, () -> 0.5));
+        copilot.b()
+                .whileTrue(new IntakeAndFeed(indexer, () -> 1, () -> 0.5))
+                .onFalse(Commands.runOnce(() -> {
+                    targetDrive.cancel();
+                    overstageTargetDrive.cancel();
+                }));
         copilot.y().whileTrue(new StageTrampCommand(tramp, indexer));
 
 //        copilot.leftTrigger(0.5).whileTrue(new ElevatorSetpointCommand(elevator, ElevatorState.CLIMB));
 
 
         new Trigger(indexer::isNoteStaged).debounce(0.1)
-                .onTrue(CommandUtils.rumbleCommand(driver.getHID(), 0.8, 1))
+                .onTrue(CommandUtils.rumbleCommand(driver.getHID(), 1, 1))
                 .whileTrue(Commands.startEnd(() -> leds.setPattern(Leds.Zone.ELEVATOR_BACK, new LedPatternWave(0), Leds.PatternCriticality.EXTREME), () -> leds.clearPattern(Leds.Zone.ELEVATOR_BACK, Leds.PatternCriticality.EXTREME)));
 
         new Trigger(indexer::isNoteStaged).and(intakeCommand::isScheduled).onTrue(CommandUtils.rumbleCommand(driver.getHID(), 0.3, 0.4));
@@ -246,9 +251,11 @@ public class RobotContainer {
         autos.add(new CenterLanePSubSprint(drivetrain, shooter, indexer));
         autos.add(new CenterLanePCBADSprint(drivetrain, shooter, indexer));
         autos.add(new CenterLanePCBAFSprint(drivetrain, shooter, indexer));
+        autos.add(new CenterLanePCBA(drivetrain, shooter, indexer));
         autos.add(new CenterLanePBDA(drivetrain, shooter, indexer));
         autos.add(new CenterLanePSubCSubBSubASubFSub(drivetrain, shooter, indexer));
-        autos.add(new CenterLanePSubCSubBSubFSub(drivetrain, shooter, indexer));
+//        autos.add(new CenterLanePSubCSubBSubFSub(drivetrain, shooter, indexer));
+        autos.add(new CenterLanePSubCSubBSubASub(drivetrain, shooter, indexer));
         autos.add(new DriveSinglePath("SourceLaneTaxi", drivetrain));
         autos.add(new DriveSinglePath("SourceLaneSprint", drivetrain));
         autos.add(new SourceLanePGHSprint(drivetrain, shooter, indexer));

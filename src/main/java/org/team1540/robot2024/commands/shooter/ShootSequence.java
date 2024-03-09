@@ -32,26 +32,23 @@ public class ShootSequence extends ParallelRaceGroup {
     public ShootSequence(Shooter shooter, Indexer indexer) {
         this(shooter, indexer, () -> HUB_SHOOT);
     }
-
     public ShootSequence(Shooter shooter, Indexer indexer, Supplier<ShooterSetpoint> setpoint) {
+        this(shooter, indexer, setpoint, 1);
+    }
+    public ShootSequence(Shooter shooter, Indexer indexer, Supplier<ShooterSetpoint> setpoint, double waitTime) {
         addCommands(
+                new PrepareShooterCommand(shooter, setpoint),
                 Commands.sequence(
-//                        Commands.runOnce(shooter::zeroPivot),
-
-                        new PrepareShooterCommand(shooter, setpoint)
-                ),
-
-                Commands.sequence(
-//                        Commands.sequence(
-//                                Commands.waitSeconds(1.5)
-//                                Commands.waitUntil(() -> shooter.isPivotAtSetpoint() && shooter.areFlywheelsSpunUp())
-                        // ) .withTimeout(1.5),
-                        Commands.waitSeconds(1),
+                        Commands.waitSeconds(waitTime),
                         new IntakeAndFeed(indexer, () -> 1, () -> 0.5).withTimeout(0.5)
                 )
 
                 // TODO: Add a wait for having completed the shot (steady then current spike/velocity dip and then back down?)
         );
+    }
+
+    public static ShootSequence forAuto(Shooter shooter, Indexer indexer) {
+        return new ShootSequence(shooter, indexer, () -> HUB_SHOOT, 1.5);
     }
 
 

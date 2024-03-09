@@ -9,30 +9,28 @@ import org.team1540.robot2024.subsystems.shooter.Shooter;
 import org.team1540.robot2024.util.auto.AutoCommand;
 import org.team1540.robot2024.util.auto.PathHelper;
 
-public class SourceLanePGHSprint extends AutoCommand {
-    public SourceLanePGHSprint(Drivetrain drivetrain, Shooter shooter, Indexer indexer){
-        super("!SourceLanePGHSprint");
+public class CenterLanePCBA extends AutoCommand {
+
+    public CenterLanePCBA(Drivetrain drivetrain, Shooter shooter, Indexer indexer) {
+        super("!CenterLanePCBA");
         addPath(
-                PathHelper.fromChoreoPath("SourceLanePGHSprint.1", true, true),
-                PathHelper.fromChoreoPath("SourceLanePGHSprint.2"),
-                PathHelper.fromChoreoPath("SourceLanePGHSprint.3"),
-                PathHelper.fromChoreoPath("SourceLanePGHSprint.4")
+                PathHelper.fromChoreoPath("CenterLanePCBA.1", true, true),
+                PathHelper.fromChoreoPath("CenterLanePCBA.2"),
+                PathHelper.fromChoreoPath("CenterLanePCBA.3")
         );
 
         addCommands(
+                ShootSequence.forAuto(shooter, indexer),
                 Commands.parallel(
                         new AutoShooterPrepare(drivetrain, shooter),
                         Commands.sequence(
                                 createSegmentSequence(drivetrain, indexer, 0),
-                                drivetrain.commandCopyVisionPose(),
                                 createSegmentSequence(drivetrain, indexer, 1),
-                                drivetrain.commandCopyVisionPose(),
-                                createSegmentSequence(drivetrain, indexer, 2),
-                                drivetrain.commandCopyVisionPose()
+                                createSegmentSequence(drivetrain, indexer, 1)
                         )
-                ),
-                getPath(3).getCommand(drivetrain)
+                )
         );
-    }
 
+        addRequirements(drivetrain, shooter, indexer);
+    }
 }

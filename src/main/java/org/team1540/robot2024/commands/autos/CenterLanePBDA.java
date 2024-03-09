@@ -24,7 +24,7 @@ public class CenterLanePBDA extends AutoCommand {
         );
 
         addCommands(
-                new ShootSequence(shooter, indexer),
+                ShootSequence.forAuto(shooter, indexer),
                 Commands.parallel(
                         new AutoShooterPrepare(drivetrain, shooter),
                         Commands.sequence(
