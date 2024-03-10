@@ -59,11 +59,11 @@ public class Indexer extends SubsystemBase {
             stopAll();
         }
 
-        if (Constants.isTuningMode()) {
-            if (kP.hasChanged(hashCode()) || kI.hasChanged(hashCode()) || kD.hasChanged(hashCode())) {
-                io.configureFeederPID(kP.get(), kI.get(), kD.get());
-            }
-        }
+//        if (Constants.isTuningMode()) {
+//            if (kP.hasChanged(hashCode()) || kI.hasChanged(hashCode()) || kD.hasChanged(hashCode())) {
+//                io.configureFeederPID(kP.get(), kI.get(), kD.get());
+//            }
+//        }
     }
 
     public void setIntakePercent(double percent) {

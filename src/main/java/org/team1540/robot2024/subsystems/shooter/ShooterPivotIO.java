@@ -11,6 +11,8 @@ public interface ShooterPivotIO {
         public double velocityRPS = 0.0;
         public double appliedVolts = 0.0;
         public double currentAmps = 0.0;
+        public boolean isAtForwardLimit = false;
+        public boolean isAtReverseLimit = false;
     }
 
     /**
@@ -37,4 +39,6 @@ public interface ShooterPivotIO {
      * Configures the PID controller
      */
     default void configPID(double kP, double kI, double kD) {}
+
+    default void setEncoderPosition(double rots) {}
 }

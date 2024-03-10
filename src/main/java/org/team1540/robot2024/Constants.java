@@ -7,6 +7,7 @@ import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Rotation3d;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.DriverStation;
+import org.team1540.robot2024.util.shooter.ShooterSetpoint;
 
 /**
  * The Constants class provides a convenient place for teams to hold robot-wide numerical or boolean
@@ -19,7 +20,7 @@ import edu.wpi.first.wpilibj.DriverStation;
 public final class Constants {
     public static final boolean IS_COMPETITION_ROBOT = true; // Objects.equals(RobotController.getComments(), "comp");
     // Whether to pull PID constants from SmartDashboard
-    private static final boolean tuningMode = true; // TODO: DO NOT SET TO TRUE FOR COMP
+    private static final boolean tuningMode = false; // TODO: DO NOT SET TO TRUE FOR COMP
     private static final Mode simMode = Mode.SIM; // Can also be Mode.REPLAY
 
     public static final Mode currentMode = Robot.isReal() ? Mode.REAL : simMode;
@@ -48,7 +49,7 @@ public final class Constants {
 
     public static class SwerveConfig {
         public static final String CAN_BUS  = IS_COMPETITION_ROBOT ? "swerve" : "swerve";
-        public static final double CAN_UPDATE_FREQUENCY_HZ = 250.0;
+        public static final double CAN_UPDATE_FREQUENCY_HZ = 200.0;
 
         public static final int FRONT_LEFT  = IS_COMPETITION_ROBOT ? 9 : 1;
         public static final int FRONT_RIGHT = IS_COMPETITION_ROBOT ? 2 : 7;
@@ -59,10 +60,10 @@ public final class Constants {
     }
 
     public static class Drivetrain {
-        public static final double DRIVE_GEAR_RATIO = (50.0 / 14.0) * (17.0 / 27.0) * (45.0 / 15.0);
+        public static final double DRIVE_GEAR_RATIO = (50.0 / 14.0) * (16.0 / 28.0) * (45.0 / 15.0);
         public static final double TURN_GEAR_RATIO = 150.0 / 7.0;
         public static final boolean IS_TURN_MOTOR_INVERTED = true;
-        public static final double WHEEL_RADIUS = Units.inchesToMeters(2.0);
+        public static final double WHEEL_RADIUS = Units.inchesToMeters(1.967);
 
         public static final double MAX_LINEAR_SPEED = Units.feetToMeters(16);
         public static final double TRACK_WIDTH_X = Units.inchesToMeters(18.75);
@@ -81,7 +82,7 @@ public final class Constants {
     }
 
     public static class Indexer {
-        public static final int BEAM_BREAK_ID = 8;
+        public static final int BEAM_BREAK_ID = IS_COMPETITION_ROBOT ? 7 : 8;
         public static final int INTAKE_ID = 13;
         public static final int FEEDER_ID = 15;
 
@@ -106,10 +107,11 @@ public final class Constants {
         //0.341306
         //0.609832
         // TODO: measure these offsets
-        public static final Pose3d FRONT_CAMERA_POSE = new Pose3d(0.0975290, 0, 0.665479, new Rotation3d(0, Math.toRadians(25), 0));
-        public static final Pose3d REAR_CAMERA_POSE = new Pose3d(0.03639, 0, 0.715274, new Rotation3d(0, 0, Math.PI));
+        public static final Pose3d FRONT_CAMERA_POSE = new Pose3d(0.0975290, 0, 0.665479, new Rotation3d(0, Math.toRadians(-25), 0));
+        public static final Pose3d REAR_CAMERA_POSE = new Pose3d(0.03639, 0, 0.715274, new Rotation3d(Math.PI, 0, Math.PI));
 
         // TODO: find these values
+        public static final double MAX_AMBIGUITY_RATIO = 0.3;
         public static final double MAX_VISION_DELAY_SECS = 0.08;
         public static final double MAX_ACCEPTED_ROT_SPEED_RAD_PER_SEC = 1.0;
         public static final double MAX_ACCEPTED_LINEAR_SPEED_MPS = 4.0;
@@ -141,34 +143,38 @@ public final class Constants {
             public static final double KS = 0.26925;
             public static final double KV = 0.07485; // TODO: this is what recalc says, may have to tune
 
-            public static final double ERROR_TOLERANCE_RPM = 50;
+            public static final double ERROR_TOLERANCE_RPM = 100;
         }
 
         public static class Pivot {
             // TODO: determine ids
             public static final int MOTOR_ID = 9;
-            public static final int CANCODER_ID = 0;
+            public static final int CANCODER_ID = 10;
 
             // TODO: figure this out
-            public static final double CANCODER_OFFSET_ROTS = 0;
+            public static final double CANCODER_OFFSET_ROTS = -0.2502;
             // TODO: determine ratios
-            public static final double CANCODER_TO_PIVOT = 60.0 / 20.0;
-            public static final double MOTOR_TO_CANCODER = 33.0;
+            public static final double CANCODER_TO_PIVOT = 28.0 / 15.0;
+            public static final double MOTOR_TO_CANCODER = 56.0;
             public static final double TOTAL_GEAR_RATIO = MOTOR_TO_CANCODER * CANCODER_TO_PIVOT;
             public static final double SIM_LENGTH_METERS = Units.inchesToMeters(12.910);
             // TODO: find the moi
             public static final double SIM_MOI = 0.04064471269;
 
-            public static final Rotation2d MAX_ANGLE = Rotation2d.fromDegrees(60.0);
-            public static final Rotation2d MIN_ANGLE = Rotation2d.fromDegrees(8.0);
+            public static final Rotation2d MAX_ANGLE = Rotation2d.fromRotations(0.14);
+            public static final Rotation2d MIN_ANGLE = Rotation2d.fromRotations(0.01);
+
+            public static final Rotation2d REAL_ZEROED_ANGLE = Rotation2d.fromDegrees(7.5); //TODO Need this number
+
+            public static final double PIVOT_HEIGHT = Units.inchesToMeters(10.5);
 
             // TODO: tune pid
-            public static final double KP = 0.1;
-            public static final double KI = 0.0;
+            public static final double KP = 80.0;
+            public static final double KI = 40.0;
             public static final double KD = 0.0;
             public static final double KS = 0.0;
-            public static final double KG = 0.1;
-            public static final double KV = 0.1;
+            public static final double KG = 0.0;
+            public static final double KV = 0.0;
 
             public static final double SIM_KP = 254;
             public static final double SIM_KI = 0.0;
@@ -178,10 +184,15 @@ public final class Constants {
             public static final double SIM_KV = 0.187;
 
             public static final double CRUISE_VELOCITY_RPS = 1.0;
-            public static final double MAX_ACCEL_RPS2 = 10.0;
+            public static final double MAX_ACCEL_RPS2 = 0.8;
             public static final double JERK_RPS3 = 2000;
 
-            public static final Rotation2d ERROR_TOLERANCE = Rotation2d.fromDegrees(0.2);
+
+            public static final ShooterSetpoint HUB_SHOOT = new ShooterSetpoint(0.125, 4800,4000);
+            public static final ShooterSetpoint PODIUM_SHOOT = new ShooterSetpoint(0.07, 6000,5000);
+
+
+            public static final Rotation2d ERROR_TOLERANCE = Rotation2d.fromDegrees(0.7);
         }
     }
 
@@ -221,17 +232,13 @@ public final class Constants {
              */
             BOTTOM(MINIMUM_HEIGHT),
             /**
-             * At height for top of initial climb :D
+             * At height for aligning for climbing
              */
-            CLIMB(CHAIN_HEIGHT_METERS + 0.1 - (CLIMBING_HOOKS_MINIMUM_HEIGHT - MINIMUM_HEIGHT)), //TODO: Find these values :D
-            /**
-             * At height for trap doing :D
-             */
-            TRAP(0.4), //TODO: Find these values :D
+            CLIMB(0.1),
             /**
              * At height for top of initial climb :D
              */
-            AMP(0.2); //TODO: Find these values :D
+            AMP(0.3); //TODO: Find these values :D
 
             public final double heightMeters;
 
@@ -243,19 +250,21 @@ public final class Constants {
 
     public static class Tramp {
         public static final int BEAM_BREAK_CHANNEL = 9;
-        public static final double GEAR_RATIO = 3.0;
+        public static final double GEAR_RATIO = 9.0;
         public static final double TRAP_SCORING_TIME_SECONDS = 1.114; //TODO: Find these values :D
         public static final int MOTOR_ID = 17;
     }
 
     public static class Targeting {
         // TODO: tune these
-        public static final double ROT_KP = 1.18;
+        public static final double ROT_KP = 0.6;
         public static final double ROT_KI = 0.0;
-        public static final double ROT_KD = 0.0;
+        public static final double ROT_KD = 0.028;
 
         public static final Pose2d SPEAKER_POSE =
                 new Pose2d(Units.inchesToMeters(8.861), Units.inchesToMeters(218), new Rotation2d());
+        public static final double SPEAKER_CENTER_HEIGHT = Units.inchesToMeters(80.4375);
+        public static final double STAGE_MAX_HEIGHT = Units.feetToMeters(7.365);
     }
 
     public static boolean isTuningMode() {

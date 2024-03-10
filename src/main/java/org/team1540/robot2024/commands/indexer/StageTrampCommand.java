@@ -16,10 +16,10 @@ public class StageTrampCommand extends Command {
     }
     @Override
     public void initialize() {
-        tramp.setPercent(0.5); //TODO: Tune this
+        tramp.setPercent(1); //TODO: Tune this
 //        indexer.setFeederVelocity(-600); TODO Make this work again
-        indexer.setFeederPercent(-0.5);
-        indexer.setIntakePercent(0.5);
+        indexer.setFeederPercent(-1);
+        indexer.setIntakePercent(1);
     }
 
     @Override

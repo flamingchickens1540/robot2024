@@ -1,5 +1,6 @@
 package org.team1540.robot2024.commands.autos;
 
+import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.PrintCommand;
 import org.team1540.robot2024.subsystems.drive.Drivetrain;
@@ -20,7 +21,8 @@ public class DriveSinglePath extends AutoCommand {
         );
 
         addCommands(
-                getPath(0).getCommand(drivetrain)
+                getPath(0).getCommand(drivetrain),
+                Commands.runOnce(drivetrain::stop)
         );
     }
 }
