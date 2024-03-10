@@ -13,12 +13,12 @@ import org.team1540.robot2024.subsystems.tramp.Tramp;
 public class TrampStageSequence extends SequentialCommandGroup {
     public TrampStageSequence(Indexer indexer, Tramp tramp, Elevator elevator){
         addCommands(
-                new ElevatorSetpointCommand(elevator, Constants.Elevator.ElevatorState.BOTTOM),
-                new StageTrampCommand(tramp, indexer),
+                new ElevatorSetpointCommand(elevator, Constants.Elevator.ElevatorState.BOTTOM).withTimeout(3),
+                new StageTrampCommand(tramp, indexer).withTimeout(3),
                 new ParallelCommandGroup(
                         Commands.runOnce(() -> tramp.setDistanceToGo(1)),
                         new ElevatorSetpointCommand(elevator, Constants.Elevator.ElevatorState.AMP)
-                )
+                ).withTimeout(5)
         );
     }
 }

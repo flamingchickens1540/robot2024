@@ -15,10 +15,7 @@ import org.team1540.robot2024.commands.elevator.ElevatorManualCommand;
 import org.team1540.robot2024.commands.indexer.IntakeAndFeed;
 import org.team1540.robot2024.commands.indexer.IntakeCommand;
 import org.team1540.robot2024.commands.indexer.StageTrampCommand;
-import org.team1540.robot2024.commands.shooter.AutoShootPrepare;
-import org.team1540.robot2024.commands.shooter.ManualPivotCommand;
-import org.team1540.robot2024.commands.shooter.OverStageShootPrepare;
-import org.team1540.robot2024.commands.shooter.ShootSequence;
+import org.team1540.robot2024.commands.shooter.*;
 import org.team1540.robot2024.commands.tramp.TrampScoreSequence;
 import org.team1540.robot2024.commands.tramp.TrampStageSequence;
 import org.team1540.robot2024.subsystems.drive.Drivetrain;
@@ -152,10 +149,11 @@ public class RobotContainer {
         LedPattern lockedOverstageDrivePattern = new LedPatternWave(280);
         Command targetDrive = new AutoShootPrepare(driver.getHID(), drivetrain, shooter).alongWith(leds.commandShowPattern(lockedDrivePattern, Leds.PatternCriticality.DRIVER_LOCK));
         Command overstageTargetDrive = new OverStageShootPrepare(driver.getHID(), drivetrain, shooter).alongWith(leds.commandShowPattern(lockedOverstageDrivePattern, Leds.PatternCriticality.DRIVER_LOCK));
-
+        Command autoShooterCommand = new AutoShooterPrepare(drivetrain, shooter).alongWith().alongWith(leds.commandShowPattern(new LedPatternWave(200), Leds.PatternCriticality.DRIVER_LOCK));
 
         driver.rightBumper().toggleOnTrue(targetDrive);
-//        driver.leftBumper().toggleOnTrue(overstageTargetDrive);
+        driver.rightTrigger(0.95).toggleOnTrue(autoShooterCommand);
+        driver.leftBumper().toggleOnTrue(overstageTargetDrive);
         driver.rightStick().onTrue(Commands.runOnce(() -> {
             targetDrive.cancel();
             overstageTargetDrive.cancel();
@@ -166,7 +164,7 @@ public class RobotContainer {
         copilot.rightBumper().whileTrue(intakeCommand);
 
         copilot.povDown().whileTrue(indexer.commandRunIntake(-1));
-        copilot.povUp().whileTrue(new IntakeCommand(indexer, tramp::isNoteStaged, 1, false, driver.getHID(), copilot.getHID()));
+        copilot.povUp().whileTrue(indexer.commandRunIntake(1));
         copilot.povRight().whileTrue(Commands.startEnd(() -> tramp.setPercent(1), tramp::stop, tramp));
 //        copilot.povLeft().onTrue(CommandUtils.startStopTimed(
 //                () -> leds.setPatternAll(() -> new LedPatternWave(DriverStation.getAlliance().orElse(DriverStation.Alliance.Red) == DriverStation.Alliance.Red ? 0: 216), Leds.PatternCriticality.HIGH),

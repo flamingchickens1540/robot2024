@@ -4,8 +4,10 @@ import com.revrobotics.CANSparkBase;
 import com.revrobotics.CANSparkLowLevel;
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.SparkPIDController;
+import edu.wpi.first.math.filter.Debouncer;
 import edu.wpi.first.wpilibj.AnalogPotentiometer;
 import edu.wpi.first.wpilibj.DigitalInput;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 import static org.team1540.robot2024.Constants.Indexer.*;
 
@@ -13,8 +15,9 @@ import static org.team1540.robot2024.Constants.Indexer.*;
 public class IndexerIOSparkMax implements IndexerIO {
     private final CANSparkMax intakeMotor = new CANSparkMax(INTAKE_ID, CANSparkLowLevel.MotorType.kBrushless);
     private final CANSparkMax feederMotor = new CANSparkMax(FEEDER_ID, CANSparkLowLevel.MotorType.kBrushless);
-//    private final DigitalInput indexerBeamBreak = new DigitalInput(7);
-    private final AnalogPotentiometer ultrasonic = new AnalogPotentiometer(0,1,0);
+    private final DigitalInput indexerBeamBreak = new DigitalInput(7);
+//    private final Debouncer beamBreakDebouncer = new Debouncer(0.2, Debouncer.DebounceType.kRising);
+//    private final AnalogPotentiometer ultrasonic = new AnalogPotentiometer(0,1,0);
     private final SparkPIDController feederPID;
     private double setpointRPM;
 
@@ -44,8 +47,9 @@ public class IndexerIOSparkMax implements IndexerIO {
         inputs.feederCurrentAmps = feederMotor.getOutputCurrent();
         inputs.feederVoltage = feederMotor.getBusVoltage() * feederMotor.getAppliedOutput();
         inputs.feederVelocityRPM = feederMotor.getEncoder().getVelocity();
-//        inputs.noteInIntake = !indexerBeamBreak.get();
-        inputs.noteInIntake = ultrasonic.get() < 0.02;
+        inputs.noteInIntake = !indexerBeamBreak.get();
+//        SmartDashboard.putNumber("ultrasonic", ultrasonic.get());
+//        inputs.noteInIntake = ultrasonic.get() < 0.02;
         inputs.setpointRPM = setpointRPM;
         inputs.feederVelocityError = setpointRPM - feederMotor.getEncoder().getVelocity();
 
