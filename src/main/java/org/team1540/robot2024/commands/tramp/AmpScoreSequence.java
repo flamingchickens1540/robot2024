@@ -7,11 +7,11 @@ import org.team1540.robot2024.subsystems.elevator.Elevator;
 import org.team1540.robot2024.subsystems.indexer.Indexer;
 import org.team1540.robot2024.subsystems.tramp.Tramp;
 
-public class TrampScoreSequence extends SequentialCommandGroup {
-    public TrampScoreSequence(Tramp tramp, Indexer indexer, Elevator elevator) {
+public class AmpScoreSequence extends SequentialCommandGroup {
+    public AmpScoreSequence(Tramp tramp, Indexer indexer, Elevator elevator) {
         addCommands(
-                new TrampStageSequence(indexer, tramp, elevator).unless(tramp::isNoteStaged),
-                new TrampShoot(tramp),
+                new AmpScoreStageSequence(indexer, tramp, elevator).unless(tramp::isNoteStaged),
+                new TrampOuttake(tramp),
                 new ElevatorSetpointCommand(elevator, Constants.Elevator.ElevatorState.BOTTOM)
         );
     }

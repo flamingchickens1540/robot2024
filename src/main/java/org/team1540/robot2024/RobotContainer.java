@@ -16,8 +16,8 @@ import org.team1540.robot2024.commands.indexer.IntakeAndFeed;
 import org.team1540.robot2024.commands.indexer.IntakeCommand;
 import org.team1540.robot2024.commands.indexer.StageTrampCommand;
 import org.team1540.robot2024.commands.shooter.*;
-import org.team1540.robot2024.commands.tramp.TrampScoreSequence;
-import org.team1540.robot2024.commands.tramp.TrampStageSequence;
+import org.team1540.robot2024.commands.tramp.AmpScoreSequence;
+import org.team1540.robot2024.commands.tramp.AmpScoreStageSequence;
 import org.team1540.robot2024.subsystems.drive.Drivetrain;
 import org.team1540.robot2024.subsystems.elevator.Elevator;
 import org.team1540.robot2024.subsystems.indexer.Indexer;
@@ -159,7 +159,7 @@ public class RobotContainer {
             overstageTargetDrive.cancel();
         }));
 
-        copilot.leftBumper().whileTrue(new TrampScoreSequence(tramp, indexer, elevator));
+        copilot.leftBumper().whileTrue(new AmpScoreSequence(tramp, indexer, elevator));
         Command intakeCommand = new IntakeCommand(indexer, tramp::isNoteStaged, 1, driver.getHID(), copilot.getHID());
         copilot.rightBumper().whileTrue(intakeCommand);
 
@@ -183,7 +183,7 @@ public class RobotContainer {
 
 
         copilot.x().whileTrue(new ShootSequence(shooter, indexer));
-        copilot.a().whileTrue(new TrampStageSequence(indexer, tramp, elevator));
+        copilot.a().whileTrue(new AmpScoreStageSequence(indexer, tramp, elevator));
 //        copilot.b().whileTrue(new ShootSequence(shooter, indexer, PODIUM_SHOOT));
 //        copilot.b().whileTrue(new TuneShooterCommand(shooter, indexer));
         copilot.b()
