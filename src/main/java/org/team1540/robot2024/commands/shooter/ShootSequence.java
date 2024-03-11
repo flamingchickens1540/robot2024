@@ -3,9 +3,7 @@ package org.team1540.robot2024.commands.shooter;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj2.command.Commands;
-import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.ParallelRaceGroup;
-import edu.wpi.first.wpilibj2.command.PrintCommand;
 import org.team1540.robot2024.Constants;
 import org.team1540.robot2024.commands.indexer.IntakeAndFeed;
 import org.team1540.robot2024.subsystems.indexer.Indexer;
@@ -47,7 +45,7 @@ public class ShootSequence extends ParallelRaceGroup {
         );
     }
 
-    public static ShootSequence forAuto(Shooter shooter, Indexer indexer) {
+    public static ShootSequence forAutoSubwoofer(Shooter shooter, Indexer indexer) {
         return new ShootSequence(shooter, indexer, () -> HUB_SHOOT, 1.5);
     }
 

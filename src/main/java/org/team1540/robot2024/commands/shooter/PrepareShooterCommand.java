@@ -11,8 +11,6 @@ import java.util.function.Supplier;
 public class PrepareShooterCommand extends Command {
     private final Shooter shooter;
     private final Supplier<ShooterSetpoint> setpoint;
-    private final LoggedDashboardNumber leftFlywheelSetpoint = new LoggedDashboardNumber("Shooter/Flywheels/leftSetpoint", 3200);
-    private final LoggedDashboardNumber rightFlywheelSetpoint = new LoggedDashboardNumber("Shooter/Flywheels/rightSetpoint", 2500);
 
     public PrepareShooterCommand(Shooter shooter, Supplier<ShooterSetpoint> setpoint) {
         this.shooter = shooter;
@@ -22,7 +20,6 @@ public class PrepareShooterCommand extends Command {
     @Override
     public void execute() {
         ShooterSetpoint setpoint = this.setpoint.get();
-        // TODO: Make this dynamically update based on estimated pose
         shooter.setFlywheelSpeeds(setpoint.leftSetpoint, setpoint.rightSetpoint);
         shooter.setPivotPosition(setpoint.pivot);
     }
@@ -30,8 +27,6 @@ public class PrepareShooterCommand extends Command {
     @Override
     public boolean isFinished() {
         return false;
-//        return shooter.areFlywheelsSpunUp() && shooter.isPivotAtSetpoint(); TODO make this terminate properly so it works
-//        return shooter.areFlywheelsSpunUp();
     }
 
     @Override

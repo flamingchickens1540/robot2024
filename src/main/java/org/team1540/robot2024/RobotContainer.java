@@ -147,9 +147,9 @@ public class RobotContainer {
 
         LedPattern lockedDrivePattern = new LedPatternWave(100);
         LedPattern lockedOverstageDrivePattern = new LedPatternWave(280);
-        Command targetDrive = new AutoShootPrepare(driver.getHID(), drivetrain, shooter).alongWith(leds.commandShowPattern(lockedDrivePattern, Leds.PatternCriticality.DRIVER_LOCK));
-        Command overstageTargetDrive = new OverStageShootPrepare(driver.getHID(), drivetrain, shooter).alongWith(leds.commandShowPattern(lockedOverstageDrivePattern, Leds.PatternCriticality.DRIVER_LOCK));
-        Command autoShooterCommand = new AutoShooterPrepare(drivetrain, shooter).alongWith().alongWith(leds.commandShowPattern(new LedPatternWave(200), Leds.PatternCriticality.DRIVER_LOCK));
+        Command targetDrive = new AutoShootPrepareWithTargeting(driver.getHID(), drivetrain, shooter).alongWith(leds.commandShowPattern(lockedDrivePattern, Leds.PatternCriticality.DRIVER_LOCK));
+        Command overstageTargetDrive = new OverStageShootPrepareWithTargeting(driver.getHID(), drivetrain, shooter).alongWith(leds.commandShowPattern(lockedOverstageDrivePattern, Leds.PatternCriticality.DRIVER_LOCK));
+        Command autoShooterCommand = new AutoShootPrepare(drivetrain, shooter).alongWith().alongWith(leds.commandShowPattern(new LedPatternWave(200), Leds.PatternCriticality.DRIVER_LOCK));
 
         driver.rightBumper().toggleOnTrue(targetDrive);
         driver.rightTrigger(0.95).toggleOnTrue(autoShooterCommand);
