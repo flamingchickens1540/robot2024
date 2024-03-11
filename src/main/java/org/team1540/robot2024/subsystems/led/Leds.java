@@ -2,9 +2,11 @@ package org.team1540.robot2024.subsystems.led;
 
 import edu.wpi.first.wpilibj.AddressableLED;
 import edu.wpi.first.wpilibj.AddressableLEDBuffer;
+import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import org.team1540.robot2024.Robot;
 import org.team1540.robot2024.subsystems.led.patterns.LedPattern;
 
 import java.util.function.Supplier;
@@ -30,12 +32,20 @@ public class Leds extends SubsystemBase {
 
     @Override
     public void periodic() {
-        for (int i = 0; i < ZONE_COUNT;i++) {
-            if (patterns[i].shouldRefresh()) {
-                patterns[i].getPattern().apply(buffers[i]);
+        try {
+            for (int i = 0; i < ZONE_COUNT; i++) {
+                if (patterns[i].shouldRefresh()) {
+                    patterns[i].getPattern().apply(buffers[i]);
+                }
+            }
+            strip.setData(ledBuffer);
+        } catch (Exception e) {
+            if (Robot.isReal()) {
+                DriverStation.reportWarning("Error in LEDs periodic: "+e+": "+e.getMessage(), e.getStackTrace());
+            } else {
+                throw e;
             }
         }
-        strip.setData(ledBuffer);
     }
 
     public void setPattern(Zone zone, LedPattern pattern, PatternLevel priority) {
