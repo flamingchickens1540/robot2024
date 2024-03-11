@@ -31,6 +31,7 @@ import org.team1540.robot2024.util.CommandUtils;
 import org.team1540.robot2024.util.PhoenixTimeSyncSignalRefresher;
 import org.team1540.robot2024.util.auto.AutoCommand;
 import org.team1540.robot2024.util.auto.AutoManager;
+import org.team1540.robot2024.util.shooter.ShooterSetpoint;
 
 import static org.team1540.robot2024.Constants.SwerveConfig;
 import static org.team1540.robot2024.Constants.isTuningMode;
@@ -189,6 +190,8 @@ public class RobotContainer {
 //        copilot.leftTrigger(0.5).whileTrue(new ElevatorSetpointCommand(elevator, ElevatorState.CLIMB));
 
 
+        new Trigger(() -> elevator.getPosition() > 0.1).debounce(0.1)
+                .whileTrue(PrepareShooterCommand.lowerPivot(shooter));
         new Trigger(indexer::isNoteStaged).debounce(0.1)
                 .onTrue(CommandUtils.rumbleCommandTimed(driver.getHID(), 1, 1))
                 .whileTrue(leds.commandShowPattern(new LedPatternWave(0), Leds.PatternLevel.INTAKE_STATE));

@@ -17,6 +17,10 @@ public class PrepareShooterCommand extends Command {
         this.setpoint = setpoint;
         addRequirements(shooter);
     }
+
+    public static PrepareShooterCommand lowerPivot(Shooter shooter) {
+        return new PrepareShooterCommand(shooter, ()->new ShooterSetpoint(0,0,0));
+    }
     @Override
     public void execute() {
         ShooterSetpoint setpoint = this.setpoint.get();
