@@ -161,17 +161,14 @@ public class RobotContainer {
         }));
 
         copilot.leftBumper().whileTrue(new AmpScoreSequence(tramp, indexer, elevator));
-        Command intakeCommand = new IntakeCommand(indexer, tramp::isNoteStaged, 1, driver.getHID(), copilot.getHID());
+        Command intakeCommand = new IntakeCommand(indexer, tramp::isNoteStaged, 1)
+                .deadlineWith(CommandUtils.rumbleCommand(driver, 0.5), CommandUtils.rumbleCommand(copilot, 0.5));
         copilot.rightBumper().whileTrue(intakeCommand);
 
         copilot.povDown().whileTrue(indexer.commandRunIntake(-1));
         copilot.povUp().whileTrue(indexer.commandRunIntake(1));
         copilot.povRight().whileTrue(Commands.startEnd(() -> tramp.setPercent(1), tramp::stop, tramp));
-//        copilot.povLeft().onTrue(CommandUtils.startStopTimed(
-//                () -> leds.setPatternAll(() -> new LedPatternWave(DriverStation.getAlliance().orElse(DriverStation.Alliance.Red) == DriverStation.Alliance.Red ? 0: 216), Leds.PatternCriticality.HIGH),
-//                () -> leds.setPatternAll(() -> new LedPatternWave(DriverStation.getAlliance().orElse(DriverStation.Alliance.Red) == DriverStation.Alliance.Red ? 0: 216), Leds.PatternCriticality.HIGH),
-//                5
-//        ));
+
 
         copilot.rightTrigger(0.95).whileTrue(Commands.startEnd(() -> tramp.setPercent(1), tramp::stop, tramp));
         copilot.leftTrigger(0.95).whileTrue(new ClimbAlignment(drivetrain, elevator, null, tramp, indexer, shooter));
@@ -196,16 +193,12 @@ public class RobotContainer {
                 .onTrue(CommandUtils.rumbleCommandTimed(driver.getHID(), 1, 1))
                 .whileTrue(leds.commandShowPattern(new LedPatternWave(0), Leds.PatternLevel.INTAKE_STATE));
 
-        new Trigger(indexer::isNoteStaged).and(intakeCommand::isScheduled).onTrue(CommandUtils.rumbleCommandTimed(driver.getHID(), 0.3, 0.4));
+        new Trigger(indexer::isNoteStaged).and(intakeCommand::isScheduled).onTrue(CommandUtils.rumbleCommandTimed(driver.getHID(), 0.8, 0.4));
 
         new Trigger(RobotController::getUserButton).toggleOnTrue(Commands.startEnd(
                 () -> {
                     elevator.setBrakeMode(false);
                     leds.setPatternAll(() -> new LedPatternRSLState(Color.kMagenta), Leds.PatternLevel.ELEVATOR_STATE);
-                    Commands.sequence(
-                            Commands.waitSeconds(5),
-                            leds.commandClear(Leds.PatternLevel.ELEVATOR_STATE)
-                    ).schedule();
                 },
                 () -> {
                     elevator.setBrakeMode(true);
