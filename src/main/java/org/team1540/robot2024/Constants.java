@@ -79,6 +79,11 @@ public final class Constants {
                 Drivetrain.MAX_LINEAR_SPEED, Drivetrain.MAX_LINEAR_SPEED * LINEAR_ACCEL_TIME_SECS,
                 Constants.Drivetrain.MAX_ANGULAR_SPEED,
                 Constants.Drivetrain.MAX_ANGULAR_SPEED * ANGULAR_ACCEL_TIME_SECS);
+
+        public static final PathConstraints STAGE_PATH_CONSTRAINTS = new PathConstraints(
+                3.0, 1,
+                1,
+                0.3);
     }
 
     public static class Indexer {

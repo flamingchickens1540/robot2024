@@ -2,7 +2,6 @@ package org.team1540.robot2024.commands.climb;
 
 import edu.wpi.first.wpilibj2.command.*;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
-import org.team1540.robot2024.Constants;
 import org.team1540.robot2024.Constants.Elevator.ElevatorState;
 import org.team1540.robot2024.commands.elevator.ElevatorSetpointCommand;
 import org.team1540.robot2024.subsystems.drive.Drivetrain;
@@ -12,7 +11,6 @@ import org.team1540.robot2024.subsystems.indexer.Indexer;
 import org.team1540.robot2024.subsystems.shooter.Shooter;
 import org.team1540.robot2024.subsystems.tramp.Tramp;
 
-import javax.imageio.metadata.IIOMetadataNode;
 
 public class TrapAndClimbSequence extends SequentialCommandGroup {
 

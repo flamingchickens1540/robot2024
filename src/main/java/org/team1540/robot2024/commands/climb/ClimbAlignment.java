@@ -1,7 +1,6 @@
 package org.team1540.robot2024.commands.climb;
 
 import com.pathplanner.lib.auto.AutoBuilder;
-import com.pathplanner.lib.path.PathConstraints;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.wpilibj2.command.*;
 import org.team1540.robot2024.Constants;
@@ -20,14 +19,11 @@ import org.team1540.robot2024.util.vision.AprilTagsCrescendo;
 
 import java.util.function.Supplier;
 
+import static org.team1540.robot2024.Constants.Auto.STAGE_PATH_CONSTRAINTS;
+
 public class ClimbAlignment extends ParallelRaceGroup {
 
     private final Drivetrain drivetrain;
-
-    public static final PathConstraints STAGE_PATH_CONSTRAINTS = new PathConstraints(
-            3.0, 1,
-            1,
-            0.3);
 
     public ClimbAlignment(Drivetrain drivetrain, Elevator elevator, Hooks hooks, Tramp tramp, Indexer indexer, Shooter shooter){
         this.drivetrain = drivetrain;
