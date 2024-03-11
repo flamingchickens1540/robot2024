@@ -1,7 +1,5 @@
 package org.team1540.robot2024.commands.indexer;
 
-import edu.wpi.first.wpilibj.GenericHID;
-import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj2.command.Command;
 import org.team1540.robot2024.subsystems.indexer.Indexer;
 

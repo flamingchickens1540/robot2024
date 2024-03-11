@@ -2,7 +2,6 @@ package org.team1540.robot2024;
 
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.DriverStation;
-import edu.wpi.first.wpilibj.util.Color;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import org.littletonrobotics.junction.LogFileUtil;
@@ -11,9 +10,11 @@ import org.littletonrobotics.junction.Logger;
 import org.littletonrobotics.junction.networktables.NT4Publisher;
 import org.littletonrobotics.junction.wpilog.WPILOGReader;
 import org.littletonrobotics.junction.wpilog.WPILOGWriter;
-import org.team1540.robot2024.subsystems.led.*;
-import org.team1540.robot2024.subsystems.led.patterns.*;
-import org.team1540.robot2024.util.LoggedTunableNumber;
+import org.team1540.robot2024.subsystems.led.Leds;
+import org.team1540.robot2024.subsystems.led.patterns.LedPattern;
+import org.team1540.robot2024.subsystems.led.patterns.LedPatternFlame;
+import org.team1540.robot2024.subsystems.led.patterns.LedPatternRainbow;
+import org.team1540.robot2024.subsystems.led.patterns.LedPatternTuneColor;
 import org.team1540.robot2024.util.MechanismVisualiser;
 import org.team1540.robot2024.util.auto.AutoManager;
 import org.team1540.robot2024.util.vision.AprilTagsCrescendo;
@@ -37,6 +38,7 @@ public class Robot extends LoggedRobot {
     public void robotInit() {
         // Record metadata
         Logger.recordMetadata("IsCompBot", String.valueOf(Constants.IS_COMPETITION_ROBOT));
+        Logger.recordMetadata("IsTuningMode", String.valueOf(Constants.isTuningMode()));
         Logger.recordMetadata("ProjectName", BuildConstants.MAVEN_NAME);
         Logger.recordMetadata("BuildDate", BuildConstants.BUILD_DATE);
         Logger.recordMetadata("GitSHA", BuildConstants.GIT_SHA);
