@@ -14,11 +14,17 @@ public class CommandUtils {
         );
     }
 
-    public static Command rumbleCommand(XboxController controller, double amount, double duration) {
+    public static Command rumbleCommandTimed(XboxController controller, double amount, double duration) {
         return startStopTimed(
                 () -> controller.setRumble(GenericHID.RumbleType.kBothRumble, amount),
                 () -> controller.setRumble(GenericHID.RumbleType.kBothRumble, 0),
                 duration
+        );
+    }
+    public static Command rumbleCommand(XboxController controller, double amount) {
+        return Commands.startEnd(
+                () -> controller.setRumble(GenericHID.RumbleType.kBothRumble, amount),
+                () -> controller.setRumble(GenericHID.RumbleType.kBothRumble, 0)
         );
     }
 }

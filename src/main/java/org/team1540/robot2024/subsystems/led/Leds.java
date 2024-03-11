@@ -38,30 +38,30 @@ public class Leds extends SubsystemBase {
         strip.setData(ledBuffer);
     }
 
-    public void setPattern(Zone zone, LedPattern pattern, PatternCriticality criticality) {
-        patterns[zone.ordinal()].addPattern(pattern, criticality);
+    public void setPattern(Zone zone, LedPattern pattern, PatternLevel priority) {
+        patterns[zone.ordinal()].addPattern(pattern, priority);
         pattern.setLength(buffers[zone.ordinal()].getLength());
     }
 
     public void setPattern(Zone zone, LedPattern pattern) {
-        setPattern(zone, pattern, PatternCriticality.NORMAL);
+        setPattern(zone, pattern, PatternLevel.DEFAULT);
     }
 
-    public void clearPattern(Zone zone, PatternCriticality criticality) {
-        patterns[zone.ordinal()].clearPattern(criticality);
+    public void clearPattern(Zone zone, PatternLevel priority) {
+        patterns[zone.ordinal()].clearPattern(priority);
     }
 
-    public void setPatternAll(Supplier<LedPattern> patternSupplier, PatternCriticality criticality) {
+    public void setPatternAll(Supplier<LedPattern> patternSupplier, PatternLevel priority) {
         for (int i = 0; i<ZONE_COUNT;i++) {
             LedPattern pattern = patternSupplier.get();
-            patterns[i].addPattern(pattern, criticality);
+            patterns[i].addPattern(pattern, priority);
             pattern.setLength(buffers[i].getLength());
         }
     }
 
-    public void clearPatternAll(PatternCriticality criticality) {
+    public void clearPatternAll(PatternLevel priority) {
         for (int i = 0; i<ZONE_COUNT;i++) {
-            patterns[i].clearPattern(criticality);
+            patterns[i].clearPattern(priority);
         }
     }
 
@@ -70,22 +70,26 @@ public class Leds extends SubsystemBase {
     public enum Zone {
         ELEVATOR_BACK,
     }
-    static final int CRITICALITY_COUNT=PatternCriticality.values().length;
-    public enum PatternCriticality {
+    static final int LEVEL_COUNT = PatternLevel.values().length;
+    public enum PatternLevel {
         LOWEST,
-        NORMAL,
-        MID,
-        HIGH,
-        HAS_INTAKE,
+        DEFAULT,
+        INTAKE_STATE,
         DRIVER_LOCK,
-        EXTREME
+        ELEVATOR_STATE
     }
 
-    public Command commandShowPattern(LedPattern pattern, Leds.PatternCriticality criticality) {
+    public Command commandShowPattern(LedPattern pattern, PatternLevel priority) {
         return Commands.startEnd(
-                () -> this.setPattern(Leds.Zone.ELEVATOR_BACK, pattern, criticality),
-                () -> this.clearPattern(Leds.Zone.ELEVATOR_BACK, criticality)
-        );
+                () -> this.setPattern(Leds.Zone.ELEVATOR_BACK, pattern, priority),
+                () -> this.clearPattern(Leds.Zone.ELEVATOR_BACK, priority)
+        ).ignoringDisable(true);
+    }
+    public Command commandSet(LedPattern pattern, PatternLevel priority) {
+        return Commands.runOnce(() -> this.setPattern(Leds.Zone.ELEVATOR_BACK, pattern, priority)).ignoringDisable(true);
+    }
+    public Command commandClear(PatternLevel priority) {
+        return Commands.runOnce(() -> this.clearPattern(Leds.Zone.ELEVATOR_BACK, priority)).ignoringDisable(true);
     }
 
 }

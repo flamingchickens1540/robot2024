@@ -1,12 +1,11 @@
 package org.team1540.robot2024.subsystems.led;
 
 import org.team1540.robot2024.subsystems.led.patterns.LedPattern;
-import org.team1540.robot2024.subsystems.led.patterns.LedPatternFlame;
 import org.team1540.robot2024.subsystems.led.patterns.LedPatternRainbow;
 
 
 public class LedTriager {
-    private final LedPattern[] patterns = new LedPattern[Leds.CRITICALITY_COUNT];
+    private final LedPattern[] patterns = new LedPattern[Leds.LEVEL_COUNT];
     private final LedPattern defaultPattern = new LedPatternRainbow(1);
     private boolean isNew = true;
     public LedPattern getPattern() {
@@ -24,12 +23,12 @@ public class LedTriager {
         return val;
     }
 
-    public void clearPattern(Leds.PatternCriticality criticality) {
+    public void clearPattern(Leds.PatternLevel criticality) {
         patterns[criticality.ordinal()] = null;
         isNew = true;
     }
 
-    public boolean addPattern(LedPattern pattern, Leds.PatternCriticality criticality) {
+    public boolean addPattern(LedPattern pattern, Leds.PatternLevel criticality) {
         patterns[criticality.ordinal()] = pattern;
         isNew = true;
         return getPattern() == pattern;

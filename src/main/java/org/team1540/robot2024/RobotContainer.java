@@ -1,6 +1,5 @@
 package org.team1540.robot2024;
 
-import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.RobotController;
 import edu.wpi.first.wpilibj.util.Color;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -32,8 +31,6 @@ import org.team1540.robot2024.util.CommandUtils;
 import org.team1540.robot2024.util.PhoenixTimeSyncSignalRefresher;
 import org.team1540.robot2024.util.auto.AutoCommand;
 import org.team1540.robot2024.util.auto.AutoManager;
-import org.team1540.robot2024.util.shooter.ShooterSetpoint;
-import org.team1540.robot2024.util.vision.AprilTagsCrescendo;
 
 import static org.team1540.robot2024.Constants.SwerveConfig;
 import static org.team1540.robot2024.Constants.isTuningMode;
@@ -147,9 +144,13 @@ public class RobotContainer {
 
         LedPattern lockedDrivePattern = new LedPatternWave(100);
         LedPattern lockedOverstageDrivePattern = new LedPatternWave(280);
-        Command targetDrive = new AutoShootPrepareWithTargeting(driver.getHID(), drivetrain, shooter).alongWith(leds.commandShowPattern(lockedDrivePattern, Leds.PatternCriticality.DRIVER_LOCK));
-        Command overstageTargetDrive = new OverStageShootPrepareWithTargeting(driver.getHID(), drivetrain, shooter).alongWith(leds.commandShowPattern(lockedOverstageDrivePattern, Leds.PatternCriticality.DRIVER_LOCK));
-        Command autoShooterCommand = new AutoShootPrepare(drivetrain, shooter).alongWith().alongWith(leds.commandShowPattern(new LedPatternWave(200), Leds.PatternCriticality.DRIVER_LOCK));
+
+        Command targetDrive = new AutoShootPrepareWithTargeting(driver.getHID(), drivetrain, shooter)
+                .alongWith(leds.commandShowPattern(lockedDrivePattern, Leds.PatternLevel.DRIVER_LOCK));
+        Command overstageTargetDrive = new OverStageShootPrepareWithTargeting(driver.getHID(), drivetrain, shooter)
+                .alongWith(leds.commandShowPattern(lockedOverstageDrivePattern, Leds.PatternLevel.DRIVER_LOCK));
+        Command autoShooterCommand = new AutoShootPrepare(drivetrain, shooter)
+                .alongWith(leds.commandShowPattern(new LedPatternWave(200), Leds.PatternLevel.DRIVER_LOCK));
 
         driver.rightBumper().toggleOnTrue(targetDrive);
         driver.rightTrigger(0.95).toggleOnTrue(autoShooterCommand);
@@ -171,12 +172,6 @@ public class RobotContainer {
 //                () -> leds.setPatternAll(() -> new LedPatternWave(DriverStation.getAlliance().orElse(DriverStation.Alliance.Red) == DriverStation.Alliance.Red ? 0: 216), Leds.PatternCriticality.HIGH),
 //                5
 //        ));
-        copilot.povLeft().whileTrue(new ShootSequence(shooter, indexer, () -> new ShooterSetpoint(
-                Rotation2d.fromRadians(
-                        Math.atan2(Constants.Targeting.SPEAKER_CENTER_HEIGHT - Constants.Shooter.Pivot.PIVOT_HEIGHT, drivetrain.getPose().getTranslation().getDistance(
-                                AprilTagsCrescendo.getInstance().getTag(AprilTagsCrescendo.Tags.SPEAKER_CENTER).toPose2d().getTranslation()
-                        ))).minus(Constants.Shooter.Pivot.REAL_ZEROED_ANGLE),
-                8000, 6000)));
 
         copilot.rightTrigger(0.95).whileTrue(Commands.startEnd(() -> tramp.setPercent(1), tramp::stop, tramp));
         copilot.leftTrigger(0.95).whileTrue(new ClimbAlignment(drivetrain, elevator, null, tramp, indexer, shooter));
@@ -198,25 +193,25 @@ public class RobotContainer {
 
 
         new Trigger(indexer::isNoteStaged).debounce(0.1)
-                .onTrue(CommandUtils.rumbleCommand(driver.getHID(), 1, 1))
-                .whileTrue(Commands.startEnd(() -> leds.setPattern(Leds.Zone.ELEVATOR_BACK, new LedPatternWave(0), Leds.PatternCriticality.HAS_INTAKE), () -> leds.clearPattern(Leds.Zone.ELEVATOR_BACK, Leds.PatternCriticality.HAS_INTAKE)));
+                .onTrue(CommandUtils.rumbleCommandTimed(driver.getHID(), 1, 1))
+                .whileTrue(leds.commandShowPattern(new LedPatternWave(0), Leds.PatternLevel.INTAKE_STATE));
 
-        new Trigger(indexer::isNoteStaged).and(intakeCommand::isScheduled).onTrue(CommandUtils.rumbleCommand(driver.getHID(), 0.3, 0.4));
+        new Trigger(indexer::isNoteStaged).and(intakeCommand::isScheduled).onTrue(CommandUtils.rumbleCommandTimed(driver.getHID(), 0.3, 0.4));
 
         new Trigger(RobotController::getUserButton).toggleOnTrue(Commands.startEnd(
                 () -> {
                     elevator.setBrakeMode(false);
-                    leds.setPatternAll(() -> new LedPatternRSLState(Color.kMagenta), Leds.PatternCriticality.EXTREME);
+                    leds.setPatternAll(() -> new LedPatternRSLState(Color.kMagenta), Leds.PatternLevel.ELEVATOR_STATE);
                     Commands.sequence(
                             Commands.waitSeconds(5),
-                            Commands.runOnce(() -> leds.clearPatternAll(Leds.PatternCriticality.EXTREME))
+                            leds.commandClear(Leds.PatternLevel.ELEVATOR_STATE)
                     ).schedule();
                 },
                 () -> {
                     elevator.setBrakeMode(true);
-                    leds.clearPatternAll(Leds.PatternCriticality.EXTREME);
+                    leds.clearPatternAll(Leds.PatternLevel.ELEVATOR_STATE);
                 }
-        ));
+        ).ignoringDisable(true));
 
 
     }
