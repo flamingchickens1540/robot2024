@@ -2,13 +2,11 @@ package org.team1540.robot2024.subsystems.vision;
 
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Pose3d;
-import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import org.littletonrobotics.junction.Logger;
 import org.team1540.robot2024.Constants;
-import org.team1540.robot2024.util.vision.TimestampedVisionPose;
-import org.team1540.robot2024.util.vision.VisionPoseAcceptor;
+import org.team1540.robot2024.util.vision.EstimatedVisionPose;
 
 import java.util.function.Consumer;
 import java.util.function.Supplier;
@@ -22,18 +20,18 @@ public class AprilTagVision extends SubsystemBase {
     private final AprilTagVisionIO rearCameraIO;
     private final AprilTagVisionIOInputsAutoLogged rearCameraInputs = new AprilTagVisionIOInputsAutoLogged();
 
-    private final Consumer<TimestampedVisionPose> visionPoseConsumer;
+    private final Consumer<EstimatedVisionPose> visionPoseConsumer;
     private final Supplier<Double> elevatorHeightSupplierMeters;
 
-    private final TimestampedVisionPose frontPose = new TimestampedVisionPose();
-    private final TimestampedVisionPose rearPose = new TimestampedVisionPose();
+    private final EstimatedVisionPose frontPose = new EstimatedVisionPose();
+    private final EstimatedVisionPose rearPose = new EstimatedVisionPose();
 
     private static boolean hasInstance = false;
 
     private AprilTagVision(
             AprilTagVisionIO frontCameraIO,
             AprilTagVisionIO rearCameraIO,
-            Consumer<TimestampedVisionPose> visionPoseConsumer,
+            Consumer<EstimatedVisionPose> visionPoseConsumer,
             Supplier<Double> elevatorHeightSupplierMeters) {
         if (hasInstance) throw new IllegalStateException("Instance of vision already exists");
         hasInstance = true;
@@ -44,7 +42,7 @@ public class AprilTagVision extends SubsystemBase {
         this.elevatorHeightSupplierMeters = elevatorHeightSupplierMeters;
     }
 
-    public static AprilTagVision createReal(Consumer<TimestampedVisionPose> visionPoseConsumer,
+    public static AprilTagVision createReal(Consumer<EstimatedVisionPose> visionPoseConsumer,
                                             Supplier<Double> elevatorHeightSupplierMeters) {
         if (Constants.currentMode != Constants.Mode.REAL) {
             DriverStation.reportWarning("Using real vision on simulated robot", false);
@@ -56,7 +54,7 @@ public class AprilTagVision extends SubsystemBase {
                 elevatorHeightSupplierMeters);
     }
 
-    public static AprilTagVision createSim(Consumer<TimestampedVisionPose> visionPoseConsumer,
+    public static AprilTagVision createSim(Consumer<EstimatedVisionPose> visionPoseConsumer,
                                            Supplier<Pose2d> drivetrainPoseSupplier,
                                            Supplier<Double> elevatorHeightSupplierMeters) {
         if (Constants.currentMode == Constants.Mode.REAL) {
@@ -106,13 +104,12 @@ public class AprilTagVision extends SubsystemBase {
         updateAndAcceptPose(rearCameraInputs, rearPose);
     }
 
-    private void updateAndAcceptPose(AprilTagVisionIOInputsAutoLogged cameraInputs, TimestampedVisionPose pose) {
+    private void updateAndAcceptPose(AprilTagVisionIOInputsAutoLogged cameraInputs, EstimatedVisionPose pose) {
         if (cameraInputs.lastMeasurementTimestampSecs > pose.timestampSecs) {
             pose.timestampSecs = cameraInputs.lastMeasurementTimestampSecs;
-            pose.poseMeters = cameraInputs.estimatedPoseMeters.toPose2d();
-            pose.hasTargets = cameraInputs.hasTargets;
-            pose.primaryTagID = cameraInputs.primaryTagID;
-            pose.primaryTagPose = cameraInputs.primaryTagPoseMeters.toPose2d();
+            pose.poseMeters = cameraInputs.estimatedPoseMeters;
+            pose.tagIDs = cameraInputs.seenTagIDs;
+            pose.tagPoses = cameraInputs.tagPosesMeters;
             visionPoseConsumer.accept(pose);
         }
     }

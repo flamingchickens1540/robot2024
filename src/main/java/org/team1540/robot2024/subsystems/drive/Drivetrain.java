@@ -17,7 +17,6 @@ import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.wpilibj.DriverStation;
-import edu.wpi.first.wpilibj.RobotController;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
@@ -27,7 +26,7 @@ import org.team1540.robot2024.util.auto.LocalADStarAK;
 import org.team1540.robot2024.Constants;
 import org.team1540.robot2024.util.PhoenixTimeSyncSignalRefresher;
 import org.team1540.robot2024.util.swerve.SwerveFactory;
-import org.team1540.robot2024.util.vision.TimestampedVisionPose;
+import org.team1540.robot2024.util.vision.EstimatedVisionPose;
 import org.team1540.robot2024.util.vision.VisionPoseAcceptor;
 
 import java.util.function.Supplier;
@@ -326,12 +325,14 @@ public class Drivetrain extends SubsystemBase {
         visionPoseEstimator.resetPosition(rawGyroRotation, getModulePositions(), pose);
     }
 
-    public void addVisionMeasurement(TimestampedVisionPose visionPose) {
+    public void addVisionMeasurement(EstimatedVisionPose visionPose) {
         boolean shouldAccept = poseAcceptor.shouldAcceptVision(visionPose);
         if (shouldAccept) {
-            visionPoseEstimator.addVisionMeasurement(visionPose.poseMeters, visionPose.timestampSecs);
+            visionPoseEstimator.setVisionMeasurementStdDevs(visionPose.getStdDevs());
+            visionPoseEstimator.addVisionMeasurement(visionPose.poseMeters.toPose2d(), visionPose.timestampSecs);
             if (!blockTags) {
-                poseEstimator.addVisionMeasurement(visionPose.poseMeters, visionPose.timestampSecs);
+                poseEstimator.setVisionMeasurementStdDevs(visionPose.getStdDevs());
+                poseEstimator.addVisionMeasurement(visionPose.poseMeters.toPose2d(), visionPose.timestampSecs);
             }
         }
     }

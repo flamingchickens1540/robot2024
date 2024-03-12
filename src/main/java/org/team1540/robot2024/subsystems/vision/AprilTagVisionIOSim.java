@@ -12,8 +12,11 @@ import org.photonvision.simulation.PhotonCameraSim;
 import org.photonvision.simulation.SimCameraProperties;
 import org.photonvision.simulation.VisionSystemSim;
 import org.photonvision.targeting.PhotonPipelineResult;
+import org.photonvision.targeting.PhotonTrackedTarget;
+import org.team1540.robot2024.Constants;
 
 import java.io.IOException;
+import java.util.List;
 import java.util.Optional;
 import java.util.function.Supplier;
 
@@ -57,7 +60,7 @@ public class AprilTagVisionIOSim implements AprilTagVisionIO {
                 PhotonPoseEstimator.PoseStrategy.MULTI_TAG_PNP_ON_COPROCESSOR,
                 camera,
                 cameraTransform);
-        photonEstimator.setMultiTagFallbackStrategy(PhotonPoseEstimator.PoseStrategy.LOWEST_AMBIGUITY);
+        photonEstimator.setMultiTagFallbackStrategy(PhotonPoseEstimator.PoseStrategy.CLOSEST_TO_LAST_POSE);
         lastEstimatedPose = new Pose3d(poseSupplier.get());
     }
 
@@ -65,22 +68,26 @@ public class AprilTagVisionIOSim implements AprilTagVisionIO {
     public void updateInputs(AprilTagVisionIOInputs inputs) {
         visionSystemSim.update(poseSupplier.get());
 
-        Optional<EstimatedRobotPose> estimatedPose = photonEstimator.update();
         PhotonPipelineResult latestResult = camera.getLatestResult();
+        List<PhotonTrackedTarget> targets = latestResult.getTargets();
+        Optional<EstimatedRobotPose> estimatedPose = photonEstimator.update(latestResult);
 
-        if (estimatedPose.isPresent()) {
+        double maxAmbiguityRatio = 0;
+        for (PhotonTrackedTarget target : targets)
+            if (target.getPoseAmbiguity() > maxAmbiguityRatio) maxAmbiguityRatio = target.getPoseAmbiguity();
+
+        if (estimatedPose.isPresent() && maxAmbiguityRatio < Constants.Vision.MAX_AMBIGUITY_RATIO) {
             lastEstimatedPose = estimatedPose.get().estimatedPose;
             inputs.estimatedPoseMeters = lastEstimatedPose;
             inputs.lastMeasurementTimestampSecs = estimatedPose.get().timestampSeconds;
         }
 
-        inputs.hasTargets = latestResult.hasTargets();
-        inputs.primaryTagID = inputs.hasTargets ? latestResult.getBestTarget().getFiducialId() : -1;
-        inputs.primaryTagPoseMeters =
-                inputs.hasTargets
-                        ? new Pose3d().plus(
-                                latestResult.getBestTarget().getBestCameraToTarget().plus(cameraTransform.inverse()))
-                        : new Pose3d();
+        inputs.seenTagIDs = new int[targets.size()];
+        inputs.tagPosesMeters = new Pose3d[targets.size()];
+        for (int i = 0; i < targets.size(); i++) {
+            inputs.seenTagIDs[i] = targets.get(i).getFiducialId();
+            inputs.tagPosesMeters[i] = new Pose3d().plus(targets.get(i).getBestCameraToTarget());
+        }
     }
 
     @Override
