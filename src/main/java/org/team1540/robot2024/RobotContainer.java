@@ -180,7 +180,7 @@ public class RobotContainer {
 //        copilot.b().whileTrue(new ShootSequence(shooter, indexer, PODIUM_SHOOT));
 //        copilot.b().whileTrue(new TuneShooterCommand(shooter, indexer));
         copilot.b()
-                .whileTrue(new IntakeAndFeed(indexer, () -> 1, () -> 0.5))
+                .whileTrue(IntakeAndFeed.withDefaults(indexer))
                 .onFalse(Commands.runOnce(() -> {
                     targetDrive.cancel();
                     overstageTargetDrive.cancel();
