@@ -66,7 +66,8 @@ public class RobotContainer {
                 indexer = Indexer.createReal();
                 aprilTagVision = AprilTagVision.createReal(
                         drivetrain::addVisionMeasurement,
-                        elevator::getPosition);
+                        elevator::getPosition,
+                        drivetrain::getVisionPose);
                 break;
             case SIM:
                 // Sim robot, instantiate physics sim IO implementations

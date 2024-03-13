@@ -296,7 +296,7 @@ public class Drivetrain extends SubsystemBase {
     }
 
     @AutoLogOutput(key = "Odometry/RobotVision")
-    private Pose2d getPoseVision() {
+    public Pose2d getVisionPose() {
         return visionPoseEstimator.getEstimatedPosition();
     }
 

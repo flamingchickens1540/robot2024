@@ -43,13 +43,14 @@ public class AprilTagVision extends SubsystemBase {
     }
 
     public static AprilTagVision createReal(Consumer<EstimatedVisionPose> visionPoseConsumer,
-                                            Supplier<Double> elevatorHeightSupplierMeters) {
+                                            Supplier<Double> elevatorHeightSupplierMeters,
+                                            Supplier<Pose2d> drivetrainPoseSupplier) {
         if (Constants.currentMode != Constants.Mode.REAL) {
             DriverStation.reportWarning("Using real vision on simulated robot", false);
         }
         return new AprilTagVision(
-                new AprilTagVisionIOPhoton(FRONT_CAMERA_NAME, FRONT_CAMERA_POSE),
-                new AprilTagVisionIOPhoton(REAR_CAMERA_NAME, REAR_CAMERA_POSE),
+                new AprilTagVisionIOPhoton(FRONT_CAMERA_NAME, FRONT_CAMERA_POSE, drivetrainPoseSupplier),
+                new AprilTagVisionIOPhoton(REAR_CAMERA_NAME, REAR_CAMERA_POSE, drivetrainPoseSupplier),
                 visionPoseConsumer,
                 elevatorHeightSupplierMeters);
     }

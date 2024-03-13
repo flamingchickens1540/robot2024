@@ -1,5 +1,6 @@
 package org.team1540.robot2024.subsystems.vision;
 
+import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Pose3d;
 import edu.wpi.first.math.geometry.Transform3d;
 import org.photonvision.EstimatedRobotPose;
@@ -12,15 +13,17 @@ import org.team1540.robot2024.util.vision.AprilTagsCrescendo;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.function.Supplier;
 
 public class AprilTagVisionIOPhoton implements AprilTagVisionIO {
     private final PhotonCamera camera;
     private final PhotonPoseEstimator photonEstimator;
+    private final Supplier<Pose2d> drivetrainPoseSupplier;
 
     private Transform3d cameraTransform;
     private Pose3d lastEstimatedPose;
 
-    public AprilTagVisionIOPhoton(String name, Pose3d cameraOffsetMeters) {
+    public AprilTagVisionIOPhoton(String name, Pose3d cameraOffsetMeters, Supplier<Pose2d> drivetrainPoseSupplier) {
         camera = new PhotonCamera(name);
         cameraTransform = new Transform3d(cameraOffsetMeters.getTranslation(), cameraOffsetMeters.getRotation());
         photonEstimator = new PhotonPoseEstimator(
@@ -28,12 +31,14 @@ public class AprilTagVisionIOPhoton implements AprilTagVisionIO {
                 PhotonPoseEstimator.PoseStrategy.MULTI_TAG_PNP_ON_COPROCESSOR,
                 camera,
                 cameraTransform);
-        photonEstimator.setMultiTagFallbackStrategy(PhotonPoseEstimator.PoseStrategy.LOWEST_AMBIGUITY);
+        photonEstimator.setMultiTagFallbackStrategy(PhotonPoseEstimator.PoseStrategy.CLOSEST_TO_REFERENCE_POSE);
         lastEstimatedPose = new Pose3d();
+        this.drivetrainPoseSupplier = drivetrainPoseSupplier;
     }
 
     @Override
     public void updateInputs(AprilTagVisionIOInputs inputs) {
+        photonEstimator.setReferencePose(drivetrainPoseSupplier.get());
         PhotonPipelineResult latestResult = camera.getLatestResult();
         List<PhotonTrackedTarget> targets = latestResult.getTargets();
         Optional<EstimatedRobotPose> estimatedPose = photonEstimator.update(latestResult);
@@ -46,13 +51,13 @@ public class AprilTagVisionIOPhoton implements AprilTagVisionIO {
             lastEstimatedPose = estimatedPose.get().estimatedPose;
             inputs.estimatedPoseMeters = lastEstimatedPose;
             inputs.lastMeasurementTimestampSecs = estimatedPose.get().timestampSeconds;
-        }
 
-        inputs.seenTagIDs = new int[targets.size()];
-        inputs.tagPosesMeters = new Pose3d[targets.size()];
-        for (int i = 0; i < targets.size(); i++) {
-            inputs.seenTagIDs[i] = targets.get(i).getFiducialId();
-            inputs.tagPosesMeters[i] = new Pose3d().plus(targets.get(i).getBestCameraToTarget());
+            inputs.seenTagIDs = new int[targets.size()];
+            inputs.tagPosesMeters = new Pose3d[targets.size()];
+            for (int i = 0; i < targets.size(); i++) {
+                inputs.seenTagIDs[i] = targets.get(i).getFiducialId();
+                inputs.tagPosesMeters[i] = new Pose3d().plus(targets.get(i).getBestCameraToTarget());
+            }
         }
     }
 
