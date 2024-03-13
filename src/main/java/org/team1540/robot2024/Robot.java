@@ -11,10 +11,7 @@ import org.littletonrobotics.junction.networktables.NT4Publisher;
 import org.littletonrobotics.junction.wpilog.WPILOGReader;
 import org.littletonrobotics.junction.wpilog.WPILOGWriter;
 import org.team1540.robot2024.subsystems.led.Leds;
-import org.team1540.robot2024.subsystems.led.patterns.LedPattern;
-import org.team1540.robot2024.subsystems.led.patterns.LedPatternFlame;
-import org.team1540.robot2024.subsystems.led.patterns.LedPatternRainbow;
-import org.team1540.robot2024.subsystems.led.patterns.LedPatternTuneColor;
+import org.team1540.robot2024.subsystems.led.patterns.*;
 import org.team1540.robot2024.util.MechanismVisualiser;
 import org.team1540.robot2024.util.auto.AutoManager;
 import org.team1540.robot2024.util.vision.AprilTagsCrescendo;
@@ -28,7 +25,6 @@ import org.team1540.robot2024.util.vision.AprilTagsCrescendo;
 public class Robot extends LoggedRobot {
     private Command autonomousCommand;
     private RobotContainer robotContainer;
-    private LedPattern flamePattern = new LedPatternFlame(40);
 
     /**
      * This function is run when the robot is first started up and should be used for any

@@ -11,16 +11,15 @@ public class LedPatternWave extends LedPattern {
     private int location = 0;
     private int ticker = 0;
 
-    public LedPatternWave(int hue) {
-        super(true);
-        this.hue = hue;
-        this.saturation = 255;
-    }
     public LedPatternWave(Color color) {
         super(true);
         int[] hsv = getHSV(color);
         this.hue = hsv[0];
         this.saturation = hsv[1];
+    }
+
+    public LedPatternWave(String hex) {
+        this(new Color(hex));
     }
 
     @Override
