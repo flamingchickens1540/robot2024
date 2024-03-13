@@ -6,34 +6,46 @@ import org.team1540.robot2024.subsystems.led.ZonedAddressableLEDBuffer;
 public class LedPatternBreathing extends LedPattern {
     private final int speed;
     private final int hue;
-    private int saturation;
+    private final int saturation;
+    private int value = min;
     private boolean isReversed = false;
+    private static final int max = 255;
+    private static final int min = 60;
 
     public LedPatternBreathing(int speed, Color color) {
         super(true);
         this.speed = speed;
-        this.hue = getHSV(color)[0];
+        int[] hsv = getHSV(color);
+        this.hue = hsv[0];
+        this.saturation = hsv[1];
     }
+    public LedPatternBreathing(int speed, String color) {
+        this(speed, new Color(color));
+    }
+    public LedPatternBreathing(String color) {
+        this(3, new Color(color));
+    }
+
 
     @Override
     public void apply(ZonedAddressableLEDBuffer buffer) {
-        if (saturation > 255) {
-            saturation = 255;
+        if (value > max) {
+            value = max;
             isReversed = !isReversed;
         }
 
-        if (saturation < 0) {
-            saturation = 0;
+        if (value < min) {
+            value = min;
             isReversed = !isReversed;
         }
         for (int i = 0; i < buffer.getLength(); i++) {
-            buffer.setHSV(i, hue, saturation, 255);
+            buffer.setHSV(i, hue, saturation, value);
         }
 
         if (!isReversed) {
-            saturation = saturation + speed;
+            value = value + speed;
         } else {
-            saturation = saturation - speed;
+            value = value - speed;
         }
     }
 

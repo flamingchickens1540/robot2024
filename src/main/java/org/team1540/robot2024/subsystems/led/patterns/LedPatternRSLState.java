@@ -30,6 +30,6 @@ public class LedPatternRSLState extends LedPattern {
     }
 
     public static LedPattern matchingColors() {
-        return new LedPatternRSLState(new Color(1, 0.1, 0));
+        return new LedPatternRSLState(new Color("#FF1A00"));
     }
 }
