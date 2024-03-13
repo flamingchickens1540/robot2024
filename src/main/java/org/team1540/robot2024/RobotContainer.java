@@ -168,10 +168,10 @@ public class RobotContainer {
 
         copilot.povDown().whileTrue(indexer.commandRunIntake(-1));
         copilot.povUp().whileTrue(indexer.commandRunIntake(1));
-        copilot.povRight().whileTrue(Commands.startEnd(() -> tramp.setPercent(1), tramp::stop, tramp));
+        copilot.povRight().whileTrue(tramp.commandRun(1));
 
 
-        copilot.rightTrigger(0.95).whileTrue(Commands.startEnd(() -> tramp.setPercent(1), tramp::stop, tramp));
+        copilot.rightTrigger(0.95).whileTrue(tramp.commandRun(1));
         copilot.leftTrigger(0.95).whileTrue(new ClimbAlignment(drivetrain, elevator, null, tramp, indexer, shooter));
 
 
