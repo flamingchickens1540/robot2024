@@ -20,11 +20,6 @@ public class ElevatorSetpointCommand extends Command {
     }
 
     @Override
-    public void end(boolean interrupted) {
-        elevator.stop();
-    }
-
-    @Override
     public boolean isFinished() {
         return elevator.isAtSetpoint();
     }

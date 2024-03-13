@@ -12,6 +12,5 @@ public interface GyroIO {
         public double time = 0.0;
     }
 
-    default void updateInputs(GyroIOInputs inputs) {
-    }
+    default void updateInputs(GyroIOInputs inputs) {}
 }

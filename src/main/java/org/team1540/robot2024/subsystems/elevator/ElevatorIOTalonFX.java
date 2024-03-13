@@ -8,10 +8,7 @@ import com.ctre.phoenix6.configs.TalonFXConfiguration;
 import com.ctre.phoenix6.controls.Follower;
 import com.ctre.phoenix6.controls.MotionMagicVoltage;
 import com.ctre.phoenix6.hardware.TalonFX;
-import com.ctre.phoenix6.signals.ForwardLimitValue;
-import com.ctre.phoenix6.signals.GravityTypeValue;
-import com.ctre.phoenix6.signals.NeutralModeValue;
-import com.ctre.phoenix6.signals.ReverseLimitValue;
+import com.ctre.phoenix6.signals.*;
 import org.team1540.robot2024.Constants;
 
 public class ElevatorIOTalonFX implements ElevatorIO {
@@ -35,10 +32,9 @@ public class ElevatorIOTalonFX implements ElevatorIO {
         config.CurrentLimits.SupplyCurrentLimit = 40.0;
         config.CurrentLimits.SupplyCurrentThreshold = 60.0;
         config.CurrentLimits.SupplyTimeThreshold = 0.1;
-        config.MotorOutput.NeutralMode = NeutralModeValue.Coast;
-        config.Feedback.SensorToMechanismRatio = Constants.Elevator.MOTOR_ROTS_TO_METERS;
-        // TODO: this might not actually be inverted, so fix it if neccesary
-        follower.setControl(new Follower(leader.getDeviceID(), true));
+        config.MotorOutput.NeutralMode = NeutralModeValue.Brake;
+        config.MotorOutput.Inverted = InvertedValue.CounterClockwise_Positive;
+        config.Feedback.SensorToMechanismRatio = Constants.Elevator.MOTOR_ROTS_PER_METER;
 
         BaseStatusSignal.setUpdateFrequencyForAll(50.0,
                 leaderPosition,
@@ -70,9 +66,13 @@ public class ElevatorIOTalonFX implements ElevatorIO {
 
         config.HardwareLimitSwitch.ForwardLimitEnable = true;
         config.HardwareLimitSwitch.ReverseLimitEnable = true;
+        config.HardwareLimitSwitch.ReverseLimitAutosetPositionEnable = true;
+        config.HardwareLimitSwitch.ReverseLimitAutosetPositionValue = Constants.Elevator.MINIMUM_HEIGHT;
         leader.getConfigurator().apply(config);
+        config.MotorOutput.Inverted = InvertedValue.CounterClockwise_Positive;
         follower.getConfigurator().apply(config);
 
+        follower.setControl(new Follower(leader.getDeviceID(), false));
     }
 
     @Override
@@ -102,5 +102,21 @@ public class ElevatorIOTalonFX implements ElevatorIO {
     @Override
     public void setVoltage(double voltage) {
         leader.set(voltage);
+    }
+
+    @Override
+    public void setBrakeMode(boolean isBrakeMode) {
+        leader.setNeutralMode(isBrakeMode ? NeutralModeValue.Brake : NeutralModeValue.Coast);
+        follower.setNeutralMode(isBrakeMode ? NeutralModeValue.Brake : NeutralModeValue.Coast);
+    }
+
+    @Override
+    public void configPID(double kP, double kI, double kD) {
+        Slot0Configs configs = new Slot0Configs();
+        leader.getConfigurator().refresh(configs);
+        configs.kP = kP;
+        configs.kI = kI;
+        configs.kD = kD;
+        leader.getConfigurator().apply(configs);
     }
 }

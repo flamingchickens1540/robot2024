@@ -22,7 +22,7 @@ public class VisionPoseAcceptor {
         ChassisSpeeds robotVelocity = robotVelocitySupplier.get();
         double elevatorVelocity = elevatorVelocitySupplier.get();
         // Do not accept poses that have too much delay
-        if (Timer.getFPGATimestamp() - visionPose.timestampSecs() >= MAX_VISION_DELAY_SECS) return false;
+        if (Timer.getFPGATimestamp() - visionPose.timestampSecs >= MAX_VISION_DELAY_SECS) return false;
 
         // Do not accept poses that see too little tags
         if (visionPose.getNumTagsSeen() < MIN_ACCEPTED_NUM_TAGS) return false;

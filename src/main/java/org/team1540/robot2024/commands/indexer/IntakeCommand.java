@@ -4,23 +4,28 @@ import edu.wpi.first.wpilibj2.command.Command;
 import org.team1540.robot2024.subsystems.indexer.Indexer;
 import org.team1540.robot2024.subsystems.tramp.Tramp;
 
+import java.util.function.BooleanSupplier;
+import java.util.function.DoubleSupplier;
+
 public class IntakeCommand extends Command {
     private final Indexer indexer;
-    private final Tramp tramp;
-
-    public IntakeCommand(Indexer indexer, Tramp tramp) {
+    private final double percent;
+    private final BooleanSupplier noteInTramp;
+    public IntakeCommand(Indexer indexer, BooleanSupplier noteInTramp, double percent) {
         this.indexer = indexer;
-        this.tramp = tramp;
+        this.noteInTramp = noteInTramp;
+        this.percent = percent;
         addRequirements(indexer);
     }
 
     @Override
-    public void execute() {
-        if (indexer.isNoteStaged() || tramp.isNoteStaged()) {
-            indexer.stopIntake();
-        } else {
-            indexer.setIntakePercent(0.5);
-        }
+    public void initialize() {
+        indexer.setIntakePercent(percent);
+    }
+
+    @Override
+    public boolean isFinished() {
+        return noteInTramp.getAsBoolean() || indexer.isNoteStaged();
     }
 
     @Override

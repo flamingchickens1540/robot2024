@@ -25,14 +25,14 @@ public class FlywheelsIOTalonFX implements FlywheelsIO {
     private final StatusSignal<Double> rightCurrent = rightMotor.getSupplyCurrent();
 
     private final VelocityVoltage leftVelocityCtrlReq =
-            new VelocityVoltage(0).withEnableFOC(false).withSlot(0);
+            new VelocityVoltage(0).withEnableFOC(true).withSlot(0);
     private final VoltageOut leftVoltageCtrlReq =
-            new VoltageOut(0).withEnableFOC(false);
+            new VoltageOut(0).withEnableFOC(true);
 
     private final VelocityVoltage rightVelocityCtrlReq =
-            new VelocityVoltage(0).withEnableFOC(false).withSlot(0);
+            new VelocityVoltage(0).withEnableFOC(true).withSlot(0);
     private final VoltageOut rightVoltageCtrlReq =
-            new VoltageOut(0).withEnableFOC(false);
+            new VoltageOut(0).withEnableFOC(true);
 
     public FlywheelsIOTalonFX() {
         TalonFXConfiguration config = new TalonFXConfiguration();

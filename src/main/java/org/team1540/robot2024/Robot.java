@@ -11,10 +11,12 @@ import org.littletonrobotics.junction.networktables.NT4Publisher;
 import org.littletonrobotics.junction.wpilog.WPILOGReader;
 import org.littletonrobotics.junction.wpilog.WPILOGWriter;
 import org.team1540.robot2024.subsystems.led.*;
-import org.team1540.robot2024.subsystems.led.patterns.*;
+import org.team1540.robot2024.subsystems.led.patterns.LedPatternFlame;
+import org.team1540.robot2024.subsystems.led.patterns.LedPatternRSLState;
+import org.team1540.robot2024.subsystems.led.patterns.LedPatternRainbow;
+import org.team1540.robot2024.subsystems.led.patterns.SimpleLedPattern;
 import org.team1540.robot2024.util.LoggedTunableNumber;
 import org.team1540.robot2024.util.MechanismVisualiser;
-import edu.wpi.first.wpilibj.util.Color;
 
 /**
  * The VM is configured to automatically run this class, and to call the functions corresponding to
@@ -58,7 +60,7 @@ public class Robot extends LoggedRobot {
         switch (Constants.currentMode) {
             case REAL:
                 // Running on a real robot, log to a USB stick ("/U/logs")
-//                Logger.addDataReceiver(new WPILOGWriter());
+                Logger.addDataReceiver(new WPILOGWriter("/media/sda1"));
                 Logger.addDataReceiver(new NT4Publisher());
                 break;
 
@@ -111,6 +113,7 @@ public class Robot extends LoggedRobot {
      */
     @Override
     public void disabledInit() {
+//        robotContainer.elevator.setBrakeMode(false);
         robotContainer.leds.setPattern(Leds.Zone.ELEVATOR_BACK, new LedPatternRainbow(1));
     }
 
@@ -151,11 +154,10 @@ public class Robot extends LoggedRobot {
         // continue until interrupted by another command, remove
         // this line or comment it out.
 
-        robotContainer.leds.setPattern(Leds.Zone.ELEVATOR_BACK,
-                new LedPatternProgressBar(() -> Math.hypot(
-                        robotContainer.drivetrain.getChassisSpeeds().vxMetersPerSecond,
-                        robotContainer.drivetrain.getChassisSpeeds().vyMetersPerSecond) / Constants.Drivetrain.MAX_LINEAR_SPEED,
-                        Color.kRed));
+        // TODO: 2/16/2024 add enabledInit()
+        robotContainer.drivetrain.zeroFieldOrientation();
+        robotContainer.elevator.setBrakeMode(true);
+        robotContainer.leds.setPattern(Leds.Zone.ELEVATOR_BACK, LedPatternRSLState.matchingColors());
         if (autonomousCommand != null) {
             autonomousCommand.cancel();
         }
