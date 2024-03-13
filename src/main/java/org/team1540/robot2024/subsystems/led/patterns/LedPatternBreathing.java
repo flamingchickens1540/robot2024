@@ -12,7 +12,7 @@ public class LedPatternBreathing extends LedPattern {
     public LedPatternBreathing(int speed, Color color) {
         super(true);
         this.speed = speed;
-        this.hue = getHue(color);
+        this.hue = getHSV(color)[0];
     }
 
     @Override
