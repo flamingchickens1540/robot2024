@@ -16,14 +16,14 @@ import static org.team1540.robot2024.Constants.SwerveConfig.CAN_BUS;
 public class SwerveFactory {
     private static final double[] moduleOffsetsRots = new double[]{
             -0.9245605469,      // Module 1
-            0.16552734375,   // Module 2
+            0.6655273438,   // Module 2
             -0.7197265,      // Module 3
             -0.7722,         // Module 4
             -0.41162109375,  // Module 5
             -0.594970703125, // Module 6
             -0.826660,       // Module 7
             0.0,             // Module 8
-            0.75634765625    // Module 9
+            0.2563476562    // Module 9
     };
 
     public static SwerveModuleHW getModuleMotors(int id, SwerveCorner corner) {

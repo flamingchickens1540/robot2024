@@ -20,7 +20,7 @@ import org.team1540.robot2024.util.shooter.ShooterSetpoint;
 public final class Constants {
     public static final boolean IS_COMPETITION_ROBOT = true; // Objects.equals(RobotController.getComments(), "comp");
     // Whether to pull PID constants from SmartDashboard
-    private static final boolean tuningMode = false; // TODO: DO NOT SET TO TRUE FOR COMP
+    private static final boolean tuningMode = true; // TODO: DO NOT SET TO TRUE FOR COMP
     private static final Mode simMode = Mode.SIM; // Can also be Mode.REPLAY
 
     public static final Mode currentMode = Robot.isReal() ? Mode.REAL : simMode;
@@ -51,8 +51,8 @@ public final class Constants {
         public static final String CAN_BUS  = IS_COMPETITION_ROBOT ? "swerve" : "swerve";
         public static final double CAN_UPDATE_FREQUENCY_HZ = 200.0;
 
-        public static final int FRONT_LEFT  = IS_COMPETITION_ROBOT ? 9 : 1;
-        public static final int FRONT_RIGHT = IS_COMPETITION_ROBOT ? 2 : 7;
+        public static final int FRONT_LEFT  = IS_COMPETITION_ROBOT ? 2 : 1;
+        public static final int FRONT_RIGHT = IS_COMPETITION_ROBOT ? 9 : 7;
         public static final int BACK_LEFT   = IS_COMPETITION_ROBOT ? 5 : 4;
         public static final int BACK_RIGHT  = IS_COMPETITION_ROBOT ? 6 : 3;
 
