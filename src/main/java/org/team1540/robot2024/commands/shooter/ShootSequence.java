@@ -38,7 +38,7 @@ public class ShootSequence extends ParallelRaceGroup {
                 new PrepareShooterCommand(shooter, setpoint),
                 Commands.sequence(
                         Commands.waitSeconds(waitTime),
-                        new IntakeAndFeed(indexer, () -> 1, () -> 0.5).withTimeout(0.5)
+                        IntakeAndFeed.withDefaults(indexer).withTimeout(0.5)
                 )
 
                 // TODO: Add a wait for having completed the shot (steady then current spike/velocity dip and then back down?)

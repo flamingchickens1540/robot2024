@@ -21,7 +21,7 @@ import org.team1540.robot2024.subsystems.drive.Drivetrain;
 import org.team1540.robot2024.subsystems.elevator.Elevator;
 import org.team1540.robot2024.subsystems.indexer.Indexer;
 import org.team1540.robot2024.subsystems.led.Leds;
-import org.team1540.robot2024.subsystems.led.patterns.LedPattern;
+import org.team1540.robot2024.subsystems.led.patterns.LedPatternBreathing;
 import org.team1540.robot2024.subsystems.led.patterns.LedPatternRSLState;
 import org.team1540.robot2024.subsystems.led.patterns.LedPatternWave;
 import org.team1540.robot2024.subsystems.shooter.Shooter;
@@ -31,7 +31,6 @@ import org.team1540.robot2024.util.CommandUtils;
 import org.team1540.robot2024.util.PhoenixTimeSyncSignalRefresher;
 import org.team1540.robot2024.util.auto.AutoCommand;
 import org.team1540.robot2024.util.auto.AutoManager;
-import org.team1540.robot2024.util.shooter.ShooterSetpoint;
 
 import static org.team1540.robot2024.Constants.SwerveConfig;
 import static org.team1540.robot2024.Constants.isTuningMode;
@@ -144,15 +143,12 @@ public class RobotContainer {
             drivetrain.setBrakeMode(true);
         }).ignoringDisable(true));
 
-        LedPattern lockedDrivePattern = new LedPatternWave(100);
-        LedPattern lockedOverstageDrivePattern = new LedPatternWave(280);
-
         Command targetDrive = new AutoShootPrepareWithTargeting(driver.getHID(), drivetrain, shooter)
-                .alongWith(leds.commandShowPattern(lockedDrivePattern, Leds.PatternLevel.DRIVER_LOCK));
+                .alongWith(leds.commandShowPattern(new LedPatternWave("#00a9ff"), Leds.PatternLevel.DRIVER_LOCK));
         Command overstageTargetDrive = new OverStageShootPrepareWithTargeting(driver.getHID(), drivetrain, shooter)
-                .alongWith(leds.commandShowPattern(lockedOverstageDrivePattern, Leds.PatternLevel.DRIVER_LOCK));
+                .alongWith(leds.commandShowPattern(new LedPatternWave("#f700ff"), Leds.PatternLevel.DRIVER_LOCK));
         Command autoShooterCommand = new AutoShootPrepare(drivetrain, shooter)
-                .alongWith(leds.commandShowPattern(new LedPatternWave(200), Leds.PatternLevel.DRIVER_LOCK));
+                .alongWith(leds.commandShowPattern(new LedPatternWave("#00ffbc"), Leds.PatternLevel.DRIVER_LOCK));
 
         driver.rightBumper().toggleOnTrue(targetDrive);
         driver.rightTrigger(0.95).toggleOnTrue(autoShooterCommand);
@@ -169,10 +165,10 @@ public class RobotContainer {
 
         copilot.povDown().whileTrue(indexer.commandRunIntake(-1));
         copilot.povUp().whileTrue(indexer.commandRunIntake(1));
-        copilot.povRight().whileTrue(Commands.startEnd(() -> tramp.setPercent(1), tramp::stop, tramp));
+        copilot.povRight().whileTrue(tramp.commandRun(1));
 
 
-        copilot.rightTrigger(0.95).whileTrue(Commands.startEnd(() -> tramp.setPercent(1), tramp::stop, tramp));
+        copilot.rightTrigger(0.95).whileTrue(tramp.commandRun(1));
         copilot.leftTrigger(0.95).whileTrue(new ClimbAlignment(drivetrain, elevator, null, tramp, indexer, shooter));
 
 
@@ -181,7 +177,7 @@ public class RobotContainer {
 //        copilot.b().whileTrue(new ShootSequence(shooter, indexer, PODIUM_SHOOT));
 //        copilot.b().whileTrue(new TuneShooterCommand(shooter, indexer));
         copilot.b()
-                .whileTrue(new IntakeAndFeed(indexer, () -> 1, () -> 0.5))
+                .whileTrue(IntakeAndFeed.withDefaults(indexer))
                 .onFalse(Commands.runOnce(() -> {
                     targetDrive.cancel();
                     overstageTargetDrive.cancel();
@@ -195,7 +191,7 @@ public class RobotContainer {
                 .whileTrue(PrepareShooterCommand.lowerPivot(shooter));
         new Trigger(indexer::isNoteStaged).debounce(0.1)
                 .onTrue(CommandUtils.rumbleCommandTimed(driver.getHID(), 1, 1))
-                .whileTrue(leds.commandShowPattern(new LedPatternWave(0), Leds.PatternLevel.INTAKE_STATE));
+                .whileTrue(leds.commandShowPattern(new LedPatternBreathing("#ff0000"), Leds.PatternLevel.INTAKE_STATE));
 
         new Trigger(indexer::isNoteStaged).and(intakeCommand::isScheduled).onTrue(CommandUtils.rumbleCommandTimed(driver.getHID(), 0.8, 0.4));
 

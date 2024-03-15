@@ -22,8 +22,7 @@ public class SimpleLedPattern extends LedPattern{
         return new SimpleLedPattern((buffer, i) -> buffer.setLED(i, color));
     }
     public static LedPattern alternating(Color... colors) {
-        final int colorCount = colors.length;
-        return new SimpleLedPattern((buffer, i) -> buffer.setLED(i, colors[i%colorCount]));
+        return alternating(1, colors);
     }
     public static LedPattern alternating(int groupSize, Color... colors) {
         final int colorCount = colors.length;
