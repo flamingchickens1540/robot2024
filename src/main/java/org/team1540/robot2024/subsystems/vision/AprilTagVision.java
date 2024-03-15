@@ -50,7 +50,7 @@ public class AprilTagVision extends SubsystemBase {
         }
         return new AprilTagVision(
                 new AprilTagVisionIOPhoton(FRONT_CAMERA_NAME, FRONT_CAMERA_POSE, drivetrainPoseSupplier),
-                new AprilTagVisionIOPhoton(REAR_CAMERA_NAME, REAR_CAMERA_POSE, drivetrainPoseSupplier),
+                new AprilTagVisionIOLimelight(REAR_CAMERA_NAME, REAR_CAMERA_POSE),
                 visionPoseConsumer,
                 elevatorHeightSupplierMeters);
     }
@@ -109,8 +109,8 @@ public class AprilTagVision extends SubsystemBase {
         if (cameraInputs.lastMeasurementTimestampSecs > pose.timestampSecs) {
             pose.timestampSecs = cameraInputs.lastMeasurementTimestampSecs;
             pose.poseMeters = cameraInputs.estimatedPoseMeters;
-            pose.tagIDs = cameraInputs.seenTagIDs;
-            pose.tagPoses = cameraInputs.tagPosesMeters;
+            pose.numTags = cameraInputs.numTagsSeen;
+            pose.avgDistance = cameraInputs.avgTagDistance;
             visionPoseConsumer.accept(pose);
         }
     }

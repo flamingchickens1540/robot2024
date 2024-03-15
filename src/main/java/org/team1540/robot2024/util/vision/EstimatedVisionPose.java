@@ -10,27 +10,19 @@ import org.team1540.robot2024.Constants;
 public class EstimatedVisionPose {
     public double timestampSecs = -1;
     public Pose3d poseMeters = new Pose3d();
-    public int[] tagIDs = new int[0];
-    public Pose3d[] tagPoses = new Pose3d[0];
-
-    public double getAvgTagDistance() {
-        double avgDistance = 0;
-        for (Pose3d pose : tagPoses) avgDistance += pose.getTranslation().getNorm();
-        avgDistance /= tagPoses.length;
-        return avgDistance;
-    }
+    public int numTags = 0;
+    public double avgDistance = Double.POSITIVE_INFINITY;
 
     public Matrix<N3, N1> getStdDevs() {
-        double avgDistance = getAvgTagDistance();
 
         double xyStdDev =
                 Constants.Vision.XY_STD_DEV_COEFF
                     * Math.pow(avgDistance, 2.0)
-                    / tagPoses.length;
+                    / numTags;
         double rotStdDev =
                 Constants.Vision.ROT_STD_DEV_COEFF
                     * Math.pow(avgDistance, 2.0)
-                    / tagPoses.length;
-        return VecBuilder.fill(xyStdDev, xyStdDev, tagIDs.length > 1 ? rotStdDev : Double.POSITIVE_INFINITY);
+                    / numTags;
+        return VecBuilder.fill(xyStdDev, xyStdDev, numTags > 1 ? rotStdDev : Double.POSITIVE_INFINITY);
     }
 }

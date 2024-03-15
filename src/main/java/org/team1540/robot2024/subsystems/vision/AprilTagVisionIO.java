@@ -7,8 +7,8 @@ public interface AprilTagVisionIO {
     @AutoLog
     class AprilTagVisionIOInputs {
         public Pose3d estimatedPoseMeters = new Pose3d();
-        public int[] seenTagIDs = new int[0];
-        public Pose3d[] tagPosesMeters = new Pose3d[0];
+        public int numTagsSeen = 0;
+        public double avgTagDistance = Double.POSITIVE_INFINITY;
         public double lastMeasurementTimestampSecs = 0.0;
     }
 

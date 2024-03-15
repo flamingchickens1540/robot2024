@@ -52,11 +52,12 @@ public class AprilTagVisionIOPhoton implements AprilTagVisionIO {
             inputs.estimatedPoseMeters = lastEstimatedPose;
             inputs.lastMeasurementTimestampSecs = estimatedPose.get().timestampSeconds;
 
-            inputs.seenTagIDs = new int[targets.size()];
-            inputs.tagPosesMeters = new Pose3d[targets.size()];
-            for (int i = 0; i < targets.size(); i++) {
-                inputs.seenTagIDs[i] = targets.get(i).getFiducialId();
-                inputs.tagPosesMeters[i] = new Pose3d().plus(targets.get(i).getBestCameraToTarget());
+            inputs.numTagsSeen = targets.size();
+            if (inputs.numTagsSeen > 0) {
+                inputs.avgTagDistance = 0;
+                for (PhotonTrackedTarget target : targets)
+                    inputs.avgTagDistance += new Pose3d().plus(target.getBestCameraToTarget()).getTranslation().getNorm();
+                inputs.avgTagDistance /= inputs.numTagsSeen;
             }
         }
     }
