@@ -1,5 +1,6 @@
 package org.team1540.robot2024;
 
+import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.RobotController;
 import edu.wpi.first.wpilibj.util.Color;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -63,9 +64,7 @@ public class RobotContainer {
                 tramp = Tramp.createReal();
                 shooter = Shooter.createReal();
                 indexer = Indexer.createReal();
-                aprilTagVision = AprilTagVision.createReal(
-                        drivetrain::addVisionMeasurement,
-                        elevator::getPosition);
+                aprilTagVision = AprilTagVision.createDummy();
                 break;
             case SIM:
                 // Sim robot, instantiate physics sim IO implementations
@@ -130,7 +129,7 @@ public class RobotContainer {
     }
 
     private void configureButtonBindings() {
-        ManualPivotCommand manualPivotCommand = new ManualPivotCommand(shooter, copilot);
+        Command manualPivotCommand = new ManualPivotCommand(shooter, copilot);
         drivetrain.setDefaultCommand(new SwerveDriveCommand(drivetrain, driver));
         elevator.setDefaultCommand(new ElevatorManualCommand(elevator, copilot));
         shooter.setDefaultCommand(manualPivotCommand);
@@ -149,9 +148,14 @@ public class RobotContainer {
         Command autoShooterCommand = new AutoShootPrepare(drivetrain, shooter)
                 .alongWith(leds.commandShowPattern(new LedPatternWave("#00ffbc"), Leds.PatternLevel.DRIVER_LOCK));
 
-        driver.rightBumper().toggleOnTrue(targetDrive);
+//        driver.rightBumper().toggleOnTrue(targetDrive);
+//        driver.leftBumper().toggleOnTrue(overstageTargetDrive);
+        //TODO: remove
+          driver.rightBumper().onTrue(shooter.setPivotPositionCommand(() -> Constants.Shooter.Pivot.MAX_ANGLE));
+          driver.leftBumper().onTrue(shooter.setPivotPositionCommand(() -> Rotation2d.fromRotations(0.05)));
+
         driver.rightTrigger(0.95).toggleOnTrue(autoShooterCommand);
-        driver.leftBumper().toggleOnTrue(overstageTargetDrive);
+
         driver.rightStick().onTrue(Commands.runOnce(() -> {
             targetDrive.cancel();
             overstageTargetDrive.cancel();

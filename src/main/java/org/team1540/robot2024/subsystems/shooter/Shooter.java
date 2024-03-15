@@ -43,6 +43,7 @@ public class Shooter extends SubsystemBase {
     private final LoggedTunableNumber pivotKP = new LoggedTunableNumber("Shooter/Pivot/kP", Pivot.KP);
     private final LoggedTunableNumber pivotKI = new LoggedTunableNumber("Shooter/Pivot/kI", Pivot.KI);
     private final LoggedTunableNumber pivotKD = new LoggedTunableNumber("Shooter/Pivot/kD", Pivot.KD);
+    private final LoggedTunableNumber pivotKG = new LoggedTunableNumber("Shooter/Pivot/kG", Pivot.KG);
 
     private static boolean hasInstance = false;
 
@@ -90,11 +91,11 @@ public class Shooter extends SubsystemBase {
         }
 
         // Update tunable numbers
-        if (flywheelsKP.hasChanged(hashCode()) || flywheelsKI.hasChanged(hashCode()) || flywheelsKD.hasChanged(hashCode())) {
+        if (Constants.isTuningMode() && (flywheelsKP.hasChanged(hashCode()) || flywheelsKI.hasChanged(hashCode()) || flywheelsKD.hasChanged(hashCode()))) {
             flywheelsIO.configPID(flywheelsKP.get(), flywheelsKI.get(), flywheelsKD.get());
         }
-        if (pivotKP.hasChanged(hashCode()) || pivotKI.hasChanged(hashCode()) || pivotKD.hasChanged(hashCode())) {
-            pivotIO.configPID(pivotKP.get(), pivotKI.get(), pivotKD.get());
+        if (Constants.isTuningMode() && (pivotKP.hasChanged(hashCode()) || pivotKI.hasChanged(hashCode()) || pivotKD.hasChanged(hashCode()) || pivotKG.hasChanged(hashCode()))) {
+            pivotIO.configPID(pivotKP.get(), pivotKI.get(), pivotKD.get(), pivotKG.get());
         }
 
         // Add values to filters

@@ -174,11 +174,11 @@ public final class Constants {
             public static final double PIVOT_HEIGHT = Units.inchesToMeters(10.5);
 
             // TODO: tune pid
-            public static final double KP = 80.0;
-            public static final double KI = 40.0;
-            public static final double KD = 0.0;
+            public static final double KP = 200.0;
+            public static final double KI = 0.0;
+            public static final double KD = 20.0;
             public static final double KS = 0.0;
-            public static final double KG = 0.0;
+            public static final double KG = 1.0;
             public static final double KV = 0.0;
 
             public static final double SIM_KP = 254;
@@ -189,7 +189,7 @@ public final class Constants {
             public static final double SIM_KV = 0.187;
 
             public static final double CRUISE_VELOCITY_RPS = 1.0;
-            public static final double MAX_ACCEL_RPS2 = 0.8;
+            public static final double MAX_ACCEL_RPS2 = 2;
             public static final double JERK_RPS3 = 2000;
 
 
