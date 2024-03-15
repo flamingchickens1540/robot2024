@@ -13,8 +13,10 @@ public class ShooterSetpoint {
         this.rightSetpoint = rightSetpoint;
     }
     public ShooterSetpoint(double pivotRots, double leftSetpoint, double rightSetpoint) {
-        this.pivot = Rotation2d.fromRotations(pivotRots);
-        this.leftSetpoint = leftSetpoint;
-        this.rightSetpoint = rightSetpoint;
+        this(Rotation2d.fromRotations(pivotRots), leftSetpoint, rightSetpoint);
+    }
+
+    public ShooterSetpoint(Rotation2d pivot){
+        this(pivot, 8000, 6000);
     }
 }
