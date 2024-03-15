@@ -102,7 +102,6 @@ public class Shooter extends SubsystemBase {
         leftSpeedFilter.add(getLeftFlywheelSpeed());
         rightSpeedFilter.add(getRightFlywheelSpeed());
         pivotPositionFilter.add(getPivotPosition().getRotations());
-        Logger.recordOutput("Shooter/Pivot/Setpoint", pivotSetpoint);
         Logger.recordOutput("Shooter/Pivot/Error", pivotSetpoint.getDegrees() - pivotInputs.position.getDegrees());
     }
 
@@ -251,6 +250,11 @@ public class Shooter extends SubsystemBase {
     @AutoLogOutput
     public double getRightFlywheelSetpointRPM() {
         return rightFlywheelSetpointRPM;
+    }
+
+    @AutoLogOutput(key = "Pivot/PivotSetpoint")
+    public Rotation2d getPivotSetpoint(){
+        return pivotSetpoint;
     }
 
     public void zeroPivot() {

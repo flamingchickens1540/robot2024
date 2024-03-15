@@ -30,7 +30,8 @@ public class TuneShooterCommand extends ParallelCommandGroup {
                         Commands.waitUntil(()->!indexer.isNoteStaged()),
                         Commands.waitSeconds(1),
                         Commands.runOnce(()->shotNum += 1),
-                        Commands.print("Shot Number: " + shotNum + " Angle Degrees Setpoint: " + angleSetpoint.get() + " Left RPM Setpoint: " + leftFlywheelSetpoint.get() + " Right RPM Setpoint: " + rightFlywheelSetpoint.get())
+                        Commands.print("Shot Number: " + shotNum + " Angle Degrees Setpoint: " + shooter.getPivotSetpoint() + " Left RPM Setpoint: " + shooter.getLeftFlywheelSetpointRPM() + " Right RPM Setpoint: " + shooter.getRightFlywheelSetpointRPM() +
+                                " Angle Degrees: " + shooter.getPivotPosition().getDegrees() + " Left RPM: " + shooter.getLeftFlywheelSpeed() + " Right RPM: " + shooter.getRightFlywheelSpeed())
                 ).repeatedly()
         );
         addRequirements(shooter, indexer);
