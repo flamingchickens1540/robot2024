@@ -33,7 +33,7 @@ public class Indexer extends SubsystemBase {
         if (Constants.currentMode != Constants.Mode.REAL) {
             DriverStation.reportWarning("Using real indexer on simulated robot", false);
         }
-        return new Indexer(new IndexerIOSparkMax());
+        return new Indexer(new IndexerIOTalonFXSparkMax());
     }
 
     public static Indexer createSim() {
