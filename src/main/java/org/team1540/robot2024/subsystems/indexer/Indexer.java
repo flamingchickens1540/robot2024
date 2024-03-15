@@ -58,12 +58,6 @@ public class Indexer extends SubsystemBase {
         if (RobotState.isDisabled()){
             stopAll();
         }
-
-//        if (Constants.isTuningMode()) {
-//            if (kP.hasChanged(hashCode()) || kI.hasChanged(hashCode()) || kD.hasChanged(hashCode())) {
-//                io.configureFeederPID(kP.get(), kI.get(), kD.get());
-//            }
-//        }
     }
 
     public void setIntakePercent(double percent) {
