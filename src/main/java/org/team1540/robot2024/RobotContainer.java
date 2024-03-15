@@ -150,8 +150,8 @@ public class RobotContainer {
         Command autoShooterCommand = new AutoShootPrepare(drivetrain, shooter)
                 .alongWith(leds.commandShowPattern(new LedPatternWave("#00ffbc"), Leds.PatternLevel.DRIVER_LOCK));
 
-//        driver.rightBumper().toggleOnTrue(targetDrive);
-//        driver.leftBumper().toggleOnTrue(overstageTargetDrive);
+        driver.rightBumper().toggleOnTrue(targetDrive);
+        driver.leftBumper().toggleOnTrue(overstageTargetDrive);
 
         driver.rightTrigger(0.95).toggleOnTrue(autoShooterCommand);
 

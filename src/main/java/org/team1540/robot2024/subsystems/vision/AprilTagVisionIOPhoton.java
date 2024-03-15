@@ -31,14 +31,14 @@ public class AprilTagVisionIOPhoton implements AprilTagVisionIO {
                 PhotonPoseEstimator.PoseStrategy.MULTI_TAG_PNP_ON_COPROCESSOR,
                 camera,
                 cameraTransform);
-        photonEstimator.setMultiTagFallbackStrategy(PhotonPoseEstimator.PoseStrategy.CLOSEST_TO_REFERENCE_POSE);
+        photonEstimator.setMultiTagFallbackStrategy(PhotonPoseEstimator.PoseStrategy.LOWEST_AMBIGUITY);
         lastEstimatedPose = new Pose3d();
         this.drivetrainPoseSupplier = drivetrainPoseSupplier;
     }
 
     @Override
     public void updateInputs(AprilTagVisionIOInputs inputs) {
-        photonEstimator.setReferencePose(drivetrainPoseSupplier.get());
+//        photonEstimator.setReferencePose(drivetrainPoseSupplier.get());
         PhotonPipelineResult latestResult = camera.getLatestResult();
         List<PhotonTrackedTarget> targets = latestResult.getTargets();
         Optional<EstimatedRobotPose> estimatedPose = photonEstimator.update(latestResult);
@@ -51,14 +51,14 @@ public class AprilTagVisionIOPhoton implements AprilTagVisionIO {
             lastEstimatedPose = estimatedPose.get().estimatedPose;
             inputs.estimatedPoseMeters = lastEstimatedPose;
             inputs.lastMeasurementTimestampSecs = estimatedPose.get().timestampSeconds;
+        }
 
-            inputs.numTagsSeen = targets.size();
-            if (inputs.numTagsSeen > 0) {
-                inputs.avgTagDistance = 0;
-                for (PhotonTrackedTarget target : targets)
-                    inputs.avgTagDistance += new Pose3d().plus(target.getBestCameraToTarget()).getTranslation().getNorm();
-                inputs.avgTagDistance /= inputs.numTagsSeen;
-            }
+        inputs.numTagsSeen = targets.size();
+        if (inputs.numTagsSeen > 0) {
+            inputs.avgTagDistance = 0;
+            for (PhotonTrackedTarget target : targets)
+                inputs.avgTagDistance += new Pose3d().plus(target.getBestCameraToTarget()).getTranslation().getNorm();
+            inputs.avgTagDistance /= inputs.numTagsSeen;
         }
     }
 

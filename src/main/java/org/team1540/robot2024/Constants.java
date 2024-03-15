@@ -113,8 +113,8 @@ public final class Constants {
         public static final Pose3d REAR_CAMERA_POSE = new Pose3d(0.03639, 0, 0.715274, new Rotation3d(Math.PI, 0, Math.PI));
 
         // TODO i literally stole these from 6328 check if these actually work
-        public static final double XY_STD_DEV_COEFF = 0.005;
-        public static final double ROT_STD_DEV_COEFF = 0.01;
+        public static final double XY_STD_DEV_COEFF = 0.1;
+        public static final double ROT_STD_DEV_COEFF = 0.1;
 
         public static final double MAX_AMBIGUITY_RATIO = 0.3;
         public static final double MAX_VISION_DELAY_SECS = 0.08;
