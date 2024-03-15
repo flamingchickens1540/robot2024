@@ -6,6 +6,7 @@ import com.pathplanner.lib.util.HolonomicPathFollowerConfig;
 import com.pathplanner.lib.util.PIDConstants;
 import com.pathplanner.lib.util.PathPlannerLogging;
 import com.pathplanner.lib.util.ReplanningConfig;
+import edu.wpi.first.math.Matrix;
 import edu.wpi.first.math.VecBuilder;
 import edu.wpi.first.math.estimator.SwerveDrivePoseEstimator;
 import edu.wpi.first.math.geometry.Pose2d;
@@ -16,6 +17,8 @@ import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
+import edu.wpi.first.math.numbers.N1;
+import edu.wpi.first.math.numbers.N3;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
@@ -328,10 +331,12 @@ public class Drivetrain extends SubsystemBase {
     public void addVisionMeasurement(EstimatedVisionPose visionPose) {
         boolean shouldAccept = poseAcceptor.shouldAcceptVision(visionPose);
         if (shouldAccept) {
-            visionPoseEstimator.setVisionMeasurementStdDevs(visionPose.getStdDevs());
+            Matrix<N3, N1> stdDevs = visionPose.getStdDevs();
+            System.out.println(stdDevs.toString());
+            visionPoseEstimator.setVisionMeasurementStdDevs(stdDevs);
             visionPoseEstimator.addVisionMeasurement(visionPose.poseMeters.toPose2d(), visionPose.timestampSecs);
             if (!blockTags) {
-                poseEstimator.setVisionMeasurementStdDevs(visionPose.getStdDevs());
+                poseEstimator.setVisionMeasurementStdDevs(stdDevs);
                 poseEstimator.addVisionMeasurement(visionPose.poseMeters.toPose2d(), visionPose.timestampSecs);
             }
         }

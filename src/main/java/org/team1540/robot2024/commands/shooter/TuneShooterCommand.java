@@ -23,7 +23,7 @@ public class TuneShooterCommand extends Command {
     public void execute() {
         shooter.setFlywheelSpeeds(leftFlywheelSetpoint.get(), rightFlywheelSetpoint.get());
         shooter.setPivotPosition(Rotation2d.fromDegrees(angleSetpoint.get()));
-        indexer.setFeederPercent(0.5);
+        indexer.setFeederPercent(1);
         indexer.setIntakePercent(1);
     }
 

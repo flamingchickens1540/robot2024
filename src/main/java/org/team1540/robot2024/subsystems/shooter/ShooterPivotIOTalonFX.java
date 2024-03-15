@@ -74,7 +74,7 @@ public class ShooterPivotIOTalonFX implements ShooterPivotIO {
 
         cancoder.getConfigurator().apply(cancoderConfig);
         motor.getConfigurator().apply(motorConfig);
-        motor.setPosition(absolutePosition.getValue()*MOTOR_TO_CANCODER);
+//        motor.setPosition(absolutePosition.getValue()*MOTOR_TO_CANCODER);
         BaseStatusSignal.setUpdateFrequencyForAll(
                 50,
                 position,
@@ -119,13 +119,15 @@ public class ShooterPivotIOTalonFX implements ShooterPivotIO {
     }
 
     @Override
-    public void configPID(double kP, double kI, double kD) {
+    public void configPID(double kP, double kI, double kD, double kG) {
         Slot0Configs pidConfigs = new Slot0Configs();
         motor.getConfigurator().refresh(pidConfigs);
         pidConfigs.kP = kP;
         pidConfigs.kI = kI;
         pidConfigs.kD = kD;
+        pidConfigs.kG = kG;
         motor.getConfigurator().apply(pidConfigs);
+        System.out.println(pidConfigs);
     }
     @Override
     public void setEncoderPosition(double rots) {

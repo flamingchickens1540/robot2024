@@ -131,7 +131,7 @@ public class RobotContainer {
     }
 
     private void configureButtonBindings() {
-        ManualPivotCommand manualPivotCommand = new ManualPivotCommand(shooter, copilot);
+        Command manualPivotCommand = new ManualPivotCommand(shooter, copilot);
         drivetrain.setDefaultCommand(new SwerveDriveCommand(drivetrain, driver));
         elevator.setDefaultCommand(new ElevatorManualCommand(elevator, copilot));
         shooter.setDefaultCommand(manualPivotCommand);
@@ -150,9 +150,11 @@ public class RobotContainer {
         Command autoShooterCommand = new AutoShootPrepare(drivetrain, shooter)
                 .alongWith(leds.commandShowPattern(new LedPatternWave("#00ffbc"), Leds.PatternLevel.DRIVER_LOCK));
 
-        driver.rightBumper().toggleOnTrue(targetDrive);
+//        driver.rightBumper().toggleOnTrue(targetDrive);
+//        driver.leftBumper().toggleOnTrue(overstageTargetDrive);
+
         driver.rightTrigger(0.95).toggleOnTrue(autoShooterCommand);
-        driver.leftBumper().toggleOnTrue(overstageTargetDrive);
+
         driver.rightStick().onTrue(Commands.runOnce(() -> {
             targetDrive.cancel();
             overstageTargetDrive.cancel();

@@ -20,7 +20,7 @@ import org.team1540.robot2024.util.shooter.ShooterSetpoint;
 public final class Constants {
     public static final boolean IS_COMPETITION_ROBOT = true; // Objects.equals(RobotController.getComments(), "comp");
     // Whether to pull PID constants from SmartDashboard
-    private static final boolean tuningMode = false; // TODO: DO NOT SET TO TRUE FOR COMP
+    private static final boolean tuningMode = true; // TODO: DO NOT SET TO TRUE FOR COMP
     private static final Mode simMode = Mode.SIM; // Can also be Mode.REPLAY
 
     public static final Mode currentMode = Robot.isReal() ? Mode.REAL : simMode;
@@ -51,8 +51,8 @@ public final class Constants {
         public static final String CAN_BUS  = IS_COMPETITION_ROBOT ? "swerve" : "swerve";
         public static final double CAN_UPDATE_FREQUENCY_HZ = 200.0;
 
-        public static final int FRONT_LEFT  = IS_COMPETITION_ROBOT ? 9 : 1;
-        public static final int FRONT_RIGHT = IS_COMPETITION_ROBOT ? 2 : 7;
+        public static final int FRONT_LEFT  = IS_COMPETITION_ROBOT ? 2 : 1;
+        public static final int FRONT_RIGHT = IS_COMPETITION_ROBOT ? 9 : 7;
         public static final int BACK_LEFT   = IS_COMPETITION_ROBOT ? 5 : 4;
         public static final int BACK_RIGHT  = IS_COMPETITION_ROBOT ? 6 : 3;
 
@@ -174,11 +174,11 @@ public final class Constants {
             public static final double PIVOT_HEIGHT = Units.inchesToMeters(10.5);
 
             // TODO: tune pid
-            public static final double KP = 80.0;
-            public static final double KI = 40.0;
-            public static final double KD = 0.0;
+            public static final double KP = 200.0;
+            public static final double KI = 0.0;
+            public static final double KD = 20.0;
             public static final double KS = 0.0;
-            public static final double KG = 0.0;
+            public static final double KG = 1.0;
             public static final double KV = 0.0;
 
             public static final double SIM_KP = 254;
@@ -189,7 +189,7 @@ public final class Constants {
             public static final double SIM_KV = 0.187;
 
             public static final double CRUISE_VELOCITY_RPS = 1.0;
-            public static final double MAX_ACCEL_RPS2 = 0.8;
+            public static final double MAX_ACCEL_RPS2 = 2;
             public static final double JERK_RPS3 = 2000;
 
 
