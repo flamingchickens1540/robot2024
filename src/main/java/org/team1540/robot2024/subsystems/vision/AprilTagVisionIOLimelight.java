@@ -44,4 +44,9 @@ public class AprilTagVisionIOLimelight implements AprilTagVisionIO {
     public String getName() {
         return name;
     }
+
+    @Override
+    public void takeSnapshot(String snapshotName) {
+        LimelightHelpers.takeSnapshot(name, snapshotName);
+    }
 }

@@ -77,7 +77,6 @@ public class Drivetrain extends SubsystemBase {
                 rawGyroRotation,
                 getModulePositions(),
                 new Pose2d(),
-                // TODO: tune std devs (scale vision by distance?)
                 VecBuilder.fill(0.1, 0.1, 0.1),
                 VecBuilder.fill(0.5, 0.5, 5.0)); // Trust the gyro more than the AprilTags
 
@@ -86,7 +85,6 @@ public class Drivetrain extends SubsystemBase {
                 rawGyroRotation,
                 getModulePositions(),
                 new Pose2d(),
-                // TODO: tune std devs (scale vision by distance?)
                 VecBuilder.fill(0.1, 0.1, 0.1),
                 VecBuilder.fill(0.5, 0.5, 5.0)); // Trust the gyro more than the AprilTags
 
@@ -244,7 +242,6 @@ public class Drivetrain extends SubsystemBase {
             module.setBrakeMode(enabled);
         }
     }
-
 
     /**
      * Stops the drive and turns the modules to an X arrangement to resist movement. The modules will

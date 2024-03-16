@@ -113,6 +113,9 @@ public final class Constants {
         public static final Pose3d FRONT_CAMERA_POSE = new Pose3d(0.0975290, 0, 0.665479, new Rotation3d(0, Math.toRadians(-25), 0));
         public static final Pose3d REAR_CAMERA_POSE = new Pose3d(0.03639, 0, 0.715274, new Rotation3d(Math.PI, 0, Math.PI));
 
+        public static final boolean TAKE_SNAPSHOTS = false;
+        public static final double SNAPSHOT_PERIOD_SECS = 10;
+
         public static final double XY_STD_DEV_COEFF = 0.1;
         public static final double ROT_STD_DEV_COEFF = 0.5;
 

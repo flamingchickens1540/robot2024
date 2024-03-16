@@ -3,6 +3,8 @@ package org.team1540.robot2024.subsystems.vision;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Pose3d;
 import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj.RobotState;
+import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import org.littletonrobotics.junction.Logger;
 import org.team1540.robot2024.Constants;
@@ -103,6 +105,23 @@ public class AprilTagVision extends SubsystemBase {
 
         updateAndAcceptPose(frontCameraInputs, frontPose);
         updateAndAcceptPose(rearCameraInputs, rearPose);
+
+        if (TAKE_SNAPSHOTS && DriverStation.isFMSAttached() && RobotState.isEnabled()) {
+            Logger.runEveryN((int) (SNAPSHOT_PERIOD_SECS / Constants.LOOP_PERIOD_SECS),
+                    () -> {
+                        takeSnapshot(
+                                String.format("%s_%s%d_%d",
+                                        DriverStation.getEventName(),
+                                        DriverStation.getMatchType().toString(),
+                                        DriverStation.getMatchNumber(),
+                                        (int) Timer.getFPGATimestamp()));
+                    });
+        }
+    }
+
+    public void takeSnapshot(String snapshotName) {
+        frontCameraIO.takeSnapshot(snapshotName);
+        rearCameraIO.takeSnapshot(snapshotName);
     }
 
     private void updateAndAcceptPose(AprilTagVisionIOInputsAutoLogged cameraInputs, EstimatedVisionPose pose) {
