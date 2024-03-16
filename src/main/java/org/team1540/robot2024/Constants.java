@@ -51,10 +51,10 @@ public final class Constants {
         public static final String CAN_BUS  = IS_COMPETITION_ROBOT ? "swerve" : "swerve";
         public static final double CAN_UPDATE_FREQUENCY_HZ = 200.0;
 
-        public static final int FRONT_LEFT  = IS_COMPETITION_ROBOT ? 2 : 1;
-        public static final int FRONT_RIGHT = IS_COMPETITION_ROBOT ? 9 : 7;
-        public static final int BACK_LEFT   = IS_COMPETITION_ROBOT ? 5 : 4;
-        public static final int BACK_RIGHT  = IS_COMPETITION_ROBOT ? 6 : 3;
+        public static final int FRONT_LEFT  = IS_COMPETITION_ROBOT ? 1 : 1;
+        public static final int FRONT_RIGHT = IS_COMPETITION_ROBOT ? 7 : 9;
+        public static final int BACK_LEFT   = IS_COMPETITION_ROBOT ? 4 : 5;
+        public static final int BACK_RIGHT  = IS_COMPETITION_ROBOT ? 3 : 6;
 
         public static final int PIGEON_ID = 9;
     }
