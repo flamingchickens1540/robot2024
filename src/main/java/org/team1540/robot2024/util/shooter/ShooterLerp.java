@@ -19,11 +19,13 @@ public class ShooterLerp {
         right.put(key, value.rightSetpoint);
     }
 
-    public void put(Pair<Double, ShooterSetpoint>... dataPoints){
+    public ShooterLerp put(Pair<Double, ShooterSetpoint>... dataPoints){
         for (Pair<Double, ShooterSetpoint> point : dataPoints) {
             put(point.getFirst(), point.getSecond());
         }
+        return this;
     }
+
 
     public ShooterSetpoint get(Double key){
         return new ShooterSetpoint(Rotation2d.fromDegrees(angle.get(key)), left.get(key), right.get(key));

@@ -280,7 +280,7 @@ public class Drivetrain extends SubsystemBase {
         }
         return driveVelocityAverage / 4.0;
     }
-
+    @AutoLogOutput(key = "Odometry/ChassisSpeeds")
     public ChassisSpeeds getChassisSpeeds() {
         return kinematics.toChassisSpeeds(getModuleStates());
     }

@@ -1,6 +1,7 @@
 package org.team1540.robot2024.subsystems.shooter;
 
 import edu.wpi.first.math.MathUtil;
+import edu.wpi.first.math.Pair;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.RobotState;
@@ -13,6 +14,8 @@ import org.team1540.robot2024.Constants;
 import org.team1540.robot2024.util.LoggedTunableNumber;
 import org.team1540.robot2024.util.MechanismVisualiser;
 import org.team1540.robot2024.util.math.AverageFilter;
+import org.team1540.robot2024.util.shooter.ShooterLerp;
+import org.team1540.robot2024.util.shooter.ShooterSetpoint;
 
 import java.util.function.Supplier;
 
@@ -44,6 +47,23 @@ public class Shooter extends SubsystemBase {
     private final LoggedTunableNumber pivotKI = new LoggedTunableNumber("Shooter/Pivot/kI", Pivot.KI);
     private final LoggedTunableNumber pivotKD = new LoggedTunableNumber("Shooter/Pivot/kD", Pivot.KD);
     private final LoggedTunableNumber pivotKG = new LoggedTunableNumber("Shooter/Pivot/kG", Pivot.KG);
+
+    public final ShooterLerp lerp = new ShooterLerp().put(
+            new Pair<>(1.22, new ShooterSetpoint(Rotation2d.fromDegrees(52.5).minus(Pivot.REAL_ZEROED_ANGLE))),
+            new Pair<>(1.39, new ShooterSetpoint(Rotation2d.fromDegrees(47.5).minus(Pivot.REAL_ZEROED_ANGLE))),
+            new Pair<>(1.66, new ShooterSetpoint(Rotation2d.fromDegrees(43.5).minus(Pivot.REAL_ZEROED_ANGLE))),
+            new Pair<>(2.00, new ShooterSetpoint(Rotation2d.fromDegrees(40.5).minus(Pivot.REAL_ZEROED_ANGLE))),
+            new Pair<>(2.13, new ShooterSetpoint(Rotation2d.fromDegrees(38.5).minus(Pivot.REAL_ZEROED_ANGLE))),
+            new Pair<>(2.51, new ShooterSetpoint(Rotation2d.fromDegrees(33.5).minus(Pivot.REAL_ZEROED_ANGLE))),
+            new Pair<>(2.79, new ShooterSetpoint(Rotation2d.fromDegrees(31.5).minus(Pivot.REAL_ZEROED_ANGLE))),
+            new Pair<>(2.94, new ShooterSetpoint(Rotation2d.fromDegrees(29.5).minus(Pivot.REAL_ZEROED_ANGLE))),
+            new Pair<>(3.38, new ShooterSetpoint(Rotation2d.fromDegrees(26.5).minus(Pivot.REAL_ZEROED_ANGLE))),
+            new Pair<>(3.75, new ShooterSetpoint(Rotation2d.fromDegrees(24.5).minus(Pivot.REAL_ZEROED_ANGLE))),
+            new Pair<>(4.06, new ShooterSetpoint(Rotation2d.fromDegrees(23.7).minus(Pivot.REAL_ZEROED_ANGLE))),
+            new Pair<>(4.42, new ShooterSetpoint(Rotation2d.fromDegrees(22.8).minus(Pivot.REAL_ZEROED_ANGLE))),
+            new Pair<>(4.89, new ShooterSetpoint(Rotation2d.fromDegrees(22.0).minus(Pivot.REAL_ZEROED_ANGLE))),
+            new Pair<>(5.20, new ShooterSetpoint(Rotation2d.fromDegrees(21.5).minus(Pivot.REAL_ZEROED_ANGLE)))
+            );
 
     private static boolean hasInstance = false;
 
