@@ -17,6 +17,8 @@ public interface AprilTagVisionIO {
     /** Sets the robot-space pose of the camera */
     default void setPoseOffset(Pose3d newPose) {}
 
+    default void takeSnapshot(String snapshotName) {}
+
     default String getName() {
         return "";
     }

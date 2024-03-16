@@ -72,4 +72,9 @@ public class AprilTagVisionIOPhoton implements AprilTagVisionIO {
     public String getName() {
         return camera.getName();
     }
+
+    @Override
+    public void takeSnapshot(String snapshotName) {
+        camera.takeOutputSnapshot();
+    }
 }

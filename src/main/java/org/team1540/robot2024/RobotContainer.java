@@ -153,6 +153,7 @@ public class RobotContainer {
         driver.rightBumper().toggleOnTrue(targetDrive);
         driver.leftBumper().toggleOnTrue(overstageTargetDrive);
 
+        // TODO remove this
         driver.a().whileTrue(new TuneShooterCommand(shooter, indexer, drivetrain::getPose));
 
         driver.rightTrigger(0.95).toggleOnTrue(autoShooterCommand);
