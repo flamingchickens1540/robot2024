@@ -252,7 +252,7 @@ public class Shooter extends SubsystemBase {
         return rightFlywheelSetpointRPM;
     }
 
-    @AutoLogOutput(key = "Pivot/PivotSetpoint")
+    @AutoLogOutput(key = "Shooter/Pivot/PivotSetpoint")
     public Rotation2d getPivotSetpoint(){
         return pivotSetpoint;
     }
