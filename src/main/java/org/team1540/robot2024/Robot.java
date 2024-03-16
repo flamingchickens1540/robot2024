@@ -88,6 +88,7 @@ public class Robot extends LoggedRobot {
 
         robotContainer.shooter.setPivotBrakeMode(false);
         AprilTagsCrescendo.getInstance().getTag(1);
+        robotContainer.drivetrain.setBrakeMode(false);
     }
 
     /**

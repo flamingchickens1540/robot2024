@@ -16,7 +16,7 @@ public class FlywheelsIOSim implements FlywheelsIO {
 
     private final PIDController rightController = new PIDController(KP, KI, KD);
     private final PIDController leftController = new PIDController(KP, KI, KD);
-    private final SimpleMotorFeedforward feedforward = new SimpleMotorFeedforward(KS, KV);
+    private SimpleMotorFeedforward feedforward = new SimpleMotorFeedforward(KS, KV);
 
     private boolean isClosedLoop;
     private double leftSetpointRPS;
@@ -67,8 +67,10 @@ public class FlywheelsIOSim implements FlywheelsIO {
     }
 
     @Override
-    public void configPID(double kP, double kI, double kD) {
+    public void configPID(double kP, double kI, double kD, double kV) {
         leftController.setPID(kP, kI, kD);
         rightController.setPID(kP, kI, kD);
+
+        feedforward = new SimpleMotorFeedforward(KS, kV);
     }
 }

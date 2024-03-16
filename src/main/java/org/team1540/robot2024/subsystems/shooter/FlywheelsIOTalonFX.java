@@ -102,12 +102,13 @@ public class FlywheelsIOTalonFX implements FlywheelsIO {
     }
 
     @Override
-    public void configPID(double kP, double kI, double kD) {
+    public void configPID(double kP, double kI, double kD, double kV) {
         Slot0Configs pidConfigs = new Slot0Configs();
         leftMotor.getConfigurator().refresh(pidConfigs);
         pidConfigs.kP = kP;
         pidConfigs.kI = kI;
         pidConfigs.kD = kD;
+        pidConfigs.kV = kV;
         leftMotor.getConfigurator().apply(pidConfigs);
         rightMotor.getConfigurator().apply(pidConfigs);
     }

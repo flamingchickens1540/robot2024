@@ -142,7 +142,7 @@ public final class Constants {
             public static final double SIM_MOI = 4.08232288e-4;
 
             // TODO: if it's tuned in simulation, it's tuned in real life
-            public static final double KP = 0.53;
+            public static final double KP = 0.3;
             public static final double KI = 0.2;
             public static final double KD = 0.0;
             public static final double KS = 0.26925;
@@ -174,11 +174,11 @@ public final class Constants {
             public static final double PIVOT_HEIGHT = Units.inchesToMeters(10.5);
 
             // TODO: tune pid
-            public static final double KP = 200.0;
+            public static final double KP = 400.0;
             public static final double KI = 0.0;
             public static final double KD = 20.0;
             public static final double KS = 0.0;
-            public static final double KG = 1.0;
+            public static final double KG = 0.5;
             public static final double KV = 0.0;
 
             public static final double SIM_KP = 254;

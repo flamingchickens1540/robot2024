@@ -32,6 +32,7 @@ import org.team1540.robot2024.util.swerve.SwerveFactory;
 import org.team1540.robot2024.util.vision.EstimatedVisionPose;
 import org.team1540.robot2024.util.vision.VisionPoseAcceptor;
 
+import java.util.Arrays;
 import java.util.function.Supplier;
 
 import static org.team1540.robot2024.Constants.Drivetrain.*;
@@ -52,6 +53,8 @@ public class Drivetrain extends SubsystemBase {
 
     private static boolean hasInstance = false;
     private boolean blockTags = false;
+    private boolean isCharacterizingWheels = false;
+    private double characterizationInput = 0.0;
 
     private Drivetrain(
             GyroIO gyroIO,
@@ -161,6 +164,10 @@ public class Drivetrain extends SubsystemBase {
             // Log empty setpoint states when disabled
             Logger.recordOutput("SwerveStates/Setpoints", new SwerveModuleState[]{});
             Logger.recordOutput("SwerveStates/SetpointsOptimized", new SwerveModuleState[]{});
+        }
+
+        if (isCharacterizingWheels) {
+            runVelocity(new ChassisSpeeds(0, 0, characterizationInput));
         }
 
 
@@ -309,6 +316,10 @@ public class Drivetrain extends SubsystemBase {
     public Rotation2d getRotation() {
         return getPose().getRotation();
     }
+    
+    public Rotation2d getRawGyroRotation() {
+        return rawGyroRotation;
+    }
 
     public void zeroFieldOrientationManual() {
         fieldOrientationOffset = rawGyroRotation;
@@ -332,7 +343,6 @@ public class Drivetrain extends SubsystemBase {
         boolean shouldAccept = poseAcceptor.shouldAcceptVision(visionPose);
         if (shouldAccept) {
             Matrix<N3, N1> stdDevs = visionPose.getStdDevs();
-            System.out.println(stdDevs.toString());
             visionPoseEstimator.setVisionMeasurementStdDevs(stdDevs);
             visionPoseEstimator.addVisionMeasurement(visionPose.poseMeters.toPose2d(), visionPose.timestampSecs);
             if (!blockTags) {
@@ -395,5 +405,14 @@ public class Drivetrain extends SubsystemBase {
 
     public Command commandStop() {
         return Commands.runOnce(this::stop);
+    }
+
+    public double[] getWheelRadiusCharacterizationPosition() {
+        return Arrays.stream(modules).mapToDouble(Module::getPositionRads).toArray();
+    }
+
+    public void runWheelRadiusCharacterization(double omegaSpeed) {
+        isCharacterizingWheels = true;
+        characterizationInput = omegaSpeed;
     }
 }
