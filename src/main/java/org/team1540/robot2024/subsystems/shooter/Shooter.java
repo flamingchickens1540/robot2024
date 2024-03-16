@@ -49,20 +49,14 @@ public class Shooter extends SubsystemBase {
     private final LoggedTunableNumber pivotKG = new LoggedTunableNumber("Shooter/Pivot/kG", Pivot.KG);
 
     public final ShooterLerp lerp = new ShooterLerp().put(
-            new Pair<>(1.22, new ShooterSetpoint(Rotation2d.fromDegrees(52.5).minus(Pivot.REAL_ZEROED_ANGLE))),
-            new Pair<>(1.39, new ShooterSetpoint(Rotation2d.fromDegrees(47.5).minus(Pivot.REAL_ZEROED_ANGLE))),
-            new Pair<>(1.66, new ShooterSetpoint(Rotation2d.fromDegrees(43.5).minus(Pivot.REAL_ZEROED_ANGLE))),
-            new Pair<>(2.00, new ShooterSetpoint(Rotation2d.fromDegrees(40.5).minus(Pivot.REAL_ZEROED_ANGLE))),
-            new Pair<>(2.13, new ShooterSetpoint(Rotation2d.fromDegrees(38.5).minus(Pivot.REAL_ZEROED_ANGLE))),
-            new Pair<>(2.51, new ShooterSetpoint(Rotation2d.fromDegrees(33.5).minus(Pivot.REAL_ZEROED_ANGLE))),
-            new Pair<>(2.79, new ShooterSetpoint(Rotation2d.fromDegrees(31.5).minus(Pivot.REAL_ZEROED_ANGLE))),
-            new Pair<>(2.94, new ShooterSetpoint(Rotation2d.fromDegrees(29.5).minus(Pivot.REAL_ZEROED_ANGLE))),
-            new Pair<>(3.38, new ShooterSetpoint(Rotation2d.fromDegrees(26.5).minus(Pivot.REAL_ZEROED_ANGLE))),
-            new Pair<>(3.75, new ShooterSetpoint(Rotation2d.fromDegrees(24.5).minus(Pivot.REAL_ZEROED_ANGLE))),
-            new Pair<>(4.06, new ShooterSetpoint(Rotation2d.fromDegrees(23.7).minus(Pivot.REAL_ZEROED_ANGLE))),
-            new Pair<>(4.42, new ShooterSetpoint(Rotation2d.fromDegrees(22.8).minus(Pivot.REAL_ZEROED_ANGLE))),
-            new Pair<>(4.89, new ShooterSetpoint(Rotation2d.fromDegrees(22.0).minus(Pivot.REAL_ZEROED_ANGLE))),
-            new Pair<>(5.20, new ShooterSetpoint(Rotation2d.fromDegrees(21.5).minus(Pivot.REAL_ZEROED_ANGLE)))
+            new Pair<>(1.2954, new ShooterSetpoint(Rotation2d.fromDegrees(40))),
+            new Pair<>(1.842, new ShooterSetpoint(Rotation2d.fromDegrees(37))),
+            new Pair<>(2.238, new ShooterSetpoint(Rotation2d.fromDegrees(31))),
+            new Pair<>(2.707, new ShooterSetpoint(Rotation2d.fromDegrees(27))),
+            new Pair<>(3.208, new ShooterSetpoint(Rotation2d.fromDegrees(23))),
+            new Pair<>(3.775, new ShooterSetpoint(Rotation2d.fromDegrees(20.625))),
+            new Pair<>(4.355, new ShooterSetpoint(Rotation2d.fromDegrees(15.5))),
+            new Pair<>(3.831, new ShooterSetpoint(Rotation2d.fromDegrees(22)))
             );
 
     private static boolean hasInstance = false;
