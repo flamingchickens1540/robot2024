@@ -60,12 +60,13 @@ public final class Constants {
     }
 
     public static class Drivetrain {
-        public static final double DRIVE_GEAR_RATIO = (50.0 / 14.0) * (16.0 / 28.0) * (45.0 / 15.0);
+        public static final boolean IS_L3 = false;
+        public static final double DRIVE_GEAR_RATIO = (50.0 / 14.0) * (IS_L3 ? 16.0 / 28.0 : 17.0 / 27.0) * (45.0 / 15.0);
         public static final double TURN_GEAR_RATIO = 150.0 / 7.0;
         public static final boolean IS_TURN_MOTOR_INVERTED = true;
         public static final double WHEEL_RADIUS = Units.inchesToMeters(1.967);
 
-        public static final double MAX_LINEAR_SPEED = Units.feetToMeters(16);
+        public static final double MAX_LINEAR_SPEED = Units.feetToMeters(IS_L3 ? 16.0 : 15.7);
         public static final double TRACK_WIDTH_X = Units.inchesToMeters(18.75);
         public static final double TRACK_WIDTH_Y = Units.inchesToMeters(19.75);
         public static final double DRIVE_BASE_RADIUS = Math.hypot(TRACK_WIDTH_X / 2.0, TRACK_WIDTH_Y / 2.0);
@@ -168,7 +169,7 @@ public final class Constants {
             public static final Rotation2d MAX_ANGLE = Rotation2d.fromRotations(0.14);
             public static final Rotation2d MIN_ANGLE = Rotation2d.fromRotations(0.01);
 
-            public static final Rotation2d REAL_ZEROED_ANGLE = Rotation2d.fromDegrees(7.5); //TODO Need this number
+            public static final Rotation2d REAL_ZEROED_ANGLE = Rotation2d.fromDegrees(8.5); //TODO Need this number
 
             public static final double PIVOT_HEIGHT = Units.inchesToMeters(10.5);
 
