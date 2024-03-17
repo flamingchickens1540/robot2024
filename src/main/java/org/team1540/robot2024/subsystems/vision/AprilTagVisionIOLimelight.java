@@ -20,12 +20,13 @@ public class AprilTagVisionIOLimelight implements AprilTagVisionIO {
     @Override
     public void updateInputs(AprilTagVisionIOInputs inputs) {
         LimelightHelpers.PoseEstimate measurement = LimelightHelpers.getBotPoseEstimate_wpiBlue(name);
+        if (measurement.tagCount > 1) {
+            inputs.estimatedPoseMeters = new Pose3d(measurement.pose);
+            inputs.numTagsSeen = measurement.tagCount;
+            inputs.avgTagDistance = measurement.avgTagDist;
 
-        inputs.estimatedPoseMeters = new Pose3d(measurement.pose);
-        inputs.numTagsSeen = measurement.tagCount;
-        inputs.avgTagDistance = measurement.avgTagDist;
-
-        inputs.lastMeasurementTimestampSecs = measurement.timestampSeconds;
+            inputs.lastMeasurementTimestampSecs = measurement.timestampSeconds;
+        }
     }
 
     @Override

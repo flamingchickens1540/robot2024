@@ -4,11 +4,14 @@ import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.proto.Trajectory;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
+import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
+import org.team1540.robot2024.commands.drivetrain.DriveWithTargetingCommand;
 import org.team1540.robot2024.commands.indexer.IntakeAndFeed;
 import org.team1540.robot2024.commands.indexer.IntakeCommand;
 import org.team1540.robot2024.subsystems.drive.Drivetrain;
 import org.team1540.robot2024.subsystems.indexer.Indexer;
+import org.team1540.robot2024.subsystems.shooter.Shooter;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -92,7 +95,31 @@ public class AutoCommand extends SequentialCommandGroup {
                         new IntakeCommand(indexer, () -> false, 1)
                 ),
                 drivetrain.commandStop(),
-                IntakeAndFeed.withDefaults(indexer).withTimeout(0.5)
+                drivetrain.commandCopyVisionPose(),
+                Commands.parallel(
+                        new DriveWithTargetingCommand(drivetrain, null).withTimeout(0.4),
+//                        IntakeAndFeed.withDefaults(indexer).withTimeout(0.5),
+                        IntakeAndFeed.withDefaults(indexer).until(()->!indexer.isNoteStaged()).andThen(Commands.waitSeconds(0.2))
+                )
+        );
+    }
+
+    protected Command createCancoderSegmentSequence(Drivetrain drivetrain, Shooter shooter, Indexer indexer, int pathIndex) {
+        return Commands.sequence(
+                Commands.deadline(
+                        getPath(pathIndex).getCommand(drivetrain),
+                        new IntakeCommand(indexer, () -> false, 1)
+                ),
+                drivetrain.commandStop(),
+                Commands.waitSeconds(0.25),
+                new InstantCommand(shooter::zeroPivotToCancoder),
+                drivetrain.commandCopyVisionPose(),
+                Commands.parallel(
+                        new DriveWithTargetingCommand(drivetrain, null).withTimeout(0.4),
+                        IntakeAndFeed.withDefaults(indexer).until(()->!indexer.isNoteStaged()).andThen(Commands.waitSeconds(0.1))
+                )
+
+//                IntakeAndFeed.withDefaults(indexer).withTimeout(0.5)
         );
     }
 

@@ -27,7 +27,7 @@ public class CenterLanePCBAFSprint extends AutoCommand {
                 Commands.parallel(
                         new AutoShootPrepare(drivetrain, shooter),
                         Commands.sequence(
-                                createSegmentSequence(drivetrain, indexer, 0),
+                                createCancoderSegmentSequence(drivetrain, shooter, indexer, 0),
                                 drivetrain.commandCopyVisionPose(),
                                 createSegmentSequence(drivetrain, indexer, 1),
                                 drivetrain.commandCopyVisionPose(),

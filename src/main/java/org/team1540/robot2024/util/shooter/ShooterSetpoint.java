@@ -17,6 +17,6 @@ public class ShooterSetpoint {
     }
 
     public ShooterSetpoint(Rotation2d pivot){
-        this(pivot, 8000, 6000);
+        this(pivot, 7000, 3000);
     }
 }

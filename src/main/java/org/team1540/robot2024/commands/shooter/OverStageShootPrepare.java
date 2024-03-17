@@ -25,7 +25,7 @@ public class OverStageShootPrepare extends SequentialCommandGroup {
                                         )
                                 )
                         ).minus(Constants.Shooter.Pivot.REAL_ZEROED_ANGLE),
-                        3000, 3000)
+                        3500, 3500)
                 )
         );
     }

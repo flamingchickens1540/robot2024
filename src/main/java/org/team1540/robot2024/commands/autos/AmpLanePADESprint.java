@@ -1,6 +1,8 @@
 package org.team1540.robot2024.commands.autos;
 
 import edu.wpi.first.wpilibj2.command.Commands;
+import edu.wpi.first.wpilibj2.command.InstantCommand;
+import edu.wpi.first.wpilibj2.command.WaitCommand;
 import org.team1540.robot2024.commands.shooter.AutoShootPrepare;
 import org.team1540.robot2024.subsystems.drive.Drivetrain;
 import org.team1540.robot2024.subsystems.indexer.Indexer;
@@ -25,10 +27,16 @@ public class AmpLanePADESprint extends AutoCommand {
                 Commands.parallel(
                         new AutoShootPrepare(drivetrain, shooter),
                         Commands.sequence(
-                                createSegmentSequence(drivetrain, indexer, 0),
+                                createCancoderSegmentSequence(drivetrain, shooter, indexer, 0),
                                 createSegmentSequence(drivetrain, indexer, 1),
+//                                new WaitCommand(5),
+//                                drivetrain.commandCopyVisionPose(),
                                 createSegmentSequence(drivetrain, indexer, 2),
-                                createSegmentSequence(drivetrain, indexer, 3)
+//                                new WaitCommand(5),
+//                                drivetrain.commandCopyVisionPose(),
+                                createSegmentSequence(drivetrain, indexer, 3),
+                                getPath(4).getCommand(drivetrain)
+//                                drivetrain.commandCopyVisionPose()
                         )
                 ),
                 getPath(4).getCommand(drivetrain)

@@ -2,6 +2,7 @@ package org.team1540.robot2024.commands.drivetrain;
 
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.filter.SlewRateLimiter;
+import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj2.command.Command;
 import java.util.function.DoubleSupplier;
@@ -60,8 +61,9 @@ public class WheelRadiusCharacterization extends Command {
     @Override
     public void execute() {
         // Run drive at velocity
-        drive.runWheelRadiusCharacterization(
-                omegaLimiter.calculate(omegaDirection.value * characterizationSpeed.get()));
+
+        drive.runVelocity(new ChassisSpeeds(0, 0, omegaLimiter.calculate(omegaDirection.value * characterizationSpeed.get())));
+        System.out.println("running characterization");
 
         // Get yaw and wheel positions
         accumGyroYawRads += MathUtil.angleModulus(gyroYawRadsSupplier.getAsDouble() - lastGyroYawRads);
@@ -91,5 +93,7 @@ public class WheelRadiusCharacterization extends Command {
                             + Units.metersToInches(currentEffectiveWheelRadius)
                             + " inches");
         }
+        drive.stop();
+        drive.stopCharacterization();
     }
 }

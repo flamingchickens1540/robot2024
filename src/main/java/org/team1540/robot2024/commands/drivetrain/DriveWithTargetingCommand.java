@@ -54,13 +54,18 @@ public class DriveWithTargetingCommand extends Command {
         Rotation2d targetRot =
                 drivetrain.getPose()
                         .minus(target.get()).getTranslation().getAngle()
-                        .rotateBy(isFlipped ? Rotation2d.fromDegrees(180) : Rotation2d.fromDegrees(0));
+                        .rotateBy(isFlipped ? Rotation2d.fromDegrees(180) : Rotation2d.fromDegrees(0))
+                        .minus(Rotation2d.fromDegrees(3));
         Logger.recordOutput("Targeting/setpointPose", new Pose2d(drivetrain.getPose().getTranslation(), targetRot));
         Logger.recordOutput("Targeting/rotErrorDegrees", Math.abs(targetRot.minus(drivetrain.getRotation()).getDegrees()));
         Logger.recordOutput("Targeting/target", target.get());
 
-        double xPercent = MathUtil.applyDeadband((-controller.getLeftY()), 0.1);
-        double yPercent = MathUtil.applyDeadband((-controller.getLeftX()), 0.1);
+        double xPercent = 0;
+        double yPercent = 0;
+        if(controller != null){
+            xPercent = MathUtil.applyDeadband((-controller.getLeftY()), 0.1);
+            yPercent = MathUtil.applyDeadband((-controller.getLeftX()), 0.1);
+        }
         double rotPercent = rotController.calculate(drivetrain.getRotation().getRadians(), targetRot.getRadians());
         drivetrain.drivePercent(xPercent, yPercent, rotPercent, true);
     }

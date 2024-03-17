@@ -10,6 +10,7 @@ import org.team1540.robot2024.commands.FeedForwardCharacterization;
 import org.team1540.robot2024.commands.autos.*;
 import org.team1540.robot2024.commands.climb.ClimbAlignment;
 import org.team1540.robot2024.commands.drivetrain.SwerveDriveCommand;
+import org.team1540.robot2024.commands.drivetrain.WheelRadiusCharacterization;
 import org.team1540.robot2024.commands.elevator.ElevatorManualCommand;
 import org.team1540.robot2024.commands.indexer.IntakeAndFeed;
 import org.team1540.robot2024.commands.indexer.IntakeCommand;
@@ -56,7 +57,7 @@ public class RobotContainer {
      */
     public RobotContainer() {
         switch (Constants.currentMode) {
-            case REAL:
+            case REAL -> {
                 // Real robot, instantiate hardware IO implementations
                 elevator = Elevator.createReal();
                 drivetrain = Drivetrain.createReal(odometrySignalRefresher, elevator::getVelocity);
@@ -67,30 +68,28 @@ public class RobotContainer {
                         drivetrain::addVisionMeasurement,
                         elevator::getPosition,
                         drivetrain::getVisionPose);
-                break;
-            case SIM:
+            }
+            case SIM -> {
                 // Sim robot, instantiate physics sim IO implementations
                 elevator = Elevator.createSim();
                 drivetrain = Drivetrain.createSim(elevator::getVelocity);
                 tramp = Tramp.createSim();
                 shooter = Shooter.createSim();
-
                 indexer = Indexer.createSim();
                 aprilTagVision = AprilTagVision.createSim(
                         drivetrain::addVisionMeasurement,
                         drivetrain::getPose,
                         elevator::getPosition);
-                break;
-            default:
+            }
+            default -> {
                 // Replayed robot, disable IO implementations
                 elevator = Elevator.createDummy();
                 drivetrain = Drivetrain.createDummy();
                 tramp = Tramp.createDummy();
                 shooter = Shooter.createDummy();
-
                 indexer = Indexer.createDummy();
                 aprilTagVision = AprilTagVision.createDummy();
-                break;
+            }
         }
 
         // Set up FF characterization routines
@@ -136,12 +135,13 @@ public class RobotContainer {
 //        drivetrain.setDefaultCommand(new AutoShootPrepareWhileMoving(driver.getHID(), drivetrain, shooter));
         elevator.setDefaultCommand(new ElevatorManualCommand(elevator, copilot));
         shooter.setDefaultCommand(manualPivotCommand);
-        driver.x().onTrue(Commands.runOnce(drivetrain::stopWithX, drivetrain));
+        driver.b().onTrue(Commands.runOnce(drivetrain::stopWithX, drivetrain));
 //        driver.y().toggleOnTrue(new DriveWithSpeakerTargetingCommand(drivetrain, driver));
         driver.y().onTrue(Commands.runOnce(() -> {
             drivetrain.zeroFieldOrientationManual();
             drivetrain.setBrakeMode(true);
         }).ignoringDisable(true));
+
 
         Command targetDrive = new AutoShootPrepareWithTargeting(driver.getHID(), drivetrain, shooter)
                 .alongWith(leds.commandShowPattern(new LedPatternWave("#00a9ff"), Leds.PatternLevel.DRIVER_LOCK));
@@ -149,19 +149,28 @@ public class RobotContainer {
                 .alongWith(leds.commandShowPattern(new LedPatternWave("#f700ff"), Leds.PatternLevel.DRIVER_LOCK));
         Command autoShooterCommand = new AutoShootPrepare(drivetrain, shooter)
                 .alongWith(leds.commandShowPattern(new LedPatternWave("#00ffbc"), Leds.PatternLevel.DRIVER_LOCK));
+        Command cancelAlignment = Commands.runOnce(() -> {
+            targetDrive.cancel();
+            overstageTargetDrive.cancel();
+        });
+        driver.x()
+                .whileTrue(IntakeAndFeed.withDefaults(indexer))
+                .onFalse(cancelAlignment);
 
         driver.rightBumper().toggleOnTrue(targetDrive);
         driver.leftBumper().toggleOnTrue(overstageTargetDrive);
 
         // TODO remove this
-        driver.a().whileTrue(new TuneShooterCommand(shooter, indexer, drivetrain::getPose));
+        if (isTuningMode()) {
+            driver.leftTrigger().whileTrue(new AutoShootPrepareWhileMoving(driver.getHID(), drivetrain, shooter).alongWith(leds.commandShowPattern(new LedPatternWave("#00ff00"), Leds.PatternLevel.DRIVER_LOCK)));
+            driver.a().whileTrue(new TuneShooterCommand(shooter, indexer, drivetrain::getPose));
+        }
 
         driver.rightTrigger(0.95).toggleOnTrue(autoShooterCommand);
 
-        driver.rightStick().onTrue(Commands.runOnce(() -> {
-            targetDrive.cancel();
-            overstageTargetDrive.cancel();
-        }));
+        driver.rightStick().onTrue(cancelAlignment);
+
+        copilot.back().onTrue(Commands.runOnce(shooter::zeroPivotToCancoder).andThen(Commands.print("BACK IS PRESSED")));
 
         copilot.leftBumper().whileTrue(new AmpScoreSequence(tramp, indexer, elevator));
         Command intakeCommand = new IntakeCommand(indexer, tramp::isNoteStaged, 1)
@@ -179,14 +188,8 @@ public class RobotContainer {
 
         copilot.x().whileTrue(new ShootSequence(shooter, indexer));
         copilot.a().whileTrue(new AmpScoreStageSequence(indexer, tramp, elevator));
-//        copilot.b().whileTrue(new ShootSequence(shooter, indexer, PODIUM_SHOOT));
-//        copilot.b().whileTrue(new TuneShooterCommand(shooter, indexer));
-        copilot.b()
-                .whileTrue(IntakeAndFeed.withDefaults(indexer))
-                .onFalse(Commands.runOnce(() -> {
-                    targetDrive.cancel();
-                    overstageTargetDrive.cancel();
-                }));
+        copilot.b().whileTrue(IntakeAndFeed.withDefaults(indexer))
+                    .onFalse(cancelAlignment);
         copilot.y().whileTrue(new StageTrampCommand(tramp, indexer));
 
 //        copilot.leftTrigger(0.5).whileTrue(new ElevatorSetpointCommand(elevator, ElevatorState.CLIMB));
@@ -255,7 +258,7 @@ public class RobotContainer {
         autos.add(new DriveSinglePath("SourceLaneSprint", drivetrain));
         autos.add(new SourceLanePGHSprint(drivetrain, shooter, indexer));
         autos.add(new SourceLanePHG(drivetrain, shooter, indexer));
-
+        autos.add(new AutoCommand("WheelRadiusChar", new WheelRadiusCharacterization(drivetrain, WheelRadiusCharacterization.Direction.CLOCKWISE)));
 
     }
 

@@ -37,6 +37,8 @@ public class FlywheelsIOTalonFX implements FlywheelsIO {
     public FlywheelsIOTalonFX() {
         TalonFXConfiguration config = new TalonFXConfiguration();
         config.MotorOutput.NeutralMode = NeutralModeValue.Coast;
+        config.Voltage.PeakForwardVoltage = 10;
+        config.Voltage.PeakReverseVoltage = 10;
 
         // Shooter current limits are banned
         config.CurrentLimits.SupplyCurrentLimitEnable = false;

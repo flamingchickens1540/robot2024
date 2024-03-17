@@ -29,6 +29,7 @@ import org.team1540.robot2024.util.auto.LocalADStarAK;
 import org.team1540.robot2024.Constants;
 import org.team1540.robot2024.util.PhoenixTimeSyncSignalRefresher;
 import org.team1540.robot2024.util.swerve.SwerveFactory;
+import org.team1540.robot2024.util.vision.AprilTagsCrescendo;
 import org.team1540.robot2024.util.vision.EstimatedVisionPose;
 import org.team1540.robot2024.util.vision.VisionPoseAcceptor;
 
@@ -282,6 +283,11 @@ public class Drivetrain extends SubsystemBase {
         return kinematics.toChassisSpeeds(getModuleStates());
     }
 
+    @AutoLogOutput(key = "Odometry/ChassisSpeedMagnitude")
+    public double ChassisSpeedMagnitude(){
+        return Math.hypot(getChassisSpeeds().vxMetersPerSecond, getChassisSpeeds().vyMetersPerSecond);
+    }
+
     /**
      * Returns the module states (turn angles and drive velocities) for all the modules.
      */
@@ -411,5 +417,14 @@ public class Drivetrain extends SubsystemBase {
     public void runWheelRadiusCharacterization(double omegaSpeed) {
         isCharacterizingWheels = true;
         characterizationInput = omegaSpeed;
+    }
+
+    public void stopCharacterization() {
+        isCharacterizingWheels = false;
+    }
+
+    @AutoLogOutput(key = "Targeting/SpeakerDistance")
+    public double getSpeakerDistanceMeters(){
+        return getPose().getTranslation().getDistance(AprilTagsCrescendo.getInstance().getTag(AprilTagsCrescendo.Tags.SPEAKER_CENTER).toPose2d().getTranslation());
     }
 }

@@ -16,8 +16,8 @@ import java.util.function.DoubleSupplier;
 import java.util.function.Supplier;
 
 public class TuneShooterCommand extends ParallelCommandGroup {
-    private final LoggedDashboardNumber leftFlywheelSetpoint = new LoggedDashboardNumber("Shooter/Flywheels/leftSetpoint", 8000);
-    private final LoggedDashboardNumber rightFlywheelSetpoint = new LoggedDashboardNumber("Shooter/Flywheels/rightSetpoint", 6000);
+    private final LoggedDashboardNumber leftFlywheelSetpoint = new LoggedDashboardNumber("Shooter/Flywheels/leftSetpoint", 7000);
+    private final LoggedDashboardNumber rightFlywheelSetpoint = new LoggedDashboardNumber("Shooter/Flywheels/rightSetpoint", 3000);
     private final LoggedDashboardNumber angleSetpoint = new LoggedDashboardNumber("Shooter/Pivot/angleSetpoint", 15);
 
     private final DoubleSupplier shooterLeftSupplier;
@@ -44,10 +44,7 @@ public class TuneShooterCommand extends ParallelCommandGroup {
                         Commands.print("Shot Number: " + shotNum + " Angle Degrees Setpoint: " + pivotRotationSupplier.get() + " Left RPM Setpoint: " + shooterLeftSupplier.getAsDouble() + " Right RPM Setpoint: " + shooterRightSupplier.getAsDouble() +
                                 " Angle Degrees: " + shooter.getPivotPosition().getDegrees() + " Left RPM: " + shooter.getLeftFlywheelSpeed() + " Right RPM: " + shooter.getRightFlywheelSpeed() +
                                 " Distance: " + poseSupplier.get().getTranslation().getDistance(AprilTagsCrescendo.getInstance().getTag(AprilTagsCrescendo.Tags.SPEAKER_CENTER).toPose2d().getTranslation()))
-                ).repeatedly(),
-                Commands.runOnce(
-                        () -> Logger.recordOutput("shooterTuning/Distance",
-                                poseSupplier.get().getTranslation().getDistance(AprilTagsCrescendo.getInstance().getTag(AprilTagsCrescendo.Tags.SPEAKER_CENTER).toPose2d().getTranslation()))).repeatedly()
+                ).repeatedly()
         );
         addRequirements(shooter, indexer);
     }

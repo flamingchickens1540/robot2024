@@ -48,15 +48,20 @@ public class Shooter extends SubsystemBase {
     private final LoggedTunableNumber pivotKD = new LoggedTunableNumber("Shooter/Pivot/kD", Pivot.KD);
     private final LoggedTunableNumber pivotKG = new LoggedTunableNumber("Shooter/Pivot/kG", Pivot.KG);
 
+    private boolean flipper = false;
+
     public final ShooterLerp lerp = new ShooterLerp().put(
             new Pair<>(1.2954, new ShooterSetpoint(Rotation2d.fromDegrees(40))),
             new Pair<>(1.842, new ShooterSetpoint(Rotation2d.fromDegrees(37))),
+            new Pair<>(2.012, new ShooterSetpoint(Rotation2d.fromDegrees(34.422))),
             new Pair<>(2.238, new ShooterSetpoint(Rotation2d.fromDegrees(31))),
-            new Pair<>(2.707, new ShooterSetpoint(Rotation2d.fromDegrees(27))),
-            new Pair<>(3.208, new ShooterSetpoint(Rotation2d.fromDegrees(23))),
-            new Pair<>(3.775, new ShooterSetpoint(Rotation2d.fromDegrees(20.625))),
-            new Pair<>(4.355, new ShooterSetpoint(Rotation2d.fromDegrees(15.5))),
-            new Pair<>(3.831, new ShooterSetpoint(Rotation2d.fromDegrees(22)))
+            new Pair<>(2.747, new ShooterSetpoint(Rotation2d.fromDegrees(25.5))),
+            new Pair<>(3.175, new ShooterSetpoint(Rotation2d.fromDegrees(22))),
+            new Pair<>(3.197, new ShooterSetpoint(Rotation2d.fromDegrees(22))),
+//            new Pair<>(3.990, new ShooterSetpoint(Rotation2d.fromDegrees(17.2))),
+            new Pair<>(4.029, new ShooterSetpoint(Rotation2d.fromDegrees(16.5))),
+            new Pair<>(4.256, new ShooterSetpoint(Rotation2d.fromDegrees(16.2))),
+            new Pair<>(5.300, new ShooterSetpoint(Rotation2d.fromDegrees(13)))
             );
 
     private static boolean hasInstance = false;
@@ -117,6 +122,7 @@ public class Shooter extends SubsystemBase {
         rightSpeedFilter.add(getRightFlywheelSpeed());
         pivotPositionFilter.add(getPivotPosition().getRotations());
         Logger.recordOutput("Shooter/Pivot/Error", pivotSetpoint.getDegrees() - pivotInputs.position.getDegrees());
+        Logger.recordOutput("Shooter/Pivot/ResettingToCancoder", flipper);
     }
 
     /**
@@ -273,5 +279,9 @@ public class Shooter extends SubsystemBase {
 
     public void zeroPivot() {
         pivotIO.setEncoderPosition(0);
+    }
+    public void zeroPivotToCancoder(){
+        pivotIO.setEncoderPosition(Rotation2d.fromDegrees(pivotInputs.absolutePosition.getDegrees()*0.984 - 140).getRotations());
+        flipper = !flipper;
     }
 }

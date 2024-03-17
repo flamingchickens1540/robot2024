@@ -5,7 +5,6 @@ import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import org.team1540.robot2024.Constants;
-import org.team1540.robot2024.commands.drivetrain.DriveWithSpeakerTargetingCommand;
 import org.team1540.robot2024.commands.drivetrain.DriveWithTargetingCommand;
 import org.team1540.robot2024.subsystems.drive.Drivetrain;
 import org.team1540.robot2024.subsystems.shooter.Shooter;
@@ -25,7 +24,7 @@ public class AutoShootPrepareWhileMoving extends ParallelCommandGroup {
                     new Rotation3d());
             double flightDistance = speakerPose3d.getTranslation().getDistance(new Translation3d(drivetrain.getPose().getX(), drivetrain.getPose().getY(), Constants.Shooter.Pivot.PIVOT_HEIGHT));
 //            double NOTE_VELOCITY = 6000.0*1.5*2.0*Math.PI*2.54/100.0/60.0;
-            double NOTE_VELOCITY = 24.0;
+            double NOTE_VELOCITY = 12.18;
             double time = flightDistance/NOTE_VELOCITY;
             Translation2d modifier = new Translation2d(drivetrain.getChassisSpeeds().vxMetersPerSecond * time,drivetrain.getChassisSpeeds().vyMetersPerSecond*time);
             return modifier;

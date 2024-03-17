@@ -22,12 +22,13 @@ public class SourceLanePGHSprint extends AutoCommand {
                 Commands.parallel(
                         new AutoShootPrepare(drivetrain, shooter),
                         Commands.sequence(
-                                createSegmentSequence(drivetrain, indexer, 0),
+                                createCancoderSegmentSequence(drivetrain, shooter, indexer, 0),
                                 drivetrain.commandCopyVisionPose(),
                                 createSegmentSequence(drivetrain, indexer, 1),
                                 drivetrain.commandCopyVisionPose(),
                                 createSegmentSequence(drivetrain, indexer, 2),
-                                drivetrain.commandCopyVisionPose()
+                                drivetrain.commandCopyVisionPose(),
+                                getPath(3).getCommand(drivetrain)
                         )
                 ),
                 getPath(3).getCommand(drivetrain)

@@ -133,6 +133,7 @@ public class Robot extends LoggedRobot {
 //        robotContainer.leds.setPattern(Leds.Zone.ELEVATOR_BACK,flamePattern);
         robotContainer.elevator.setBrakeMode(true);
         robotContainer.shooter.setPivotBrakeMode(true);
+        robotContainer.drivetrain.setBrakeMode(true);
     }
 
     /**
