@@ -51,16 +51,16 @@ public final class Constants {
         public static final String CAN_BUS  = IS_COMPETITION_ROBOT ? "swerve" : "swerve";
         public static final double CAN_UPDATE_FREQUENCY_HZ = 200.0;
 
-        public static final int FRONT_LEFT  = IS_COMPETITION_ROBOT ? 1 : 1;
-        public static final int FRONT_RIGHT = IS_COMPETITION_ROBOT ? 7 : 9;
-        public static final int BACK_LEFT   = IS_COMPETITION_ROBOT ? 4 : 5;
-        public static final int BACK_RIGHT  = IS_COMPETITION_ROBOT ? 3 : 6;
+        public static final int FRONT_LEFT  = IS_COMPETITION_ROBOT ? 1 : 9;
+        public static final int FRONT_RIGHT = IS_COMPETITION_ROBOT ? 7 : 2;
+        public static final int BACK_LEFT   = IS_COMPETITION_ROBOT ? 4 : 6;
+        public static final int BACK_RIGHT  = IS_COMPETITION_ROBOT ? 3 : 5;
 
         public static final int PIGEON_ID = 9;
     }
 
     public static class Drivetrain {
-        public static final boolean IS_L3 = false;
+        public static final boolean IS_L3 = !IS_COMPETITION_ROBOT;
         public static final double DRIVE_GEAR_RATIO = (50.0 / 14.0) * (IS_L3 ? 16.0 / 28.0 : 17.0 / 27.0) * (45.0 / 15.0);
         public static final double TURN_GEAR_RATIO = 150.0 / 7.0;
         public static final boolean IS_TURN_MOTOR_INVERTED = true;

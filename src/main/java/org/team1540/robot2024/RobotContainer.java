@@ -59,15 +59,24 @@ public class RobotContainer {
         switch (Constants.currentMode) {
             case REAL -> {
                 // Real robot, instantiate hardware IO implementations
-                elevator = Elevator.createReal();
-                drivetrain = Drivetrain.createReal(odometrySignalRefresher, elevator::getVelocity);
-                tramp = Tramp.createReal();
-                shooter = Shooter.createReal();
-                indexer = Indexer.createReal();
-                aprilTagVision = AprilTagVision.createReal(
-                        drivetrain::addVisionMeasurement,
-                        elevator::getPosition,
-                        drivetrain::getVisionPose);
+                if (Constants.IS_COMPETITION_ROBOT) {
+                    elevator = Elevator.createReal();
+                    drivetrain = Drivetrain.createReal(odometrySignalRefresher, elevator::getVelocity);
+                    tramp = Tramp.createReal();
+                    shooter = Shooter.createReal();
+                    indexer = Indexer.createReal();
+                    aprilTagVision = AprilTagVision.createReal(
+                            drivetrain::addVisionMeasurement,
+                            elevator::getPosition,
+                            drivetrain::getVisionPose);
+                } else {
+                    elevator = Elevator.createDummy();
+                    drivetrain = Drivetrain.createReal(odometrySignalRefresher, () -> 0.0);
+                    tramp = Tramp.createDummy();
+                    shooter = Shooter.createDummy();
+                    indexer = Indexer.createDummy();
+                    aprilTagVision = AprilTagVision.createDummy();
+                }
             }
             case SIM -> {
                 // Sim robot, instantiate physics sim IO implementations
