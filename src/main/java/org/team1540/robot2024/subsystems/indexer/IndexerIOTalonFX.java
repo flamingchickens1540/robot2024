@@ -10,30 +10,34 @@ import com.ctre.phoenix6.hardware.TalonFX;
 import com.ctre.phoenix6.signals.InvertedValue;
 import com.ctre.phoenix6.signals.NeutralModeValue;
 import com.revrobotics.CANSparkBase;
-import com.revrobotics.CANSparkLowLevel;
-import com.revrobotics.CANSparkMax;
-import com.revrobotics.RelativeEncoder;
 import edu.wpi.first.wpilibj.DigitalInput;
 
 import static org.team1540.robot2024.Constants.Indexer.*;
 
-public class IndexerIOTalonFXSparkMax implements IndexerIO {
-    private final CANSparkMax intakeMotor = new CANSparkMax(INTAKE_ID, CANSparkLowLevel.MotorType.kBrushless);
+public class IndexerIOTalonFX implements IndexerIO {
+    private final TalonFX intakeMotor = new TalonFX(INTAKE_ID);
     private final TalonFX feederMotor = new TalonFX(FEEDER_ID);
     private final DigitalInput indexerBeamBreak = new DigitalInput(7);
 
-    private final RelativeEncoder intakeEncoder = intakeMotor.getEncoder();
-
-    private final VoltageOut voltageCtrlReq = new VoltageOut(0).withEnableFOC(true);
-    private final VelocityVoltage velocityCtrlReq = new VelocityVoltage(0).withEnableFOC(true);
+    private final VoltageOut feederVoltageCtrlReq = new VoltageOut(0).withEnableFOC(true);
+    private final VelocityVoltage feederVelocityCtrlReq = new VelocityVoltage(0).withEnableFOC(true);
     private final StatusSignal<Double> feederVoltage = feederMotor.getMotorVoltage();
     private final StatusSignal<Double> feederCurrent = feederMotor.getSupplyCurrent();
     private final StatusSignal<Double> feederVelocity = feederMotor.getVelocity();
 
-    public IndexerIOTalonFXSparkMax() {
-        intakeMotor.setIdleMode(CANSparkBase.IdleMode.kCoast);
-        intakeMotor.enableVoltageCompensation(12.0);
-        intakeMotor.setSmartCurrentLimit(55);
+    private final VoltageOut intakeVoltageCtrlReq = new VoltageOut(0).withEnableFOC(true);
+    private final StatusSignal<Double> intakeVoltage = intakeMotor.getMotorVoltage();
+    private final StatusSignal<Double> intakeCurrent = intakeMotor.getSupplyCurrent();
+    private final StatusSignal<Double> intakeVelocity = intakeMotor.getVelocity();
+
+    public IndexerIOTalonFX() {
+        TalonFXConfiguration intakeConfig = new TalonFXConfiguration();
+        intakeConfig.MotorOutput.Inverted = InvertedValue.CounterClockwise_Positive;
+        intakeConfig.MotorOutput.NeutralMode = NeutralModeValue.Coast;
+        intakeConfig.CurrentLimits.SupplyCurrentLimitEnable = true;
+        intakeConfig.CurrentLimits.SupplyCurrentLimit = 55;
+        intakeConfig.CurrentLimits.SupplyCurrentThreshold = 80;
+        intakeConfig.CurrentLimits.SupplyTimeThreshold = 0.1;
 
         TalonFXConfiguration feederConfig  = new TalonFXConfiguration();
         feederConfig.MotorOutput.Inverted = InvertedValue.Clockwise_Positive;
@@ -47,35 +51,42 @@ public class IndexerIOTalonFXSparkMax implements IndexerIO {
         feederConfig.Slot0.kD = FEEDER_KD;
         feederConfig.Slot0.kV = FEEDER_KV;
 
+        intakeMotor.getConfigurator().apply(intakeConfig);
         feederMotor.getConfigurator().apply(feederConfig);
     }
 
     @Override
     public void updateInputs(IndexerIOInputs inputs) {
-        BaseStatusSignal.refreshAll(feederVoltage, feederCurrent, feederVelocity);
-        inputs.intakeVoltage = intakeMotor.getAppliedOutput() * intakeMotor.getBusVoltage();
-        inputs.intakeCurrentAmps = intakeMotor.getOutputCurrent();
-        inputs.intakeVelocityRPM = intakeEncoder.getVelocity();
+        BaseStatusSignal.refreshAll(
+                intakeVoltage,
+                intakeCurrent,
+                intakeVelocity,
+                feederVoltage,
+                feederCurrent,
+                feederVelocity);
+        inputs.intakeVoltage = intakeVoltage.getValueAsDouble();
+        inputs.intakeCurrentAmps = intakeCurrent.getValueAsDouble();
+        inputs.intakeVelocityRPM = intakeVelocity.getValueAsDouble();
         inputs.feederVoltage = feederVoltage.getValueAsDouble();
         inputs.feederCurrentAmps = feederCurrent.getValueAsDouble();
         inputs.feederVelocityRPM = feederVelocity.getValueAsDouble();
-        inputs.feederVelocityError = inputs.feederVelocityRPM - velocityCtrlReq.Velocity;
+        inputs.feederVelocityError = inputs.feederVelocityRPM - feederVelocityCtrlReq.Velocity;
         inputs.noteInIntake = !indexerBeamBreak.get();
     }
 
     @Override
     public void setIntakeVoltage(double volts) {
-        intakeMotor.setVoltage(volts);
+        intakeMotor.setControl(intakeVoltageCtrlReq.withOutput(volts));
     }
 
     @Override
     public void setFeederVoltage(double voltage) {
-        feederMotor.setControl(voltageCtrlReq.withOutput(voltage));
+        feederMotor.setControl(feederVoltageCtrlReq.withOutput(voltage));
     }
 
     @Override
     public void setFeederVelocity(double velocity) {
-        feederMotor.setControl(velocityCtrlReq.withVelocity(velocity));
+        feederMotor.setControl(feederVelocityCtrlReq.withVelocity(velocity));
     }
 
     @Override
