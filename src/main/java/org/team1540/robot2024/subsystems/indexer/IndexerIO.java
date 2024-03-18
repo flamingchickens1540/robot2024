@@ -9,9 +9,11 @@ public interface IndexerIO {
         public double intakeVoltage;
         public double intakeCurrentAmps;
         public double intakeVelocityRPM;
+        public double intakeTempCelsius;
         public double feederVoltage;
         public double feederCurrentAmps;
         public double feederVelocityRPM;
+        public double feederTempCelsius;
         public boolean noteInIntake = false;
         public double setpointRPM;
         public double feederVelocityError;

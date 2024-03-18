@@ -33,7 +33,6 @@ public class Shooter extends SubsystemBase {
     private final AverageFilter rightSpeedFilter = new AverageFilter(20); // Units: RPM
     private final AverageFilter pivotPositionFilter = new AverageFilter(10); // Units: rotations
 
-
     private double leftFlywheelSetpointRPM;
     private double rightFlywheelSetpointRPM;
     private Rotation2d pivotSetpoint = new Rotation2d();

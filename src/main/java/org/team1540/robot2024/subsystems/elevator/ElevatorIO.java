@@ -9,6 +9,7 @@ public interface ElevatorIO {
         public double velocityMPS = 0.0;
         public double voltage = 0.0;
         public double[] current = new double[]{};
+        public double[] tempCelsius = new double[]{};
         public boolean atUpperLimit = false;
         public boolean atLowerLimit = false;
     }

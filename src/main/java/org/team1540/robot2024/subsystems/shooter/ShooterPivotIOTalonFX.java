@@ -6,7 +6,6 @@ import com.ctre.phoenix6.configs.CANcoderConfiguration;
 import com.ctre.phoenix6.configs.Slot0Configs;
 import com.ctre.phoenix6.configs.TalonFXConfiguration;
 import com.ctre.phoenix6.controls.MotionMagicVoltage;
-import com.ctre.phoenix6.controls.PositionVoltage;
 import com.ctre.phoenix6.controls.VoltageOut;
 import com.ctre.phoenix6.hardware.CANcoder;
 import com.ctre.phoenix6.hardware.TalonFX;
@@ -25,6 +24,7 @@ public class ShooterPivotIOTalonFX implements ShooterPivotIO {
     private final StatusSignal<Double> velocity = motor.getVelocity();
     private final StatusSignal<Double> appliedVoltage = motor.getMotorVoltage();
     private final StatusSignal<Double> current = motor.getSupplyCurrent();
+    private final StatusSignal<Double> temp = motor.getDeviceTemp();
     private final StatusSignal<ForwardLimitValue> forwardLimit = motor.getForwardLimit();
     private final StatusSignal<ReverseLimitValue> reverseLimit = motor.getReverseLimit();
 
@@ -82,6 +82,7 @@ public class ShooterPivotIOTalonFX implements ShooterPivotIO {
                 velocity,
                 appliedVoltage,
                 current,
+                temp,
                 forwardLimit,
                 reverseLimit);
 
@@ -92,7 +93,7 @@ public class ShooterPivotIOTalonFX implements ShooterPivotIO {
 
     @Override
     public void updateInputs(ShooterPivotIOInputs inputs) {
-        BaseStatusSignal.refreshAll(position, absolutePosition, velocity, appliedVoltage, current, forwardLimit, reverseLimit);
+        BaseStatusSignal.refreshAll(position, absolutePosition, velocity, appliedVoltage, current, temp, forwardLimit, reverseLimit);
         inputs.isAtForwardLimit = forwardLimit.getValue() == ForwardLimitValue.ClosedToGround;
         inputs.isAtReverseLimit = reverseLimit.getValue() == ReverseLimitValue.ClosedToGround;
         inputs.position = Rotation2d.fromRotations(position.getValueAsDouble());
@@ -100,6 +101,7 @@ public class ShooterPivotIOTalonFX implements ShooterPivotIO {
         inputs.velocityRPS = velocity.getValueAsDouble();
         inputs.appliedVolts = appliedVoltage.getValueAsDouble();
         inputs.currentAmps = current.getValueAsDouble();
+        inputs.tempCelsius = temp.getValueAsDouble();
 
     }
 

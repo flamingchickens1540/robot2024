@@ -19,10 +19,12 @@ public class FlywheelsIOTalonFX implements FlywheelsIO {
     private final StatusSignal<Double> leftVelocity = leftMotor.getVelocity();
     private final StatusSignal<Double> leftAppliedVolts = leftMotor.getMotorVoltage();
     private final StatusSignal<Double> leftCurrent = leftMotor.getSupplyCurrent();
+    private final StatusSignal<Double> leftTempCelsius = leftMotor.getDeviceTemp();
 
     private final StatusSignal<Double> rightVelocity = rightMotor.getVelocity();
     private final StatusSignal<Double> rightAppliedVolts = rightMotor.getMotorVoltage();
     private final StatusSignal<Double> rightCurrent = rightMotor.getSupplyCurrent();
+    private final StatusSignal<Double> rightTempCelsius = rightMotor.getDeviceTemp();
 
     private final VelocityVoltage leftVelocityCtrlReq =
             new VelocityVoltage(0).withEnableFOC(true).withSlot(0);
@@ -64,9 +66,11 @@ public class FlywheelsIOTalonFX implements FlywheelsIO {
                 leftVelocity,
                 leftAppliedVolts,
                 leftCurrent,
+                leftTempCelsius,
                 rightVelocity,
                 rightAppliedVolts,
-                rightCurrent);
+                rightCurrent,
+                rightTempCelsius);
 
         leftMotor.optimizeBusUtilization();
         rightMotor.optimizeBusUtilization();
@@ -78,17 +82,21 @@ public class FlywheelsIOTalonFX implements FlywheelsIO {
                 leftVelocity,
                 leftAppliedVolts,
                 leftCurrent,
+                leftTempCelsius,
                 rightVelocity,
                 rightAppliedVolts,
-                rightCurrent);
+                rightCurrent,
+                rightTempCelsius);
 
         inputs.leftVelocityRPM = leftVelocity.getValueAsDouble() * 60;
         inputs.leftAppliedVolts = leftAppliedVolts.getValueAsDouble();
         inputs.leftCurrentAmps = leftCurrent.getValueAsDouble();
+        inputs.leftTempCelsius = leftTempCelsius.getValueAsDouble();
 
         inputs.rightVelocityRPM = rightVelocity.getValueAsDouble() * 60;
         inputs.rightAppliedVolts = rightAppliedVolts.getValueAsDouble();
         inputs.rightCurrentAmps = rightCurrent.getValueAsDouble();
+        inputs.rightTempCelsius = rightTempCelsius.getValueAsDouble();
     }
 
     @Override

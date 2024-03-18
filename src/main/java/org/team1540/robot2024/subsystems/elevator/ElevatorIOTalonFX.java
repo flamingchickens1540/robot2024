@@ -22,6 +22,8 @@ public class ElevatorIOTalonFX implements ElevatorIO {
     private final StatusSignal<Double> leaderAppliedVolts = leader.getMotorVoltage();
     private final StatusSignal<Double> leaderCurrent = leader.getStatorCurrent();
     private final StatusSignal<Double> followerCurrent = follower.getStatorCurrent();
+    private final StatusSignal<Double> leaderTemp = leader.getDeviceTemp();
+    private final StatusSignal<Double> followerTemp = follower.getDeviceTemp();
     private final StatusSignal<ForwardLimitValue> topLimitStatus = leader.getForwardLimit();
     private final StatusSignal<ReverseLimitValue> bottomLimitStatus = leader.getReverseLimit();
     TalonFXConfiguration config;
@@ -43,6 +45,8 @@ public class ElevatorIOTalonFX implements ElevatorIO {
                 leaderAppliedVolts,
                 leaderCurrent,
                 followerCurrent,
+                leaderTemp,
+                followerTemp,
                 topLimitStatus,
                 bottomLimitStatus);
         leader.optimizeBusUtilization();
@@ -83,13 +87,16 @@ public class ElevatorIOTalonFX implements ElevatorIO {
                 leaderAppliedVolts,
                 leaderCurrent,
                 followerCurrent,
+                leaderTemp,
+                followerTemp,
                 topLimitStatus,
                 bottomLimitStatus);
 
-        inputs.positionMeters = leaderPosition.getValue();
-        inputs.velocityMPS = leaderVelocity.getValue();
-        inputs.voltage = leaderAppliedVolts.getValue();
-        inputs.current = new double[]{leaderCurrent.getValue(), followerCurrent.getValue()};
+        inputs.positionMeters = leaderPosition.getValueAsDouble();
+        inputs.velocityMPS = leaderVelocity.getValueAsDouble();
+        inputs.voltage = leaderAppliedVolts.getValueAsDouble();
+        inputs.current = new double[]{leaderCurrent.getValueAsDouble(), followerCurrent.getValueAsDouble()};
+        inputs.tempCelsius = new double[]{leaderTemp.getValueAsDouble(), followerCurrent.getValueAsDouble()};
         inputs.atUpperLimit = topLimitStatus.getValue() == ForwardLimitValue.ClosedToGround;
         inputs.atLowerLimit = bottomLimitStatus.getValue() == ReverseLimitValue.ClosedToGround;
     }

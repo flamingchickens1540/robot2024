@@ -31,6 +31,6 @@ public class TrampIOSparkMax implements TrampIO {
         inputs.positionRots = motorEncoder.getPosition();
         inputs.appliedVolts = motor.getAppliedOutput() * motor.getBusVoltage();
         inputs.currentAmps = motor.getOutputCurrent();
-
+        inputs.tempCelsius = motor.getMotorTemperature();
     }
 }

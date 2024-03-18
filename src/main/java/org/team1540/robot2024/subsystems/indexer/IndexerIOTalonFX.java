@@ -9,7 +9,6 @@ import com.ctre.phoenix6.controls.VoltageOut;
 import com.ctre.phoenix6.hardware.TalonFX;
 import com.ctre.phoenix6.signals.InvertedValue;
 import com.ctre.phoenix6.signals.NeutralModeValue;
-import com.revrobotics.CANSparkBase;
 import edu.wpi.first.wpilibj.DigitalInput;
 
 import static org.team1540.robot2024.Constants.Indexer.*;
@@ -24,11 +23,13 @@ public class IndexerIOTalonFX implements IndexerIO {
     private final StatusSignal<Double> feederVoltage = feederMotor.getMotorVoltage();
     private final StatusSignal<Double> feederCurrent = feederMotor.getSupplyCurrent();
     private final StatusSignal<Double> feederVelocity = feederMotor.getVelocity();
+    private final StatusSignal<Double> feederTemp = feederMotor.getDeviceTemp();
 
     private final VoltageOut intakeVoltageCtrlReq = new VoltageOut(0).withEnableFOC(true);
     private final StatusSignal<Double> intakeVoltage = intakeMotor.getMotorVoltage();
     private final StatusSignal<Double> intakeCurrent = intakeMotor.getSupplyCurrent();
     private final StatusSignal<Double> intakeVelocity = intakeMotor.getVelocity();
+    private final StatusSignal<Double> intakeTemp = intakeMotor.getDeviceTemp();
 
     public IndexerIOTalonFX() {
         TalonFXConfiguration intakeConfig = new TalonFXConfiguration();
@@ -53,6 +54,18 @@ public class IndexerIOTalonFX implements IndexerIO {
 
         intakeMotor.getConfigurator().apply(intakeConfig);
         feederMotor.getConfigurator().apply(feederConfig);
+
+        BaseStatusSignal.setUpdateFrequencyForAll(50,
+                feederVoltage,
+                feederCurrent,
+                feederVelocity,
+                feederTemp,
+                intakeVoltage,
+                intakeCurrent,
+                intakeVelocity,
+                intakeTemp);
+        intakeMotor.optimizeBusUtilization();
+        feederMotor.optimizeBusUtilization();
     }
 
     @Override
@@ -61,15 +74,19 @@ public class IndexerIOTalonFX implements IndexerIO {
                 intakeVoltage,
                 intakeCurrent,
                 intakeVelocity,
+                intakeTemp,
                 feederVoltage,
                 feederCurrent,
-                feederVelocity);
+                feederVelocity,
+                intakeTemp);
         inputs.intakeVoltage = intakeVoltage.getValueAsDouble();
         inputs.intakeCurrentAmps = intakeCurrent.getValueAsDouble();
         inputs.intakeVelocityRPM = intakeVelocity.getValueAsDouble();
+        inputs.intakeTempCelsius = intakeTemp.getValueAsDouble();
         inputs.feederVoltage = feederVoltage.getValueAsDouble();
         inputs.feederCurrentAmps = feederCurrent.getValueAsDouble();
         inputs.feederVelocityRPM = feederVelocity.getValueAsDouble();
+        inputs.feederTempCelsius = feederTemp.getValueAsDouble();
         inputs.feederVelocityError = inputs.feederVelocityRPM - feederVelocityCtrlReq.Velocity;
         inputs.noteInIntake = !indexerBeamBreak.get();
     }
