@@ -57,10 +57,16 @@ public class Robot extends LoggedRobot {
         // Set up data receivers & replay source
         switch (Constants.currentMode) {
             case REAL:
-                // Running on a real robot, log to a USB stick ("/U/logs")
-                Logger.registerURCL(URCL.startExternal());
+                // Running on a real robot, log to a USB stick
                 Logger.addDataReceiver(new WPILOGWriter("/media/sda1"));
                 Logger.addDataReceiver(new NT4Publisher());
+
+                // Start REV signal logger
+                Logger.registerURCL(URCL.startExternal());
+
+                // Start CTRE signal logger
+                SignalLogger.setPath("media/sda1/ctre-logs");
+                SignalLogger.start();
                 break;
 
             case SIM:

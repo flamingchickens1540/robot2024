@@ -21,7 +21,7 @@ public final class Constants {
     public static final boolean IS_COMPETITION_ROBOT = true;
     // Whether to pull PID constants from SmartDashboard
     private static final boolean tuningMode = true; // TODO: DO NOT SET TO TRUE FOR COMP
-    private static final Mode simMode = Mode.SIM; // Can also be Mode.REPLAY
+    private static final Mode simMode = Mode.REPLAY; // Can also be Mode.REPLAY
 
     public static final Mode currentMode = Robot.isReal() ? Mode.REAL : simMode;
     public static final class Leds {
