@@ -1,5 +1,6 @@
 package org.team1540.robot2024;
 
+import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.util.Color;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -11,12 +12,11 @@ import org.littletonrobotics.junction.networktables.NT4Publisher;
 import org.littletonrobotics.junction.wpilog.WPILOGReader;
 import org.littletonrobotics.junction.wpilog.WPILOGWriter;
 import org.team1540.robot2024.subsystems.led.*;
-import org.team1540.robot2024.subsystems.led.patterns.LedPatternFlame;
-import org.team1540.robot2024.subsystems.led.patterns.LedPatternRSLState;
-import org.team1540.robot2024.subsystems.led.patterns.LedPatternRainbow;
-import org.team1540.robot2024.subsystems.led.patterns.SimpleLedPattern;
+import org.team1540.robot2024.subsystems.led.patterns.*;
 import org.team1540.robot2024.util.LoggedTunableNumber;
 import org.team1540.robot2024.util.MechanismVisualiser;
+import org.team1540.robot2024.util.auto.AutoManager;
+import org.team1540.robot2024.util.vision.AprilTagsCrescendo;
 
 /**
  * The VM is configured to automatically run this class, and to call the functions corresponding to
@@ -27,10 +27,7 @@ import org.team1540.robot2024.util.MechanismVisualiser;
 public class Robot extends LoggedRobot {
     private Command autonomousCommand;
     private RobotContainer robotContainer;
-
-    LoggedTunableNumber led_r = new LoggedTunableNumber("led/r", 0);
-    LoggedTunableNumber led_g = new LoggedTunableNumber("led/g", 0);
-    LoggedTunableNumber led_b = new LoggedTunableNumber("led/b", 0);
+    private LedPattern flamePattern = new LedPatternFlame(40);
 
     /**
      * This function is run when the robot is first started up and should be used for any
@@ -39,6 +36,7 @@ public class Robot extends LoggedRobot {
     @Override
     public void robotInit() {
         // Record metadata
+        Logger.recordMetadata("IsCompBot", String.valueOf(Constants.IS_COMPETITION_ROBOT));
         Logger.recordMetadata("ProjectName", BuildConstants.MAVEN_NAME);
         Logger.recordMetadata("BuildDate", BuildConstants.BUILD_DATE);
         Logger.recordMetadata("GitSHA", BuildConstants.GIT_SHA);
@@ -85,9 +83,13 @@ public class Robot extends LoggedRobot {
         Logger.start();
 
         DriverStation.silenceJoystickConnectionWarning(true);
+
         // Instantiate our RobotContainer. This will perform all our button bindings,
         // and put our autonomous chooser on the dashboard.
         robotContainer = new RobotContainer();
+
+        robotContainer.shooter.setPivotBrakeMode(false);
+        AprilTagsCrescendo.getInstance().getTag(1);
     }
 
     /**
@@ -114,6 +116,9 @@ public class Robot extends LoggedRobot {
     @Override
     public void disabledInit() {
 //        robotContainer.elevator.setBrakeMode(false);
+        robotContainer.shooter.setPivotBrakeMode(false);
+        robotContainer.drivetrain.unblockTags();
+        robotContainer.shooter.setPivotPosition(new Rotation2d());
         robotContainer.leds.setPattern(Leds.Zone.ELEVATOR_BACK, new LedPatternRainbow(1));
     }
 
@@ -122,6 +127,13 @@ public class Robot extends LoggedRobot {
      */
     @Override
     public void disabledPeriodic() {
+        AutoManager.getInstance().updateSelected();
+    }
+
+    public void enabledInit() {
+//        robotContainer.leds.setPattern(Leds.Zone.ELEVATOR_BACK,flamePattern);
+        robotContainer.elevator.setBrakeMode(true);
+        robotContainer.shooter.setPivotBrakeMode(true);
     }
 
     /**
@@ -129,7 +141,9 @@ public class Robot extends LoggedRobot {
      */
     @Override
     public void autonomousInit() {
-        robotContainer.leds.setPattern(Leds.Zone.ELEVATOR_BACK,LedPatternRSLState.matchingColors());
+        enabledInit();
+//        robotContainer.leds.setPatternAll(LedPatternFlame::new, Leds.PatternCriticality.HIGH);
+        robotContainer.drivetrain.blockTags();
         autonomousCommand = robotContainer.getAutonomousCommand();
         // schedule the autonomous command (example)
         if (autonomousCommand != null) {
@@ -149,15 +163,10 @@ public class Robot extends LoggedRobot {
      */
     @Override
     public void teleopInit() {
-        // This makes sure that the autonomous stops running when
-        // teleop starts running. If you want the autonomous to
-        // continue until interrupted by another command, remove
-        // this line or comment it out.
+        enabledInit();
+//        robotContainer.leds.setPatternAll(() -> new LedPatternRainbow(2), Leds.PatternCriticality.HIGH);
+        robotContainer.drivetrain.zeroFieldOrientation();// TODO: remove this once odometry / startup zero is good
 
-        // TODO: 2/16/2024 add enabledInit()
-        robotContainer.drivetrain.zeroFieldOrientation();
-        robotContainer.elevator.setBrakeMode(true);
-        robotContainer.leds.setPattern(Leds.Zone.ELEVATOR_BACK, LedPatternRSLState.matchingColors());
         if (autonomousCommand != null) {
             autonomousCommand.cancel();
         }
@@ -175,7 +184,7 @@ public class Robot extends LoggedRobot {
      */
     @Override
     public void testInit() {
-        robotContainer.leds.setPattern(Leds.Zone.ELEVATOR_BACK,new LedPatternRainbow(1));
+        robotContainer.leds.setPattern(Leds.Zone.ELEVATOR_BACK,new LedPatternTuneColor());
         // Cancels all running commands at the start of test mode.
         CommandScheduler.getInstance().cancelAll();
     }
@@ -185,7 +194,6 @@ public class Robot extends LoggedRobot {
      */
     @Override
     public void testPeriodic() {
-        robotContainer.leds.setPattern(Leds.Zone.ELEVATOR_BACK,SimpleLedPattern.solid(new Color(led_r.get(), led_g.get(), led_b.get())));
     }
 
     /**

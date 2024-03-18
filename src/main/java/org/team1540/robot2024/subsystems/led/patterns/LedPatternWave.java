@@ -10,9 +10,9 @@ public class LedPatternWave extends LedPattern {
     private int location = 0;
     private int ticker = 0;
 
-    public LedPatternWave(Color color) {
+    public LedPatternWave(int hue) {
         super(true);
-        this.hue = getHue(color);
+        this.hue = hue;
     }
 
     @Override

@@ -1,6 +1,7 @@
 package org.team1540.robot2024.subsystems.led.patterns;
 
 
+import edu.wpi.first.wpilibj.DriverStation;
 import org.team1540.robot2024.subsystems.led.ZonedAddressableLEDBuffer;
 
 import java.awt.*;
@@ -16,18 +17,21 @@ public class LedPatternFlame extends LedPattern {
     private int[] temperatures;
 
 
-    public LedPatternFlame(int cooling) {
+    public LedPatternFlame(int cooling, int size) {
         super(true);
         this.cooling = cooling;
+        this.temperatures = new int[size];
     }
 
-    public LedPatternFlame() {
-        this(62);
+    public LedPatternFlame(int size) {
+        this(62, size);
     }
 
     @Override
     public void setLength(int length) {
-        this.temperatures = new int[length];
+        if (length != this.temperatures.length) {
+            DriverStation.reportWarning("Attempted to change led pattern length", false);
+        }
     }
 
     @Override

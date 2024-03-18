@@ -7,6 +7,8 @@ import edu.wpi.first.wpilibj.RobotState;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.FunctionalCommand;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import org.littletonrobotics.junction.AutoLog;
+import org.littletonrobotics.junction.AutoLogOutput;
 import org.littletonrobotics.junction.Logger;
 import org.team1540.robot2024.Constants;
 import org.team1540.robot2024.util.LoggedTunableNumber;
@@ -28,6 +30,7 @@ public class Shooter extends SubsystemBase {
     private final AverageFilter leftSpeedFilter = new AverageFilter(20); // Units: RPM
     private final AverageFilter rightSpeedFilter = new AverageFilter(20); // Units: RPM
     private final AverageFilter pivotPositionFilter = new AverageFilter(10); // Units: rotations
+
 
     private double leftFlywheelSetpointRPM;
     private double rightFlywheelSetpointRPM;
@@ -54,8 +57,8 @@ public class Shooter extends SubsystemBase {
         if (Constants.currentMode != Constants.Mode.REAL) {
             DriverStation.reportWarning("Using real shooter on simulated robot", false);
         }
-//        return new Shooter(new ShooterPivotIOTalonFX(), new FlywheelsIOTalonFX());
-        return new Shooter(new ShooterPivotIO() {}, new FlywheelsIOTalonFX());
+        return new Shooter(new ShooterPivotIOTalonFX(), new FlywheelsIOTalonFX());
+//        return new Shooter(new ShooterPivotIO() {}, new FlywheelsIOTalonFX());
     }
 
     public static Shooter createSim() {
@@ -98,7 +101,8 @@ public class Shooter extends SubsystemBase {
         leftSpeedFilter.add(getLeftFlywheelSpeed());
         rightSpeedFilter.add(getRightFlywheelSpeed());
         pivotPositionFilter.add(getPivotPosition().getRotations());
-        Logger.recordOutput("Shooter/Pivot/Setpoint", pivotSetpoint.getDegrees());
+        Logger.recordOutput("Shooter/Pivot/Setpoint", pivotSetpoint);
+        Logger.recordOutput("Shooter/Pivot/Error", pivotSetpoint.getDegrees() - pivotInputs.position.getDegrees());
     }
 
     /**
@@ -141,6 +145,13 @@ public class Shooter extends SubsystemBase {
                 )
         );
         pivotPositionFilter.clear();
+        pivotIO.setPosition(pivotSetpoint);
+    }
+    /**
+     * Sets the position of the pivot, using parallel to the floor as 0
+     */
+    public void holdPivotPosition() {
+//        pivotPositionFilter.clear();
         pivotIO.setPosition(pivotSetpoint);
     }
 
@@ -229,5 +240,19 @@ public class Shooter extends SubsystemBase {
                 () -> areFlywheelsSpunUp() && isPivotAtSetpoint(),
                 this
         );
+    }
+
+    @AutoLogOutput
+    public double getLeftFlywheelSetpointRPM() {
+        return leftFlywheelSetpointRPM;
+    }
+
+    @AutoLogOutput
+    public double getRightFlywheelSetpointRPM() {
+        return rightFlywheelSetpointRPM;
+    }
+
+    public void zeroPivot() {
+        pivotIO.setEncoderPosition(0);
     }
 }

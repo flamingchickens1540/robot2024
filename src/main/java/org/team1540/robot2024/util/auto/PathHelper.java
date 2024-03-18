@@ -46,8 +46,7 @@ public class PathHelper {
         this.isResetting = shouldReset;
         this.canFlip = canFlip;
         this.path = isChoreo ? PathPlannerPath.fromChoreoTrajectory(pathname) : PathPlannerPath.fromPathFile(pathname);
-        Rotation2d rotation = path.getPoint(0).rotationTarget == null ? new Rotation2d() : path.getPoint(0).rotationTarget.getTarget();
-        this.initialPose = new Pose2d(path.getPoint(0).position, rotation);
+        this.initialPose = path.getPreviewStartingHolonomicPose();
     }
 
     public boolean getIsResetting() {
@@ -55,7 +54,15 @@ public class PathHelper {
     }
 
     public Pose2d getInitialPose() {
-        return initialPose;
+        BooleanSupplier shouldFlip = () -> DriverStation.getAlliance().orElse(null) == DriverStation.Alliance.Red;
+//        System.out.println(DriverStation.getAlliance().orElse(null) + " " + shouldFlip.getAsBoolean());
+        return shouldFlip.getAsBoolean() ? GeometryUtil.flipFieldPose(initialPose) : initialPose;
+    }
+
+    public Pose2d getFinalPose(){
+        BooleanSupplier shouldFlip = () -> DriverStation.getAlliance().orElse(null) == DriverStation.Alliance.Red;
+        Pose2d endPose = path.getPathPoses().get(path.getPathPoses().size()-1);
+        return shouldFlip.getAsBoolean() ? GeometryUtil.flipFieldPose(endPose) : endPose;
     }
 
     public PathPlannerPath getPath() {
@@ -69,8 +76,18 @@ public class PathHelper {
                 AutoBuilder.pathfindThenFollowPath(path, Constants.Auto.PATH_CONSTRAINTS),
                 AutoBuilder.followPath(path),
                 () -> drivetrain.getPose().getTranslation().getDistance((startingPose.get()).getTranslation()) > 1 && shouldRealign); //TODO tune this distance
+        command.addRequirements(drivetrain); //FIXME COuld cause problems if we did things wrong but it shouldnt.
         Command resetCommand = new InstantCommand(() -> drivetrain.setPose(startingPose.get()));
-        return isResetting ? resetCommand.andThen(command) : command;
+        return (isResetting ? resetCommand.andThen(command) : command);
+    }
+
+    public Command resetToInitialPose(Drivetrain drivetrain){
+        BooleanSupplier shouldFlip = () -> DriverStation.getAlliance().orElse(null) == DriverStation.Alliance.Red;
+        Supplier<Pose2d> startingPose = () -> shouldFlip.getAsBoolean() ? GeometryUtil.flipFieldPose(initialPose) : initialPose;
+        return new ConditionalCommand(
+                AutoBuilder.pathfindToPose(startingPose.get(), Constants.Auto.PATH_CONSTRAINTS),
+                new InstantCommand(),
+                () -> drivetrain.getPose().getTranslation().getDistance((startingPose.get()).getTranslation()) > 1);
     }
 
     public Command getCommand(Drivetrain drivetrain) {

@@ -1,57 +1,63 @@
 package org.team1540.robot2024.subsystems.vision;
 
-import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Pose3d;
 import edu.wpi.first.math.geometry.Rotation3d;
+import edu.wpi.first.networktables.NetworkTable;
+import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.wpilibj.Timer;
-import org.team1540.robot2024.util.vision.LimelightHelpers;
 
 public class AprilTagVisionIOLimelight implements AprilTagVisionIO {
     private final String name;
+    private final NetworkTable table;
 
     public AprilTagVisionIOLimelight(String name, Pose3d cameraOffsetMeters) {
         this.name = name;
+        this.table = NetworkTableInstance.getDefault().getTable(name);
+        table.getEntry("camMode").setNumber(0);
+        table.getEntry("ledMode").setNumber(0);
         setPoseOffset(cameraOffsetMeters);
     }
 
     @Override
     public void updateInputs(AprilTagVisionIOInputs inputs) {
-        LimelightHelpers.Results results = LimelightHelpers.getLatestResults(name).targetingResults;
-        LimelightHelpers.LimelightTarget_Fiducial[] fiducialTargets = results.targets_Fiducials;
-
+        double[] botPose = table.getEntry("botpose_wpiblue").getDoubleArray(new double[6]);
         inputs.estimatedPoseMeters = new Pose3d(
-                results.botpose_wpiblue[0],
-                results.botpose_wpiblue[1],
-                results.botpose_wpiblue[2],
+                botPose[0],
+                botPose[1],
+                botPose[2],
                 new Rotation3d(
-                        Math.toRadians(results.botpose_wpiblue[3]),
-                        Math.toRadians(results.botpose_wpiblue[4]),
-                        Math.toRadians(results.botpose_wpiblue[5])
-                )
-        ).toPose2d();
+                        Math.toRadians(botPose[3]),
+                        Math.toRadians(botPose[4]),
+                        Math.toRadians(botPose[5])));
 
-        inputs.seenTagIDs = new int[fiducialTargets.length];
-        for (int i = 0; i < fiducialTargets.length; i++)
-            inputs.seenTagIDs[i] = (int) fiducialTargets[i].fiducialID; // fiducial tag ids had better be ints
+        inputs.hasTargets = table.getEntry("tv").getNumber(0).intValue() == 1;
+        inputs.primaryTagID = inputs.hasTargets ? table.getEntry("tid").getNumber(0).intValue() : -1;
+        double[] tagPose = table.getEntry("targetpose_robotspace").getDoubleArray(new double[6]);
+        inputs.primaryTagPoseMeters = inputs.hasTargets
+                ? new Pose3d(
+                        tagPose[0],
+                        tagPose[1],
+                        tagPose[2],
+                        new Rotation3d(
+                                Math.toRadians(tagPose[3]),
+                                Math.toRadians(tagPose[4]),
+                                Math.toRadians(tagPose[5])))
+                : new Pose3d();
 
-        inputs.tagPosesMeters = new Pose2d[fiducialTargets.length];
-        for (int i = 0; i < fiducialTargets.length; i++)
-            inputs.tagPosesMeters[i] = fiducialTargets[i].getTargetPose_RobotSpace2D();
-
-        inputs.lastMeasurementTimestampSecs =
-                Timer.getFPGATimestamp() - (results.latency_capture + results.latency_pipeline) / 1000.0;
+        inputs.lastMeasurementTimestampSecs = Timer.getFPGATimestamp()
+                - (table.getEntry("cl").getDouble(0) + table.getEntry("tl").getDouble(0)) / 1000.0;
     }
 
     @Override
     public void setPoseOffset(Pose3d poseOffsetMeters) {
-        LimelightHelpers.setCameraPose_RobotSpace(
-                name,
+        table.getEntry("camerapose_robotspace_set").setDoubleArray(new double[]{
                 poseOffsetMeters.getX(),
                 poseOffsetMeters.getY(),
                 poseOffsetMeters.getZ(),
                 Math.toDegrees(poseOffsetMeters.getRotation().getX()),
                 Math.toDegrees(poseOffsetMeters.getRotation().getY()),
-                Math.toDegrees(poseOffsetMeters.getRotation().getZ()));
+                Math.toDegrees(poseOffsetMeters.getRotation().getZ())
+        });
     }
 
     @Override

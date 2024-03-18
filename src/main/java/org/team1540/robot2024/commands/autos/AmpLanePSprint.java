@@ -19,6 +19,6 @@ public class AmpLanePSprint extends AutoCommand {
                 getPath(0).getCommand(drivetrain),
                 new ShootSequence(shooter, indexer),
                 getPath(1).getCommand(drivetrain)
-                );
+        );
     }
 }

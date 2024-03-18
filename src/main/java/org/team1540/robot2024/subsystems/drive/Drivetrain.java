@@ -3,6 +3,7 @@ package org.team1540.robot2024.subsystems.drive;
 import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.pathfinding.Pathfinding;
 import com.pathplanner.lib.util.HolonomicPathFollowerConfig;
+import com.pathplanner.lib.util.PIDConstants;
 import com.pathplanner.lib.util.PathPlannerLogging;
 import com.pathplanner.lib.util.ReplanningConfig;
 import edu.wpi.first.math.VecBuilder;
@@ -16,6 +17,9 @@ import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj.RobotController;
+import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import org.littletonrobotics.junction.AutoLogOutput;
 import org.littletonrobotics.junction.Logger;
@@ -24,6 +28,9 @@ import org.team1540.robot2024.Constants;
 import org.team1540.robot2024.util.PhoenixTimeSyncSignalRefresher;
 import org.team1540.robot2024.util.swerve.SwerveFactory;
 import org.team1540.robot2024.util.vision.TimestampedVisionPose;
+import org.team1540.robot2024.util.vision.VisionPoseAcceptor;
+
+import java.util.function.Supplier;
 
 import static org.team1540.robot2024.Constants.Drivetrain.*;
 
@@ -38,15 +45,19 @@ public class Drivetrain extends SubsystemBase {
     private boolean forceModuleAngleChange = false;
 
     private final SwerveDrivePoseEstimator poseEstimator;
+    private final SwerveDrivePoseEstimator visionPoseEstimator;
+    private final VisionPoseAcceptor poseAcceptor;
 
     private static boolean hasInstance = false;
+    private boolean blockTags = false;
 
     private Drivetrain(
             GyroIO gyroIO,
             ModuleIO flModuleIO,
             ModuleIO frModuleIO,
             ModuleIO blModuleIO,
-            ModuleIO brModuleIO) {
+            ModuleIO brModuleIO, Supplier<Double> elevatorVelocitySupplier) {
+
         if (hasInstance) throw new IllegalStateException("Instance of drivetrain already exists");
         hasInstance = true;
 
@@ -65,13 +76,24 @@ public class Drivetrain extends SubsystemBase {
                 VecBuilder.fill(0.1, 0.1, 0.1),
                 VecBuilder.fill(0.5, 0.5, 5.0)); // Trust the gyro more than the AprilTags
 
+        visionPoseEstimator = new SwerveDrivePoseEstimator(
+                kinematics,
+                rawGyroRotation,
+                getModulePositions(),
+                new Pose2d(),
+                // TODO: tune std devs (scale vision by distance?)
+                VecBuilder.fill(0.1, 0.1, 0.1),
+                VecBuilder.fill(0.5, 0.5, 5.0)); // Trust the gyro more than the AprilTags
+
+        this.poseAcceptor = new VisionPoseAcceptor(this::getChassisSpeeds, elevatorVelocitySupplier);
+
         // Configure AutoBuilder for PathPlanner
         AutoBuilder.configureHolonomic(
                 this::getPose,
                 this::setPose,
                 () -> kinematics.toChassisSpeeds(getModuleStates()),
                 this::runVelocity,
-                new HolonomicPathFollowerConfig(MAX_LINEAR_SPEED, DRIVE_BASE_RADIUS, new ReplanningConfig()),
+                new HolonomicPathFollowerConfig(new PIDConstants(5.0, 0.0, 0.0),new PIDConstants(7.0, 0.0, 0.0),MAX_LINEAR_SPEED, DRIVE_BASE_RADIUS, new ReplanningConfig()),
                 () -> DriverStation.getAlliance().isPresent() && DriverStation.getAlliance().get() == DriverStation.Alliance.Red,
                 this);
         Pathfinding.setPathfinder(new LocalADStarAK());
@@ -81,7 +103,7 @@ public class Drivetrain extends SubsystemBase {
                 (targetPose) -> Logger.recordOutput("Pathplanner/TargetPosition", targetPose));
     }
 
-    public static Drivetrain createReal(PhoenixTimeSyncSignalRefresher odometrySignalRefresher) {
+    public static Drivetrain createReal(PhoenixTimeSyncSignalRefresher odometrySignalRefresher, Supplier<Double> elevatorVelocitySupplier) {
         if (Constants.currentMode != Constants.Mode.REAL) {
             DriverStation.reportWarning("Using real drivetrain on simulated robot", false);
         }
@@ -90,10 +112,11 @@ public class Drivetrain extends SubsystemBase {
                 new ModuleIOTalonFX(SwerveFactory.getModuleMotors(Constants.SwerveConfig.FRONT_LEFT, SwerveFactory.SwerveCorner.FRONT_LEFT), odometrySignalRefresher),
                 new ModuleIOTalonFX(SwerveFactory.getModuleMotors(Constants.SwerveConfig.FRONT_RIGHT, SwerveFactory.SwerveCorner.FRONT_RIGHT), odometrySignalRefresher),
                 new ModuleIOTalonFX(SwerveFactory.getModuleMotors(Constants.SwerveConfig.BACK_LEFT, SwerveFactory.SwerveCorner.BACK_LEFT), odometrySignalRefresher),
-                new ModuleIOTalonFX(SwerveFactory.getModuleMotors(Constants.SwerveConfig.BACK_RIGHT, SwerveFactory.SwerveCorner.BACK_RIGHT), odometrySignalRefresher));
+                new ModuleIOTalonFX(SwerveFactory.getModuleMotors(Constants.SwerveConfig.BACK_RIGHT, SwerveFactory.SwerveCorner.BACK_RIGHT), odometrySignalRefresher),
+                elevatorVelocitySupplier);
     }
 
-    public static Drivetrain createSim() {
+    public static Drivetrain createSim(Supplier<Double> elevatorVelocitySupplier) {
         if (Constants.currentMode == Constants.Mode.REAL) {
             DriverStation.reportWarning("Using simulated drivetrain on real robot", false);
         }
@@ -102,8 +125,10 @@ public class Drivetrain extends SubsystemBase {
                 new ModuleIOSim(),
                 new ModuleIOSim(),
                 new ModuleIOSim(),
-                new ModuleIOSim());
+                new ModuleIOSim(),
+                elevatorVelocitySupplier);
     }
+
 
     public static Drivetrain createDummy() {
         if (Constants.currentMode == Constants.Mode.REAL) {
@@ -114,13 +139,15 @@ public class Drivetrain extends SubsystemBase {
                 new ModuleIO() {},
                 new ModuleIO() {},
                 new ModuleIO() {},
-                new ModuleIO() {});
+                new ModuleIO() {},
+                 () -> 0.0
+                );
     }
 
     @Override
     public void periodic() {
         gyroIO.updateInputs(gyroInputs);
-        Logger.processInputs("Drivetrain/Gyro", gyroInputs);
+
         for (Module module : modules) {
             module.periodic();
         }
@@ -134,6 +161,7 @@ public class Drivetrain extends SubsystemBase {
             Logger.recordOutput("SwerveStates/SetpointsOptimized", new SwerveModuleState[]{});
         }
 
+
         // Calculate module deltas
         SwerveModulePosition[] wheelDeltas = new SwerveModulePosition[4];
         for (int i = 0; i < 4; i++) {
@@ -146,6 +174,8 @@ public class Drivetrain extends SubsystemBase {
                         : rawGyroRotation.plus(Rotation2d.fromRadians(kinematics.toTwist2d(wheelDeltas).dtheta));
         // Update odometry
         poseEstimator.update(rawGyroRotation, getModulePositions());
+        visionPoseEstimator.update(rawGyroRotation, getModulePositions());
+
     }
 
     /**
@@ -199,6 +229,13 @@ public class Drivetrain extends SubsystemBase {
     public void stop() {
         runVelocity(new ChassisSpeeds());
     }
+
+    public void setBrakeMode(boolean enabled) {
+        for (Module module : modules) {
+            module.setBrakeMode(enabled);
+        }
+    }
+
 
     /**
      * Stops the drive and turns the modules to an X arrangement to resist movement. The modules will
@@ -259,6 +296,11 @@ public class Drivetrain extends SubsystemBase {
         return poseEstimator.getEstimatedPosition();
     }
 
+    @AutoLogOutput(key = "Odometry/RobotVision")
+    private Pose2d getPoseVision() {
+        return visionPoseEstimator.getEstimatedPosition();
+    }
+
     /**
      * Returns the current odometry rotation.
      */
@@ -281,10 +323,33 @@ public class Drivetrain extends SubsystemBase {
      */
     public void setPose(Pose2d pose) {
         poseEstimator.resetPosition(rawGyroRotation, getModulePositions(), pose);
+        visionPoseEstimator.resetPosition(rawGyroRotation, getModulePositions(), pose);
     }
 
     public void addVisionMeasurement(TimestampedVisionPose visionPose) {
-        poseEstimator.addVisionMeasurement(visionPose.poseMeters, visionPose.timestampSecs);
+        boolean shouldAccept = poseAcceptor.shouldAcceptVision(visionPose);
+        if (shouldAccept) {
+            visionPoseEstimator.addVisionMeasurement(visionPose.poseMeters, visionPose.timestampSecs);
+            if (!blockTags) {
+                poseEstimator.addVisionMeasurement(visionPose.poseMeters, visionPose.timestampSecs);
+            }
+        }
+    }
+
+    public void blockTags() {
+        blockTags = true;
+    }
+
+    public void unblockTags() {
+        blockTags = false;
+    }
+
+    public void copyVisionPose() {
+        poseEstimator.resetPosition(rawGyroRotation, getModulePositions(), visionPoseEstimator.getEstimatedPosition());
+    }
+
+    public Command commandCopyVisionPose() {
+        return Commands.runOnce(this::copyVisionPose);
     }
 
     public SwerveModulePosition[] getModulePositions() {
@@ -320,5 +385,9 @@ public class Drivetrain extends SubsystemBase {
                 new Translation2d(-TRACK_WIDTH_X / 2.0, TRACK_WIDTH_Y / 2.0),
                 new Translation2d(-TRACK_WIDTH_X / 2.0, -TRACK_WIDTH_Y / 2.0)
         };
+    }
+
+    public Command commandStop() {
+        return Commands.runOnce(this::stop);
     }
 }

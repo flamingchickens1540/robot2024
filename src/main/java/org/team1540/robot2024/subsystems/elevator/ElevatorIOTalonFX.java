@@ -24,10 +24,11 @@ public class ElevatorIOTalonFX implements ElevatorIO {
     private final StatusSignal<Double> followerCurrent = follower.getStatorCurrent();
     private final StatusSignal<ForwardLimitValue> topLimitStatus = leader.getForwardLimit();
     private final StatusSignal<ReverseLimitValue> bottomLimitStatus = leader.getReverseLimit();
+    TalonFXConfiguration config;
 
 
     public ElevatorIOTalonFX() {
-        TalonFXConfiguration config = new TalonFXConfiguration();
+        config = new TalonFXConfiguration();
         config.CurrentLimits.SupplyCurrentLimitEnable = true;
         config.CurrentLimits.SupplyCurrentLimit = 40.0;
         config.CurrentLimits.SupplyCurrentThreshold = 60.0;
@@ -71,7 +72,6 @@ public class ElevatorIOTalonFX implements ElevatorIO {
         leader.getConfigurator().apply(config);
         config.MotorOutput.Inverted = InvertedValue.CounterClockwise_Positive;
         follower.getConfigurator().apply(config);
-
         follower.setControl(new Follower(leader.getDeviceID(), false));
     }
 

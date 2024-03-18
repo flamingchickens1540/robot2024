@@ -13,6 +13,13 @@ public class LedPatternRSLState extends LedPattern {
         this.b = b;
     }
 
+    public LedPatternRSLState(LedPattern a) {
+        this(a, SimpleLedPattern.solid(Color.kBlack));
+    }
+    public LedPatternRSLState(Color a) {
+        this(SimpleLedPattern.solid(a), SimpleLedPattern.solid(Color.kBlack));
+    }
+
     @Override
     public void apply(ZonedAddressableLEDBuffer buffer) {
         if (RobotController.getRSLState()) {
@@ -23,6 +30,6 @@ public class LedPatternRSLState extends LedPattern {
     }
 
     public static LedPattern matchingColors() {
-        return new LedPatternRSLState(SimpleLedPattern.solid(new Color(1, 0.1, 0)), SimpleLedPattern.solid(Color.kBlack));
+        return new LedPatternRSLState(new Color(1, 0.1, 0));
     }
 }
