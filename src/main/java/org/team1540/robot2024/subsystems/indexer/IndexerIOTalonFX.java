@@ -17,7 +17,7 @@ import static org.team1540.robot2024.Constants.Indexer.*;
 public class IndexerIOTalonFX implements IndexerIO {
     private final TalonFX intakeMotor = new TalonFX(INTAKE_ID);
     private final TalonFX feederMotor = new TalonFX(FEEDER_ID);
-    private final DigitalInput indexerBeamBreak = new DigitalInput(7);
+    private final DigitalInput indexerBeamBreak = new DigitalInput(BEAM_BREAK_ID);
 
     private final VoltageOut feederVoltageCtrlReq = new VoltageOut(0).withEnableFOC(true);
     private final VelocityVoltage feederVelocityCtrlReq = new VelocityVoltage(0).withEnableFOC(true);

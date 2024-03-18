@@ -18,7 +18,7 @@ import org.team1540.robot2024.util.shooter.ShooterSetpoint;
  * constants are needed, to reduce verbosity.
  */
 public final class Constants {
-    public static final boolean IS_COMPETITION_ROBOT = true; // Objects.equals(RobotController.getComments(), "comp");
+    public static final boolean IS_COMPETITION_ROBOT = true;
     // Whether to pull PID constants from SmartDashboard
     private static final boolean tuningMode = true; // TODO: DO NOT SET TO TRUE FOR COMP
     private static final Mode simMode = Mode.SIM; // Can also be Mode.REPLAY
@@ -48,7 +48,7 @@ public final class Constants {
     public static final double LOOP_PERIOD_SECS = 0.02;
 
     public static class SwerveConfig {
-        public static final String CAN_BUS  = IS_COMPETITION_ROBOT ? "swerve" : "swerve";
+        public static final String CAN_BUS  = "swerve";
         public static final double CAN_UPDATE_FREQUENCY_HZ = 200.0;
 
         public static final int FRONT_LEFT  = IS_COMPETITION_ROBOT ? 1 : 9;
@@ -92,7 +92,6 @@ public final class Constants {
         public static final int INTAKE_ID = 13;
         public static final int FEEDER_ID = 15;
 
-        // TODO: fix these constants
         public static final double FEEDER_KP = 0.5;
         public static final double FEEDER_KI = 0.1;
         public static final double FEEDER_KD = 0.001;
@@ -137,30 +136,26 @@ public final class Constants {
 
     public static class Shooter {
         public static class Flywheels {
-            // TODO: determine ids
             public static final int LEFT_ID = 12;
             public static final int RIGHT_ID = 11;
 
             public static final double GEAR_RATIO = 24.0 / 36.0;
             public static final double SIM_MOI = 4.08232288e-4;
 
-            // TODO: if it's tuned in simulation, it's tuned in real life
             public static final double KP = 0.3;
             public static final double KI = 0.2;
             public static final double KD = 0.0;
             public static final double KS = 0.26925;
-            public static final double KV = 0.07485; // TODO: this is what recalc says, may have to tune
+            public static final double KV = 0.07485;
 
             public static final double ERROR_TOLERANCE_RPM = 100;
         }
 
         public static class Pivot {
-            // TODO: determine ids
             public static final int MOTOR_ID = 9;
             public static final int CANCODER_ID = 10;
 
-            // TODO: figure this out
-            public static final double CANCODER_OFFSET_ROTS = -0.2502;
+
             // TODO: determine ratios
             public static final double CANCODER_TO_PIVOT = 28.0 / 15.0;
             public static final double MOTOR_TO_CANCODER = 56.0;
@@ -172,11 +167,9 @@ public final class Constants {
             public static final Rotation2d MAX_ANGLE = Rotation2d.fromRotations(0.14);
             public static final Rotation2d MIN_ANGLE = Rotation2d.fromRotations(0.01);
 
-            public static final Rotation2d REAL_ZEROED_ANGLE = Rotation2d.fromDegrees(8.5); //TODO Need this number
-
+            public static final Rotation2d REAL_ZEROED_ANGLE = Rotation2d.fromDegrees(8.5);
             public static final double PIVOT_HEIGHT = Units.inchesToMeters(10.5);
 
-            // TODO: tune pid
             public static final double KP = 400.0;
             public static final double KI = 0.0;
             public static final double KD = 20.0;
@@ -206,12 +199,12 @@ public final class Constants {
 
     public static class Elevator {
         public static final double CHAIN_HEIGHT_METERS = Units.inchesToMeters(28.25);
-        public static final double MINIMUM_HEIGHT = Units.inchesToMeters(-0.03);
+        public static final double MINIMUM_HEIGHT = Units.inchesToMeters(-0.01); //TODO: Does this make it angry?
         public static final double CLIMBING_HOOKS_MINIMUM_HEIGHT = Units.inchesToMeters(12.0);
         public static final double MAX_HEIGHT = MINIMUM_HEIGHT + Units.inchesToMeters(21.0); //TODO: Fix these constants to be more accurate
         public static final double CLIMBING_HOOKS_MAX_HEIGHT = CLIMBING_HOOKS_MINIMUM_HEIGHT + MAX_HEIGHT - MINIMUM_HEIGHT;
 
-        public static final double GEAR_RATIO = 11.571; //TODO: Get constants right sometime
+        public static final double GEAR_RATIO = 11.571;
         public static final int LEADER_ID = 7;
         public static final int FOLLOWER_ID = 8;
         public static final double KS = 0.03178;
@@ -246,7 +239,7 @@ public final class Constants {
             /**
              * At height for top of initial climb :D
              */
-            AMP(0.3); //TODO: Find these values :D
+            AMP(0.3);
 
             public final double heightMeters;
 
@@ -259,7 +252,6 @@ public final class Constants {
     public static class Tramp {
         public static final int BEAM_BREAK_CHANNEL = 9;
         public static final double GEAR_RATIO = 9.0;
-        public static final double TRAP_SCORING_TIME_SECONDS = 1.114; //TODO: Find these values :D
         public static final int MOTOR_ID = 17;
     }
 
