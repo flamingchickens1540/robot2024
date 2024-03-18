@@ -206,7 +206,7 @@ public final class Constants {
 
     public static class Elevator {
         public static final double CHAIN_HEIGHT_METERS = Units.inchesToMeters(28.25);
-        public static final double MINIMUM_HEIGHT = Units.inchesToMeters(0.0);
+        public static final double MINIMUM_HEIGHT = Units.inchesToMeters(-0.03);
         public static final double CLIMBING_HOOKS_MINIMUM_HEIGHT = Units.inchesToMeters(12.0);
         public static final double MAX_HEIGHT = MINIMUM_HEIGHT + Units.inchesToMeters(21.0); //TODO: Fix these constants to be more accurate
         public static final double CLIMBING_HOOKS_MAX_HEIGHT = CLIMBING_HOOKS_MINIMUM_HEIGHT + MAX_HEIGHT - MINIMUM_HEIGHT;
@@ -227,7 +227,7 @@ public final class Constants {
         public static final double SPROCKET_RADIUS_M = Units.inchesToMeters(1.751/2);
         public static final double SPROCKET_CIRCUMFERENCE_M = 2 * SPROCKET_RADIUS_M * Math.PI;
         public static final double MOTOR_ROTS_PER_METER = GEAR_RATIO / SPROCKET_CIRCUMFERENCE_M;
-        public static final double POS_ERR_TOLERANCE_METERS = 0.03;
+        public static final double POS_ERR_TOLERANCE_METERS = 0.01;
         public static final double SIM_CARRIAGE_MASS_KG = 1.55; //TODO: check this number :)
 
         public enum ElevatorState {
