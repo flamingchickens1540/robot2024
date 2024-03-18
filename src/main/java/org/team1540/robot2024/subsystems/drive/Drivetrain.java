@@ -1,5 +1,6 @@
 package org.team1540.robot2024.subsystems.drive;
 
+import com.ctre.phoenix6.CANBus;
 import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.pathfinding.Pathfinding;
 import com.pathplanner.lib.util.HolonomicPathFollowerConfig;
@@ -23,6 +24,7 @@ import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import org.littletonrobotics.junction.AutoLog;
 import org.littletonrobotics.junction.AutoLogOutput;
 import org.littletonrobotics.junction.Logger;
 import org.team1540.robot2024.util.auto.LocalADStarAK;
@@ -37,6 +39,7 @@ import java.util.Arrays;
 import java.util.function.Supplier;
 
 import static org.team1540.robot2024.Constants.Drivetrain.*;
+import static org.team1540.robot2024.Constants.SwerveConfig.CAN_BUS;
 
 public class Drivetrain extends SubsystemBase {
     private final GyroIO gyroIO;
@@ -155,6 +158,7 @@ public class Drivetrain extends SubsystemBase {
         for (Module module : modules) {
             module.periodic();
         }
+
 
         if (DriverStation.isDisabled()) {
             // Stop moving when disabled

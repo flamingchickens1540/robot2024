@@ -1,6 +1,5 @@
 package org.team1540.robot2024;
 
-import com.ctre.phoenix6.SignalLogger;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -14,6 +13,7 @@ import org.littletonrobotics.junction.wpilog.WPILOGWriter;
 import org.littletonrobotics.urcl.URCL;
 import org.team1540.robot2024.subsystems.led.Leds;
 import org.team1540.robot2024.subsystems.led.patterns.*;
+import org.team1540.robot2024.util.LoggedCanivoreStats;
 import org.team1540.robot2024.util.MechanismVisualiser;
 import org.team1540.robot2024.util.auto.AutoManager;
 import org.team1540.robot2024.util.vision.AprilTagsCrescendo;
@@ -59,6 +59,7 @@ public class Robot extends LoggedRobot {
             case REAL:
                 // Running on a real robot, log to a USB stick ("/U/logs")
                 Logger.registerURCL(URCL.startExternal());
+
                 Logger.addDataReceiver(new WPILOGWriter("/media/sda1"));
                 Logger.addDataReceiver(new NT4Publisher());
                 break;
@@ -105,9 +106,8 @@ public class Robot extends LoggedRobot {
         // This must be called from the robot's periodic block in order for anything in
         // the Command-based framework to work.
         CommandScheduler.getInstance().run();
-        if (Constants.currentMode == Constants.Mode.REAL) robotContainer.odometrySignalRefresher.periodic();
-
         // Update mechanism visualiser in sim
+        Logger.runEveryN(20, LoggedCanivoreStats::periodic);
         if (Robot.isSimulation()) MechanismVisualiser.periodic();
 //        robotContainer.leds.setPattern(Leds.Zone.ZONE1, SimpleLedPattern.alternating(Color.kBlueViolet, Color.kGreen));
     }
