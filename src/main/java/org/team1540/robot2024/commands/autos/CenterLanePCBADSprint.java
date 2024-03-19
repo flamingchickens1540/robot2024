@@ -26,10 +26,10 @@ public class CenterLanePCBADSprint extends AutoCommand {
                 Commands.parallel(
                         new AutoShootPrepare(drivetrain, shooter),
                         Commands.sequence(
-                                createSegmentSequence(drivetrain, indexer, 0),
-                                createSegmentSequence(drivetrain, indexer, 1),
-                                createSegmentSequence(drivetrain, indexer, 2),
-                                createSegmentSequence(drivetrain, indexer, 3)
+                                createSegmentSequence(drivetrain, shooter, indexer, 0),
+                                createSegmentSequence(drivetrain, shooter, indexer, 1),
+                                createSegmentSequence(drivetrain, shooter, indexer, 2),
+                                createSegmentSequence(drivetrain, shooter, indexer, 3)
                         )
                 ),
                 getPath(4).getCommand(drivetrain)

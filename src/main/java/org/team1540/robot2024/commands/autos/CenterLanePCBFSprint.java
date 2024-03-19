@@ -26,11 +26,11 @@ public class CenterLanePCBFSprint extends AutoCommand {
                 Commands.parallel(
                         new AutoShootPrepare(drivetrain, shooter),
                         Commands.sequence(
-                                createSegmentSequence(drivetrain, indexer, 0),
-                                createSegmentSequence(drivetrain, indexer, 1),
+                                createSegmentSequence(drivetrain, shooter, indexer, 0),
+                                createSegmentSequence(drivetrain, shooter, indexer, 1),
                                 getPath(2).getCommand(drivetrain),
                                 Commands.runOnce(drivetrain::copyVisionPose),
-                                createSegmentSequence(drivetrain, indexer, 3)
+                                createSegmentSequence(drivetrain, shooter, indexer, 3)
                         )
                 ),
                 getPath(4).getCommand(drivetrain)

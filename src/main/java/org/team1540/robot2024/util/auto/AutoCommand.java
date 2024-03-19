@@ -1,7 +1,6 @@
 package org.team1540.robot2024.util.auto;
 
 import edu.wpi.first.math.geometry.Pose2d;
-import edu.wpi.first.math.proto.Trajectory;
 import edu.wpi.first.wpilibj2.command.*;
 import org.team1540.robot2024.commands.drivetrain.DriveWithTargetingCommand;
 import org.team1540.robot2024.commands.indexer.IntakeAndFeed;
@@ -112,8 +111,8 @@ public class AutoCommand extends SequentialCommandGroup {
                 )
         );
     }
-    protected Command createSegmentSequence(Drivetrain drivetrain, Indexer indexer, int pathIndex){
-        return createSegmentSequence(drivetrain, null, indexer, pathIndex, false);
+    protected Command createSegmentSequence(Drivetrain drivetrain, Shooter shooter, Indexer indexer, int pathIndex){
+        return createSegmentSequence(drivetrain, shooter, indexer, pathIndex, false);
     }
 
     protected Command createCancoderSegmentSequence(Drivetrain drivetrain, Shooter shooter, Indexer indexer, int pathIndex) {

@@ -29,11 +29,11 @@ public class CenterLanePCBAFSprint extends AutoCommand {
                         Commands.sequence(
                                 createCancoderSegmentSequence(drivetrain, shooter, indexer, 0),
                                 drivetrain.commandCopyVisionPose(),
-                                createSegmentSequence(drivetrain, indexer, 1),
+                                createSegmentSequence(drivetrain, shooter, indexer, 1),
                                 drivetrain.commandCopyVisionPose(),
-                                createSegmentSequence(drivetrain, indexer, 2),
+                                createSegmentSequence(drivetrain, shooter, indexer, 2),
                                 drivetrain.commandCopyVisionPose(),
-                                createSegmentSequence(drivetrain, indexer, 3),
+                                createSegmentSequence(drivetrain, shooter, indexer, 3),
                                 drivetrain.commandCopyVisionPose()
                         )
                 ),
