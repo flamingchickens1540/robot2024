@@ -1,12 +1,8 @@
 package org.team1540.robot2024.util.shooter;
 
-import edu.wpi.first.math.InterpolatingMatrixTreeMap;
 import edu.wpi.first.math.Pair;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.interpolation.InterpolatingDoubleTreeMap;
-import edu.wpi.first.math.interpolation.InterpolatingTreeMap;
-import edu.wpi.first.math.interpolation.Interpolator;
-import edu.wpi.first.math.interpolation.InverseInterpolator;
 
 public class ShooterLerp {
     InterpolatingDoubleTreeMap angle = new InterpolatingDoubleTreeMap();
@@ -19,7 +15,8 @@ public class ShooterLerp {
         right.put(key, value.rightSetpoint);
     }
 
-    public ShooterLerp put(Pair<Double, ShooterSetpoint>... dataPoints){
+    @SafeVarargs
+    public final ShooterLerp put(Pair<Double, ShooterSetpoint>... dataPoints){
         for (Pair<Double, ShooterSetpoint> point : dataPoints) {
             put(point.getFirst(), point.getSecond());
         }
