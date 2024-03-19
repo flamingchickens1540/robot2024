@@ -27,7 +27,7 @@ public class TrampIOSparkMax implements TrampIO {
     @Override
     public void updateInputs(TrampIOInputs inputs) {
         inputs.noteInTramp = !(beamBreak.get()); //I think returns false when broken... Returns true when broken now.
-        inputs.velocityRPM = motorEncoder.getVelocity();
+        inputs.velocityRPS = motorEncoder.getVelocity();
         inputs.positionRots = motorEncoder.getPosition();
         inputs.appliedVolts = motor.getAppliedOutput() * motor.getBusVoltage();
         inputs.currentAmps = motor.getOutputCurrent();

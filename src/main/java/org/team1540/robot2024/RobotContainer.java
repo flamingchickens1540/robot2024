@@ -67,8 +67,7 @@ public class RobotContainer {
                     indexer = Indexer.createReal();
                     aprilTagVision = AprilTagVision.createReal(
                             drivetrain::addVisionMeasurement,
-                            elevator::getPosition,
-                            drivetrain::getVisionPose);
+                            elevator::getPosition);
                 } else {
                     elevator = Elevator.createDummy();
                     drivetrain = Drivetrain.createReal(odometrySignalRefresher, () -> 0.0);

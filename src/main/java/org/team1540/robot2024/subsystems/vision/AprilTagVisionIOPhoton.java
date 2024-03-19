@@ -1,6 +1,5 @@
 package org.team1540.robot2024.subsystems.vision;
 
-import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Pose3d;
 import edu.wpi.first.math.geometry.Transform3d;
 import org.photonvision.EstimatedRobotPose;
@@ -13,17 +12,15 @@ import org.team1540.robot2024.util.vision.AprilTagsCrescendo;
 
 import java.util.List;
 import java.util.Optional;
-import java.util.function.Supplier;
 
 public class AprilTagVisionIOPhoton implements AprilTagVisionIO {
     private final PhotonCamera camera;
     private final PhotonPoseEstimator photonEstimator;
-    private final Supplier<Pose2d> drivetrainPoseSupplier;
 
     private Transform3d cameraTransform;
     private Pose3d lastEstimatedPose;
 
-    public AprilTagVisionIOPhoton(String name, Pose3d cameraOffsetMeters, Supplier<Pose2d> drivetrainPoseSupplier) {
+    public AprilTagVisionIOPhoton(String name, Pose3d cameraOffsetMeters) {
         camera = new PhotonCamera(name);
         cameraTransform = new Transform3d(cameraOffsetMeters.getTranslation(), cameraOffsetMeters.getRotation());
         photonEstimator = new PhotonPoseEstimator(
@@ -33,12 +30,10 @@ public class AprilTagVisionIOPhoton implements AprilTagVisionIO {
                 cameraTransform);
         photonEstimator.setMultiTagFallbackStrategy(PhotonPoseEstimator.PoseStrategy.LOWEST_AMBIGUITY);
         lastEstimatedPose = new Pose3d();
-        this.drivetrainPoseSupplier = drivetrainPoseSupplier;
     }
 
     @Override
     public void updateInputs(AprilTagVisionIOInputs inputs) {
-//        photonEstimator.setReferencePose(drivetrainPoseSupplier.get());
         PhotonPipelineResult latestResult = camera.getLatestResult();
         List<PhotonTrackedTarget> targets = latestResult.getTargets();
         Optional<EstimatedRobotPose> estimatedPose = photonEstimator.update(latestResult);

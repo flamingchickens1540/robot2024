@@ -5,7 +5,6 @@ import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
-import edu.wpi.first.wpilibj2.command.button.Trigger;
 import org.littletonrobotics.junction.Logger;
 import org.team1540.robot2024.Constants;
 
@@ -47,9 +46,10 @@ public class Tramp extends SubsystemBase {
         isClosedLoop = false;
         io.setVoltage(12.0 * percentage);
     }
+
     public void setDistanceToGo(double distanceRots) {
         isClosedLoop = true;
-        positionalPID.setSetpoint(distanceRots*Constants.Tramp.GEAR_RATIO+inputs.positionRots);
+        positionalPID.setSetpoint(distanceRots * Constants.Tramp.GEAR_RATIO + inputs.positionRots);
     }
 
     public boolean isNoteStaged() {

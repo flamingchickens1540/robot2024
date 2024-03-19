@@ -77,7 +77,6 @@ public class Shooter extends SubsystemBase {
             DriverStation.reportWarning("Using real shooter on simulated robot", false);
         }
         return new Shooter(new ShooterPivotIOTalonFX(), new FlywheelsIOTalonFX());
-//        return new Shooter(new ShooterPivotIO() {}, new FlywheelsIOTalonFX());
     }
 
     public static Shooter createSim() {
@@ -261,12 +260,12 @@ public class Shooter extends SubsystemBase {
         );
     }
 
-    @AutoLogOutput
+    @AutoLogOutput(key = "Shooter/Flywheels/leftSetpointRPM")
     public double getLeftFlywheelSetpointRPM() {
         return leftFlywheelSetpointRPM;
     }
 
-    @AutoLogOutput
+    @AutoLogOutput(key = "Shooter/Flywheels/rightSetpointRPM")
     public double getRightFlywheelSetpointRPM() {
         return rightFlywheelSetpointRPM;
     }

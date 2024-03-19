@@ -88,7 +88,7 @@ public class Elevator extends SubsystemBase {
         io.setVoltage(0.0);
     }
 
-    @AutoLogOutput
+    @AutoLogOutput(key = "Elevator/setpoint")
     public double getSetpoint() {
         return setpointMeters;
     }

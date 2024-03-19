@@ -45,13 +45,12 @@ public class AprilTagVision extends SubsystemBase {
     }
 
     public static AprilTagVision createReal(Consumer<EstimatedVisionPose> visionPoseConsumer,
-                                            Supplier<Double> elevatorHeightSupplierMeters,
-                                            Supplier<Pose2d> drivetrainPoseSupplier) {
+                                            Supplier<Double> elevatorHeightSupplierMeters) {
         if (Constants.currentMode != Constants.Mode.REAL) {
             DriverStation.reportWarning("Using real vision on simulated robot", false);
         }
         return new AprilTagVision(
-                new AprilTagVisionIOPhoton(FRONT_CAMERA_NAME, FRONT_CAMERA_POSE, drivetrainPoseSupplier),
+                new AprilTagVisionIOPhoton(FRONT_CAMERA_NAME, FRONT_CAMERA_POSE),
                 new AprilTagVisionIOLimelight(REAR_CAMERA_NAME, REAR_CAMERA_POSE),
                 visionPoseConsumer,
                 elevatorHeightSupplierMeters);
@@ -108,14 +107,12 @@ public class AprilTagVision extends SubsystemBase {
 
         if (TAKE_SNAPSHOTS && DriverStation.isFMSAttached() && RobotState.isEnabled()) {
             Logger.runEveryN((int) (SNAPSHOT_PERIOD_SECS / Constants.LOOP_PERIOD_SECS),
-                    () -> {
-                        takeSnapshot(
-                                String.format("%s_%s%d_%d",
-                                        DriverStation.getEventName(),
-                                        DriverStation.getMatchType().toString(),
-                                        DriverStation.getMatchNumber(),
-                                        (int) Timer.getFPGATimestamp()));
-                    });
+                    () -> takeSnapshot(
+                            String.format("%s_%s%d_%d",
+                                    DriverStation.getEventName(),
+                                    DriverStation.getMatchType().toString(),
+                                    DriverStation.getMatchNumber(),
+                                    (int) Timer.getFPGATimestamp())));
         }
     }
 
