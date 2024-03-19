@@ -81,11 +81,11 @@ public class IndexerIOTalonFX implements IndexerIO {
                 intakeTemp);
         inputs.intakeVoltage = intakeVoltage.getValueAsDouble();
         inputs.intakeCurrentAmps = intakeCurrent.getValueAsDouble();
-        inputs.intakeVelocityRPS = intakeVelocity.getValueAsDouble();
+        inputs.intakeVelocityRPM = intakeVelocity.getValueAsDouble() * 60;
         inputs.intakeTempCelsius = intakeTemp.getValueAsDouble();
         inputs.feederVoltage = feederVoltage.getValueAsDouble();
         inputs.feederCurrentAmps = feederCurrent.getValueAsDouble();
-        inputs.feederVelocityRPS = feederVelocity.getValueAsDouble();
+        inputs.feederVelocityRPM = feederVelocity.getValueAsDouble() * 60;
         inputs.feederTempCelsius = feederTemp.getValueAsDouble();
         inputs.noteInIntake = !indexerBeamBreak.get();
     }
@@ -101,8 +101,8 @@ public class IndexerIOTalonFX implements IndexerIO {
     }
 
     @Override
-    public void setFeederVelocity(double velocity) {
-        feederMotor.setControl(feederVelocityCtrlReq.withVelocity(velocity));
+    public void setFeederVelocity(double velocityRPM) {
+        feederMotor.setControl(feederVelocityCtrlReq.withVelocity(velocityRPM / 60));
     }
 
     @Override

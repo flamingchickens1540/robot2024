@@ -37,11 +37,11 @@ public class IndexerIOSparkMax implements IndexerIO {
     public void updateInputs(IndexerIOInputs inputs) {
         inputs.intakeCurrentAmps = intakeMotor.getOutputCurrent();
         inputs.intakeVoltage = intakeMotor.getBusVoltage() * intakeMotor.getAppliedOutput();
-        inputs.intakeVelocityRPS = intakeEncoder.getVelocity();
+        inputs.intakeVelocityRPM = intakeEncoder.getVelocity();
         inputs.intakeTempCelsius = intakeMotor.getMotorTemperature();
         inputs.feederCurrentAmps = feederMotor.getOutputCurrent();
         inputs.feederVoltage = feederMotor.getBusVoltage() * feederMotor.getAppliedOutput();
-        inputs.feederVelocityRPS = feederEncoder.getVelocity();
+        inputs.feederVelocityRPM = feederEncoder.getVelocity();
         inputs.feederTempCelsius = feederMotor.getMotorTemperature();
         inputs.noteInIntake = !indexerBeamBreak.get();
     }
@@ -57,9 +57,9 @@ public class IndexerIOSparkMax implements IndexerIO {
     }
 
     @Override
-    public void setFeederVelocity(double velocity) {
+    public void setFeederVelocity(double velocityRPM) {
         feederPID.setReference(
-                velocity * FEEDER_GEAR_RATIO,
+                velocityRPM * FEEDER_GEAR_RATIO,
                 CANSparkBase.ControlType.kVelocity,
                 0,
                 FEEDER_KS,

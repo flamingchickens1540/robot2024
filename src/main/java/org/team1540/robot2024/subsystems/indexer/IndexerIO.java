@@ -8,11 +8,11 @@ public interface IndexerIO {
     class IndexerIOInputs {
         public double intakeVoltage = 0.0;
         public double intakeCurrentAmps = 0.01;
-        public double intakeVelocityRPS = 0.0;
+        public double intakeVelocityRPM = 0.0;
         public double intakeTempCelsius = 0.0;
         public double feederVoltage = 0.0;
         public double feederCurrentAmps = 0.0;
-        public double feederVelocityRPS = 0.0;
+        public double feederVelocityRPM = 0.0;
         public double feederTempCelsius = 0.0;
         public boolean noteInIntake = false;
     }
@@ -26,7 +26,7 @@ public interface IndexerIO {
 
     default void setFeederVoltage(double volts) {}
 
-    default void setFeederVelocity(double velocity) {}
+    default void setFeederVelocity(double velocityRPM) {}
 
     default void configureFeederPID(double p, double i, double d) {}
 

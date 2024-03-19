@@ -22,7 +22,7 @@ public class Indexer extends SubsystemBase {
     private final LoggedTunableNumber kI = new LoggedTunableNumber("Indexer/kI", FEEDER_KI);
     private final LoggedTunableNumber kD = new LoggedTunableNumber("Indexer/kD", FEEDER_KD);
 
-    private final double feederSetpointRPS = 0.0;
+    private double feederSetpointRPM = 0.0;
 
     private static boolean hasInstance = false;
 
@@ -71,8 +71,9 @@ public class Indexer extends SubsystemBase {
         return inputs.noteInIntake;
     }
 
-    public void setFeederVelocity(double setpointRPS) {
-        io.setFeederVelocity(setpointRPS);
+    public void setFeederVelocity(double setpointRPM) {
+        feederSetpointRPM = setpointRPM;
+        io.setFeederVelocity(setpointRPM);
     }
 
     public void setFeederPercent(double percent) {
@@ -96,14 +97,14 @@ public class Indexer extends SubsystemBase {
         io.setFeederVoltage(0);
     }
 
-    @AutoLogOutput(key = "Intake/Feeder/setpointRPS")
+    @AutoLogOutput(key = "Intake/Feeder/setpointRPM")
     public double getFeederVelocitySetpoint() {
-        return feederSetpointRPS;
+        return feederSetpointRPM;
     }
 
-    @AutoLogOutput(key = "Intake/Feeder/setpointRPS")
+    @AutoLogOutput(key = "Intake/Feeder/velocityErrorRPM")
     public double getFeederVelocityError() {
-        return inputs.feederVelocityRPS - getFeederVelocitySetpoint();
+        return inputs.feederVelocityRPM - getFeederVelocitySetpoint();
     }
 
     public Command feedToAmp() {

@@ -46,7 +46,7 @@ public class TrampIOTalonFX implements TrampIO {
     public void updateInputs(TrampIOInputs inputs) {
         BaseStatusSignal.refreshAll(position, velocity, appliedVoltage, current, temp);
         inputs.noteInTramp = !(beamBreak.get());
-        inputs.velocityRPS = velocity.getValueAsDouble();
+        inputs.velocityRPM = velocity.getValueAsDouble() * 60;
         inputs.positionRots = position.getValueAsDouble();
         inputs.appliedVolts = appliedVoltage.getValueAsDouble();
         inputs.currentAmps = current.getValueAsDouble();

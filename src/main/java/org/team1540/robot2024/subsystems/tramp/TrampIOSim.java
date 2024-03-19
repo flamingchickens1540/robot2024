@@ -15,7 +15,7 @@ public class TrampIOSim implements TrampIO {
     @Override
     public void updateInputs(TrampIOInputs inputs) {
         sim.update(Constants.LOOP_PERIOD_SECS);
-        inputs.velocityRPS = sim.getAngularVelocityRPM();
+        inputs.velocityRPM = sim.getAngularVelocityRPM();
         inputs.appliedVolts = appliedVolts;
         inputs.currentAmps = sim.getCurrentDrawAmps();
     }

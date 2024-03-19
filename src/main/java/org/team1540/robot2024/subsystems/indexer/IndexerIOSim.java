@@ -33,10 +33,10 @@ public class IndexerIOSim implements IndexerIO {
         feederSim.update(Constants.LOOP_PERIOD_SECS);
         inputs.intakeCurrentAmps = intakeSim.getCurrentDrawAmps();
         inputs.intakeVoltage = intakeVoltage;
-        inputs.intakeVelocityRPS = intakeSim.getAngularVelocityRPM();
+        inputs.intakeVelocityRPM = intakeSim.getAngularVelocityRPM();
         inputs.feederCurrentAmps = feederSim.getCurrentDrawAmps();
         inputs.feederVoltage = feederVoltage;
-        inputs.feederVelocityRPS = feederSim.getAngularVelocityRPM();
+        inputs.feederVelocityRPM = feederSim.getAngularVelocityRPM();
     }
 
     @Override
@@ -56,10 +56,10 @@ public class IndexerIOSim implements IndexerIO {
     }
 
     @Override
-    public void setFeederVelocity(double velocity) {
+    public void setFeederVelocity(double velocityRPM) {
         isClosedLoop = true;
         feederSimPID.reset();
-        feederSetpointRPS = velocity / 60;
+        feederSetpointRPS = velocityRPM / 60;
     }
 
 }
