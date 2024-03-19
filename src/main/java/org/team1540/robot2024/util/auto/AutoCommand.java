@@ -2,10 +2,7 @@ package org.team1540.robot2024.util.auto;
 
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.proto.Trajectory;
-import edu.wpi.first.wpilibj2.command.Command;
-import edu.wpi.first.wpilibj2.command.Commands;
-import edu.wpi.first.wpilibj2.command.InstantCommand;
-import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
+import edu.wpi.first.wpilibj2.command.*;
 import org.team1540.robot2024.commands.drivetrain.DriveWithTargetingCommand;
 import org.team1540.robot2024.commands.indexer.IntakeAndFeed;
 import org.team1540.robot2024.commands.indexer.IntakeCommand;
@@ -88,39 +85,39 @@ public class AutoCommand extends SequentialCommandGroup {
      * @param pathIndex
      * @return the commands to run in the segment
      */
-    protected Command createSegmentSequence(Drivetrain drivetrain, Indexer indexer, int pathIndex) {
+    protected Command createSegmentSequence(Drivetrain drivetrain, Shooter shooter, Indexer indexer, int pathIndex, boolean shouldZeroCancoder) {
         return Commands.sequence(
                 Commands.deadline(
                         getPath(pathIndex).getCommand(drivetrain),
                         new IntakeCommand(indexer, () -> false, 1)
                 ),
                 drivetrain.commandStop(),
+                Commands.sequence(
+                        Commands.waitSeconds(0.25),
+                        new InstantCommand(shooter::zeroPivotToCancoder)
+                ).onlyIf(()->shouldZeroCancoder),
                 drivetrain.commandCopyVisionPose(),
                 Commands.parallel(
                         new DriveWithTargetingCommand(drivetrain, null).withTimeout(0.4),
-//                        IntakeAndFeed.withDefaults(indexer).withTimeout(0.5),
-                        IntakeAndFeed.withDefaults(indexer).until(()->!indexer.isNoteStaged()).andThen(Commands.waitSeconds(0.2))
+                        Commands.sequence(
+                                Commands.waitUntil(()->drivetrain.getPose().getRotation().minus(drivetrain.getTargetPose().getRotation()).getDegrees()<10),
+                                new ParallelDeadlineGroup(
+                                        Commands.sequence(
+                                                Commands.waitUntil(()->!indexer.isNoteStaged()),
+                                                Commands.waitSeconds(0.2)
+                                        ).withTimeout(1),
+                                        IntakeAndFeed.withDefaults(indexer)
+                                )
+                        )
                 )
         );
     }
+    protected Command createSegmentSequence(Drivetrain drivetrain, Indexer indexer, int pathIndex){
+        return createSegmentSequence(drivetrain, null, indexer, pathIndex, false);
+    }
 
     protected Command createCancoderSegmentSequence(Drivetrain drivetrain, Shooter shooter, Indexer indexer, int pathIndex) {
-        return Commands.sequence(
-                Commands.deadline(
-                        getPath(pathIndex).getCommand(drivetrain),
-                        new IntakeCommand(indexer, () -> false, 1)
-                ),
-                drivetrain.commandStop(),
-                Commands.waitSeconds(0.25),
-                new InstantCommand(shooter::zeroPivotToCancoder),
-                drivetrain.commandCopyVisionPose(),
-                Commands.parallel(
-                        new DriveWithTargetingCommand(drivetrain, null).withTimeout(0.4),
-                        IntakeAndFeed.withDefaults(indexer).until(()->!indexer.isNoteStaged()).andThen(Commands.waitSeconds(0.1))
-                )
-
-//                IntakeAndFeed.withDefaults(indexer).withTimeout(0.5)
-        );
+        return createSegmentSequence(drivetrain, shooter, indexer, pathIndex, true);
     }
 
     public List<Pose2d> toTrajectory() {

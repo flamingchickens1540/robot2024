@@ -57,6 +57,8 @@ public class Drivetrain extends SubsystemBase {
     private boolean isCharacterizingWheels = false;
     private double characterizationInput = 0.0;
 
+    private Pose2d targetPose = new Pose2d();
+
     private Drivetrain(
             GyroIO gyroIO,
             ModuleIO flModuleIO,
@@ -426,5 +428,14 @@ public class Drivetrain extends SubsystemBase {
     @AutoLogOutput(key = "Targeting/SpeakerDistance")
     public double getSpeakerDistanceMeters(){
         return getPose().getTranslation().getDistance(AprilTagsCrescendo.getInstance().getTag(AprilTagsCrescendo.Tags.SPEAKER_CENTER).toPose2d().getTranslation());
+    }
+
+    public void setTargetPose(Pose2d pose){
+        this.targetPose = pose;
+    }
+
+    @AutoLogOutput(key = "Targeting/TargetPose")
+    public Pose2d getTargetPose() {
+        return targetPose;
     }
 }
