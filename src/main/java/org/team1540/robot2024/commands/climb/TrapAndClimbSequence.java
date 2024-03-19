@@ -6,7 +6,6 @@ import org.team1540.robot2024.Constants.Elevator.ElevatorState;
 import org.team1540.robot2024.commands.elevator.ElevatorSetpointCommand;
 import org.team1540.robot2024.subsystems.drive.Drivetrain;
 import org.team1540.robot2024.subsystems.elevator.Elevator;
-import org.team1540.robot2024.subsystems.fakesubsystems.Hooks;
 import org.team1540.robot2024.subsystems.indexer.Indexer;
 import org.team1540.robot2024.subsystems.shooter.Shooter;
 import org.team1540.robot2024.subsystems.tramp.Tramp;
@@ -14,9 +13,9 @@ import org.team1540.robot2024.subsystems.tramp.Tramp;
 
 public class TrapAndClimbSequence extends SequentialCommandGroup {
 
-    public TrapAndClimbSequence(Drivetrain drivetrain, Elevator elevator, Hooks hooks, Tramp tramp, Indexer indexer, Shooter shooter, CommandXboxController controller) {
+    public TrapAndClimbSequence(Drivetrain drivetrain, Elevator elevator, Tramp tramp, Indexer indexer, Shooter shooter, CommandXboxController controller) {
         addCommands(
-                new ClimbSequence(drivetrain, elevator, hooks, tramp, indexer, shooter, controller),//Confirm that nothing will break
+                new ClimbSequence(drivetrain, elevator, tramp, indexer, shooter, controller),//Confirm that nothing will break
                 Commands.waitUntil(controller.a()),
                 new ElevatorSetpointCommand(elevator, ElevatorState.TOP),
                 Commands.runOnce(()->tramp.setDistanceToGo(3))
