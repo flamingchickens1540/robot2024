@@ -67,8 +67,7 @@ public class RobotContainer {
                     indexer = Indexer.createReal();
                     aprilTagVision = AprilTagVision.createReal(
                             drivetrain::addVisionMeasurement,
-                            elevator::getPosition,
-                            drivetrain::getVisionPose);
+                            elevator::getPosition);
                 } else {
                     elevator = Elevator.createDummy();
                     drivetrain = Drivetrain.createReal(odometrySignalRefresher, () -> 0.0);
@@ -192,7 +191,7 @@ public class RobotContainer {
 
 
         copilot.rightTrigger(0.95).whileTrue(tramp.commandRun(1));
-        copilot.leftTrigger(0.95).whileTrue(new ClimbAlignment(drivetrain, elevator, null, tramp, indexer, shooter));
+        copilot.leftTrigger(0.95).whileTrue(new ClimbAlignment(drivetrain, elevator, tramp, indexer, shooter));
 
 
         copilot.x().whileTrue(new ShootSequence(shooter, indexer));

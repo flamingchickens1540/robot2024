@@ -37,9 +37,6 @@ public class IndexerIOSim implements IndexerIO {
         inputs.feederCurrentAmps = feederSim.getCurrentDrawAmps();
         inputs.feederVoltage = feederVoltage;
         inputs.feederVelocityRPM = feederSim.getAngularVelocityRPM();
-//        inputs.noteInIntake = beamBreakSim.getBoolean("Indexer Beam Break").get();
-        inputs.setpointRPM = feederSimPID.getSetpoint() * 60;
-        inputs.feederVelocityError = feederSimPID.getPositionError();
     }
 
     @Override
@@ -59,10 +56,10 @@ public class IndexerIOSim implements IndexerIO {
     }
 
     @Override
-    public void setFeederVelocity(double velocity) {
+    public void setFeederVelocity(double velocityRPM) {
         isClosedLoop = true;
         feederSimPID.reset();
-        feederSetpointRPS = velocity / 60;
+        feederSetpointRPS = velocityRPM / 60;
     }
 
 }

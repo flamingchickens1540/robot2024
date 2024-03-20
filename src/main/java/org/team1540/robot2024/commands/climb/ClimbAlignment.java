@@ -9,7 +9,6 @@ import org.team1540.robot2024.commands.indexer.StageTrampCommand;
 import org.team1540.robot2024.commands.shooter.PrepareShooterCommand;
 import org.team1540.robot2024.subsystems.drive.Drivetrain;
 import org.team1540.robot2024.subsystems.elevator.Elevator;
-import org.team1540.robot2024.subsystems.fakesubsystems.Hooks;
 import org.team1540.robot2024.subsystems.indexer.Indexer;
 import org.team1540.robot2024.subsystems.shooter.Shooter;
 import org.team1540.robot2024.subsystems.tramp.Tramp;
@@ -25,7 +24,7 @@ public class ClimbAlignment extends ParallelRaceGroup {
 
     private final Drivetrain drivetrain;
 
-    public ClimbAlignment(Drivetrain drivetrain, Elevator elevator, Hooks hooks, Tramp tramp, Indexer indexer, Shooter shooter){
+    public ClimbAlignment(Drivetrain drivetrain, Elevator elevator, Tramp tramp, Indexer indexer, Shooter shooter){
         this.drivetrain = drivetrain;
         addCommands(
                 new SequentialCommandGroup(
