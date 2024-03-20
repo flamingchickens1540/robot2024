@@ -77,7 +77,7 @@ public class Elevator extends SubsystemBase {
     }
 
     public boolean isAtSetpoint() {
-        return MathUtil.isNear(setpointMeters, positionFilter.getAverage(), POS_ERR_TOLERANCE_METERS);
+        return MathUtil.isNear(setpointMeters, positionFilter.getAverage(), POS_ERR_TOLERANCE_METERS) || (inputs.atLowerLimit && setpointMeters <= 0);
     }
 
     public void setVoltage(double voltage) {

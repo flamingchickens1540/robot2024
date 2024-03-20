@@ -109,8 +109,8 @@ public final class Constants {
         public static final String FRONT_CAMERA_NAME = "limelight-front";
         public static final String REAR_CAMERA_NAME = "limelight-rear";
 
-        public static final Pose3d FRONT_CAMERA_POSE = new Pose3d(0.0975290, 0, 0.665479, new Rotation3d(0, Math.toRadians(-25), 0));
-        public static final Pose3d REAR_CAMERA_POSE = new Pose3d(0.03639, 0, 0.715274, new Rotation3d(Math.PI, 0, Math.PI));
+        public static final Pose3d FRONT_CAMERA_POSE = new Pose3d(0.066606, 0, 0.626963, new Rotation3d(0, Math.toRadians(-16.393), 0));
+        public static final Pose3d REAR_CAMERA_POSE = new Pose3d(0.005553, 0, 0.540533, new Rotation3d(0, Math.toRadians(10), Math.PI));
 
         public static final boolean TAKE_SNAPSHOTS = false;
         public static final double SNAPSHOT_PERIOD_SECS = 10;
@@ -199,7 +199,7 @@ public final class Constants {
 
     public static class Elevator {
         public static final double CHAIN_HEIGHT_METERS = Units.inchesToMeters(28.25);
-        public static final double MINIMUM_HEIGHT = Units.inchesToMeters(-0.01); //TODO: Does this make it angry?
+        public static final double MINIMUM_HEIGHT = Units.inchesToMeters(-2); //TODO: Does this make it angry?
         public static final double CLIMBING_HOOKS_MINIMUM_HEIGHT = Units.inchesToMeters(12.0);
         public static final double MAX_HEIGHT = MINIMUM_HEIGHT + Units.inchesToMeters(21.0); //TODO: Fix these constants to be more accurate
         public static final double CLIMBING_HOOKS_MAX_HEIGHT = CLIMBING_HOOKS_MINIMUM_HEIGHT + MAX_HEIGHT - MINIMUM_HEIGHT;

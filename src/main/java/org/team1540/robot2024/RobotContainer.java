@@ -267,7 +267,7 @@ public class RobotContainer {
         autos.add(new DriveSinglePath("SourceLaneSprint", drivetrain));
         autos.add(new SourceLanePGHSprint(drivetrain, shooter, indexer));
         autos.add(new SourceLanePHG(drivetrain, shooter, indexer));
-        autos.add(new AutoCommand("WheelRadiusChar", new WheelRadiusCharacterization(drivetrain, WheelRadiusCharacterization.Direction.CLOCKWISE)));
+        autos.add(new AutoCommand("WheelRadiusChar", new WheelRadiusCharacterization(drivetrain, WheelRadiusCharacterization.Direction.COUNTER_CLOCKWISE)));
 
     }
 

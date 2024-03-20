@@ -13,7 +13,7 @@ import org.team1540.robot2024.util.LoggedTunableNumber;
 
 public class WheelRadiusCharacterization extends Command {
     private static final LoggedTunableNumber characterizationSpeed =
-            new LoggedTunableNumber("WheelRadiusCharacterization/SpeedRadsPerSec", 0.1);
+            new LoggedTunableNumber("WheelRadiusCharacterization/SpeedRadsPerSec", 1);
     private static final double driveRadius = Constants.Drivetrain.DRIVE_BASE_RADIUS;
 
     public enum Direction {
@@ -63,7 +63,6 @@ public class WheelRadiusCharacterization extends Command {
         // Run drive at velocity
 
         drive.runVelocity(new ChassisSpeeds(0, 0, omegaLimiter.calculate(omegaDirection.value * characterizationSpeed.get())));
-        System.out.println("running characterization");
 
         // Get yaw and wheel positions
         accumGyroYawRads += MathUtil.angleModulus(gyroYawRadsSupplier.getAsDouble() - lastGyroYawRads);

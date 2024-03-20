@@ -72,7 +72,7 @@ public class ElevatorIOTalonFX implements ElevatorIO {
         config.HardwareLimitSwitch.ForwardLimitEnable = true;
         config.HardwareLimitSwitch.ReverseLimitEnable = true;
         config.HardwareLimitSwitch.ReverseLimitAutosetPositionEnable = true;
-        config.HardwareLimitSwitch.ReverseLimitAutosetPositionValue = Constants.Elevator.MINIMUM_HEIGHT;
+        config.HardwareLimitSwitch.ReverseLimitAutosetPositionValue = 0;
         leader.getConfigurator().apply(config);
         config.MotorOutput.Inverted = InvertedValue.CounterClockwise_Positive;
         follower.getConfigurator().apply(config);
