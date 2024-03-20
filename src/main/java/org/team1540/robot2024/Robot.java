@@ -1,6 +1,8 @@
 package org.team1540.robot2024;
 
 import com.ctre.phoenix6.SignalLogger;
+import com.pathplanner.lib.commands.FollowPathCommand;
+import com.pathplanner.lib.commands.PathfindingCommand;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -96,8 +98,13 @@ public class Robot extends LoggedRobot {
         robotContainer = new RobotContainer();
 
         robotContainer.shooter.setPivotBrakeMode(false);
-        AprilTagsCrescendo.getInstance().getTag(1);
         robotContainer.drivetrain.setBrakeMode(false);
+
+        // Pathplanner warmup (helps prevents delays at the start of auto)
+        FollowPathCommand.warmupCommand().schedule();
+        PathfindingCommand.warmupCommand().schedule();
+
+        AprilTagsCrescendo.getInstance().getTag(1);
     }
 
     /**
