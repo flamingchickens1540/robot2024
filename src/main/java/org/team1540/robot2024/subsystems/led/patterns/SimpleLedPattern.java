@@ -21,11 +21,20 @@ public class SimpleLedPattern extends LedPattern{
     public static LedPattern solid(Color color) {
         return new SimpleLedPattern((buffer, i) -> buffer.setLED(i, color));
     }
+    public static LedPattern solid(String color) {
+        return solid(new Color(color));
+    }
     public static LedPattern alternating(Color... colors) {
         return alternating(1, colors);
     }
     public static LedPattern alternating(int groupSize, Color... colors) {
         final int colorCount = colors.length;
         return new SimpleLedPattern((buffer, i) -> buffer.setLED(i, colors[(i/groupSize)%colorCount]));
+    }
+    public static LedPattern blank() {
+        return new LedPattern(false) {
+            @Override
+            public void apply(ZonedAddressableLEDBuffer buffer) {}
+        };
     }
 }

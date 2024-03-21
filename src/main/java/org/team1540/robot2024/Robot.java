@@ -134,7 +134,8 @@ public class Robot extends LoggedRobot {
         robotContainer.shooter.setPivotBrakeMode(false);
         robotContainer.drivetrain.unblockTags();
         robotContainer.shooter.setPivotPosition(new Rotation2d());
-        robotContainer.leds.setPattern(Leds.Zone.ELEVATOR_BACK, new LedPatternRainbow(1));
+        robotContainer.leds.setPattern(Leds.Zone.MAIN, new LedPatternRainbow(1));
+        robotContainer.leds.setPattern(Leds.Zone.TOP, SimpleLedPattern.blank());
     }
 
     /**
@@ -146,7 +147,6 @@ public class Robot extends LoggedRobot {
     }
 
     public void enabledInit() {
-//        robotContainer.leds.setPattern(Leds.Zone.ELEVATOR_BACK,flamePattern);
         robotContainer.elevator.setBrakeMode(true);
         robotContainer.shooter.setPivotBrakeMode(true);
         robotContainer.drivetrain.setBrakeMode(true);
@@ -200,7 +200,7 @@ public class Robot extends LoggedRobot {
      */
     @Override
     public void testInit() {
-        robotContainer.leds.setPattern(Leds.Zone.ELEVATOR_BACK,new LedPatternTuneColor());
+        robotContainer.leds.setPattern(Leds.Zone.MAIN,new LedPatternTuneColor());
         // Cancels all running commands at the start of test mode.
         CommandScheduler.getInstance().cancelAll();
     }

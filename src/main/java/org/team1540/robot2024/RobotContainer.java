@@ -25,6 +25,7 @@ import org.team1540.robot2024.subsystems.led.Leds;
 import org.team1540.robot2024.subsystems.led.patterns.LedPatternBreathing;
 import org.team1540.robot2024.subsystems.led.patterns.LedPatternRSLState;
 import org.team1540.robot2024.subsystems.led.patterns.LedPatternWave;
+import org.team1540.robot2024.subsystems.led.patterns.SimpleLedPattern;
 import org.team1540.robot2024.subsystems.shooter.Shooter;
 import org.team1540.robot2024.subsystems.tramp.Tramp;
 import org.team1540.robot2024.subsystems.vision.AprilTagVision;
@@ -207,7 +208,7 @@ public class RobotContainer {
                 .whileTrue(PrepareShooterCommand.lowerPivot(shooter));
         new Trigger(indexer::isNoteStaged).debounce(0.1)
                 .onTrue(CommandUtils.rumbleCommandTimed(driver.getHID(), 1, 1))
-                .whileTrue(leds.commandShowPattern(new LedPatternBreathing("#ff0000"), Leds.PatternLevel.INTAKE_STATE));
+                .whileTrue(leds.commandShowIntakePattern(SimpleLedPattern.solid("#ff0000")));
 
         new Trigger(indexer::isNoteStaged).and(intakeCommand::isScheduled).onTrue(CommandUtils.rumbleCommandTimed(driver.getHID(), 0.8, 0.4));
 

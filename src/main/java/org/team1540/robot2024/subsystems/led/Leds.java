@@ -24,7 +24,8 @@ public class Leds extends SubsystemBase {
         strip.setData(ledBuffer);
         strip.start();
 
-        buffers[Zone.ELEVATOR_BACK.ordinal()] = new ZonedAddressableLEDBuffer(ledBuffer, 1, 41, false);
+        buffers[Zone.MAIN.ordinal()] = new ZonedAddressableLEDBuffer(ledBuffer, 1, 41, false);
+        buffers[Zone.TOP.ordinal()] = new ZonedAddressableLEDBuffer(ledBuffer, 35, 41, false);
         for (int i = 0; i < ZONE_COUNT;i++) {
             patterns[i] = new LedTriager();
         }
@@ -78,7 +79,8 @@ public class Leds extends SubsystemBase {
 
     private static final int ZONE_COUNT=Zone.values().length;
     public enum Zone {
-        ELEVATOR_BACK,
+        MAIN,
+        TOP
     }
     static final int LEVEL_COUNT = PatternLevel.values().length;
     public enum PatternLevel {
@@ -90,15 +92,28 @@ public class Leds extends SubsystemBase {
 
     public Command commandShowPattern(LedPattern pattern, PatternLevel priority) {
         return Commands.startEnd(
-                () -> this.setPattern(Leds.Zone.ELEVATOR_BACK, pattern, priority),
-                () -> this.clearPattern(Leds.Zone.ELEVATOR_BACK, priority)
+                () -> this.setPattern(Leds.Zone.MAIN, pattern, priority),
+                () -> this.clearPattern(Leds.Zone.MAIN, priority)
+        ).ignoringDisable(true);
+    }
+
+    public Command commandShowIntakePattern(LedPattern pattern) {
+        return Commands.startEnd(
+                () -> {
+                    this.setPattern(Zone.MAIN, pattern, PatternLevel.INTAKE_STATE);
+                    this.setPattern(Zone.TOP, pattern, PatternLevel.INTAKE_STATE);
+                },
+                () -> {
+                    this.clearPattern(Zone.MAIN,  PatternLevel.INTAKE_STATE);
+                    this.clearPattern(Zone.TOP,  PatternLevel.INTAKE_STATE);
+                }
         ).ignoringDisable(true);
     }
     public Command commandSet(LedPattern pattern, PatternLevel priority) {
-        return Commands.runOnce(() -> this.setPattern(Leds.Zone.ELEVATOR_BACK, pattern, priority)).ignoringDisable(true);
+        return Commands.runOnce(() -> this.setPattern(Leds.Zone.MAIN, pattern, priority)).ignoringDisable(true);
     }
     public Command commandClear(PatternLevel priority) {
-        return Commands.runOnce(() -> this.clearPattern(Leds.Zone.ELEVATOR_BACK, priority)).ignoringDisable(true);
+        return Commands.runOnce(() -> this.clearPattern(Leds.Zone.MAIN, priority)).ignoringDisable(true);
     }
 
 }
