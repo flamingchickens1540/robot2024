@@ -27,14 +27,10 @@ public class CenterLanePCBAFSprint extends AutoCommand {
                 Commands.parallel(
                         new AutoShootPrepare(drivetrain, shooter),
                         Commands.sequence(
-                                createCancoderSegmentSequence(drivetrain, shooter, indexer, 0),
-                                drivetrain.commandCopyVisionPose(),
-                                createSegmentSequence(drivetrain, shooter, indexer, 1),
-                                drivetrain.commandCopyVisionPose(),
-                                createSegmentSequence(drivetrain, shooter, indexer, 2),
-                                drivetrain.commandCopyVisionPose(),
-                                createSegmentSequence(drivetrain, shooter, indexer, 3),
-                                drivetrain.commandCopyVisionPose()
+                                createSegmentSequence(drivetrain, shooter, indexer, 0, false, false, false),
+                                createSegmentSequence(drivetrain, shooter, indexer, 1, false, false, true),
+                                createSegmentSequence(drivetrain, shooter, indexer, 2, false, false, true),
+                                createSegmentSequence(drivetrain, shooter, indexer, 3, false, false, true)
                         )
                 ),
                 getPath(4).getCommand(drivetrain)

@@ -54,8 +54,7 @@ public class DriveWithTargetingCommand extends Command {
         Rotation2d targetRot =
                 drivetrain.getPose()
                         .minus(target.get()).getTranslation().getAngle()
-                        .rotateBy(isFlipped ? Rotation2d.fromDegrees(180) : Rotation2d.fromDegrees(0))
-                        .plus(Rotation2d.fromDegrees(5));
+                        .rotateBy(isFlipped ? Rotation2d.fromDegrees(180) : Rotation2d.fromDegrees(0));
 //        Logger.recordOutput("Targeting/setpointPose", new Pose2d(drivetrain.getPose().getTranslation(), targetRot));
         drivetrain.setTargetPose(new Pose2d(drivetrain.getPose().getTranslation(), targetRot));
         Logger.recordOutput("Targeting/rotErrorDegrees", Math.abs(targetRot.minus(drivetrain.getRotation()).getDegrees()));

@@ -2,6 +2,8 @@ package org.team1540.robot2024.commands.shooter;
 
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.util.Units;
+import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.ParallelRaceGroup;
 import org.team1540.robot2024.Constants;
@@ -45,8 +47,16 @@ public class ShootSequence extends ParallelRaceGroup {
         );
     }
 
-    public static ShootSequence forAutoSubwoofer(Shooter shooter, Indexer indexer) {
-        return new ShootSequence(shooter, indexer, () -> HUB_SHOOT, 1.5);
+    public static Command forAutoSubwoofer(Shooter shooter, Indexer indexer) {
+        return Commands.race(
+                new PrepareShooterCommand(shooter, ()-> shooter.lerp.get(Units.feetToMeters(3))),
+                Commands.sequence(
+                        Commands.waitSeconds(1.5),
+                        Commands.runOnce(shooter::zeroPivotToCancoder),
+                        IntakeAndFeed.withDefaults(indexer).withTimeout(0.5)
+                )
+
+        );
     }
 
 

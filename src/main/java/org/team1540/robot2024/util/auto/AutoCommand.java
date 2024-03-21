@@ -84,7 +84,7 @@ public class AutoCommand extends SequentialCommandGroup {
      * @param pathIndex
      * @return the commands to run in the segment
      */
-    protected Command createSegmentSequence(Drivetrain drivetrain, Shooter shooter, Indexer indexer, int pathIndex, boolean shouldZeroCancoder, boolean shouldRealignYaw) {
+    protected Command createSegmentSequence(Drivetrain drivetrain, Shooter shooter, Indexer indexer, int pathIndex, boolean shouldZeroCancoder, boolean shouldRealignYaw, boolean shouldResetOdometry) {
         return Commands.sequence(
                 Commands.deadline(
                         getPath(pathIndex).getCommand(drivetrain),
@@ -95,7 +95,7 @@ public class AutoCommand extends SequentialCommandGroup {
                         Commands.waitSeconds(0.25),
                         new InstantCommand(shooter::zeroPivotToCancoder)
                 ).onlyIf(()->shouldZeroCancoder),
-                drivetrain.commandCopyVisionPose(),
+                drivetrain.commandCopyVisionPose().onlyIf(()->shouldResetOdometry),
                 Commands.parallel(
                         new DriveWithTargetingCommand(drivetrain, null).withTimeout(0.4).onlyIf(()->shouldRealignYaw),
                         Commands.sequence(
@@ -112,11 +112,11 @@ public class AutoCommand extends SequentialCommandGroup {
         );
     }
     protected Command createSegmentSequence(Drivetrain drivetrain, Shooter shooter, Indexer indexer, int pathIndex){
-        return createSegmentSequence(drivetrain, shooter, indexer, pathIndex, false, false);
+        return createSegmentSequence(drivetrain, shooter, indexer, pathIndex, false, true, true);
     }
 
     protected Command createCancoderSegmentSequence(Drivetrain drivetrain, Shooter shooter, Indexer indexer, int pathIndex) {
-        return createSegmentSequence(drivetrain, shooter, indexer, pathIndex, true, false);
+        return createSegmentSequence(drivetrain, shooter, indexer, pathIndex, true, true, true);
     }
 
     public List<Pose2d> toTrajectory() {
