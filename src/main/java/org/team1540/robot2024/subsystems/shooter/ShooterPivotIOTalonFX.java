@@ -129,7 +129,6 @@ public class ShooterPivotIOTalonFX implements ShooterPivotIO {
         pidConfigs.kD = kD;
         pidConfigs.kG = kG;
         motor.getConfigurator().apply(pidConfigs);
-        System.out.println(pidConfigs);
     }
     @Override
     public void setEncoderPosition(double rots) {
