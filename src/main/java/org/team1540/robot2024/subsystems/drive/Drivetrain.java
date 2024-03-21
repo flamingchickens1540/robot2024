@@ -153,6 +153,7 @@ public class Drivetrain extends SubsystemBase {
     @Override
     public void periodic() {
         gyroIO.updateInputs(gyroInputs);
+        Logger.processInputs("Drivetrain/Gyro", gyroInputs);
 
         for (Module module : modules) {
             module.periodic();
