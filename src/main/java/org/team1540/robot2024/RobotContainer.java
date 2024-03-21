@@ -22,7 +22,6 @@ import org.team1540.robot2024.subsystems.drive.Drivetrain;
 import org.team1540.robot2024.subsystems.elevator.Elevator;
 import org.team1540.robot2024.subsystems.indexer.Indexer;
 import org.team1540.robot2024.subsystems.led.Leds;
-import org.team1540.robot2024.subsystems.led.patterns.LedPatternBreathing;
 import org.team1540.robot2024.subsystems.led.patterns.LedPatternRSLState;
 import org.team1540.robot2024.subsystems.led.patterns.LedPatternWave;
 import org.team1540.robot2024.subsystems.led.patterns.SimpleLedPattern;
@@ -212,7 +211,7 @@ public class RobotContainer {
                 .whileTrue(leds.commandShowIntakePattern(SimpleLedPattern.solid("#ff0000")));
 
         new Trigger(tramp::isNoteStaged).debounce(0.1)
-                .whileTrue(leds.commandShowPattern(SimpleLedPattern.solid("#ff9900"), Leds.PatternLevel.TRAMP_STATE));
+                .whileTrue(leds.commandShowTrampPattern(SimpleLedPattern.solid("#ff9900")));
 
         new Trigger(indexer::isNoteStaged).and(intakeCommand::isScheduled).onTrue(CommandUtils.rumbleCommandTimed(driver.getHID(), 0.8, 0.4));
 
