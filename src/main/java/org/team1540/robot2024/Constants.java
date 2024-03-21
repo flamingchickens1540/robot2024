@@ -112,8 +112,8 @@ public final class Constants {
         public static final Pose3d FRONT_CAMERA_POSE = new Pose3d(0.066606, 0, 0.626963, new Rotation3d(0, Math.toRadians(-16.393), 0));
         public static final Pose3d REAR_CAMERA_POSE = new Pose3d(0.005553, 0, 0.540533, new Rotation3d(0, Math.toRadians(10), Math.PI));
 
-        public static final boolean TAKE_SNAPSHOTS = false;
-        public static final double SNAPSHOT_PERIOD_SECS = 10;
+        public static final boolean TAKE_SNAPSHOTS = true;
+        public static final double SNAPSHOT_PERIOD_SECS = 1;
 
         public static final double XY_STD_DEV_COEFF = 0.1;
         public static final double ROT_STD_DEV_COEFF = 0.5;
@@ -159,13 +159,15 @@ public final class Constants {
             // TODO: determine ratios
             public static final double CANCODER_TO_PIVOT = 28.0 / 15.0;
             public static final double MOTOR_TO_CANCODER = 56.0;
+
+            public static final double CHAIN_FACTOR = 1.04;
             public static final double TOTAL_GEAR_RATIO = MOTOR_TO_CANCODER * CANCODER_TO_PIVOT;
             public static final double SIM_LENGTH_METERS = Units.inchesToMeters(12.910);
             // TODO: find the moi
             public static final double SIM_MOI = 0.04064471269;
 
-            public static final Rotation2d MAX_ANGLE = Rotation2d.fromRotations(0.14);
-            public static final Rotation2d MIN_ANGLE = Rotation2d.fromRotations(0.01);
+            public static final Rotation2d MAX_ANGLE = Rotation2d.fromRotations(0.174);
+            public static final Rotation2d MIN_ANGLE = Rotation2d.fromRotations(0.044);
 
             public static final Rotation2d REAL_ZEROED_ANGLE = Rotation2d.fromDegrees(8.5);
             public static final double PIVOT_HEIGHT = Units.inchesToMeters(10.5);

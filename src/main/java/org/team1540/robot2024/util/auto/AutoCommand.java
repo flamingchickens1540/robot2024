@@ -84,7 +84,7 @@ public class AutoCommand extends SequentialCommandGroup {
      * @param pathIndex
      * @return the commands to run in the segment
      */
-    protected Command createSegmentSequence(Drivetrain drivetrain, Shooter shooter, Indexer indexer, int pathIndex, boolean shouldZeroCancoder) {
+    protected Command createSegmentSequence(Drivetrain drivetrain, Shooter shooter, Indexer indexer, int pathIndex, boolean shouldZeroCancoder, boolean shouldRealignYaw) {
         return Commands.sequence(
                 Commands.deadline(
                         getPath(pathIndex).getCommand(drivetrain),
@@ -97,9 +97,9 @@ public class AutoCommand extends SequentialCommandGroup {
                 ).onlyIf(()->shouldZeroCancoder),
                 drivetrain.commandCopyVisionPose(),
                 Commands.parallel(
-                        new DriveWithTargetingCommand(drivetrain, null).withTimeout(0.4),
+                        new DriveWithTargetingCommand(drivetrain, null).withTimeout(0.4).onlyIf(()->shouldRealignYaw),
                         Commands.sequence(
-                                Commands.waitUntil(()->drivetrain.getPose().getRotation().minus(drivetrain.getTargetPose().getRotation()).getDegrees()<10),
+                                Commands.waitUntil(()->drivetrain.getPose().getRotation().minus(drivetrain.getTargetPose().getRotation()).getDegrees()<10).onlyIf(()->shouldRealignYaw),
                                 new ParallelDeadlineGroup(
                                         Commands.sequence(
                                                 Commands.waitUntil(()->!indexer.isNoteStaged()),
@@ -112,11 +112,11 @@ public class AutoCommand extends SequentialCommandGroup {
         );
     }
     protected Command createSegmentSequence(Drivetrain drivetrain, Shooter shooter, Indexer indexer, int pathIndex){
-        return createSegmentSequence(drivetrain, shooter, indexer, pathIndex, false);
+        return createSegmentSequence(drivetrain, shooter, indexer, pathIndex, false, false);
     }
 
     protected Command createCancoderSegmentSequence(Drivetrain drivetrain, Shooter shooter, Indexer indexer, int pathIndex) {
-        return createSegmentSequence(drivetrain, shooter, indexer, pathIndex, true);
+        return createSegmentSequence(drivetrain, shooter, indexer, pathIndex, true, false);
     }
 
     public List<Pose2d> toTrajectory() {

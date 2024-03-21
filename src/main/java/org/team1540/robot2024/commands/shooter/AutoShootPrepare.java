@@ -15,6 +15,10 @@ public class AutoShootPrepare extends SequentialCommandGroup {
     public AutoShootPrepare(Drivetrain drivetrain, Shooter shooter) {
         this(drivetrain::getPose, shooter);
     }
+    double A = -0.6953;
+    double B = 0.8702;
+    double C = -0.4942;
+    double D = 1.491;
 
     public AutoShootPrepare(Supplier<Pose2d> positionSupplier, Shooter shooter) {
         addCommands(
@@ -27,7 +31,14 @@ public class AutoShootPrepare extends SequentialCommandGroup {
 //                            )
 //                    ).minus(Constants.Shooter.Pivot.REAL_ZEROED_ANGLE),
 //                    8000, 6000)
-                    shooter.lerp.get(positionSupplier.get().getTranslation().getDistance(AprilTagsCrescendo.getInstance().getTag(AprilTagsCrescendo.Tags.SPEAKER_CENTER).toPose2d().getTranslation()))
+//                    shooter.lerp.get(positionSupplier.get().getTranslation().getDistance(AprilTagsCrescendo.getInstance().getTag(AprilTagsCrescendo.Tags.SPEAKER_CENTER).toPose2d().getTranslation()))
+                    new ShooterSetpoint(
+                            Rotation2d.fromRadians(
+                                    A * Math.atan(B * (positionSupplier.get().getTranslation().getDistance(AprilTagsCrescendo.getInstance().getTag(AprilTagsCrescendo.Tags.SPEAKER_CENTER).toPose2d().getTranslation())) + C) + D
+                            ),
+                            7000,
+                            3000
+                    )
             )
         );
     }

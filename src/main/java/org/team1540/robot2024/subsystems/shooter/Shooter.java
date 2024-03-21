@@ -49,18 +49,22 @@ public class Shooter extends SubsystemBase {
 
     private boolean flipper = false;
 
+    private Rotation2d angleOffset = new Rotation2d();
+
     public final ShooterLerp lerp = new ShooterLerp().put(
-            new Pair<>(1.2954, new ShooterSetpoint(Rotation2d.fromDegrees(40))),
-            new Pair<>(1.842, new ShooterSetpoint(Rotation2d.fromDegrees(37))),
-            new Pair<>(2.012, new ShooterSetpoint(Rotation2d.fromDegrees(34.422))),
-            new Pair<>(2.238, new ShooterSetpoint(Rotation2d.fromDegrees(31))),
-            new Pair<>(2.747, new ShooterSetpoint(Rotation2d.fromDegrees(25.5))),
-            new Pair<>(3.175, new ShooterSetpoint(Rotation2d.fromDegrees(22))),
-            new Pair<>(3.197, new ShooterSetpoint(Rotation2d.fromDegrees(22))),
-//            new Pair<>(3.990, new ShooterSetpoint(Rotation2d.fromDegrees(17.2))),
-            new Pair<>(4.029, new ShooterSetpoint(Rotation2d.fromDegrees(16.5))),
-            new Pair<>(4.256, new ShooterSetpoint(Rotation2d.fromDegrees(16.2))),
-            new Pair<>(5.300, new ShooterSetpoint(Rotation2d.fromDegrees(13)))
+            new Pair<>(1.386, new ShooterSetpoint(Rotation2d.fromRadians(1.06184))),
+            new Pair<>(1.673, new ShooterSetpoint(Rotation2d.fromRadians(0.9563528))),
+            new Pair<>(2.0398, new ShooterSetpoint(Rotation2d.fromRadians(0.8606))),
+            new Pair<>(2.35254, new ShooterSetpoint(Rotation2d.fromRadians(0.79248))),
+            new Pair<>(2.36, new ShooterSetpoint(Rotation2d.fromRadians(0.79976))),
+            new Pair<>(2.632, new ShooterSetpoint(Rotation2d.fromRadians(0.758056))),
+            new Pair<>(2.9345, new ShooterSetpoint(Rotation2d.fromRadians(0.7332))),
+            new Pair<>(3.222, new ShooterSetpoint(Rotation2d.fromRadians(0.699088))),
+            new Pair<>(3.5768, new ShooterSetpoint(Rotation2d.fromRadians(0.67704))),
+            new Pair<>(3.883, new ShooterSetpoint(Rotation2d.fromRadians(0.64688))),
+            new Pair<>(4.22, new ShooterSetpoint(Rotation2d.fromRadians(0.603304))),
+            new Pair<>(4.54, new ShooterSetpoint(Rotation2d.fromRadians(0.59904))),
+            new Pair<>(4.794, new ShooterSetpoint(Rotation2d.fromRadians(0.59384)))
             );
 
     private static boolean hasInstance = false;
@@ -275,11 +279,16 @@ public class Shooter extends SubsystemBase {
         return pivotSetpoint;
     }
 
+    @AutoLogOutput(key = "Shooter/Pivot/AbsolutePivotSetpoint")
+    public Rotation2d getAbsolutePivotSetpoint(){
+        return pivotSetpoint.plus(angleOffset);
+    }
+
     public void zeroPivot() {
         pivotIO.setEncoderPosition(0);
     }
     public void zeroPivotToCancoder(){
-        pivotIO.setEncoderPosition(Rotation2d.fromDegrees(pivotInputs.absolutePosition.getDegrees()*0.984 - 140).getRotations());
+        pivotIO.setEncoderPosition(pivotInputs.absolutePosition.getRotations());
         flipper = !flipper;
     }
 }
