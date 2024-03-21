@@ -8,7 +8,7 @@ import java.util.function.BiConsumer;
 public class SimpleLedPattern extends LedPattern{
     private final BiConsumer<ZonedAddressableLEDBuffer, Integer> applier;
     private SimpleLedPattern(BiConsumer<ZonedAddressableLEDBuffer, Integer> applier) {
-        super(false);
+        super(true);
         this.applier = applier;
     }
 

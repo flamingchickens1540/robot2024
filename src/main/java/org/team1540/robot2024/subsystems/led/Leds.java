@@ -86,6 +86,7 @@ public class Leds extends SubsystemBase {
     public enum PatternLevel {
         DEFAULT,
         INTAKE_STATE,
+        TRAMP_STATE,
         DRIVER_LOCK,
         ELEVATOR_STATE
     }
@@ -106,6 +107,19 @@ public class Leds extends SubsystemBase {
                 () -> {
                     this.clearPattern(Zone.MAIN,  PatternLevel.INTAKE_STATE);
                     this.clearPattern(Zone.TOP,  PatternLevel.INTAKE_STATE);
+                }
+        ).ignoringDisable(true);
+    }
+
+    public Command commandShowTrampPattern(LedPattern pattern) {
+        return Commands.startEnd(
+                () -> {
+                    this.setPattern(Zone.MAIN, pattern, PatternLevel.TRAMP_STATE);
+                    this.setPattern(Zone.TOP, pattern, PatternLevel.TRAMP_STATE);
+                },
+                () -> {
+                    this.clearPattern(Zone.MAIN,  PatternLevel.TRAMP_STATE);
+                    this.clearPattern(Zone.TOP,  PatternLevel.TRAMP_STATE);
                 }
         ).ignoringDisable(true);
     }

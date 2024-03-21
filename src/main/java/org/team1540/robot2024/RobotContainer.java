@@ -206,9 +206,13 @@ public class RobotContainer {
 
         new Trigger(() -> elevator.getPosition() > 0.1).debounce(0.1)
                 .whileTrue(PrepareShooterCommand.lowerPivot(shooter));
+
         new Trigger(indexer::isNoteStaged).debounce(0.1)
                 .onTrue(CommandUtils.rumbleCommandTimed(driver.getHID(), 1, 1))
                 .whileTrue(leds.commandShowIntakePattern(SimpleLedPattern.solid("#ff0000")));
+
+        new Trigger(tramp::isNoteStaged).debounce(0.1)
+                .whileTrue(leds.commandShowPattern(SimpleLedPattern.solid("#ff9900"), Leds.PatternLevel.TRAMP_STATE));
 
         new Trigger(indexer::isNoteStaged).and(intakeCommand::isScheduled).onTrue(CommandUtils.rumbleCommandTimed(driver.getHID(), 0.8, 0.4));
 
