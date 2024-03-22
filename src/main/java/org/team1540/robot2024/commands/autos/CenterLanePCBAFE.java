@@ -9,16 +9,16 @@ import org.team1540.robot2024.subsystems.shooter.Shooter;
 import org.team1540.robot2024.util.auto.AutoCommand;
 import org.team1540.robot2024.util.auto.PathHelper;
 
-public class CenterLanePCBAFSprint extends AutoCommand {
+public class CenterLanePCBAFE extends AutoCommand {
 
-    public CenterLanePCBAFSprint(Drivetrain drivetrain, Shooter shooter, Indexer indexer) {
-        super("!CenterLanePCBAFSprint");
+    public CenterLanePCBAFE(Drivetrain drivetrain, Shooter shooter, Indexer indexer) {
+        super("!CenterLanePCBAFE");
         addPath(
-                PathHelper.fromChoreoPath("CenterLanePCBAFSprint.1", false, true),
-                PathHelper.fromChoreoPath("CenterLanePCBAFSprint.2"),
-                PathHelper.fromChoreoPath("CenterLanePCBAFSprint.3"),
-                PathHelper.fromChoreoPath("CenterLanePCBAFSprint.4"),
-                PathHelper.fromChoreoPath("CenterLanePCBAFSprint.5")
+                PathHelper.fromChoreoPath("CenterLanePCBAFE.1", false, true),
+                PathHelper.fromChoreoPath("CenterLanePCBAFE.2"),
+                PathHelper.fromChoreoPath("CenterLanePCBAFE.3"),
+                PathHelper.fromChoreoPath("CenterLanePCBAFE.4"),
+                PathHelper.fromChoreoPath("CenterLanePCBAFE.5")
 
         );
 
@@ -31,10 +31,10 @@ public class CenterLanePCBAFSprint extends AutoCommand {
                                 createSegmentSequence(drivetrain, shooter, indexer, 0, false, false, false),
                                 createSegmentSequence(drivetrain, shooter, indexer, 1, false, false, true),
                                 createSegmentSequence(drivetrain, shooter, indexer, 2, false, false, true),
-                                createSegmentSequence(drivetrain, shooter, indexer, 3, false, false, true)
+                                createSegmentSequence(drivetrain, shooter, indexer, 3, false, false, true),
+                                createSegmentSequence(drivetrain, shooter, indexer, 4, false, false, true)
                         )
-                ),
-                getPath(4).getCommand(drivetrain)
+                )
         );
 
         addRequirements(drivetrain, shooter, indexer);

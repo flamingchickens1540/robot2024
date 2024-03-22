@@ -32,8 +32,7 @@ public class AmpLanePADESprint extends AutoCommand {
                                 createSegmentSequence(drivetrain, shooter, indexer, 2),
 //                                new WaitCommand(5),
 //                                drivetrain.commandCopyVisionPose(),
-                                createSegmentSequence(drivetrain, shooter, indexer, 3),
-                                getPath(4).getCommand(drivetrain)
+                                createSegmentSequence(drivetrain, shooter, indexer, 3)
 //                                drivetrain.commandCopyVisionPose()
                         )
                 ),

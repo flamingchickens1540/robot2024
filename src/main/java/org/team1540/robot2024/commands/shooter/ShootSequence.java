@@ -51,7 +51,7 @@ public class ShootSequence extends ParallelRaceGroup {
         return Commands.race(
                 new PrepareShooterCommand(shooter, ()-> shooter.lerp.get(Units.feetToMeters(3))),
                 Commands.sequence(
-                        Commands.waitSeconds(1.5),
+                        Commands.waitSeconds(1),
                         Commands.runOnce(shooter::zeroPivotToCancoder),
                         IntakeAndFeed.withDefaults(indexer).withTimeout(0.5)
                 )

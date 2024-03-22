@@ -109,8 +109,8 @@ public final class Constants {
         public static final String FRONT_CAMERA_NAME = "limelight-front";
         public static final String REAR_CAMERA_NAME = "limelight-rear";
 
-        public static final Pose3d FRONT_CAMERA_POSE = new Pose3d(0.066606, 0, 0.626963, new Rotation3d(0, Math.toRadians(-16.393), 0));
-        public static final Pose3d REAR_CAMERA_POSE = new Pose3d(0.005553, 0, 0.540533, new Rotation3d(0, Math.toRadians(10), Math.PI));
+        public static final Pose3d FRONT_CAMERA_POSE = new Pose3d(0.086018, 0, 0.627079, new Rotation3d(0, Math.toRadians(-40.843), 0));
+        public static final Pose3d REAR_CAMERA_POSE = new Pose3d(0.046049, 0, 0.540510, new Rotation3d(0, Math.toRadians(10), Math.PI));
 
         public static final boolean TAKE_SNAPSHOTS = true;
         public static final double SNAPSHOT_PERIOD_SECS = 1;

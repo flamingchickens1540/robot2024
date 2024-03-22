@@ -99,7 +99,7 @@ public class AutoCommand extends SequentialCommandGroup {
                 Commands.parallel(
                         new DriveWithTargetingCommand(drivetrain, null).withTimeout(0.4).onlyIf(()->shouldRealignYaw),
                         Commands.sequence(
-                                Commands.waitUntil(()->drivetrain.getPose().getRotation().minus(drivetrain.getTargetPose().getRotation()).getDegrees()<10).onlyIf(()->shouldRealignYaw),
+//                                Commands.waitUntil(()->drivetrain.getPose().getRotation().minus(drivetrain.getTargetPose().getRotation()).getDegrees()<10).onlyIf(()->shouldRealignYaw),
                                 new ParallelDeadlineGroup(
                                         Commands.sequence(
                                                 Commands.waitUntil(()->!indexer.isNoteStaged()),
