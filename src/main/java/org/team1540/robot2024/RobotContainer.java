@@ -13,6 +13,7 @@ import edu.wpi.first.wpilibj2.command.button.Trigger;
 import org.team1540.robot2024.commands.FeedForwardCharacterization;
 import org.team1540.robot2024.commands.autos.*;
 import org.team1540.robot2024.commands.climb.ClimbAlignment;
+import org.team1540.robot2024.commands.drivetrain.DriveWithAmpSideLock;
 import org.team1540.robot2024.commands.drivetrain.SwerveDriveCommand;
 import org.team1540.robot2024.commands.drivetrain.WheelRadiusCharacterization;
 import org.team1540.robot2024.commands.elevator.ElevatorManualCommand;
@@ -147,6 +148,7 @@ public class RobotContainer {
         drivetrain.setDefaultCommand(new SwerveDriveCommand(drivetrain, driver));
 //        drivetrain.setDefaultCommand(new OverStageShootPrepareWithTargeting(driver.getHID(), drivetrain, shooter));
 //        drivetrain.setDefaultCommand(new AutoShootPrepareWhileMoving(driver.getHID(), drivetrain, shooter));
+//        drivetrain.setDefaultCommand(new DriveWithAmpSideLock(drivetrain, driver.getHID()));
         elevator.setDefaultCommand(new ElevatorManualCommand(elevator, copilot));
         shooter.setDefaultCommand(manualPivotCommand);
         driver.b().onTrue(Commands.runOnce(drivetrain::stopWithX, drivetrain));
@@ -163,9 +165,12 @@ public class RobotContainer {
                 .alongWith(leds.commandShowPattern(new LedPatternWave("#f700ff"), Leds.PatternLevel.DRIVER_LOCK));
         Command autoShooterCommand = new AutoShootPrepare(drivetrain, shooter)
                 .alongWith(leds.commandShowPattern(new LedPatternWave("#00ffbc"), Leds.PatternLevel.DRIVER_LOCK));
+        Command ampLock = new DriveWithAmpSideLock(drivetrain, driver.getHID())
+                .alongWith(leds.commandShowPattern(new LedPatternWave("#ffffff"), Leds.PatternLevel.DRIVER_LOCK));
         Command cancelAlignment = Commands.runOnce(() -> {
             targetDrive.cancel();
             overstageTargetDrive.cancel();
+            ampLock.cancel();
         });
         driver.x()
                 .whileTrue(IntakeAndFeed.withDefaults(indexer))
@@ -203,7 +208,7 @@ public class RobotContainer {
 
 
         copilot.x().whileTrue(new ShootSequence(shooter, indexer));
-        copilot.a().whileTrue(new AmpScoreStageSequence(indexer, tramp, elevator));
+        copilot.a().whileTrue(new AmpScoreStageSequence(indexer, tramp, elevator).alongWith(ampLock));
         copilot.b().whileTrue(IntakeAndFeed.withDefaults(indexer))
                     .onFalse(cancelAlignment);
         copilot.y().whileTrue(new StageTrampCommand(tramp, indexer));
