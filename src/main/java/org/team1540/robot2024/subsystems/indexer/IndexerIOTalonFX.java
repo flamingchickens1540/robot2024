@@ -114,4 +114,9 @@ public class IndexerIOTalonFX implements IndexerIO {
         pidConfigs.kD = d;
         feederMotor.getConfigurator().apply(pidConfigs);
     }
+
+    @Override
+    public void setIntakeNeutralMode(boolean isBrakeMode) {
+        intakeMotor.setNeutralMode(isBrakeMode ? NeutralModeValue.Brake : NeutralModeValue.Coast);
+    }
 }

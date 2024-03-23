@@ -25,7 +25,7 @@ public class Leds extends SubsystemBase {
         strip.start();
 
         buffers[Zone.MAIN.ordinal()] = new ZonedAddressableLEDBuffer(ledBuffer, 1, 41, false);
-        buffers[Zone.TOP.ordinal()] = new ZonedAddressableLEDBuffer(ledBuffer, 35, 41, false);
+        buffers[Zone.TOP.ordinal()] = new ZonedAddressableLEDBuffer(ledBuffer, 32, 41, false);
         for (int i = 0; i < ZONE_COUNT;i++) {
             patterns[i] = new LedTriager();
         }

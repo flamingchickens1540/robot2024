@@ -1,5 +1,9 @@
 package org.team1540.robot2024;
 
+import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.util.Units;
+import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.RobotController;
 import edu.wpi.first.wpilibj.util.Color;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -12,6 +16,7 @@ import org.team1540.robot2024.commands.climb.ClimbAlignment;
 import org.team1540.robot2024.commands.drivetrain.SwerveDriveCommand;
 import org.team1540.robot2024.commands.drivetrain.WheelRadiusCharacterization;
 import org.team1540.robot2024.commands.elevator.ElevatorManualCommand;
+import org.team1540.robot2024.commands.indexer.ContinuousIntakeCommand;
 import org.team1540.robot2024.commands.indexer.IntakeAndFeed;
 import org.team1540.robot2024.commands.indexer.IntakeCommand;
 import org.team1540.robot2024.commands.indexer.StageTrampCommand;
@@ -140,6 +145,7 @@ public class RobotContainer {
     private void configureButtonBindings() {
         Command manualPivotCommand = new ManualPivotCommand(shooter, copilot);
         drivetrain.setDefaultCommand(new SwerveDriveCommand(drivetrain, driver));
+//        drivetrain.setDefaultCommand(new OverStageShootPrepareWithTargeting(driver.getHID(), drivetrain, shooter));
 //        drivetrain.setDefaultCommand(new AutoShootPrepareWhileMoving(driver.getHID(), drivetrain, shooter));
         elevator.setDefaultCommand(new ElevatorManualCommand(elevator, copilot));
         shooter.setDefaultCommand(manualPivotCommand);
@@ -172,7 +178,9 @@ public class RobotContainer {
         if (isTuningMode()) {
             driver.leftTrigger().whileTrue(new AutoShootPrepareWhileMoving(driver.getHID(), drivetrain, shooter).alongWith(leds.commandShowPattern(new LedPatternWave("#00ff00"), Leds.PatternLevel.DRIVER_LOCK)));
             driver.a().whileTrue(new TuneShooterCommand(shooter, indexer, drivetrain::getPose));
+
         }
+        driver.povDown().and(() -> !DriverStation.isFMSAttached()).onTrue(Commands.runOnce(() -> drivetrain.setPose(new Pose2d(Units.inchesToMeters(260), Units.inchesToMeters(161.62), Rotation2d.fromRadians(0)))).ignoringDisable(true));
 
         driver.rightTrigger(0.95).toggleOnTrue(autoShooterCommand);
 
@@ -181,7 +189,7 @@ public class RobotContainer {
         copilot.back().onTrue(Commands.runOnce(shooter::zeroPivotToCancoder).andThen(Commands.print("BACK IS PRESSED")));
 
         copilot.leftBumper().whileTrue(new AmpScoreSequence(tramp, indexer, elevator));
-        Command intakeCommand = new IntakeCommand(indexer, tramp::isNoteStaged, 1)
+        Command intakeCommand = new ContinuousIntakeCommand(indexer, 1)
                 .deadlineWith(CommandUtils.rumbleCommand(driver, 0.5), CommandUtils.rumbleCommand(copilot, 0.5));
         copilot.rightBumper().whileTrue(intakeCommand);
 

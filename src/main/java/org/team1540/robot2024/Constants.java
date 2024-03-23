@@ -20,7 +20,7 @@ import org.team1540.robot2024.util.shooter.ShooterSetpoint;
 public final class Constants {
     public static final boolean IS_COMPETITION_ROBOT = true;
     // Whether to pull PID constants from SmartDashboard
-    private static final boolean tuningMode = true; // TODO: DO NOT SET TO TRUE FOR COMP
+    private static final boolean tuningMode = false; // TODO: DO NOT SET TO TRUE FOR COMP
     private static final Mode simMode = Mode.SIM; // Can also be Mode.REPLAY
 
     public static final Mode currentMode = Robot.isReal() ? Mode.REAL : simMode;
@@ -169,7 +169,7 @@ public final class Constants {
             public static final Rotation2d MAX_ANGLE = Rotation2d.fromRotations(0.174);
             public static final Rotation2d MIN_ANGLE = Rotation2d.fromRotations(0.044);
 
-            public static final Rotation2d REAL_ZEROED_ANGLE = Rotation2d.fromDegrees(8.5);
+            public static final Rotation2d REAL_ZEROED_ANGLE = Rotation2d.fromDegrees(8.5).minus(Rotation2d.fromRadians(0.3153));
             public static final double PIVOT_HEIGHT = Units.inchesToMeters(10.5);
 
             public static final double KP = 400.0;
@@ -191,7 +191,7 @@ public final class Constants {
             public static final double JERK_RPS3 = 2000;
 
 
-            public static final ShooterSetpoint HUB_SHOOT = new ShooterSetpoint(0.125, 4800,4000);
+            public static final ShooterSetpoint HUB_SHOOT = new ShooterSetpoint(Rotation2d.fromRadians(1.06184));
             public static final ShooterSetpoint PODIUM_SHOOT = new ShooterSetpoint(0.07, 6000,5000);
 
 

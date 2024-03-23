@@ -19,16 +19,6 @@ import static org.team1540.robot2024.Constants.Shooter.Pivot.HUB_SHOOT;
 
 public class ShootSequence extends ParallelRaceGroup {
 
-    public ShootSequence(Supplier<Pose2d> positionSupplier, Shooter shooter, Indexer indexer) {
-        this(shooter, indexer, () -> new ShooterSetpoint(
-                Rotation2d.fromRadians(
-                        Math.atan2(Constants.Targeting.SPEAKER_CENTER_HEIGHT - Constants.Shooter.Pivot.PIVOT_HEIGHT, positionSupplier.get().getTranslation().getDistance(
-                                AprilTagsCrescendo.getInstance().getTag(AprilTagsCrescendo.Tags.SPEAKER_CENTER).toPose2d().getTranslation()
-                        ))).minus(Constants.Shooter.Pivot.REAL_ZEROED_ANGLE),
-                8000, 6000)
-        );
-    }
-
     public ShootSequence(Shooter shooter, Indexer indexer) {
         this(shooter, indexer, () -> HUB_SHOOT);
     }

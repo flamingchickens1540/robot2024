@@ -211,9 +211,7 @@ public class Drivetrain extends SubsystemBase {
         Logger.recordOutput("SwerveStates/SetpointsOptimized", optimizedSetpointStates);
     }
 
-    public void drivePercent(double xPercent, double yPercent, double rotPercent, boolean fieldRelative) {
-        Rotation2d linearDirection = new Rotation2d(xPercent, yPercent);
-        double linearMagnitude = Math.hypot(xPercent, yPercent);
+    public void drivePercent(double linearMagnitude, Rotation2d linearDirection, double rotPercent, boolean fieldRelative) {
 
         Translation2d linearVelocity =
                 new Pose2d(new Translation2d(), linearDirection)

@@ -12,6 +12,7 @@ import org.littletonrobotics.junction.Logger;
 import org.team1540.robot2024.Constants;
 import org.team1540.robot2024.subsystems.drive.Drivetrain;
 import org.team1540.robot2024.util.LoggedTunableNumber;
+import org.team1540.robot2024.util.math.JoystickUtils;
 import org.team1540.robot2024.util.vision.AprilTagsCrescendo;
 
 import java.util.function.Supplier;
@@ -31,6 +32,8 @@ public class DriveWithTargetingCommand extends Command {
     private boolean isFlipped;
 
     private Supplier<Pose2d> target;
+
+    private final double deadzone = 0.03;
 
     public DriveWithTargetingCommand(Drivetrain drivetrain, XboxController controller){
         this(drivetrain, controller, ()-> AprilTagsCrescendo.getInstance().getTag(AprilTagsCrescendo.Tags.SPEAKER_CENTER).toPose2d());
@@ -60,14 +63,16 @@ public class DriveWithTargetingCommand extends Command {
         Logger.recordOutput("Targeting/rotErrorDegrees", Math.abs(targetRot.minus(drivetrain.getRotation()).getDegrees()));
         Logger.recordOutput("Targeting/target", target.get());
 
-        double xPercent = 0;
-        double yPercent = 0;
+        double linearMagnitude = 0;
+        Rotation2d linearDirection = new Rotation2d();
         if(controller != null){
-            xPercent = MathUtil.applyDeadband((-controller.getLeftY()), 0.1);
-            yPercent = MathUtil.applyDeadband((-controller.getLeftX()), 0.1);
+            double xPercent   = -controller.getLeftY() * (Constants.IS_COMPETITION_ROBOT ? 1 : -1);
+            double yPercent   = -controller.getLeftX() * (Constants.IS_COMPETITION_ROBOT ? 1 : -1);
+            linearMagnitude = JoystickUtils.smartDeadzone(Math.hypot(xPercent, yPercent), deadzone);
+            linearDirection = new Rotation2d(xPercent, yPercent);
         }
         double rotPercent = rotController.calculate(drivetrain.getRotation().getRadians(), targetRot.getRadians());
-        drivetrain.drivePercent(xPercent, yPercent, rotPercent, true);
+        drivetrain.drivePercent(linearMagnitude, linearDirection, rotPercent, true);
     }
 
     @Override

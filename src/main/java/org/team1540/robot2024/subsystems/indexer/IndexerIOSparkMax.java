@@ -73,4 +73,9 @@ public class IndexerIOSparkMax implements IndexerIO {
         feederPID.setI(i);
         feederPID.setD(d);
     }
+
+    public void setIntakeNeutralMode(boolean isBrakeMode) {
+        intakeMotor.setIdleMode(isBrakeMode ? CANSparkBase.IdleMode.kBrake : CANSparkBase.IdleMode.kCoast);
+    }
 }
+

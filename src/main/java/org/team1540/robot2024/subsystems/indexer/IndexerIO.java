@@ -30,4 +30,6 @@ public interface IndexerIO {
 
     default void configureFeederPID(double p, double i, double d) {}
 
+    default void setIntakeNeutralMode(boolean isBrakeMode) {}
+
 }

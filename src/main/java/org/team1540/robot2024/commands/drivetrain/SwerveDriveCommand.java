@@ -1,5 +1,6 @@
 package org.team1540.robot2024.commands.drivetrain;
 
+import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import org.team1540.robot2024.Constants;
@@ -24,11 +25,13 @@ public class SwerveDriveCommand extends Command {
 
     @Override
     public void execute() {
-        double xPercent   = JoystickUtils.squaredSmartDeadzone(-controller.getLeftY(), deadzone) * (Constants.IS_COMPETITION_ROBOT ? 1 : -1);
-        double yPercent   = JoystickUtils.squaredSmartDeadzone(-controller.getLeftX(), deadzone) * (Constants.IS_COMPETITION_ROBOT ? 1 : -1);
-        double rotPercent = JoystickUtils.squaredSmartDeadzone(-controller.getRightX(), deadzone) * (Constants.IS_COMPETITION_ROBOT ? 1 : -1);
+        double xPercent   = -controller.getLeftY() * (Constants.IS_COMPETITION_ROBOT ? 1 : -1);
+        double yPercent   = -controller.getLeftX() * (Constants.IS_COMPETITION_ROBOT ? 1 : -1);
+        double linearMagnitude = JoystickUtils.smartDeadzone(Math.hypot(xPercent, yPercent), deadzone);
+        Rotation2d linearDirection = new Rotation2d(xPercent, yPercent);
+        double rotPercent = JoystickUtils.smartDeadzone(-controller.getRightX(), deadzone) * (Constants.IS_COMPETITION_ROBOT ? 1 : -1);
 
-        drivetrain.drivePercent(xPercent, yPercent, rotPercent, true);
+        drivetrain.drivePercent(linearMagnitude, linearDirection, rotPercent, true);
     }
 
     @Override
