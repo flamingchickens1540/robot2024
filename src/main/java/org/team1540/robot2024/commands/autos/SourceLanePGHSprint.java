@@ -9,8 +9,9 @@ import org.team1540.robot2024.util.auto.AutoCommand;
 import org.team1540.robot2024.util.auto.PathHelper;
 
 public class SourceLanePGHSprint extends AutoCommand {
+    private static final double SHOT_WAIT = 0.2;
     public SourceLanePGHSprint(Drivetrain drivetrain, Shooter shooter, Indexer indexer){
-        super("!SourceLanePGHSprint");
+        super("!!SourceLanePGHSprint");
         addPath(
                 PathHelper.fromChoreoPath("SourceLanePGHSprint.1", true, true),
                 PathHelper.fromChoreoPath("SourceLanePGHSprint.2"),
@@ -22,11 +23,11 @@ public class SourceLanePGHSprint extends AutoCommand {
                 Commands.parallel(
                         new AutoShootPrepare(drivetrain, shooter),
                         Commands.sequence(
-                                createCancoderSegmentSequence(drivetrain, shooter, indexer, 0),
+                                createSegmentSequence(drivetrain, shooter, indexer, 0, true, true, true, SHOT_WAIT),
                                 drivetrain.commandCopyVisionPose(),
-                                createSegmentSequence(drivetrain, shooter, indexer, 1),
+                                createSegmentSequence(drivetrain, shooter, indexer, 1, false, true, true, SHOT_WAIT),
                                 drivetrain.commandCopyVisionPose(),
-                                createSegmentSequence(drivetrain, shooter, indexer, 2),
+                                createSegmentSequence(drivetrain, shooter, indexer, 2, false, true, true, SHOT_WAIT),
                                 drivetrain.commandCopyVisionPose(),
                                 getPath(3).getCommand(drivetrain)
                         )

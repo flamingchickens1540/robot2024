@@ -31,10 +31,10 @@ public class CenterLanePCBAFSprint extends AutoCommand {
                                 createSegmentSequence(drivetrain, shooter, indexer, 0, false, false, false),
                                 createSegmentSequence(drivetrain, shooter, indexer, 1, false, false, true),
                                 createSegmentSequence(drivetrain, shooter, indexer, 2, false, false, true),
-                                createSegmentSequence(drivetrain, shooter, indexer, 3, false, false, true)
+                                createSegmentSequence(drivetrain, shooter, indexer, 3, false, false, true),
+                                getPath(4).getCommand(drivetrain)
                         )
-                ),
-                getPath(4).getCommand(drivetrain)
+                )
         );
 
         addRequirements(drivetrain, shooter, indexer);
