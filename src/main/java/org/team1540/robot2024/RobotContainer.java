@@ -1,5 +1,6 @@
 package org.team1540.robot2024;
 
+import com.pathplanner.lib.util.GeometryUtil;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.util.Units;
@@ -8,6 +9,7 @@ import edu.wpi.first.wpilibj.RobotController;
 import edu.wpi.first.wpilibj.util.Color;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
+import edu.wpi.first.wpilibj2.command.ConditionalCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import org.team1540.robot2024.commands.FeedForwardCharacterization;
@@ -106,27 +108,6 @@ public class RobotContainer {
             }
         }
 
-        // Set up FF characterization routines
-        AutoManager.getInstance().add(
-                new AutoCommand(
-                        "Drive FF Characterization",
-                        new FeedForwardCharacterization(
-                                drivetrain, drivetrain::runCharacterizationVolts, drivetrain::getCharacterizationVelocity
-                        )
-                )
-        );
-
-        AutoManager.getInstance().add(
-                new AutoCommand(
-                        "Flywheels FF Characterization",
-                        new FeedForwardCharacterization(
-                                shooter, volts -> shooter.setFlywheelVolts(volts, volts), () -> shooter.getLeftFlywheelSpeed() / 60
-                        )
-                )
-        );
-
-        AutoManager.getInstance().addDefault(new AmpLanePABCSprint(drivetrain, shooter, indexer));
-        AutoManager.getInstance().add(new SourceLanePHGFSprint(drivetrain));
 
         configureAutoRoutines();
         // Configure the button bindings
@@ -145,12 +126,25 @@ public class RobotContainer {
 
     private void configureButtonBindings() {
         Command manualPivotCommand = new ManualPivotCommand(shooter, copilot);
+        Command defaultShooterCommand = new ConditionalCommand(
+                Commands.either(
+                        new LeadingShootPrepare(drivetrain, shooter, 7000*0.75, 3000*0.75),
+                        new LeadingShootPrepare(drivetrain, shooter, 0, 0),
+                        indexer::isNoteStaged
+                ),
+                new OverStageShootPrepare(drivetrain::getPose, shooter, 0, 0),
+                ()->{
+                    Pose2d pose = DriverStation.getAlliance().orElse(null) == DriverStation.Alliance.Blue ? drivetrain.getPose() : GeometryUtil.flipFieldPose(drivetrain.getPose());
+                    return pose.getTranslation().getX() < Units.inchesToMeters(231.2);
+                }
+
+        );
         drivetrain.setDefaultCommand(new SwerveDriveCommand(drivetrain, driver));
 //        drivetrain.setDefaultCommand(new OverStageShootPrepareWithTargeting(driver.getHID(), drivetrain, shooter));
 //        drivetrain.setDefaultCommand(new AutoShootPrepareWhileMoving(driver.getHID(), drivetrain, shooter));
 //        drivetrain.setDefaultCommand(new DriveWithAmpSideLock(drivetrain, driver.getHID()));
         elevator.setDefaultCommand(new ElevatorManualCommand(elevator, copilot));
-        shooter.setDefaultCommand(manualPivotCommand);
+        shooter.setDefaultCommand(defaultShooterCommand);
         driver.b().onTrue(Commands.runOnce(drivetrain::stopWithX, drivetrain));
 //        driver.y().toggleOnTrue(new DriveWithSpeakerTargetingCommand(drivetrain, driver));
         driver.y().onTrue(Commands.runOnce(() -> {
@@ -268,11 +262,10 @@ public class RobotContainer {
         }
         autos.addDefault(new AutoCommand("Dwayne :skull:"));
         autos.add(new AutoCommand("SubwooferShot", new ShootSequence(shooter, indexer)));
-        autos.add(new DriveSinglePath("AmpLaneTaxi", drivetrain));
-        autos.add(new DriveSinglePath("AmpLaneSprint", drivetrain));
-        autos.add(new AmpLanePADESprint(drivetrain, shooter, indexer));
-        autos.add(new DriveSinglePath("CenterLaneTaxi", drivetrain));
+        autos.add(new DriveSinglePath("Taxi", drivetrain));
+        autos.add(new DriveSinglePath("Sprint", drivetrain));
         autos.add(new DriveSinglePath("CenterLaneSprint", drivetrain, true, true));
+        autos.add(new AmpLanePADESprint(drivetrain, shooter, indexer));
         autos.add(new CenterLanePSubSprint(drivetrain, shooter, indexer));
         autos.add(new CenterLanePCBADSprint(drivetrain, shooter, indexer));
         autos.add(new CenterLanePCBAFSprint(drivetrain, shooter, indexer));
@@ -282,10 +275,8 @@ public class RobotContainer {
         autos.add(new CenterLanePSubCSubBSubASubFSub(drivetrain, shooter, indexer));
 //        autos.add(new CenterLanePSubCSubBSubFSub(drivetrain, shooter, indexer));
         autos.add(new CenterLanePSubCSubBSubASub(drivetrain, shooter, indexer));
-        autos.add(new DriveSinglePath("SourceLaneTaxi", drivetrain));
-        autos.add(new DriveSinglePath("SourceLaneSprint", drivetrain));
         autos.add(new SourceLanePGHSprint(drivetrain, shooter, indexer));
-        autos.add(new SourceLanePHG(drivetrain, shooter, indexer));
+//        autos.addDefault(new ATestAuto(drivetrain, shooter, indexer));
     }
 
 

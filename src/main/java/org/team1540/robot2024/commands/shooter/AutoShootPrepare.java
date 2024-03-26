@@ -20,7 +20,7 @@ public class AutoShootPrepare extends SequentialCommandGroup {
     double C = -0.4942;
     double D = 1.491;
 
-    public AutoShootPrepare(Supplier<Pose2d> positionSupplier, Shooter shooter) {
+    public AutoShootPrepare(Supplier<Pose2d> positionSupplier, Shooter shooter, double leftSetpoint, double rightSetpoint) {
         addCommands(
             new PrepareShooterCommand(shooter, () -> //new ShooterSetpoint(
 //                    Rotation2d.fromRadians(
@@ -36,10 +36,14 @@ public class AutoShootPrepare extends SequentialCommandGroup {
                             Rotation2d.fromRadians(
                                     A * Math.atan(B * (positionSupplier.get().getTranslation().getDistance(AprilTagsCrescendo.getInstance().getTag(AprilTagsCrescendo.Tags.SPEAKER_CENTER).toPose2d().getTranslation())) + C) + D
                             ),
-                            7000,
-                            3000
+                            leftSetpoint,
+                            rightSetpoint
                     )
             )
         );
+    }
+
+    public AutoShootPrepare(Supplier<Pose2d> positionSupplier, Shooter shooter){
+        this(positionSupplier, shooter, 7000, 3000);
     }
 }

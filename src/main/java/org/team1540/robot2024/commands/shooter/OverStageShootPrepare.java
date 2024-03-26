@@ -15,7 +15,7 @@ public class OverStageShootPrepare extends SequentialCommandGroup {
     public OverStageShootPrepare(Drivetrain drivetrain, Shooter shooter) {
         this(drivetrain::getPose, shooter);
     }
-    public OverStageShootPrepare(Supplier<Pose2d> positionSupplier, Shooter shooter) {
+    public OverStageShootPrepare(Supplier<Pose2d> positionSupplier, Shooter shooter, double leftSetpoint, double rightSetpoint) {
         addCommands(
                 new PrepareShooterCommand(shooter, () -> new ShooterSetpoint(
                         Rotation2d.fromRadians(
@@ -25,8 +25,12 @@ public class OverStageShootPrepare extends SequentialCommandGroup {
                                         )
                                 )
                         ).minus(Constants.Shooter.Pivot.REAL_ZEROED_ANGLE),
-                        3500, 3500)
+                        leftSetpoint, rightSetpoint)
                 )
         );
+    }
+
+    public OverStageShootPrepare(Supplier<Pose2d> positionSupplier, Shooter shooter){
+        this(positionSupplier, shooter, 3500, 3500);
     }
 }
