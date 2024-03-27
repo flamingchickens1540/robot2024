@@ -27,21 +27,26 @@ public class ClimbAlignment extends ParallelRaceGroup {
     public ClimbAlignment(Drivetrain drivetrain, Elevator elevator, Tramp tramp, Indexer indexer, Shooter shooter){
         this.drivetrain = drivetrain;
         addCommands(
+                new PrepareShooterCommand(shooter, ()->new ShooterSetpoint(0,0,0)),
                 new SequentialCommandGroup(
                     new ParallelCommandGroup(
                             new SequentialCommandGroup(
                                     new ElevatorSetpointCommand(elevator, Constants.Elevator.ElevatorState.BOTTOM),
                                     new StageTrampCommand(tramp, indexer).onlyIf(indexer::isNoteStaged)
-                            ),
-                            new PrepareShooterCommand(shooter, ()->new ShooterSetpoint(0,0,0))
+                            )
 //                            new ProxyCommand(() -> climbPath(drivetrain::getPose, 1))
                     ),
-                    Commands.runOnce(() -> drivetrain.setBrakeMode(false))
+//                    Commands.runOnce(() -> drivetrain.setBrakeMode(false))
 //                    Commands.waitSeconds(5), //Confirm that nothing will break
+//                    Commands.runOnce(()->elevator.setFlipper(true)),
 //                    new ElevatorSetpointCommand(elevator, Constants.Elevator.ElevatorState.TOP),
 //                    Commands.runOnce(() -> drivetrain.setBrakeMode(true)),
 //                    Commands.waitSeconds(5), //Confirm that nothing will break
-//                    new ProxyCommand(() -> climbPath(drivetrain::getPose, 2))
+//                    new ProxyCommand(() -> climbPath(drivetrain::getPose, 2)),
+                    Commands.parallel(
+//                            Commands.runOnce(()->elevator.setFlipper(false)),
+//                            new ElevatorSetpointCommand(elevator, Constants.Elevator.ElevatorState.TOP)
+                    )
                 ),
                 new StartEndCommand(()->{}, ()->{
                     drivetrain.setBrakeMode(true);

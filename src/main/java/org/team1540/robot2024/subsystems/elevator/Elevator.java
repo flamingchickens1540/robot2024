@@ -76,6 +76,10 @@ public class Elevator extends SubsystemBase {
         positionFilter.clear();
     }
 
+    public void setFlipper(boolean flipped){
+        io.setFlipper(flipped);
+    }
+
     public boolean isAtSetpoint() {
         return MathUtil.isNear(setpointMeters, positionFilter.getAverage(), POS_ERR_TOLERANCE_METERS) || (inputs.atLowerLimit && setpointMeters <= 0);
     }

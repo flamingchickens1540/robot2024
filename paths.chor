@@ -200,15 +200,13 @@
                     "scope": [
                         "first"
                     ],
-                    "type": "StopPoint",
-                    "direction": 0
+                    "type": "StopPoint"
                 },
                 {
                     "scope": [
                         "last"
                     ],
-                    "type": "StopPoint",
-                    "direction": 0
+                    "type": "StopPoint"
                 }
             ],
             "usesControlIntervalGuessing": true,
@@ -216,7 +214,7 @@
             "usesDefaultFieldObstacles": true,
             "circleObstacles": [],
             "eventMarkers": [],
-            "isTrajectoryStale": false
+            "isTrajectoryStale": true
         },
         "Sprint": {
             "waypoints": [
@@ -504,15 +502,13 @@
                     "scope": [
                         "first"
                     ],
-                    "type": "StopPoint",
-                    "direction": 0
+                    "type": "StopPoint"
                 },
                 {
                     "scope": [
                         "last"
                     ],
-                    "type": "StopPoint",
-                    "direction": 0
+                    "type": "StopPoint"
                 }
             ],
             "usesControlIntervalGuessing": true,
@@ -520,7 +516,7 @@
             "usesDefaultFieldObstacles": true,
             "circleObstacles": [],
             "eventMarkers": [],
-            "isTrajectoryStale": false
+            "isTrajectoryStale": true
         },
         "CenterLaneSprint": {
             "waypoints": [
@@ -1019,15 +1015,13 @@
                     "scope": [
                         "first"
                     ],
-                    "type": "StopPoint",
-                    "direction": 0
+                    "type": "StopPoint"
                 },
                 {
                     "scope": [
                         "last"
                     ],
-                    "type": "StopPoint",
-                    "direction": 0
+                    "type": "StopPoint"
                 }
             ],
             "usesControlIntervalGuessing": true,
@@ -1035,30 +1029,30 @@
             "usesDefaultFieldObstacles": true,
             "circleObstacles": [],
             "eventMarkers": [],
-            "isTrajectoryStale": false
+            "isTrajectoryStale": true
         },
         "Tag14": {
             "waypoints": [
                 {
-                    "x": 6.224338054656982,
+                    "x": 5.65,
                     "y": 4.105148,
                     "heading": 3.141592653589793,
                     "isInitialGuess": false,
                     "translationConstrained": true,
                     "headingConstrained": true,
-                    "controlIntervalCount": 7
+                    "controlIntervalCount": 2
                 },
                 {
-                    "x": 5.77,
+                    "x": 5.67,
                     "y": 4.105148,
                     "heading": 3.141592653589793,
                     "isInitialGuess": false,
                     "translationConstrained": true,
                     "headingConstrained": true,
-                    "controlIntervalCount": 3
+                    "controlIntervalCount": 5
                 },
                 {
-                    "x": 5.826,
+                    "x": 5.87,
                     "y": 4.105148,
                     "heading": 3.141592653589793,
                     "isInitialGuess": false,
@@ -1069,132 +1063,105 @@
             ],
             "trajectory": [
                 {
-                    "x": 6.224338054656982,
+                    "x": 5.65,
                     "y": 4.105148,
                     "heading": 3.141592653589793,
-                    "angularVelocity": -1.9390670879884598e-35,
-                    "velocityX": 1.7766873980807548e-19,
-                    "velocityY": 8.904182726292149e-48,
+                    "angularVelocity": 1.9898168855172235e-35,
+                    "velocityX": -4.1906548586207977e-19,
+                    "velocityY": -8.603933715604811e-45,
                     "timestamp": 0
                 },
                 {
-                    "x": 6.186476547774305,
+                    "x": 5.67,
                     "y": 4.105148,
                     "heading": 3.141592653589793,
-                    "angularVelocity": -2.4996122271018033e-24,
-                    "velocityX": -0.40642791397744565,
-                    "velocityY": 1.1300565278043194e-37,
-                    "timestamp": 0.0931567581373812
+                    "angularVelocity": -1.9404859008459245e-25,
+                    "velocityX": 0.2953925521078346,
+                    "velocityY": 2.5211469248369934e-41,
+                    "timestamp": 0.06770651411921333
                 },
                 {
-                    "x": 6.110753536336873,
+                    "x": 5.67,
                     "y": 4.105148,
                     "heading": 3.141592653589793,
-                    "angularVelocity": -7.642010441615522e-24,
-                    "velocityX": -0.8128558029655188,
-                    "velocityY": -2.827834467819816e-37,
-                    "timestamp": 0.1863135162747624
+                    "angularVelocity": 1.9894322566378973e-35,
+                    "velocityX": -9.732091066591102e-19,
+                    "velocityY": -8.603933345990491e-45,
+                    "timestamp": 0.13541302823842666
                 },
                 {
-                    "x": 5.99716902732849,
+                    "x": 5.7033333348623145,
                     "y": 4.105148,
                     "heading": 3.141592653589793,
-                    "angularVelocity": -1.6489729233438956e-24,
-                    "velocityX": -1.2192836169854868,
-                    "velocityY": -1.22969459333099e-36,
-                    "timestamp": 0.27947027441214356
+                    "angularVelocity": 6.224455028031798e-27,
+                    "velocityX": 0.3813501839335422,
+                    "velocityY": -7.87167491563539e-43,
+                    "timestamp": 0.22282175718804903
                 },
                 {
-                    "x": 5.88358451832009,
+                    "x": 5.770000000000059,
                     "y": 4.105148,
                     "heading": 3.141592653589793,
-                    "angularVelocity": 1.0379573373635505e-23,
-                    "velocityX": -1.2192836169854868,
-                    "velocityY": -2.8845016149269677e-37,
-                    "timestamp": 0.3726270325495248
+                    "angularVelocity": 1.1939294645306622e-26,
+                    "velocityX": 0.7627003153894066,
+                    "velocityY": -1.6493125386550898e-42,
+                    "timestamp": 0.3102304861376714
                 },
                 {
-                    "x": 5.807861506882689,
+                    "x": 5.836666665137633,
                     "y": 4.105148,
                     "heading": 3.141592653589793,
-                    "angularVelocity": -6.829975200213146e-25,
-                    "velocityX": -0.8128558029655188,
-                    "velocityY": 9.593634209674488e-37,
-                    "timestamp": 0.465783790686906
+                    "angularVelocity": 1.2599779930508123e-26,
+                    "velocityX": 0.7627003153894064,
+                    "velocityY": -1.6423599321913863e-42,
+                    "timestamp": 0.3976392150872938
                 },
                 {
-                    "x": 5.769999999999999,
+                    "x": 5.87,
                     "y": 4.105148,
                     "heading": 3.141592653589793,
-                    "angularVelocity": 2.101401640366878e-24,
-                    "velocityX": -0.4064279139774457,
-                    "velocityY": 7.2855825720271415e-37,
-                    "timestamp": 0.5589405488242872
+                    "angularVelocity": 6.4603054830567416e-27,
+                    "velocityX": 0.38135018393354214,
+                    "velocityY": -7.88271785574287e-43,
+                    "timestamp": 0.48504794403691615
                 },
                 {
-                    "x": 5.77,
+                    "x": 5.87,
                     "y": 4.105148,
                     "heading": 3.141592653589793,
-                    "angularVelocity": -1.8956839170817245e-35,
-                    "velocityX": 1.3726397507122414e-19,
-                    "velocityY": 1.1843965226752523e-47,
-                    "timestamp": 0.6520973069616685
-                },
-                {
-                    "x": 5.797999999999997,
-                    "y": 4.105148,
-                    "heading": 3.141592653589793,
-                    "angularVelocity": -4.600113928387426e-28,
-                    "velocityX": 0.3495132037100882,
-                    "velocityY": 8.714533783663232e-44,
-                    "timestamp": 0.7322087296569475
-                },
-                {
-                    "x": 5.826,
-                    "y": 4.105148,
-                    "heading": 3.141592653589793,
-                    "angularVelocity": -4.607782485444709e-28,
-                    "velocityX": 0.34951320371008815,
-                    "velocityY": 8.023846057264112e-44,
-                    "timestamp": 0.8123201523522265
-                },
-                {
-                    "x": 5.826,
-                    "y": 4.105148,
-                    "heading": 3.141592653589793,
-                    "angularVelocity": 9.888109688615658e-44,
-                    "velocityX": -2.1136492085418514e-19,
-                    "velocityY": -4.40493861881828e-55,
-                    "timestamp": 0.8924315750475056
+                    "angularVelocity": -8.84678881735324e-46,
+                    "velocityX": -2.5654038297220854e-19,
+                    "velocityY": -1.971878449457756e-53,
+                    "timestamp": 0.5724566729865386
                 }
             ],
             "trajectoryWaypoints": [
                 {
                     "timestamp": 0,
                     "isStopPoint": true,
-                    "x": 6.224338054656982,
+                    "x": 5.65,
                     "y": 4.105148,
                     "heading": 3.141592653589793,
                     "isInitialGuess": false,
                     "translationConstrained": true,
                     "headingConstrained": true,
-                    "controlIntervalCount": 7
+                    "controlIntervalCount": 2
                 },
                 {
-                    "timestamp": 0.6520973069616685,
+                    "timestamp": 0.13541302823842666,
                     "isStopPoint": true,
-                    "x": 5.77,
+                    "x": 5.67,
                     "y": 4.105148,
                     "heading": 3.141592653589793,
                     "isInitialGuess": false,
                     "translationConstrained": true,
                     "headingConstrained": true,
-                    "controlIntervalCount": 3
+                    "controlIntervalCount": 5
                 },
                 {
-                    "timestamp": 0.8924315750475056,
+                    "timestamp": 0.5724566729865386,
                     "isStopPoint": true,
-                    "x": 5.826,
+                    "x": 5.87,
                     "y": 4.105148,
                     "heading": 3.141592653589793,
                     "isInitialGuess": false,
@@ -1208,22 +1175,19 @@
                     "scope": [
                         "first"
                     ],
-                    "type": "StopPoint",
-                    "direction": 0
+                    "type": "StopPoint"
                 },
                 {
                     "scope": [
                         "last"
                     ],
-                    "type": "StopPoint",
-                    "direction": 0
+                    "type": "StopPoint"
                 },
                 {
                     "scope": [
                         1
                     ],
-                    "type": "StopPoint",
-                    "direction": 0
+                    "type": "StopPoint"
                 }
             ],
             "usesControlIntervalGuessing": true,
@@ -1404,22 +1368,19 @@
                     "scope": [
                         "first"
                     ],
-                    "type": "StopPoint",
-                    "direction": 0
+                    "type": "StopPoint"
                 },
                 {
                     "scope": [
                         "last"
                     ],
-                    "type": "StopPoint",
-                    "direction": 0
+                    "type": "StopPoint"
                 },
                 {
                     "scope": [
                         1
                     ],
-                    "type": "StopPoint",
-                    "direction": 0
+                    "type": "StopPoint"
                 }
             ],
             "usesControlIntervalGuessing": true,
@@ -1427,7 +1388,7 @@
             "usesDefaultFieldObstacles": true,
             "circleObstacles": [],
             "eventMarkers": [],
-            "isTrajectoryStale": false
+            "isTrajectoryStale": true
         },
         "Tag16": {
             "waypoints": [
@@ -1600,22 +1561,19 @@
                     "scope": [
                         "first"
                     ],
-                    "type": "StopPoint",
-                    "direction": 0
+                    "type": "StopPoint"
                 },
                 {
                     "scope": [
                         "last"
                     ],
-                    "type": "StopPoint",
-                    "direction": 0
+                    "type": "StopPoint"
                 },
                 {
                     "scope": [
                         1
                     ],
-                    "type": "StopPoint",
-                    "direction": 0
+                    "type": "StopPoint"
                 }
             ],
             "usesControlIntervalGuessing": true,
@@ -1623,7 +1581,7 @@
             "usesDefaultFieldObstacles": true,
             "circleObstacles": [],
             "eventMarkers": [],
-            "isTrajectoryStale": false
+            "isTrajectoryStale": true
         },
         "SourceLanePSubHSubSprint": {
             "waypoints": [
@@ -3129,22 +3087,19 @@
                     "scope": [
                         "first"
                     ],
-                    "type": "StopPoint",
-                    "direction": 0
+                    "type": "StopPoint"
                 },
                 {
                     "scope": [
                         "last"
                     ],
-                    "type": "StopPoint",
-                    "direction": 0
+                    "type": "StopPoint"
                 },
                 {
                     "scope": [
                         5
                     ],
-                    "type": "StopPoint",
-                    "direction": 0
+                    "type": "StopPoint"
                 }
             ],
             "usesControlIntervalGuessing": true,
@@ -3152,7 +3107,7 @@
             "usesDefaultFieldObstacles": true,
             "circleObstacles": [],
             "eventMarkers": [],
-            "isTrajectoryStale": false
+            "isTrajectoryStale": true
         },
         "CenterLanePSubCSubBSubASubSprint": {
             "waypoints": [
@@ -4664,36 +4619,31 @@
                     "scope": [
                         "first"
                     ],
-                    "type": "StopPoint",
-                    "direction": 0
+                    "type": "StopPoint"
                 },
                 {
                     "scope": [
                         "last"
                     ],
-                    "type": "StopPoint",
-                    "direction": 0
+                    "type": "StopPoint"
                 },
                 {
                     "scope": [
                         2
                     ],
-                    "type": "StopPoint",
-                    "direction": 0
+                    "type": "StopPoint"
                 },
                 {
                     "scope": [
                         4
                     ],
-                    "type": "StopPoint",
-                    "direction": 0
+                    "type": "StopPoint"
                 },
                 {
                     "scope": [
                         6
                     ],
-                    "type": "StopPoint",
-                    "direction": 0
+                    "type": "StopPoint"
                 }
             ],
             "usesControlIntervalGuessing": true,
@@ -4701,7 +4651,7 @@
             "usesDefaultFieldObstacles": true,
             "circleObstacles": [],
             "eventMarkers": [],
-            "isTrajectoryStale": false
+            "isTrajectoryStale": true
         },
         "CenterLanePSubCSubBSubASubFSub": {
             "waypoints": [
@@ -6714,36 +6664,31 @@
                     "scope": [
                         "first"
                     ],
-                    "type": "StopPoint",
-                    "direction": 0
+                    "type": "StopPoint"
                 },
                 {
                     "scope": [
                         "last"
                     ],
-                    "type": "StopPoint",
-                    "direction": 0
+                    "type": "StopPoint"
                 },
                 {
                     "scope": [
                         2
                     ],
-                    "type": "StopPoint",
-                    "direction": 0
+                    "type": "StopPoint"
                 },
                 {
                     "scope": [
                         4
                     ],
-                    "type": "StopPoint",
-                    "direction": 0
+                    "type": "StopPoint"
                 },
                 {
                     "scope": [
                         6
                     ],
-                    "type": "StopPoint",
-                    "direction": 0
+                    "type": "StopPoint"
                 }
             ],
             "usesControlIntervalGuessing": true,
@@ -6751,7 +6696,7 @@
             "usesDefaultFieldObstacles": true,
             "circleObstacles": [],
             "eventMarkers": [],
-            "isTrajectoryStale": false
+            "isTrajectoryStale": true
         },
         "SourceLanePSubHSubGSub": {
             "waypoints": [
@@ -8803,22 +8748,19 @@
                     "scope": [
                         "first"
                     ],
-                    "type": "StopPoint",
-                    "direction": 0
+                    "type": "StopPoint"
                 },
                 {
                     "scope": [
                         "last"
                     ],
-                    "type": "StopPoint",
-                    "direction": 0
+                    "type": "StopPoint"
                 },
                 {
                     "scope": [
                         5
                     ],
-                    "type": "StopPoint",
-                    "direction": 0
+                    "type": "StopPoint"
                 }
             ],
             "usesControlIntervalGuessing": true,
@@ -8826,7 +8768,7 @@
             "usesDefaultFieldObstacles": true,
             "circleObstacles": [],
             "eventMarkers": [],
-            "isTrajectoryStale": false
+            "isTrajectoryStale": true
         },
         "AmpLanePSubASubDSubESub": {
             "waypoints": [
@@ -10885,29 +10827,25 @@
                     "scope": [
                         "first"
                     ],
-                    "type": "StopPoint",
-                    "direction": 0
+                    "type": "StopPoint"
                 },
                 {
                     "scope": [
                         "last"
                     ],
-                    "type": "StopPoint",
-                    "direction": 0
+                    "type": "StopPoint"
                 },
                 {
                     "scope": [
                         2
                     ],
-                    "type": "StopPoint",
-                    "direction": 0
+                    "type": "StopPoint"
                 },
                 {
                     "scope": [
                         5
                     ],
-                    "type": "StopPoint",
-                    "direction": 0
+                    "type": "StopPoint"
                 }
             ],
             "usesControlIntervalGuessing": true,
@@ -10915,7 +10853,7 @@
             "usesDefaultFieldObstacles": true,
             "circleObstacles": [],
             "eventMarkers": [],
-            "isTrajectoryStale": false
+            "isTrajectoryStale": true
         },
         "CenterLanePCBAFSprint": {
             "waypoints": [
@@ -13067,43 +13005,37 @@
                     "scope": [
                         "first"
                     ],
-                    "type": "StopPoint",
-                    "direction": 0
+                    "type": "StopPoint"
                 },
                 {
                     "scope": [
                         "last"
                     ],
-                    "type": "StopPoint",
-                    "direction": 0
+                    "type": "StopPoint"
                 },
                 {
                     "scope": [
                         3
                     ],
-                    "type": "StopPoint",
-                    "direction": 0
+                    "type": "StopPoint"
                 },
                 {
                     "scope": [
                         5
                     ],
-                    "type": "StopPoint",
-                    "direction": 0
+                    "type": "StopPoint"
                 },
                 {
                     "scope": [
                         2
                     ],
-                    "type": "StopPoint",
-                    "direction": 0
+                    "type": "StopPoint"
                 },
                 {
                     "scope": [
                         12
                     ],
-                    "type": "StopPoint",
-                    "direction": 0
+                    "type": "StopPoint"
                 },
                 {
                     "scope": [
@@ -13118,7 +13050,7 @@
             "usesDefaultFieldObstacles": true,
             "circleObstacles": [],
             "eventMarkers": [],
-            "isTrajectoryStale": false
+            "isTrajectoryStale": true
         },
         "CenterLanePCBADSprint": {
             "waypoints": [
@@ -14574,51 +14506,44 @@
                     "scope": [
                         "first"
                     ],
-                    "type": "StopPoint",
-                    "direction": 0
+                    "type": "StopPoint"
                 },
                 {
                     "scope": [
                         "last"
                     ],
-                    "type": "StopPoint",
-                    "direction": 0
+                    "type": "StopPoint"
                 },
                 {
                     "scope": [
                         2
                     ],
-                    "type": "StopPoint",
-                    "direction": 0
+                    "type": "StopPoint"
                 },
                 {
                     "scope": [
                         3
                     ],
-                    "type": "StopPoint",
-                    "direction": 0
+                    "type": "StopPoint"
                 },
                 {
                     "scope": [
                         5
                     ],
-                    "type": "StopPoint",
-                    "direction": 0
+                    "type": "StopPoint"
                 },
                 {
                     "scope": [
                         4,
                         5
                     ],
-                    "type": "StraightLine",
-                    "direction": 0
+                    "type": "StraightLine"
                 },
                 {
                     "scope": [
                         8
                     ],
-                    "type": "StopPoint",
-                    "direction": 0
+                    "type": "StopPoint"
                 }
             ],
             "usesControlIntervalGuessing": true,
@@ -14626,7 +14551,7 @@
             "usesDefaultFieldObstacles": true,
             "circleObstacles": [],
             "eventMarkers": [],
-            "isTrajectoryStale": false
+            "isTrajectoryStale": true
         },
         "SourceLanePGHSprint": {
             "waypoints": [
@@ -17017,36 +16942,31 @@
                     "scope": [
                         "first"
                     ],
-                    "type": "StopPoint",
-                    "direction": 0
+                    "type": "StopPoint"
                 },
                 {
                     "scope": [
                         "last"
                     ],
-                    "type": "StopPoint",
-                    "direction": 0
+                    "type": "StopPoint"
                 },
                 {
                     "scope": [
                         6
                     ],
-                    "type": "StopPoint",
-                    "direction": 0
+                    "type": "StopPoint"
                 },
                 {
                     "scope": [
                         1
                     ],
-                    "type": "StopPoint",
-                    "direction": 0
+                    "type": "StopPoint"
                 },
                 {
                     "scope": [
                         11
                     ],
-                    "type": "StopPoint",
-                    "direction": 0
+                    "type": "StopPoint"
                 }
             ],
             "usesControlIntervalGuessing": true,
@@ -17054,7 +16974,7 @@
             "usesDefaultFieldObstacles": true,
             "circleObstacles": [],
             "eventMarkers": [],
-            "isTrajectoryStale": false
+            "isTrajectoryStale": true
         },
         "AmpLanePADESprint": {
             "waypoints": [
@@ -18883,43 +18803,37 @@
                     "scope": [
                         "first"
                     ],
-                    "type": "StopPoint",
-                    "direction": 0
+                    "type": "StopPoint"
                 },
                 {
                     "scope": [
                         "last"
                     ],
-                    "type": "StopPoint",
-                    "direction": 0
+                    "type": "StopPoint"
                 },
                 {
                     "scope": [
                         1
                     ],
-                    "type": "StopPoint",
-                    "direction": 0
+                    "type": "StopPoint"
                 },
                 {
                     "scope": [
                         5
                     ],
-                    "type": "StopPoint",
-                    "direction": 0
+                    "type": "StopPoint"
                 },
                 {
                     "scope": [
                         10
                     ],
-                    "type": "StopPoint",
-                    "direction": 0
+                    "type": "StopPoint"
                 },
                 {
                     "scope": [
                         2
                     ],
-                    "type": "StopPoint",
-                    "direction": 0
+                    "type": "StopPoint"
                 }
             ],
             "usesControlIntervalGuessing": true,
@@ -18927,7 +18841,7 @@
             "usesDefaultFieldObstacles": true,
             "circleObstacles": [],
             "eventMarkers": [],
-            "isTrajectoryStale": false
+            "isTrajectoryStale": true
         },
         "CenterLanePBDA": {
             "waypoints": [
@@ -19963,29 +19877,25 @@
                     "scope": [
                         "first"
                     ],
-                    "type": "StopPoint",
-                    "direction": 0
+                    "type": "StopPoint"
                 },
                 {
                     "scope": [
                         "last"
                     ],
-                    "type": "StopPoint",
-                    "direction": 0
+                    "type": "StopPoint"
                 },
                 {
                     "scope": [
                         4
                     ],
-                    "type": "StopPoint",
-                    "direction": 0
+                    "type": "StopPoint"
                 },
                 {
                     "scope": [
                         1
                     ],
-                    "type": "StopPoint",
-                    "direction": 0
+                    "type": "StopPoint"
                 }
             ],
             "usesControlIntervalGuessing": true,
@@ -19993,7 +19903,7 @@
             "usesDefaultFieldObstacles": true,
             "circleObstacles": [],
             "eventMarkers": [],
-            "isTrajectoryStale": false
+            "isTrajectoryStale": true
         },
         "CenterLanePCBA": {
             "waypoints": [
@@ -20694,44 +20604,38 @@
                     "scope": [
                         "first"
                     ],
-                    "type": "StopPoint",
-                    "direction": 0
+                    "type": "StopPoint"
                 },
                 {
                     "scope": [
                         "last"
                     ],
-                    "type": "StopPoint",
-                    "direction": 0
+                    "type": "StopPoint"
                 },
                 {
                     "scope": [
                         3
                     ],
-                    "type": "StopPoint",
-                    "direction": 0
+                    "type": "StopPoint"
                 },
                 {
                     "scope": [
                         5
                     ],
-                    "type": "StopPoint",
-                    "direction": 0
+                    "type": "StopPoint"
                 },
                 {
                     "scope": [
                         4,
                         5
                     ],
-                    "type": "StraightLine",
-                    "direction": 0
+                    "type": "StraightLine"
                 },
                 {
                     "scope": [
                         2
                     ],
-                    "type": "StopPoint",
-                    "direction": 0
+                    "type": "StopPoint"
                 }
             ],
             "usesControlIntervalGuessing": true,
@@ -20739,7 +20643,7 @@
             "usesDefaultFieldObstacles": true,
             "circleObstacles": [],
             "eventMarkers": [],
-            "isTrajectoryStale": false
+            "isTrajectoryStale": true
         },
         "CenterLanePCBAFE": {
             "waypoints": [
@@ -23037,43 +22941,37 @@
                     "scope": [
                         "first"
                     ],
-                    "type": "StopPoint",
-                    "direction": 0
+                    "type": "StopPoint"
                 },
                 {
                     "scope": [
                         "last"
                     ],
-                    "type": "StopPoint",
-                    "direction": 0
+                    "type": "StopPoint"
                 },
                 {
                     "scope": [
                         3
                     ],
-                    "type": "StopPoint",
-                    "direction": 0
+                    "type": "StopPoint"
                 },
                 {
                     "scope": [
                         5
                     ],
-                    "type": "StopPoint",
-                    "direction": 0
+                    "type": "StopPoint"
                 },
                 {
                     "scope": [
                         2
                     ],
-                    "type": "StopPoint",
-                    "direction": 0
+                    "type": "StopPoint"
                 },
                 {
                     "scope": [
                         11
                     ],
-                    "type": "StopPoint",
-                    "direction": 0
+                    "type": "StopPoint"
                 }
             ],
             "usesControlIntervalGuessing": true,
@@ -23081,7 +22979,7 @@
             "usesDefaultFieldObstacles": true,
             "circleObstacles": [],
             "eventMarkers": [],
-            "isTrajectoryStale": false
+            "isTrajectoryStale": true
         },
         "CenterLanePCBFSprint": {
             "waypoints": [
@@ -24941,36 +24839,31 @@
                     "scope": [
                         "first"
                     ],
-                    "type": "StopPoint",
-                    "direction": 0
+                    "type": "StopPoint"
                 },
                 {
                     "scope": [
                         "last"
                     ],
-                    "type": "StopPoint",
-                    "direction": 0
+                    "type": "StopPoint"
                 },
                 {
                     "scope": [
                         3
                     ],
-                    "type": "StopPoint",
-                    "direction": 0
+                    "type": "StopPoint"
                 },
                 {
                     "scope": [
                         2
                     ],
-                    "type": "StopPoint",
-                    "direction": 0
+                    "type": "StopPoint"
                 },
                 {
                     "scope": [
                         10
                     ],
-                    "type": "StopPoint",
-                    "direction": 0
+                    "type": "StopPoint"
                 }
             ],
             "usesControlIntervalGuessing": true,
@@ -24978,7 +24871,7 @@
             "usesDefaultFieldObstacles": true,
             "circleObstacles": [],
             "eventMarkers": [],
-            "isTrajectoryStale": false
+            "isTrajectoryStale": true
         },
         "SourceLanePGCSprint": {
             "waypoints": [
@@ -26924,52 +26817,45 @@
                     "scope": [
                         "first"
                     ],
-                    "type": "StopPoint",
-                    "direction": 0
+                    "type": "StopPoint"
                 },
                 {
                     "scope": [
                         "last"
                     ],
-                    "type": "StopPoint",
-                    "direction": 0
+                    "type": "StopPoint"
                 },
                 {
                     "scope": [
                         6
                     ],
-                    "type": "StopPoint",
-                    "direction": 0
+                    "type": "StopPoint"
                 },
                 {
                     "scope": [
                         1
                     ],
-                    "type": "StopPoint",
-                    "direction": 0
+                    "type": "StopPoint"
                 },
                 {
                     "scope": [
                         9
                     ],
-                    "type": "StopPoint",
-                    "direction": 0
+                    "type": "StopPoint"
                 },
                 {
                     "scope": [
                         7,
                         8
                     ],
-                    "type": "ZeroAngularVelocity",
-                    "direction": 0
+                    "type": "ZeroAngularVelocity"
                 },
                 {
                     "scope": [
                         7,
                         8
                     ],
-                    "type": "StraightLine",
-                    "direction": 0
+                    "type": "StraightLine"
                 }
             ],
             "usesControlIntervalGuessing": true,
@@ -26977,7 +26863,7 @@
             "usesDefaultFieldObstacles": true,
             "circleObstacles": [],
             "eventMarkers": [],
-            "isTrajectoryStale": false
+            "isTrajectoryStale": true
         }
     },
     "splitTrajectoriesAtStopPoints": true,

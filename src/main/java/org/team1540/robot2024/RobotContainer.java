@@ -126,25 +126,12 @@ public class RobotContainer {
 
     private void configureButtonBindings() {
         Command manualPivotCommand = new ManualPivotCommand(shooter, copilot);
-        Command defaultShooterCommand = new ConditionalCommand(
-                Commands.either(
-                        new LeadingShootPrepare(drivetrain, shooter, 7000*0.75, 3000*0.75),
-                        new LeadingShootPrepare(drivetrain, shooter, 0, 0),
-                        indexer::isNoteStaged
-                ),
-                new OverStageShootPrepare(drivetrain::getPose, shooter, 0, 0),
-                ()->{
-                    Pose2d pose = DriverStation.getAlliance().orElse(null) == DriverStation.Alliance.Blue ? drivetrain.getPose() : GeometryUtil.flipFieldPose(drivetrain.getPose());
-                    return pose.getTranslation().getX() < Units.inchesToMeters(231.2);
-                }
-
-        );
         drivetrain.setDefaultCommand(new SwerveDriveCommand(drivetrain, driver));
 //        drivetrain.setDefaultCommand(new OverStageShootPrepareWithTargeting(driver.getHID(), drivetrain, shooter));
 //        drivetrain.setDefaultCommand(new AutoShootPrepareWhileMoving(driver.getHID(), drivetrain, shooter));
 //        drivetrain.setDefaultCommand(new DriveWithAmpSideLock(drivetrain, driver.getHID()));
         elevator.setDefaultCommand(new ElevatorManualCommand(elevator, copilot));
-        shooter.setDefaultCommand(defaultShooterCommand);
+        shooter.setDefaultCommand(manualPivotCommand);
         driver.b().onTrue(Commands.runOnce(drivetrain::stopWithX, drivetrain));
 //        driver.y().toggleOnTrue(new DriveWithSpeakerTargetingCommand(drivetrain, driver));
         driver.y().onTrue(Commands.runOnce(() -> {
@@ -179,6 +166,7 @@ public class RobotContainer {
             driver.a().whileTrue(new TuneShooterCommand(shooter, indexer, drivetrain::getPose));
 
         }
+        copilot.povLeft().onTrue(Commands.runOnce(()->elevator.setFlipper(true))).onFalse(Commands.runOnce(()->elevator.setFlipper(false)));
         driver.povDown().and(() -> !DriverStation.isFMSAttached()).onTrue(Commands.runOnce(() -> drivetrain.setPose(new Pose2d(Units.inchesToMeters(260), Units.inchesToMeters(161.62), Rotation2d.fromRadians(0)))).ignoringDisable(true));
 
         driver.rightTrigger(0.95).toggleOnTrue(autoShooterCommand);

@@ -12,6 +12,7 @@ public interface ElevatorIO {
         public double[] tempCelsius = new double[]{};
         public boolean atUpperLimit = false;
         public boolean atLowerLimit = false;
+        public double flipperAngleDegrees = 0.0;
     }
 
     default void updateInputs(ElevatorIOInputs inputs) {}
@@ -21,6 +22,8 @@ public interface ElevatorIO {
     default void setVoltage(double voltage) {}
 
     default void setBrakeMode(boolean isBrakeMode) {}
+
+    default void setFlipper(boolean flipped) {}
 
     default void configPID(double kP, double kI, double kD) {}
 }

@@ -9,6 +9,7 @@ import com.ctre.phoenix6.controls.Follower;
 import com.ctre.phoenix6.controls.MotionMagicVoltage;
 import com.ctre.phoenix6.hardware.TalonFX;
 import com.ctre.phoenix6.signals.*;
+import edu.wpi.first.wpilibj.Servo;
 import org.team1540.robot2024.Constants;
 
 public class ElevatorIOTalonFX implements ElevatorIO {
@@ -16,7 +17,8 @@ public class ElevatorIOTalonFX implements ElevatorIO {
     private final MotionMagicVoltage motionMagicOut = new MotionMagicVoltage(0).withEnableFOC(true);
     private final TalonFX leader = new TalonFX(Constants.Elevator.LEADER_ID);
     private final TalonFX follower = new TalonFX(Constants.Elevator.FOLLOWER_ID);
-
+    private final Servo leftFlipper = new Servo(Constants.Elevator.LEFT_FLIPPER_ID);
+    private final Servo rightFlipper = new Servo(Constants.Elevator.RIGHT_FLIPPER_ID);
     private final StatusSignal<Double> leaderPosition = leader.getPosition();
     private final StatusSignal<Double> leaderVelocity = leader.getVelocity();
     private final StatusSignal<Double> leaderAppliedVolts = leader.getMotorVoltage();
@@ -99,6 +101,7 @@ public class ElevatorIOTalonFX implements ElevatorIO {
         inputs.tempCelsius = new double[]{leaderTemp.getValueAsDouble(), followerCurrent.getValueAsDouble()};
         inputs.atUpperLimit = topLimitStatus.getValue() == ForwardLimitValue.ClosedToGround;
         inputs.atLowerLimit = bottomLimitStatus.getValue() == ReverseLimitValue.ClosedToGround;
+        inputs.flipperAngleDegrees = leftFlipper.getAngle();
     }
 
     @Override
@@ -115,6 +118,12 @@ public class ElevatorIOTalonFX implements ElevatorIO {
     public void setBrakeMode(boolean isBrakeMode) {
         leader.setNeutralMode(isBrakeMode ? NeutralModeValue.Brake : NeutralModeValue.Coast);
         follower.setNeutralMode(isBrakeMode ? NeutralModeValue.Brake : NeutralModeValue.Coast);
+    }
+
+    @Override
+    public void setFlipper(boolean flipped) {
+        leftFlipper.set(flipped ? 0.63 : 1);
+        rightFlipper.set(flipped ? 1 : 0);
     }
 
     @Override

@@ -209,6 +209,10 @@ public final class Constants {
         public static final double GEAR_RATIO = 11.571;
         public static final int LEADER_ID = 7;
         public static final int FOLLOWER_ID = 8;
+
+        public static final int LEFT_FLIPPER_ID = 1;
+
+        public static final int RIGHT_FLIPPER_ID = 0;
         public static final double KS = 0.03178;
         public static final double KV = 0.82983;
         public static final double KA = 0.00;
