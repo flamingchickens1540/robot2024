@@ -1,6 +1,7 @@
 package org.team1540.robot2024;
 
 import com.pathplanner.lib.path.PathConstraints;
+import com.pathplanner.lib.util.GeometryUtil;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Pose3d;
 import edu.wpi.first.math.geometry.Rotation2d;
@@ -267,10 +268,26 @@ public final class Constants {
         public static final double ROT_KI = 0.0;
         public static final double ROT_KD = 0.0;
 
-        public static final Pose2d SPEAKER_POSE =
-                new Pose2d(Units.inchesToMeters(8.861), Units.inchesToMeters(218), new Rotation2d());
+
         public static final double SPEAKER_CENTER_HEIGHT = Units.inchesToMeters(80.4375);
         public static final double STAGE_MAX_HEIGHT = Units.feetToMeters(7.365);
+
+        private static final Pose2d SPEAKER_POSE =
+                new Pose2d(Units.inchesToMeters(8.861), Units.inchesToMeters(218), new Rotation2d());
+        private static final Pose2d SHUFFLE_POSE =
+                new Pose2d(SPEAKER_POSE.getX(), SPEAKER_POSE.getY() + 2, new Rotation2d());
+
+        public static Pose2d getSpeakerPose() {
+            return DriverStation.getAlliance().orElse(null) == DriverStation.Alliance.Red
+                    ? GeometryUtil.flipFieldPose(SPEAKER_POSE)
+                    : SPEAKER_POSE;
+        }
+
+        public static Pose2d getShufflePose() {
+            return DriverStation.getAlliance().orElse(null) == DriverStation.Alliance.Red
+                    ? GeometryUtil.flipFieldPose(SHUFFLE_POSE)
+                    : SHUFFLE_POSE;
+        }
     }
 
     public static boolean isTuningMode() {

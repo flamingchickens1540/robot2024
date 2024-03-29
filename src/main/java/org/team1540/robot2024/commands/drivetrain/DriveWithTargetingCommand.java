@@ -1,19 +1,15 @@
 package org.team1540.robot2024.commands.drivetrain;
 
-import com.pathplanner.lib.util.GeometryUtil;
-import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.geometry.*;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj2.command.Command;
-import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import org.littletonrobotics.junction.Logger;
 import org.team1540.robot2024.Constants;
 import org.team1540.robot2024.subsystems.drive.Drivetrain;
 import org.team1540.robot2024.util.LoggedTunableNumber;
 import org.team1540.robot2024.util.math.JoystickUtils;
-import org.team1540.robot2024.util.vision.AprilTagsCrescendo;
 
 import java.util.function.Supplier;
 
@@ -31,12 +27,12 @@ public class DriveWithTargetingCommand extends Command {
 
     private boolean isFlipped;
 
-    private Supplier<Pose2d> target;
+    private final Supplier<Pose2d> target;
 
     private final double deadzone = 0.03;
 
     public DriveWithTargetingCommand(Drivetrain drivetrain, XboxController controller){
-        this(drivetrain, controller, ()-> AprilTagsCrescendo.getInstance().getTag(AprilTagsCrescendo.Tags.SPEAKER_CENTER).toPose2d());
+        this(drivetrain, controller, Constants.Targeting::getSpeakerPose);
     }
     public DriveWithTargetingCommand(Drivetrain drivetrain, XboxController controller, Supplier<Pose2d> target) {
         this.drivetrain = drivetrain;
@@ -58,9 +54,8 @@ public class DriveWithTargetingCommand extends Command {
                 drivetrain.getPose()
                         .minus(target.get()).getTranslation().getAngle()
                         .rotateBy(isFlipped ? Rotation2d.fromDegrees(180) : Rotation2d.fromDegrees(0));
-//        Logger.recordOutput("Targeting/setpointPose", new Pose2d(drivetrain.getPose().getTranslation(), targetRot));
         drivetrain.setTargetPose(new Pose2d(drivetrain.getPose().getTranslation(), targetRot));
-        Logger.recordOutput("Targeting/rotErrorDegrees", Math.abs(targetRot.minus(drivetrain.getRotation()).getDegrees()));
+        Logger.recordOutput("Targeting/rotError", targetRot.minus(drivetrain.getRotation()));
         Logger.recordOutput("Targeting/target", target.get());
 
         double linearMagnitude = 0;

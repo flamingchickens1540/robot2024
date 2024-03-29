@@ -4,7 +4,6 @@ import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
-import org.littletonrobotics.junction.Logger;
 import org.littletonrobotics.junction.networktables.LoggedDashboardNumber;
 import org.team1540.robot2024.commands.indexer.IntakeAndFeed;
 import org.team1540.robot2024.subsystems.indexer.Indexer;
@@ -31,8 +30,8 @@ public class TuneShooterCommand extends ParallelCommandGroup {
         pivotRotationSupplier = shooter::getPivotPosition;
 
         addCommands(
-                new IntakeAndFeed(indexer, ()->1, ()->1),
-                new PrepareShooterCommand(shooter, ()->
+                new IntakeAndFeed(indexer, () -> 1, () -> 1),
+                new PrepareShooterCommand(shooter, () ->
                         new ShooterSetpoint(
                                 Rotation2d.fromDegrees(angleSetpoint.get()), leftFlywheelSetpoint.get(), rightFlywheelSetpoint.get()
                         )),

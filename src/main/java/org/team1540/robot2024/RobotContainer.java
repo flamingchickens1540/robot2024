@@ -1,6 +1,5 @@
 package org.team1540.robot2024;
 
-import com.pathplanner.lib.util.GeometryUtil;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.util.Units;
@@ -9,7 +8,6 @@ import edu.wpi.first.wpilibj.RobotController;
 import edu.wpi.first.wpilibj.util.Color;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
-import edu.wpi.first.wpilibj2.command.ConditionalCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import org.team1540.robot2024.commands.FeedForwardCharacterization;
@@ -21,7 +19,6 @@ import org.team1540.robot2024.commands.drivetrain.WheelRadiusCharacterization;
 import org.team1540.robot2024.commands.elevator.ElevatorManualCommand;
 import org.team1540.robot2024.commands.indexer.ContinuousIntakeCommand;
 import org.team1540.robot2024.commands.indexer.IntakeAndFeed;
-import org.team1540.robot2024.commands.indexer.IntakeCommand;
 import org.team1540.robot2024.commands.indexer.StageTrampCommand;
 import org.team1540.robot2024.commands.shooter.*;
 import org.team1540.robot2024.commands.tramp.AmpScoreSequence;
@@ -30,6 +27,7 @@ import org.team1540.robot2024.subsystems.drive.Drivetrain;
 import org.team1540.robot2024.subsystems.elevator.Elevator;
 import org.team1540.robot2024.subsystems.indexer.Indexer;
 import org.team1540.robot2024.subsystems.led.Leds;
+import org.team1540.robot2024.subsystems.led.patterns.LedPatternProgressBar;
 import org.team1540.robot2024.subsystems.led.patterns.LedPatternRSLState;
 import org.team1540.robot2024.subsystems.led.patterns.LedPatternWave;
 import org.team1540.robot2024.subsystems.led.patterns.SimpleLedPattern;
@@ -135,13 +133,18 @@ public class RobotContainer {
             drivetrain.setBrakeMode(true);
         }).ignoringDisable(true));
 
-
         Command targetDrive = new AutoShootPrepareWithTargeting(driver.getHID(), drivetrain, shooter)
-                .alongWith(leds.commandShowPattern(new LedPatternWave("#00a9ff"), Leds.PatternLevel.DRIVER_LOCK));
+                .alongWith(leds.commandShowPattern(
+                        new LedPatternProgressBar(shooter::getSpinUpPercent, "#00a9ff", 33),
+                        Leds.PatternLevel.DRIVER_LOCK));
         Command overstageTargetDrive = new OverStageShootPrepareWithTargeting(driver.getHID(), drivetrain, shooter)
-                .alongWith(leds.commandShowPattern(new LedPatternWave("#f700ff"), Leds.PatternLevel.DRIVER_LOCK));
+                .alongWith(leds.commandShowPattern(
+                        new LedPatternProgressBar(shooter::getSpinUpPercent, "#f700ff", 33),
+                        Leds.PatternLevel.DRIVER_LOCK));
         Command autoShooterCommand = new AutoShootPrepare(drivetrain, shooter)
-                .alongWith(leds.commandShowPattern(new LedPatternWave("#00ffbc"), Leds.PatternLevel.DRIVER_LOCK));
+                .alongWith(leds.commandShowPattern(
+                        new LedPatternProgressBar(shooter::getSpinUpPercent, "#00ffbc", 33),
+                        Leds.PatternLevel.DRIVER_LOCK));
         Command ampLock = new DriveWithAmpSideLock(drivetrain, driver.getHID())
                 .alongWith(leds.commandShowPattern(new LedPatternWave("#ffffff"), Leds.PatternLevel.DRIVER_LOCK));
         Command cancelAlignment = Commands.runOnce(() -> {
@@ -187,7 +190,7 @@ public class RobotContainer {
 
         copilot.x().whileTrue(new ShootSequence(shooter, indexer));
         copilot.a().whileTrue(new AmpScoreStageSequence(indexer, tramp, elevator).alongWith(ampLock));
-        copilot.b().whileTrue(IntakeAndFeed.withDefaults(indexer).onlyIf(shooter::areFlywheelsSpunUp))
+        copilot.b().and(shooter::areFlywheelsSpunUp).whileTrue(IntakeAndFeed.withDefaults(indexer))
                     .onFalse(cancelAlignment);
         copilot.y().whileTrue(new StageTrampCommand(tramp, indexer));
 

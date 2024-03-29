@@ -15,6 +15,7 @@ public class OverStageShootPrepare extends SequentialCommandGroup {
     public OverStageShootPrepare(Drivetrain drivetrain, Shooter shooter) {
         this(drivetrain::getPose, shooter);
     }
+
     public OverStageShootPrepare(Supplier<Pose2d> positionSupplier, Shooter shooter, double leftSetpoint, double rightSetpoint) {
         addCommands(
                 new PrepareShooterCommand(shooter, () -> new ShooterSetpoint(

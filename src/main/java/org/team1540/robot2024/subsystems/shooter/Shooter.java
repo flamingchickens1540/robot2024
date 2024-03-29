@@ -209,6 +209,10 @@ public class Shooter extends SubsystemBase {
         return flywheelInputs.rightVelocityRPM;
     }
 
+    public double getSpinUpPercent() {
+        return (getRightFlywheelSpeed() + getLeftFlywheelSpeed()) / (getRightFlywheelSetpointRPM() + getLeftFlywheelSetpointRPM());
+    }
+
     /**
      * Gets the position of the pivot
      */
@@ -287,6 +291,7 @@ public class Shooter extends SubsystemBase {
     public void zeroPivot() {
         pivotIO.setEncoderPosition(0);
     }
+
     public void zeroPivotToCancoder(){
         pivotIO.setEncoderPosition(pivotInputs.absolutePosition.getRotations());
         flipper = !flipper;
