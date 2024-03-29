@@ -49,7 +49,7 @@ public class Shooter extends SubsystemBase {
 
     private boolean flipper = false;
 
-    private Rotation2d angleOffset = new Rotation2d();
+    private final Rotation2d angleOffset = new Rotation2d();
 
     public final ShooterLerp lerp = new ShooterLerp().put(
             new Pair<>(1.386, new ShooterSetpoint(Rotation2d.fromRadians(1.06184))),

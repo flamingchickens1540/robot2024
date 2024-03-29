@@ -148,7 +148,7 @@ public final class Constants {
             public static final double KS = 0.26925;
             public static final double KV = 0.07485;
 
-            public static final double ERROR_TOLERANCE_RPM = 100;
+            public static final double ERROR_TOLERANCE_RPM = 1000;
         }
 
         public static class Pivot {

@@ -127,13 +127,9 @@ public class RobotContainer {
     private void configureButtonBindings() {
         Command manualPivotCommand = new ManualPivotCommand(shooter, copilot);
         drivetrain.setDefaultCommand(new SwerveDriveCommand(drivetrain, driver));
-//        drivetrain.setDefaultCommand(new OverStageShootPrepareWithTargeting(driver.getHID(), drivetrain, shooter));
-//        drivetrain.setDefaultCommand(new AutoShootPrepareWhileMoving(driver.getHID(), drivetrain, shooter));
-//        drivetrain.setDefaultCommand(new DriveWithAmpSideLock(drivetrain, driver.getHID()));
         elevator.setDefaultCommand(new ElevatorManualCommand(elevator, copilot));
         shooter.setDefaultCommand(manualPivotCommand);
         driver.b().onTrue(Commands.runOnce(drivetrain::stopWithX, drivetrain));
-//        driver.y().toggleOnTrue(new DriveWithSpeakerTargetingCommand(drivetrain, driver));
         driver.y().onTrue(Commands.runOnce(() -> {
             drivetrain.zeroFieldOrientationManual();
             drivetrain.setBrakeMode(true);
@@ -164,9 +160,8 @@ public class RobotContainer {
         if (isTuningMode()) {
             driver.leftTrigger().whileTrue(new AutoShootPrepareWhileMoving(driver.getHID(), drivetrain, shooter).alongWith(leds.commandShowPattern(new LedPatternWave("#00ff00"), Leds.PatternLevel.DRIVER_LOCK)));
             driver.a().whileTrue(new TuneShooterCommand(shooter, indexer, drivetrain::getPose));
-
         }
-        copilot.povLeft().onTrue(Commands.runOnce(()->elevator.setFlipper(true))).onFalse(Commands.runOnce(()->elevator.setFlipper(false)));
+
         driver.povDown().and(() -> !DriverStation.isFMSAttached()).onTrue(Commands.runOnce(() -> drivetrain.setPose(new Pose2d(Units.inchesToMeters(260), Units.inchesToMeters(161.62), Rotation2d.fromRadians(0)))).ignoringDisable(true));
 
         driver.rightTrigger(0.95).toggleOnTrue(autoShooterCommand);
@@ -182,7 +177,8 @@ public class RobotContainer {
 
         copilot.povDown().whileTrue(indexer.commandRunIntake(-1));
         copilot.povUp().whileTrue(indexer.commandRunIntake(1));
-        copilot.povRight().whileTrue(tramp.commandRun(1));
+        copilot.povRight().whileTrue(IntakeAndFeed.withDefaults(indexer)).onFalse(cancelAlignment);
+        copilot.povLeft().onTrue(Commands.runOnce(()->elevator.setFlipper(true))).onFalse(Commands.runOnce(()->elevator.setFlipper(false)));
 
 
         copilot.rightTrigger(0.95).whileTrue(tramp.commandRun(1));
@@ -191,7 +187,7 @@ public class RobotContainer {
 
         copilot.x().whileTrue(new ShootSequence(shooter, indexer));
         copilot.a().whileTrue(new AmpScoreStageSequence(indexer, tramp, elevator).alongWith(ampLock));
-        copilot.b().whileTrue(IntakeAndFeed.withDefaults(indexer))
+        copilot.b().whileTrue(IntakeAndFeed.withDefaults(indexer).onlyIf(shooter::areFlywheelsSpunUp))
                     .onFalse(cancelAlignment);
         copilot.y().whileTrue(new StageTrampCommand(tramp, indexer));
 
