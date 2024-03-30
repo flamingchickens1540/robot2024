@@ -23,6 +23,6 @@ public class EstimatedVisionPose {
                 Constants.Vision.ROT_STD_DEV_COEFF
                     * Math.pow(avgDistance, 2.0)
                     / numTags;
-        return VecBuilder.fill(xyStdDev, xyStdDev, numTags > 1 ? rotStdDev : Double.POSITIVE_INFINITY);
+        return VecBuilder.fill(xyStdDev, xyStdDev, rotStdDev/*numTags > 1 ? rotStdDev : Double.POSITIVE_INFINITY*/);
     }
 }

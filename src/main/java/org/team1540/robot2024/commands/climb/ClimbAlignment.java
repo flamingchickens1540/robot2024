@@ -33,19 +33,22 @@ public class ClimbAlignment extends ParallelRaceGroup {
                             new SequentialCommandGroup(
                                     new ElevatorSetpointCommand(elevator, Constants.Elevator.ElevatorState.BOTTOM),
                                     new StageTrampCommand(tramp, indexer).onlyIf(indexer::isNoteStaged)
-                            )
-//                            new ProxyCommand(() -> climbPath(drivetrain::getPose, 1))
+                            ),
+                            new ProxyCommand(() -> climbPath(drivetrain::getPose, 1))
                     ),
 //                    Commands.runOnce(() -> drivetrain.setBrakeMode(false))
 //                    Commands.waitSeconds(5), //Confirm that nothing will break
-//                    Commands.runOnce(()->elevator.setFlipper(true)),
+                    Commands.runOnce(()->elevator.setFlipper(true)),
 //                    new ElevatorSetpointCommand(elevator, Constants.Elevator.ElevatorState.TOP),
 //                    Commands.runOnce(() -> drivetrain.setBrakeMode(true)),
 //                    Commands.waitSeconds(5), //Confirm that nothing will break
-//                    new ProxyCommand(() -> climbPath(drivetrain::getPose, 2)),
+                    new ProxyCommand(() -> climbPath(drivetrain::getPose, 2)),
+                    new ElevatorSetpointCommand(elevator, Constants.Elevator.ElevatorState.AMP),
+                    new WaitCommand(5),
+                    new RepeatCommand(new PrintCommand("elevator things")),
                     Commands.parallel(
-//                            Commands.runOnce(()->elevator.setFlipper(false)),
-//                            new ElevatorSetpointCommand(elevator, Constants.Elevator.ElevatorState.TOP)
+                            Commands.runOnce(()->elevator.setFlipper(false)),
+                            new ElevatorSetpointCommand(elevator, Constants.Elevator.ElevatorState.TOP)
                     )
                 ),
                 new StartEndCommand(()->{}, ()->{

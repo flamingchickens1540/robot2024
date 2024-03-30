@@ -83,7 +83,7 @@ public final class Constants {
                 Constants.Drivetrain.MAX_ANGULAR_SPEED * ANGULAR_ACCEL_TIME_SECS);
 
         public static final PathConstraints STAGE_PATH_CONSTRAINTS = new PathConstraints(
-                3.0, 1,
+                3.0, 3.0,
                 1,
                 0.3);
     }
@@ -204,7 +204,7 @@ public final class Constants {
         public static final double CHAIN_HEIGHT_METERS = Units.inchesToMeters(28.25);
         public static final double MINIMUM_HEIGHT = Units.inchesToMeters(-2); //TODO: Does this make it angry?
         public static final double CLIMBING_HOOKS_MINIMUM_HEIGHT = Units.inchesToMeters(12.0);
-        public static final double MAX_HEIGHT = MINIMUM_HEIGHT + Units.inchesToMeters(21.0); //TODO: Fix these constants to be more accurate
+        public static final double MAX_HEIGHT = 0.5; //TODO: Fix these constants to be more accurate
         public static final double CLIMBING_HOOKS_MAX_HEIGHT = CLIMBING_HOOKS_MINIMUM_HEIGHT + MAX_HEIGHT - MINIMUM_HEIGHT;
 
         public static final double GEAR_RATIO = 11.571;

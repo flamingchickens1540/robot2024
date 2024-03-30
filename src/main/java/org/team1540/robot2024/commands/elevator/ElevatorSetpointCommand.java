@@ -24,4 +24,8 @@ public class ElevatorSetpointCommand extends Command {
         return elevator.isAtSetpoint();
     }
 
+    @Override
+    public void end(boolean interrupted) {
+        elevator.holdPosition();
+    }
 }

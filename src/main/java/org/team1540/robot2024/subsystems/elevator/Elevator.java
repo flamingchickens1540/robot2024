@@ -80,6 +80,7 @@ public class Elevator extends SubsystemBase {
         io.setFlipper(flipped);
     }
 
+    @AutoLogOutput(key = "Elevator/isAtSetpoint")
     public boolean isAtSetpoint() {
         return MathUtil.isNear(setpointMeters, positionFilter.getAverage(), POS_ERR_TOLERANCE_METERS) || (inputs.atLowerLimit && setpointMeters <= 0);
     }
