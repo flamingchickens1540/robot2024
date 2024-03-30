@@ -24,10 +24,9 @@ public class ClimbAlignment extends ParallelRaceGroup {
 
     private final Drivetrain drivetrain;
 
-    public ClimbAlignment(Drivetrain drivetrain, Elevator elevator, Tramp tramp, Indexer indexer, Shooter shooter){
+    public ClimbAlignment(Drivetrain drivetrain, Elevator elevator, Tramp tramp, Indexer indexer){
         this.drivetrain = drivetrain;
         addCommands(
-                new PrepareShooterCommand(shooter, ()->new ShooterSetpoint(0,0,0)),
                 new SequentialCommandGroup(
                     new ParallelCommandGroup(
                             new SequentialCommandGroup(
@@ -44,8 +43,6 @@ public class ClimbAlignment extends ParallelRaceGroup {
 //                    Commands.waitSeconds(5), //Confirm that nothing will break
                     new ProxyCommand(() -> climbPath(drivetrain::getPose, 2)),
                     new ElevatorSetpointCommand(elevator, Constants.Elevator.ElevatorState.AMP),
-                    new WaitCommand(5),
-                    new RepeatCommand(new PrintCommand("elevator things")),
                     Commands.parallel(
                             Commands.runOnce(()->elevator.setFlipper(false)),
                             new ElevatorSetpointCommand(elevator, Constants.Elevator.ElevatorState.TOP)
