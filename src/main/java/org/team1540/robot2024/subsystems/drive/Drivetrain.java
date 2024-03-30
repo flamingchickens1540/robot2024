@@ -1,6 +1,8 @@
 package org.team1540.robot2024.subsystems.drive;
 
 import com.pathplanner.lib.auto.AutoBuilder;
+import com.pathplanner.lib.commands.FollowPathHolonomic;
+import com.pathplanner.lib.controllers.PPHolonomicDriveController;
 import com.pathplanner.lib.pathfinding.Pathfinding;
 import com.pathplanner.lib.util.HolonomicPathFollowerConfig;
 import com.pathplanner.lib.util.PIDConstants;
@@ -34,6 +36,7 @@ import org.team1540.robot2024.util.vision.EstimatedVisionPose;
 import org.team1540.robot2024.util.vision.VisionPoseAcceptor;
 
 import java.util.Arrays;
+import java.util.Optional;
 import java.util.function.Supplier;
 
 import static org.team1540.robot2024.Constants.Drivetrain.*;
@@ -54,6 +57,7 @@ public class Drivetrain extends SubsystemBase {
 
     private static boolean hasInstance = false;
     private boolean blockTags = false;
+    private boolean overrideTargetRot = false;
     private boolean isCharacterizingWheels = false;
     private double characterizationInput = 0.0;
 
@@ -102,6 +106,7 @@ public class Drivetrain extends SubsystemBase {
                 new HolonomicPathFollowerConfig(new PIDConstants(5.0, 0.0, 0.0),new PIDConstants(7.0, 0.0, 0.0),MAX_LINEAR_SPEED, DRIVE_BASE_RADIUS, new ReplanningConfig()),
                 () -> DriverStation.getAlliance().isPresent() && DriverStation.getAlliance().get() == DriverStation.Alliance.Red,
                 this);
+        PPHolonomicDriveController.setRotationTargetOverride(this::getOverrideTargetRotationToSpeaker);
         Pathfinding.setPathfinder(new LocalADStarAK());
         PathPlannerLogging.setLogActivePathCallback(
                 (activePath) -> Logger.recordOutput("Pathplanner/ActivePath", activePath.toArray(new Pose2d[activePath.size()])));
@@ -379,6 +384,20 @@ public class Drivetrain extends SubsystemBase {
                 modules[2].getPosition(),
                 modules[3].getPosition(),
         };
+    }
+
+    public void setPathRotationOverride(boolean shouldOverride) {
+        overrideTargetRot = shouldOverride;
+    }
+
+    private Optional<Rotation2d> getOverrideTargetRotationToSpeaker() {
+        if (overrideTargetRot)
+            return Optional.of(getPose()
+                    .minus(Constants.Targeting.getSpeakerPose()).getTranslation().getAngle()
+                    .rotateBy(DriverStation.getAlliance().orElse(null) == DriverStation.Alliance.Red
+                            ? Rotation2d.fromDegrees(180)
+                            : Rotation2d.fromDegrees(0)));
+        else return Optional.empty();
     }
 
     /**

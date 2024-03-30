@@ -14,14 +14,10 @@ import org.team1540.robot2024.subsystems.tramp.Tramp;
 public class ClimbSequence extends ParallelRaceGroup {
 
 
-    public ClimbSequence(Drivetrain drivetrain, Elevator elevator, Tramp tramp, Indexer indexer, Shooter shooter, CommandXboxController controller) {
+    public ClimbSequence(Drivetrain drivetrain, Elevator elevator, Tramp tramp, Indexer indexer, CommandXboxController controller) {
         addCommands(
-                Commands.startEnd(() -> {
-                    shooter.stopPivot();
-                    shooter.setPivotBrakeMode(false);
-                }, () -> shooter.setPivotBrakeMode(true), shooter),
                 Commands.sequence(
-                        new ClimbAlignment(drivetrain, elevator, tramp, indexer, shooter),
+                        new ClimbAlignment(drivetrain, elevator, tramp, indexer),
                         Commands.waitUntil(controller.a()),
                         new ElevatorSetpointCommand(elevator, ElevatorState.TOP),
                         Commands.waitSeconds(5), // Confirm that nothing will break. Also might need to be tuned if chain does weird things
