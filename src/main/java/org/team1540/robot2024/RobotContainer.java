@@ -190,8 +190,13 @@ public class RobotContainer {
 
         copilot.x().whileTrue(new ShootSequence(shooter, indexer));
         copilot.a().whileTrue(new AmpScoreStageSequence(indexer, tramp, elevator).alongWith(ampLock));
-        copilot.b().and(shooter::areFlywheelsSpunUp).whileTrue(IntakeAndFeed.withDefaults(indexer))
-                    .onFalse(cancelAlignment);
+        copilot.b()
+                .and(shooter::areFlywheelsSpunUp)
+                .and(() -> targetDrive.isScheduled()
+                        || overstageTargetDrive.isScheduled()
+                        || autoShooterCommand.isScheduled())
+                .whileTrue(IntakeAndFeed.withDefaults(indexer))
+                .onFalse(cancelAlignment);
         copilot.y().whileTrue(new StageTrampCommand(tramp, indexer));
 
 //        copilot.leftTrigger(0.5).whileTrue(new ElevatorSetpointCommand(elevator, ElevatorState.CLIMB));
