@@ -65,7 +65,7 @@ public final class Constants {
         public static final double DRIVE_GEAR_RATIO = (50.0 / 14.0) * (IS_L3 ? 16.0 / 28.0 : 17.0 / 27.0) * (45.0 / 15.0);
         public static final double TURN_GEAR_RATIO = 150.0 / 7.0;
         public static final boolean IS_TURN_MOTOR_INVERTED = true;
-        public static final double WHEEL_RADIUS = Units.inchesToMeters(1.972022165051841);
+        public static final double WHEEL_RADIUS = Units.inchesToMeters(1.9423034948238156);
 
         public static final double MAX_LINEAR_SPEED = Units.feetToMeters(IS_L3 ? 16.0 : 15.7);
         public static final double TRACK_WIDTH_X = Units.inchesToMeters(18.75);
@@ -111,7 +111,7 @@ public final class Constants {
         public static final String REAR_CAMERA_NAME = "limelight-rear";
 
         public static final Pose3d FRONT_CAMERA_POSE = new Pose3d(0.086018, 0, 0.627079, new Rotation3d(0, Math.toRadians(-40.843), 0));
-        public static final Pose3d REAR_CAMERA_POSE = new Pose3d(0.046049, 0, 0.540510, new Rotation3d(0, Math.toRadians(10), Math.PI));
+        public static final Pose3d REAR_CAMERA_POSE = new Pose3d(0.046049, 0, 0.540510, new Rotation3d(0, Math.toRadians(10), Math.PI + 0.043));
 
         public static final boolean TAKE_SNAPSHOTS = true;
         public static final double SNAPSHOT_PERIOD_SECS = 1;
@@ -149,7 +149,7 @@ public final class Constants {
             public static final double KS = 0.26925;
             public static final double KV = 0.07485;
 
-            public static final double ERROR_TOLERANCE_RPM = 1000;
+            public static final double ERROR_TOLERANCE_RPM = 2000;
         }
 
         public static class Pivot {
@@ -204,7 +204,7 @@ public final class Constants {
         public static final double CHAIN_HEIGHT_METERS = Units.inchesToMeters(28.25);
         public static final double MINIMUM_HEIGHT = Units.inchesToMeters(-2); //TODO: Does this make it angry?
         public static final double CLIMBING_HOOKS_MINIMUM_HEIGHT = Units.inchesToMeters(12.0);
-        public static final double MAX_HEIGHT = 0.5; //TODO: Fix these constants to be more accurate
+        public static final double MAX_HEIGHT = 0.52; //TODO: Fix these constants to be more accurate
         public static final double CLIMBING_HOOKS_MAX_HEIGHT = CLIMBING_HOOKS_MINIMUM_HEIGHT + MAX_HEIGHT - MINIMUM_HEIGHT;
 
         public static final double GEAR_RATIO = 11.571;

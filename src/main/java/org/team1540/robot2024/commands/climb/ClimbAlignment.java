@@ -72,6 +72,6 @@ public class ClimbAlignment extends ParallelRaceGroup {
         else{
             pathCmd= AutoBuilder.pathfindThenFollowPath(PathHelper.fromChoreoPath("Tag16." + index).getPath(), STAGE_PATH_CONSTRAINTS);
         }
-        return Commands.runOnce(drivetrain::blockTags).andThen(pathCmd).andThen(Commands.runOnce(drivetrain::unblockTags));
+        return Commands.runOnce(drivetrain::unblockTags).andThen(pathCmd).andThen(Commands.runOnce(drivetrain::unblockTags));
     }
 }

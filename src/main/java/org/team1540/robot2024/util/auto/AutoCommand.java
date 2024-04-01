@@ -97,7 +97,6 @@ public class AutoCommand extends SequentialCommandGroup {
                 ).onlyIf(()->shouldZeroCancoder),
                 drivetrain.commandCopyVisionPose().onlyIf(()->shouldResetOdometry),
                 Commands.parallel(
-                        new DriveWithTargetingCommand(drivetrain, null).withTimeout(0.4).onlyIf(()->shouldRealignYaw),
                         Commands.sequence(
 //                                Commands.waitUntil(()->drivetrain.getPose().getRotation().minus(drivetrain.getTargetPose().getRotation()).getDegrees()<10).onlyIf(()->shouldRealignYaw),
                                 new ParallelDeadlineGroup(
@@ -106,9 +105,11 @@ public class AutoCommand extends SequentialCommandGroup {
                                                 Commands.waitUntil(()->!indexer.isNoteStaged()),
                                                 Commands.waitSeconds(0.2)
                                         ).withTimeout(1+extraPreShotWait),
-                                        IntakeAndFeed.withDefaults(indexer)
+                                        Commands.waitSeconds(extraPreShotWait).andThen(IntakeAndFeed.withDefaults(indexer))
                                 )
-                        )
+                        ),
+                        new DriveWithTargetingCommand(drivetrain, null).withTimeout(0.4).onlyIf(()->shouldRealignYaw)
+
                 )
         );
     }

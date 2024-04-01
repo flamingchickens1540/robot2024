@@ -133,14 +133,6 @@ public class Indexer extends SubsystemBase {
                 );
     }
 
-    public Command setIntakeAndFeeder(double intakePercent, double feederVelocity) {
-        return Commands.startEnd(
-                () -> {setIntakePercent(intakePercent); setFeederVelocity(feederVelocity);},
-                () -> {setIntakePercent(0); setFeederVelocity(0);},
-                this
-        );
-    }
-
     public void setIntakeNeutralMode(boolean isBrake) {
         io.setIntakeNeutralMode(isBrake);
     }

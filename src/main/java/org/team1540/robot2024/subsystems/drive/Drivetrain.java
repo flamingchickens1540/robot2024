@@ -22,6 +22,7 @@ import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.math.numbers.N1;
 import edu.wpi.first.math.numbers.N3;
 import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj.RobotState;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
@@ -354,7 +355,7 @@ public class Drivetrain extends SubsystemBase {
             Matrix<N3, N1> stdDevs = visionPose.getStdDevs();
             visionPoseEstimator.setVisionMeasurementStdDevs(stdDevs);
             visionPoseEstimator.addVisionMeasurement(visionPose.poseMeters.toPose2d(), visionPose.timestampSecs);
-            if (!blockTags) {
+            if (!blockTags && (!RobotState.isAutonomous() || getSpeakerDistanceMeters() < 4.5)) {
                 poseEstimator.setVisionMeasurementStdDevs(stdDevs);
                 poseEstimator.addVisionMeasurement(visionPose.poseMeters.toPose2d(), visionPose.timestampSecs);
             }

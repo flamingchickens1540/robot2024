@@ -66,6 +66,9 @@ public class Elevator extends SubsystemBase {
         if (kP.hasChanged(hashCode()) || kI.hasChanged(hashCode()) || kD.hasChanged(hashCode())) {
             io.configPID(kP.get(), kI.get(), kD.get());
         }
+        if(getPosition() > 0.31){
+            setFlipper(false);
+        }
     }
 
     public void setElevatorPosition(double positionMeters) {
