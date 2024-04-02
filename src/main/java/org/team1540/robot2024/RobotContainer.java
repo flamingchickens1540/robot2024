@@ -216,7 +216,7 @@ public class RobotContainer {
         new Trigger(indexer::isNoteStaged).and(intakeCommand::isScheduled).onTrue(CommandUtils.rumbleCommandTimed(driver.getHID(), 0.8, 0.4));
 
 
-        BooleanSupplier isPreMatch = () -> (!DriverStation.isDSAttached() || DriverStation.isAutonomous()) && DriverStation.isDisabled();
+        BooleanSupplier isPreMatch = () -> (!DriverStation.isDSAttached() || !DriverStation.isFMSAttached() || DriverStation.isAutonomous()) && DriverStation.isDisabled();
         Command brakeModeCommand = Commands.runOnce(
                 () -> {
                     if (!isPreMatch.getAsBoolean()) {return;}

@@ -147,16 +147,11 @@ public class Robot extends LoggedRobot {
         AutoManager.getInstance().updateSelected();
     }
 
-    public void enabledInit() {
-
-    }
-
     /**
      * This autonomous runs the autonomous command selected by your {@link RobotContainer} class.
      */
     @Override
     public void autonomousInit() {
-        enabledInit();
 //        robotContainer.leds.setPatternAll(LedPatternFlame::new, Leds.PatternCriticality.HIGH);
         robotContainer.drivetrain.blockTags();
 
@@ -188,7 +183,6 @@ public class Robot extends LoggedRobot {
      */
     @Override
     public void teleopInit() {
-        enabledInit();
         robotContainer.enableBrakeMode(false);
 //        robotContainer.leds.setPatternAll(() -> new LedPatternRainbow(2), Leds.PatternCriticality.HIGH);
         robotContainer.drivetrain.zeroFieldOrientation();// TODO: remove this once odometry / startup zero is good
