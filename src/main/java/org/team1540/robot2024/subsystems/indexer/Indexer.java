@@ -133,8 +133,8 @@ public class Indexer extends SubsystemBase {
                 );
     }
 
-    public void setIntakeNeutralMode(boolean isBrake) {
-        io.setIntakeNeutralMode(isBrake);
+    public void setIntakeBrakeMode(boolean isBrake) {
+        io.setIntakeBrakeMode(isBrake);
     }
 
 }
