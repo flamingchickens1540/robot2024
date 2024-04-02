@@ -4,12 +4,11 @@ import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.DriverStation;
-import edu.wpi.first.wpilibj.RobotController;
-import edu.wpi.first.wpilibj.util.Color;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
+import org.littletonrobotics.junction.Logger;
 import org.team1540.robot2024.commands.FeedForwardCharacterization;
 import org.team1540.robot2024.commands.autos.*;
 import org.team1540.robot2024.commands.climb.ClimbAlignment;
@@ -27,10 +26,7 @@ import org.team1540.robot2024.subsystems.drive.Drivetrain;
 import org.team1540.robot2024.subsystems.elevator.Elevator;
 import org.team1540.robot2024.subsystems.indexer.Indexer;
 import org.team1540.robot2024.subsystems.led.Leds;
-import org.team1540.robot2024.subsystems.led.patterns.LedPatternProgressBar;
-import org.team1540.robot2024.subsystems.led.patterns.LedPatternRSLState;
-import org.team1540.robot2024.subsystems.led.patterns.LedPatternWave;
-import org.team1540.robot2024.subsystems.led.patterns.SimpleLedPattern;
+import org.team1540.robot2024.subsystems.led.patterns.*;
 import org.team1540.robot2024.subsystems.shooter.Shooter;
 import org.team1540.robot2024.subsystems.tramp.Tramp;
 import org.team1540.robot2024.subsystems.vision.AprilTagVision;
@@ -38,6 +34,8 @@ import org.team1540.robot2024.util.CommandUtils;
 import org.team1540.robot2024.util.PhoenixTimeSyncSignalRefresher;
 import org.team1540.robot2024.util.auto.AutoCommand;
 import org.team1540.robot2024.util.auto.AutoManager;
+
+import java.util.function.BooleanSupplier;
 
 import static org.team1540.robot2024.Constants.SwerveConfig;
 import static org.team1540.robot2024.Constants.isTuningMode;
@@ -58,6 +56,9 @@ public class RobotContainer {
 
     public final PhoenixTimeSyncSignalRefresher odometrySignalRefresher = new PhoenixTimeSyncSignalRefresher(SwerveConfig.CAN_BUS);
 
+
+
+    public boolean isBrakeMode;
     /**
      * The container for the robot. Contains subsystems, IO devices, and commands.
      */
@@ -130,7 +131,7 @@ public class RobotContainer {
         driver.b().onTrue(Commands.runOnce(drivetrain::stopWithX, drivetrain));
         driver.y().onTrue(Commands.runOnce(() -> {
             drivetrain.zeroFieldOrientationManual();
-            drivetrain.setBrakeMode(true);
+            enableBrakeMode(false);
         }).ignoringDisable(true));
 
         Command targetDrive = new AutoShootPrepareWithTargeting(driver.getHID(), drivetrain, shooter)
@@ -214,17 +215,24 @@ public class RobotContainer {
 
         new Trigger(indexer::isNoteStaged).and(intakeCommand::isScheduled).onTrue(CommandUtils.rumbleCommandTimed(driver.getHID(), 0.8, 0.4));
 
-        new Trigger(RobotController::getUserButton).toggleOnTrue(Commands.startEnd(
-                () -> {
-                    elevator.setBrakeMode(false);
-                    leds.setPatternAll(() -> new LedPatternRSLState(Color.kMagenta), Leds.PatternLevel.ELEVATOR_STATE);
-                },
-                () -> {
-                    elevator.setBrakeMode(true);
-                    leds.clearPatternAll(Leds.PatternLevel.ELEVATOR_STATE);
-                }
-        ).ignoringDisable(true));
 
+        BooleanSupplier isPreMatch = () -> (!DriverStation.isDSAttached() || !DriverStation.isFMSAttached() || DriverStation.isAutonomous()) && DriverStation.isDisabled();
+        Command brakeModeCommand = Commands.runOnce(
+                () -> {
+                    if (!isPreMatch.getAsBoolean()) {return;}
+                    if (!isBrakeMode) {
+                        enableBrakeMode(true);
+                    } else {
+                        disableBrakeMode();
+                    }
+                }
+        ).ignoringDisable(true);
+
+        new Trigger(tramp::isNoteStaged).debounce(0.1)
+                .onTrue(brakeModeCommand);
+
+        driver.start().onTrue(brakeModeCommand);
+        copilot.start().onTrue(brakeModeCommand);
 
     }
 
@@ -285,5 +293,28 @@ public class RobotContainer {
      */
     public Command getAutonomousCommand() {
         return AutoManager.getInstance().getSelected();
+    }
+
+    public void enableBrakeMode(boolean requireRobotDisabled) {
+        if (!isBrakeMode && (!requireRobotDisabled || !DriverStation.isEnabled())) {
+            shooter.setPivotBrakeMode(true);
+            indexer.setIntakeBrakeMode(true);
+            elevator.setBrakeMode(true);
+            drivetrain.setBrakeMode(true);
+            leds.clearPattern(Leds.Zone.MAIN, Leds.PatternLevel.COAST_STATE);
+            isBrakeMode = true;
+            Logger.recordOutput("brakeMode", true);
+        }
+    }
+    public void disableBrakeMode() {
+        if (isBrakeMode && !DriverStation.isEnabled()) {
+            shooter.setPivotBrakeMode(false);
+            indexer.setIntakeBrakeMode(false);
+            elevator.setBrakeMode(false);
+            drivetrain.setBrakeMode(false);
+            leds.setPattern(Leds.Zone.MAIN, new LedPatternBreathing("#f000c7"), Leds.PatternLevel.COAST_STATE);
+            isBrakeMode = false;
+            Logger.recordOutput("brakeMode", false);
+        }
     }
 }

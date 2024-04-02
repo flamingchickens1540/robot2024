@@ -62,19 +62,7 @@ public class Leds extends SubsystemBase {
         patterns[zone.ordinal()].clearPattern(priority);
     }
 
-    public void setPatternAll(Supplier<LedPattern> patternSupplier, PatternLevel priority) {
-        for (int i = 0; i<ZONE_COUNT;i++) {
-            LedPattern pattern = patternSupplier.get();
-            patterns[i].addPattern(pattern, priority);
-            pattern.setLength(buffers[i].getLength());
-        }
-    }
 
-    public void clearPatternAll(PatternLevel priority) {
-        for (int i = 0; i<ZONE_COUNT;i++) {
-            patterns[i].clearPattern(priority);
-        }
-    }
 
 
     private static final int ZONE_COUNT=Zone.values().length;
@@ -87,8 +75,8 @@ public class Leds extends SubsystemBase {
         DEFAULT,
         TRAMP_STATE,
         INTAKE_STATE,
+        COAST_STATE,
         DRIVER_LOCK,
-        ELEVATOR_STATE
     }
 
     public Command commandShowPattern(LedPattern pattern, PatternLevel priority) {

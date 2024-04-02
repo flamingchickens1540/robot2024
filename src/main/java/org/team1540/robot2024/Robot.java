@@ -98,8 +98,7 @@ public class Robot extends LoggedRobot {
         // and put our autonomous chooser on the dashboard.
         robotContainer = new RobotContainer();
 
-        robotContainer.shooter.setPivotBrakeMode(false);
-        robotContainer.drivetrain.setBrakeMode(false);
+        robotContainer.disableBrakeMode();
 
         // Pathplanner warmup (helps prevents delays at the start of auto)
         FollowPathCommand.warmupCommand().schedule();
@@ -134,9 +133,6 @@ public class Robot extends LoggedRobot {
      */
     @Override
     public void disabledInit() {
-//        robotContainer.elevator.setBrakeMode(false);
-        robotContainer.shooter.setPivotBrakeMode(false);
-        robotContainer.indexer.setIntakeNeutralMode(false);
         robotContainer.drivetrain.unblockTags();
         robotContainer.shooter.setPivotPosition(new Rotation2d());
         robotContainer.leds.setPattern(Leds.Zone.MAIN, new LedPatternRainbow(1));
@@ -151,19 +147,11 @@ public class Robot extends LoggedRobot {
         AutoManager.getInstance().updateSelected();
     }
 
-    public void enabledInit() {
-        robotContainer.elevator.setBrakeMode(true);
-        robotContainer.shooter.setPivotBrakeMode(true);
-        robotContainer.drivetrain.setBrakeMode(true);
-        robotContainer.indexer.setIntakeNeutralMode(true);
-    }
-
     /**
      * This autonomous runs the autonomous command selected by your {@link RobotContainer} class.
      */
     @Override
     public void autonomousInit() {
-
 //        robotContainer.leds.setPatternAll(LedPatternFlame::new, Leds.PatternCriticality.HIGH);
         robotContainer.drivetrain.blockTags();
 
@@ -176,6 +164,11 @@ public class Robot extends LoggedRobot {
 
     }
 
+    @Override
+    public void autonomousExit() {
+        robotContainer.enableBrakeMode(true);
+    }
+
     /**
      * This function is called periodically during autonomous.
      */
@@ -183,12 +176,14 @@ public class Robot extends LoggedRobot {
     public void autonomousPeriodic() {
     }
 
+
+
     /**
      * This function is called once when teleop is enabled.
      */
     @Override
     public void teleopInit() {
-        enabledInit();
+        robotContainer.enableBrakeMode(false);
 //        robotContainer.leds.setPatternAll(() -> new LedPatternRainbow(2), Leds.PatternCriticality.HIGH);
         robotContainer.drivetrain.zeroFieldOrientation();// TODO: remove this once odometry / startup zero is good
 
@@ -197,6 +192,10 @@ public class Robot extends LoggedRobot {
         }
     }
 
+    @Override
+    public void teleopExit() {
+        robotContainer.enableBrakeMode(true);
+    }
     /**
      * This function is called periodically during operator control.
      */
@@ -209,9 +208,6 @@ public class Robot extends LoggedRobot {
      */
     @Override
     public void testInit() {
-        robotContainer.leds.setPattern(Leds.Zone.MAIN,new LedPatternTuneColor());
-        // Cancels all running commands at the start of test mode.
-        CommandScheduler.getInstance().cancelAll();
     }
 
     /**

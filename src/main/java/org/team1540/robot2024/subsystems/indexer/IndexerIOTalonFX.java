@@ -116,7 +116,7 @@ public class IndexerIOTalonFX implements IndexerIO {
     }
 
     @Override
-    public void setIntakeNeutralMode(boolean isBrakeMode) {
+    public void setIntakeBrakeMode(boolean isBrakeMode) {
         intakeMotor.setNeutralMode(isBrakeMode ? NeutralModeValue.Brake : NeutralModeValue.Coast);
     }
 }
