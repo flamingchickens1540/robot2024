@@ -30,35 +30,14 @@ public class CenterLanePDEABC extends AutoCommand {
                 Commands.parallel(
                         new LeadingShootPrepare(drivetrain, shooter),
                         Commands.sequence(
-                                Commands.runOnce(drivetrain::unblockTags),
-//                                drivetrain.commandCopyVisionPose(),
-//                                Commands.deadline(
-//                                        Commands.waitSeconds(0.2).andThen(getPath(0).getCommand(drivetrain)),
+                                Commands.deadline(
                                         Commands.sequence(
-//                                                Commands.waitSeconds(0.25),
-//                                                Commands.waitSeconds(0.05),
-                                                IntakeAndFeed.withDefaults(indexer).withTimeout(0.2)
-//                                                new IntakeCommand(indexer, () -> false, 1)
-                                        ),
-//                                )
-//                                ,
-//                                Commands.sequence(
-//                                        Commands.waitSeconds(0.25),
-//                                        new InstantCommand(shooter::zeroPivotToCancoder)
-//                                ),
-//                                drivetrain.commandCopyVisionPose(),
-//                                Commands.parallel(
-//                                        new DriveWithTargetingCommand(drivetrain, null).withTimeout(0.4),
-//                                        Commands.sequence(
-//                                                new ParallelDeadlineGroup(
-//                                                        Commands.sequence(
-//                                                                Commands.waitUntil(()->!indexer.isNoteStaged()),
-//                                                                Commands.waitSeconds(0.2)
-//                                                        ).withTimeout(1),
-//                                                        IntakeAndFeed.withDefaults(indexer)
-//                                                )
-//                                        )
-//                                ),
+                                                Commands.waitSeconds(0.1),
+                                                Commands.waitUntil(()->!indexer.isNoteStaged()),
+                                                Commands.waitSeconds(0.1)
+                                        ).withTimeout(1.1),
+                                        Commands.waitSeconds(0.2).andThen(IntakeAndFeed.withDefaults(indexer))
+                                ),
                                 createCancoderSegmentSequence(drivetrain, shooter, indexer, 0),
                                 createSegmentSequence(drivetrain, shooter, indexer, 1),
                                 Commands.runOnce(drivetrain::blockTags),

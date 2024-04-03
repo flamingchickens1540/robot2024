@@ -96,16 +96,19 @@ public class AutoCommand extends SequentialCommandGroup {
                         new InstantCommand(shooter::zeroPivotToCancoder)
                 ).onlyIf(()->shouldZeroCancoder),
                 drivetrain.commandCopyVisionPose().onlyIf(()->shouldResetOdometry),
-                Commands.deadline(
-                        Commands.deadline(
-                                Commands.sequence(
-                                        Commands.waitSeconds(extraPreShotWait),
-                                        Commands.waitUntil(()->!indexer.isNoteStaged()),
-                                        Commands.waitSeconds(0.1)
-                                ).withTimeout(1+extraPreShotWait),
-                                Commands.waitSeconds(extraPreShotWait).andThen(IntakeAndFeed.withDefaults(indexer))
-                        ),
-                        new DriveWithTargetingCommand(drivetrain, null).withTimeout(0.4).onlyIf(()->shouldRealignYaw)
+                Commands.parallel(
+                        new DriveWithTargetingCommand(drivetrain, null).withTimeout(0.4).onlyIf(()->shouldRealignYaw),
+                        Commands.sequence(
+//                                Commands.waitUntil(()->drivetrain.getPose().getRotation().minus(drivetrain.getTargetPose().getRotation()).getDegrees()<10).onlyIf(()->shouldRealignYaw),
+                                new ParallelDeadlineGroup(
+                                        Commands.sequence(
+                                                Commands.waitSeconds(extraPreShotWait),
+                                                Commands.waitUntil(()->!indexer.isNoteStaged()),
+                                                Commands.waitSeconds(0.2)
+                                        ).withTimeout(1+extraPreShotWait),
+                                        IntakeAndFeed.withDefaults(indexer)
+                                )
+                        )
                 )
         );
     }

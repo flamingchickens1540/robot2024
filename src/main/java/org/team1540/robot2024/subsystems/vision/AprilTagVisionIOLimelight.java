@@ -20,7 +20,7 @@ public class AprilTagVisionIOLimelight implements AprilTagVisionIO {
             Pose3d limelightPose = LimelightHelpers.getBotPose3d_wpiBlue(name);
             inputs.estimatedPoseMeters = new Pose3d(
                     limelightPose.getX(),
-                    limelightPose.getY() - 10.5,
+                    limelightPose.getY() + 0.105,
                     limelightPose.getZ(),
                     limelightPose.getRotation());
             inputs.lastMeasurementTimestampSecs = measurement.timestampSeconds;

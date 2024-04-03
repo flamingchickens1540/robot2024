@@ -273,7 +273,7 @@ public class RobotContainer {
 //        autos.add(new AmpLanePADESprint(drivetrain, shooter, indexer));
 //        autos.add(new CenterLanePSubSprint(drivetrain, shooter, indexer));
 //        autos.add(new CenterLanePCBADSprint(drivetrain, shooter, indexer));
-//        autos.add(new CenterLanePCBAFSprint(drivetrain, shooter, indexer));
+        autos.add(new CenterLanePCBAFSprint(drivetrain, shooter, indexer));
 ////        autos.add(new CenterLanePCBAFE(drivetrain, shooter, indexer));
 //        autos.add(new CenterLanePCBA(drivetrain, shooter, indexer));
 //        autos.add(new CenterLanePBDA(drivetrain, shooter, indexer));
@@ -306,6 +306,7 @@ public class RobotContainer {
             Logger.recordOutput("brakeMode", true);
         }
     }
+
     public void disableBrakeMode() {
         if (isBrakeMode && !DriverStation.isEnabled()) {
             shooter.setPivotBrakeMode(false);
