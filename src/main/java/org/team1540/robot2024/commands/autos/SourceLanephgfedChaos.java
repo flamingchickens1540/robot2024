@@ -12,11 +12,11 @@ public class SourceLanephgfedChaos extends AutoCommand {
     public  SourceLanephgfedChaos (Shooter shooter, Indexer indexer, Drivetrain drivetrain) {
         super("SourceLanephgfedChaos");
         addPath(
-                PathHelper.fromChoreoPath("SourceLanephgfedChaos.1", true, true),
-                PathHelper.fromChoreoPath("SourceLanephgfedChaos.2"),
-                PathHelper.fromChoreoPath("SourceLanephgfedChaos.3"),
-                PathHelper.fromChoreoPath("SourceLanephgfedChaos.4"),
-                PathHelper.fromChoreoPath("SourceLanephgfedChaos.5")
+                PathHelper.fromChoreoPath("SourceLanehgfedChaos.1", true, true),
+                PathHelper.fromChoreoPath("SourceLanehgfedChaos.2"),
+                PathHelper.fromChoreoPath("SourceLanehgfedChaos.3"),
+                PathHelper.fromChoreoPath("SourceLanehgfedChaos.4"),
+                PathHelper.fromChoreoPath("SourceLanehgfedChaos.5")
         );
         addCommands(
                 new ShootSequence(shooter, indexer)
