@@ -18,9 +18,6 @@ public class SourceLanephgfedChaos extends AutoCommand {
                 PathHelper.fromChoreoPath("SourceLanehgfedChaos.4"),
                 PathHelper.fromChoreoPath("SourceLanehgfedChaos.5")
         );
-        addCommands(
-                new ShootSequence(shooter, indexer)
-        );
         for (int i = 0; i < 5; ++i) {
             addCommands(
                     getPath(i).getCommand(drivetrain),
