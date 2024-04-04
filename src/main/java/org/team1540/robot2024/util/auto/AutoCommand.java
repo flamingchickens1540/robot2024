@@ -84,7 +84,7 @@ public class AutoCommand extends SequentialCommandGroup {
      * @param pathIndex
      * @return the commands to run in the segment
      */
-    protected Command createSegmentSequence(Drivetrain drivetrain, Shooter shooter, Indexer indexer, int pathIndex, boolean shouldZeroCancoder, boolean shouldRealignYaw, boolean shouldResetOdometry, double extraPreShotWait) {
+    protected Command createSegmentSequence(Drivetrain drivetrain, Shooter shooter, Indexer indexer, int pathIndex, boolean shouldZeroCancoder, boolean shouldRealignYaw, boolean shouldResetOdometry, double extraPreShotWait, double postShotWaitReduction) {
         return Commands.sequence(
                 Commands.deadline(
                         getPath(pathIndex).getCommand(drivetrain),
@@ -102,9 +102,10 @@ public class AutoCommand extends SequentialCommandGroup {
 //                                Commands.waitUntil(()->drivetrain.getPose().getRotation().minus(drivetrain.getTargetPose().getRotation()).getDegrees()<10).onlyIf(()->shouldRealignYaw),
                                 new ParallelDeadlineGroup(
                                         Commands.sequence(
+                                                Commands.waitUntil(indexer::isNoteStaged),
                                                 Commands.waitSeconds(extraPreShotWait),
                                                 Commands.waitUntil(()->!indexer.isNoteStaged()),
-                                                Commands.waitSeconds(0.2)
+                                                Commands.waitSeconds(0.2 - postShotWaitReduction)
                                         ).withTimeout(1+extraPreShotWait),
                                         IntakeAndFeed.withDefaults(indexer)
                                 )
@@ -112,6 +113,12 @@ public class AutoCommand extends SequentialCommandGroup {
                 )
         );
     }
+
+
+    protected Command createSegmentSequence(Drivetrain drivetrain, Shooter shooter, Indexer indexer, int pathIndex, boolean shouldZeroCancoder, boolean shouldRealignYaw, boolean shouldResetOdometry, double extraPreShotWait) {
+        return createSegmentSequence(drivetrain, shooter, indexer, pathIndex, shouldZeroCancoder, shouldRealignYaw, shouldResetOdometry, extraPreShotWait, 0);
+    }
+
     protected Command createSegmentSequence(Drivetrain drivetrain, Shooter shooter, Indexer indexer, int pathIndex){
         return createSegmentSequence(drivetrain, shooter, indexer, pathIndex, false, true, true,0);
     }
