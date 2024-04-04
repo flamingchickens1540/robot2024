@@ -5,8 +5,8 @@ import org.team1540.robot2024.subsystems.indexer.Indexer;
 import org.team1540.robot2024.util.auto.AutoCommand;
 import org.team1540.robot2024.util.auto.PathHelper;
 
-public class SourceLanephgfedChaos extends AutoCommand {
-    public  SourceLanephgfedChaos (Indexer indexer) {
+public class SourceLanehgfedChaos extends AutoCommand {
+    public  SourceLanehgfedChaos (Indexer indexer) {
         super("SourceLanephgfedChaos");
         addPath(
                 PathHelper.fromChoreoPath("SourceLanehgfedChaos.1", true, true)
