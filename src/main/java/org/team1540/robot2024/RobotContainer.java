@@ -262,10 +262,7 @@ public class RobotContainer {
         }
         autos.addDefault(new AutoCommand("Dwayne :skull:"));
         autos.add(new AmpLanePADEF(drivetrain, shooter, indexer));
-        autos.add(new CenterLanePDEABC(drivetrain, shooter, indexer));
-        autos.add(new SourceLanePGHF(drivetrain, shooter, indexer));
-        autos.add(new AmpLanepdChaos(drivetrain, shooter, indexer));
-        autos.add(new SoureLanephChaos(drivetrain, shooter, indexer));
+        autos.add(new AmpLanePAEDF(drivetrain, shooter, indexer));
 //        autos.add(new AutoCommand("SubwooferShot", new ShootSequence(shooter, indexer)));
 //        autos.add(new DriveSinglePath("Taxi", drivetrain));
 //        autos.add(new DriveSinglePath("Sprint", drivetrain));
@@ -274,12 +271,17 @@ public class RobotContainer {
 //        autos.add(new CenterLanePSubSprint(drivetrain, shooter, indexer));
 //        autos.add(new CenterLanePCBADSprint(drivetrain, shooter, indexer));
         autos.add(new CenterLanePCBAFSprint(drivetrain, shooter, indexer));
-////        autos.add(new CenterLanePCBAFE(drivetrain, shooter, indexer));
+        autos.add(new CenterLanePCBAFE(drivetrain, shooter, indexer));
+        autos.add(new CenterLanePDEABC(drivetrain, shooter, indexer));
+        autos.add(new CenterLanePCBAFG(drivetrain, shooter, indexer));
+        autos.add(new CenterLanePCBAEF(drivetrain, shooter, indexer));
+        autos.add(new CenterLanePCBAGF(drivetrain, shooter, indexer));
 //        autos.add(new CenterLanePCBA(drivetrain, shooter, indexer));
 //        autos.add(new CenterLanePBDA(drivetrain, shooter, indexer));
 //        autos.add(new CenterLanePSubCSubBSubASubFSub(drivetrain, shooter, indexer));
 ////        autos.add(new CenterLanePSubCSubBSubFSub(drivetrain, shooter, indexer));
 //        autos.add(new CenterLanePSubCSubBSubASub(drivetrain, shooter, indexer));
+        autos.add(new SourceLanePHGF(drivetrain, shooter, indexer));
         autos.add(new SourceLanePGHSprint(drivetrain, shooter, indexer));
 //        autos.addDefault(new ATestAuto(drivetrain, shooter, indexer));
     }

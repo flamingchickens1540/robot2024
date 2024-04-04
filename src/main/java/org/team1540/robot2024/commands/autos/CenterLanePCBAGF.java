@@ -2,25 +2,23 @@ package org.team1540.robot2024.commands.autos;
 
 import edu.wpi.first.wpilibj2.command.Commands;
 import org.team1540.robot2024.commands.indexer.IntakeAndFeed;
-import org.team1540.robot2024.commands.shooter.AutoShootPrepare;
 import org.team1540.robot2024.commands.shooter.LeadingShootPrepare;
-import org.team1540.robot2024.commands.shooter.ShootSequence;
 import org.team1540.robot2024.subsystems.drive.Drivetrain;
 import org.team1540.robot2024.subsystems.indexer.Indexer;
 import org.team1540.robot2024.subsystems.shooter.Shooter;
 import org.team1540.robot2024.util.auto.AutoCommand;
 import org.team1540.robot2024.util.auto.PathHelper;
 
-public class CenterLanePCBAFE extends AutoCommand {
+public class CenterLanePCBAGF extends AutoCommand {
 
-    public CenterLanePCBAFE(Drivetrain drivetrain, Shooter shooter, Indexer indexer) {
-        super("CenterLanePCBAFE");
+    public CenterLanePCBAGF(Drivetrain drivetrain, Shooter shooter, Indexer indexer) {
+        super("CenterLanePCBAGF");
         addPath(
-                PathHelper.fromChoreoPath("CenterLanePCBAFE.1", false, true),
-                PathHelper.fromChoreoPath("CenterLanePCBAFE.2"),
-                PathHelper.fromChoreoPath("CenterLanePCBAFE.3"),
-                PathHelper.fromChoreoPath("CenterLanePCBAFE.4"),
-                PathHelper.fromChoreoPath("CenterLanePCBAFE.5")
+                PathHelper.fromChoreoPath("CenterLanePCBAGF.1", false, true),
+                PathHelper.fromChoreoPath("CenterLanePCBAGF.2"),
+                PathHelper.fromChoreoPath("CenterLanePCBAGF.3"),
+                PathHelper.fromChoreoPath("CenterLanePCBAGF.4"),
+                PathHelper.fromChoreoPath("CenterLanePCBAGF.5")
 
         );
 
