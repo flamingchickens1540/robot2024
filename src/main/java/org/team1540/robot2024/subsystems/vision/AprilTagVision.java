@@ -2,6 +2,7 @@ package org.team1540.robot2024.subsystems.vision;
 
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Pose3d;
+import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.RobotState;
 import edu.wpi.first.wpilibj.Timer;
@@ -45,13 +46,14 @@ public class AprilTagVision extends SubsystemBase {
     }
 
     public static AprilTagVision createReal(Consumer<EstimatedVisionPose> visionPoseConsumer,
-                                            Supplier<Double> elevatorHeightSupplierMeters) {
+                                            Supplier<Double> elevatorHeightSupplierMeters,
+                                            Supplier<Rotation2d> headingSupplier) {
         if (Constants.currentMode != Constants.Mode.REAL) {
             DriverStation.reportWarning("Using real vision on simulated robot", false);
         }
         return new AprilTagVision(
                 new AprilTagVisionIOPhoton(FRONT_CAMERA_NAME, FRONT_CAMERA_POSE),
-                new AprilTagVisionIOLimelight(REAR_CAMERA_NAME, REAR_CAMERA_POSE),
+                new AprilTagVisionIOLimelight(REAR_CAMERA_NAME, REAR_CAMERA_POSE, headingSupplier),
                 visionPoseConsumer,
                 elevatorHeightSupplierMeters);
     }
