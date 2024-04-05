@@ -175,7 +175,7 @@ public class RobotContainer {
         copilot.back().onTrue(Commands.runOnce(shooter::zeroPivotToCancoder).andThen(Commands.print("BACK IS PRESSED")));
 
         copilot.leftBumper().whileTrue(new AmpScoreSequence(tramp, indexer, elevator));
-        Command intakeCommand = new ContinuousIntakeCommand(indexer, 1)
+        Command intakeCommand = new ContinuousIntakeCommand(indexer, leds, 1)
                 .deadlineWith(CommandUtils.rumbleCommand(driver, 0.5), CommandUtils.rumbleCommand(copilot, 0.5));
         copilot.rightBumper().whileTrue(intakeCommand);
 
@@ -206,7 +206,7 @@ public class RobotContainer {
         new Trigger(() -> elevator.getPosition() > 0.1).debounce(0.1)
                 .whileTrue(PrepareShooterCommand.lowerPivot(shooter));
 
-        new Trigger(indexer::isNoteStaged).debounce(0.1)
+        new Trigger(indexer::isNoteStaged).debounce(0.05)
                 .onTrue(CommandUtils.rumbleCommandTimed(driver.getHID(), 1, 1))
                 .whileTrue(leds.commandShowIntakePattern(SimpleLedPattern.solid("#ff0000")));
 
@@ -284,6 +284,7 @@ public class RobotContainer {
         autos.add(new SourceLanePHGF(drivetrain, shooter, indexer));
         autos.add(new SourceLanePGHSprint(drivetrain, shooter, indexer));
 //        autos.addDefault(new ATestAuto(drivetrain, shooter, indexer));
+        autos.add(new AutoCommand("Subwoofer Shot", ShootSequence.forAutoSubwoofer(shooter, indexer)));
     }
 
 

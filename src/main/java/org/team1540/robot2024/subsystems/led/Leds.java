@@ -9,7 +9,6 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import org.team1540.robot2024.Robot;
 import org.team1540.robot2024.subsystems.led.patterns.LedPattern;
 
-import java.util.function.Supplier;
 
 import static org.team1540.robot2024.Constants.Leds.*;
 
@@ -116,6 +115,15 @@ public class Leds extends SubsystemBase {
     }
     public Command commandClear(PatternLevel priority) {
         return Commands.runOnce(() -> this.clearPattern(Leds.Zone.MAIN, priority)).ignoringDisable(true);
+    }
+
+    public void setPatternAll(LedPattern pattern, PatternLevel level) {
+        this.setPattern(Zone.MAIN, pattern, level);
+        this.setPattern(Zone.TOP, pattern, level);
+    }
+    public void clearPatternAll(PatternLevel level) {
+        this.clearPattern(Zone.MAIN, level);
+        this.clearPattern(Zone.TOP, level);
     }
 
 }

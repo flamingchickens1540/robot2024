@@ -137,4 +137,12 @@ public class Indexer extends SubsystemBase {
         io.setIntakeBrakeMode(isBrake);
     }
 
+    public double getIntakeVoltage() {
+        return inputs.intakeVoltage;
+    }
+
+    public double getIntakeCurrent() {
+        return inputs.intakeCurrentAmps;
+    }
+
 }
