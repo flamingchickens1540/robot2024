@@ -276,6 +276,7 @@ public class RobotContainer {
         autos.add(new CenterLanePCBAFG(drivetrain, shooter, indexer));
         autos.add(new CenterLanePCBAEF(drivetrain, shooter, indexer));
         autos.add(new CenterLanePCBAGF(drivetrain, shooter, indexer));
+        autos.add(new CenterLanePCBA(drivetrain, shooter, indexer));
 //        autos.add(new CenterLanePCBA(drivetrain, shooter, indexer));
 //        autos.add(new CenterLanePBDA(drivetrain, shooter, indexer));
 //        autos.add(new CenterLanePSubCSubBSubASubFSub(drivetrain, shooter, indexer));
@@ -283,6 +284,7 @@ public class RobotContainer {
 //        autos.add(new CenterLanePSubCSubBSubASub(drivetrain, shooter, indexer));
         autos.add(new SourceLanePHGF(drivetrain, shooter, indexer));
         autos.add(new SourceLanePGHSprint(drivetrain, shooter, indexer));
+        autos.add(new SourceLanePGFE(drivetrain, shooter, indexer));
 //        autos.addDefault(new ATestAuto(drivetrain, shooter, indexer));
         autos.add(new AutoCommand("Subwoofer Shot", ShootSequence.forAutoSubwoofer(shooter, indexer)));
     }

@@ -14,9 +14,10 @@ public class CenterLanePCBA extends AutoCommand {
     public CenterLanePCBA(Drivetrain drivetrain, Shooter shooter, Indexer indexer) {
         super("!CenterLanePCBA");
         addPath(
-                PathHelper.fromChoreoPath("CenterLanePCBA.1", true, true),
-                PathHelper.fromChoreoPath("CenterLanePCBA.2"),
-                PathHelper.fromChoreoPath("CenterLanePCBA.3")
+                PathHelper.fromChoreoPath("CenterLanePCBAFSprint.1", false, true),
+                PathHelper.fromChoreoPath("CenterLanePCBAFSprint.2"),
+                PathHelper.fromChoreoPath("CenterLanePCBAFSprint.3")
+
         );
 
         addCommands(
@@ -24,9 +25,10 @@ public class CenterLanePCBA extends AutoCommand {
                 Commands.parallel(
                         new AutoShootPrepare(drivetrain, shooter),
                         Commands.sequence(
-                                createSegmentSequence(drivetrain, shooter, indexer, 0),
-                                createSegmentSequence(drivetrain, shooter, indexer, 1),
-                                createSegmentSequence(drivetrain, shooter, indexer, 1)
+                                drivetrain.commandCopyVisionPose(),
+                                createSegmentSequence(drivetrain, shooter, indexer, 0, false, false, false),
+                                createSegmentSequence(drivetrain, shooter, indexer, 1, false, false, true),
+                                createSegmentSequence(drivetrain, shooter, indexer, 2, false, false, true)
                         )
                 )
         );

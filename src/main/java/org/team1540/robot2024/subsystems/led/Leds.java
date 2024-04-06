@@ -73,6 +73,7 @@ public class Leds extends SubsystemBase {
     public enum PatternLevel {
         DEFAULT,
         TRAMP_STATE,
+        INTAKE_PREREADY,
         INTAKE_STATE,
         COAST_STATE,
         DRIVER_LOCK,
