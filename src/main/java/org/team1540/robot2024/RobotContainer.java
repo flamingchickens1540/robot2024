@@ -258,8 +258,8 @@ public class RobotContainer {
                     )
             );
 
-            autos.add(new AutoCommand("WheelRadiusChar", new WheelRadiusCharacterization(drivetrain, WheelRadiusCharacterization.Direction.COUNTER_CLOCKWISE)));
         }
+        autos.add(new AutoCommand("WheelRadiusChar", new WheelRadiusCharacterization(drivetrain, WheelRadiusCharacterization.Direction.COUNTER_CLOCKWISE)));
         autos.addDefault(new AutoCommand("Dwayne :skull:"));
         autos.add(new AmpLanePADEF(drivetrain, shooter, indexer));
         autos.add(new AmpLanePAEDF(drivetrain, shooter, indexer));
@@ -285,6 +285,7 @@ public class RobotContainer {
         autos.add(new SourceLanePHGF(drivetrain, shooter, indexer));
         autos.add(new SourceLanePGHSprint(drivetrain, shooter, indexer));
         autos.add(new SourceLanePGFE(drivetrain, shooter, indexer));
+        autos.add(new SourceLanePGFH(drivetrain, shooter, indexer));
 //        autos.addDefault(new ATestAuto(drivetrain, shooter, indexer));
         autos.add(new AutoCommand("Subwoofer Shot", ShootSequence.forAutoSubwoofer(shooter, indexer)));
     }

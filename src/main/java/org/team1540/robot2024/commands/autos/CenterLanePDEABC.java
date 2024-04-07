@@ -28,11 +28,10 @@ public class CenterLanePDEABC extends AutoCommand {
                         Commands.sequence(
                                 Commands.deadline(
                                         Commands.sequence(
-                                                Commands.waitSeconds(0.1),
                                                 Commands.waitUntil(()->!indexer.isNoteStaged()),
                                                 Commands.waitSeconds(0.1)
                                         ).withTimeout(1.1),
-                                        Commands.waitSeconds(0.2).andThen(IntakeAndFeed.withDefaults(indexer))
+                                        IntakeAndFeed.withDefaults(indexer)
                                 ),
                                 createSegmentSequence(drivetrain, shooter, indexer, 0, true, true, true, 0, 0.1),
                                 Commands.runOnce(drivetrain::unblockTags),
@@ -40,7 +39,11 @@ public class CenterLanePDEABC extends AutoCommand {
                                 Commands.runOnce(drivetrain::blockTags),
                                 createSegmentSequence(drivetrain, shooter, indexer, 2, false, true, true, 0, 0.1),
                                 createSegmentSequence(drivetrain, shooter, indexer, 3, false, true, true, 0, 0.1),
-                                createSegmentSequence(drivetrain, shooter, indexer, 4, false, true, true, 0, 0.1)
+                                Commands.parallel(
+                                        getPath(4).getCommand(drivetrain),
+                                        IntakeAndFeed.withDefaults(indexer)
+                                )
+//                                createSegmentSequence(drivetrain, shooter, indexer, 4, false, true, true, 0, 0.1)
                         )
                 )
         );

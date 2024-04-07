@@ -23,10 +23,10 @@ public class SourceLanePGFE extends AutoCommand {
                 Commands.parallel(
                         new AutoShootPrepare(drivetrain, shooter),
                         Commands.sequence(
-                                createSegmentSequence(drivetrain, shooter, indexer, 0, true, true, true, 0),
-                                createSegmentSequence(drivetrain, shooter, indexer, 1, false, true, true, 0),
-                                createSegmentSequence(drivetrain, shooter, indexer, 2, false, true, true, 0),
-                                createSegmentSequence(drivetrain, shooter, indexer, 3, false, true, true, 0)
+                                createSegmentSequence(drivetrain, shooter, indexer, 0, true, true, true, 0, 0, true),
+                                createSegmentSequence(drivetrain, shooter, indexer, 1, false, true, true, 0,0 , true),
+                                createSegmentSequence(drivetrain, shooter, indexer, 2, false, true, true, 0, 0, true),
+                                createSegmentSequence(drivetrain, shooter, indexer, 3, false, true, true, 0, 0, false)
                         )
                 )
         );

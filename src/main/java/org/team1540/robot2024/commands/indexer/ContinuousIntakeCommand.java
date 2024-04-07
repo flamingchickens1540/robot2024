@@ -11,13 +11,19 @@ public class ContinuousIntakeCommand extends Command {
     private final Indexer indexer;
     private final Leds leds;
     private final double percent;
-    private final LedPattern detected = SimpleLedPattern.solid("#ffff00");
+    private static final LedPattern detected = SimpleLedPattern.solid("#ffff00");
     private final Timer timer = new Timer();
 
 
     public ContinuousIntakeCommand(Indexer indexer, Leds leds, double percent) {
         this.indexer = indexer;
         this.leds = leds;
+        this.percent = percent;
+        addRequirements(indexer);
+    }
+    public ContinuousIntakeCommand(Indexer indexer, double percent) {
+        this.indexer = indexer;
+        this.leds = null;
         this.percent = percent;
         addRequirements(indexer);
     }
@@ -31,13 +37,17 @@ public class ContinuousIntakeCommand extends Command {
     public void execute() {
         if (indexer.isNoteStaged()) {
             indexer.stopIntake();
-            leds.clearPatternAll(Leds.PatternLevel.INTAKE_PREREADY);
-        } else {
-            if (indexer.getIntakeVoltage() == 0) {
-                timer.restart();
+            if (leds != null) {
+                leds.clearPatternAll(Leds.PatternLevel.INTAKE_PREREADY);
             }
-            if (timer.hasElapsed(0.3) && indexer.getIntakeCurrent() > 30) {
-                leds.setPatternAll(detected, Leds.PatternLevel.INTAKE_PREREADY);
+        } else {
+            if (leds != null) {
+                if (indexer.getIntakeVoltage() == 0) {
+                    timer.restart();
+                }
+                if (timer.hasElapsed(0.3) && indexer.getIntakeCurrent() > 30) {
+                    leds.setPatternAll(detected, Leds.PatternLevel.INTAKE_PREREADY);
+                }
             }
             indexer.setIntakePercent(percent);
         }
@@ -46,6 +56,8 @@ public class ContinuousIntakeCommand extends Command {
     @Override
     public void end(boolean interrupted) {
         indexer.stopIntake();
-        leds.clearPatternAll(Leds.PatternLevel.INTAKE_PREREADY);
+        if (leds != null) {
+            leds.clearPatternAll(Leds.PatternLevel.INTAKE_PREREADY);
+        }
     }
 }

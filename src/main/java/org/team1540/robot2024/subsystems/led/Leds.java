@@ -72,8 +72,8 @@ public class Leds extends SubsystemBase {
     static final int LEVEL_COUNT = PatternLevel.values().length;
     public enum PatternLevel {
         DEFAULT,
-        TRAMP_STATE,
         INTAKE_PREREADY,
+        TRAMP_STATE,
         INTAKE_STATE,
         COAST_STATE,
         DRIVER_LOCK,

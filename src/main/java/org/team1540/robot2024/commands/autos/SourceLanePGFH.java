@@ -8,15 +8,15 @@ import org.team1540.robot2024.subsystems.shooter.Shooter;
 import org.team1540.robot2024.util.auto.AutoCommand;
 import org.team1540.robot2024.util.auto.PathHelper;
 
-public class SourceLanePHGF extends AutoCommand {
+public class SourceLanePGFH extends AutoCommand {
     private static final double SHOT_WAIT = 0.2;
-    public SourceLanePHGF(Drivetrain drivetrain, Shooter shooter, Indexer indexer){
-        super("!SourceLanePHGF");
+    public SourceLanePGFH(Drivetrain drivetrain, Shooter shooter, Indexer indexer){
+        super("!SourceLanePGFH");
         addPath(
-                PathHelper.fromChoreoPath("SourceLanePHGF.1", true, true),
-                PathHelper.fromChoreoPath("SourceLanePHGF.2"),
-                PathHelper.fromChoreoPath("SourceLanePHGF.3"),
-                PathHelper.fromChoreoPath("SourceLanePHGF.4")
+                PathHelper.fromChoreoPath("SourceLanePGFH.1", true, true),
+                PathHelper.fromChoreoPath("SourceLanePGFH.2"),
+                PathHelper.fromChoreoPath("SourceLanePGFH.3"),
+                PathHelper.fromChoreoPath("SourceLanePGFH.4")
         );
 
         addCommands(

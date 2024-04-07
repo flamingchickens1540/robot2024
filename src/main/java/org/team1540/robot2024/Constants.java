@@ -65,7 +65,7 @@ public final class Constants {
         public static final double DRIVE_GEAR_RATIO = (50.0 / 14.0) * (IS_L3 ? 16.0 / 28.0 : 17.0 / 27.0) * (45.0 / 15.0);
         public static final double TURN_GEAR_RATIO = 150.0 / 7.0;
         public static final boolean IS_TURN_MOTOR_INVERTED = true;
-        public static final double WHEEL_RADIUS = Units.inchesToMeters(1.9423034948238156);
+        public static final double WHEEL_RADIUS = Units.inchesToMeters(1.9448479168443666);
 
         public static final double MAX_LINEAR_SPEED = Units.feetToMeters(IS_L3 ? 16.0 : 15.7);
         public static final double TRACK_WIDTH_X = Units.inchesToMeters(18.75);
@@ -111,7 +111,7 @@ public final class Constants {
         public static final String REAR_CAMERA_NAME = "limelight-rear";
 
         public static final Pose3d FRONT_CAMERA_POSE = new Pose3d(0.086018, 0, 0.627079, new Rotation3d(0, Math.toRadians(-40.843), 0));
-        public static final Pose3d REAR_CAMERA_POSE = new Pose3d(0.046049, 0, 0.540510, new Rotation3d(0, Math.toRadians(10), Math.PI));
+        public static final Pose3d REAR_CAMERA_POSE = new Pose3d(0.046049, 0, 0.540510, new Rotation3d(0, Math.toRadians(10), Math.PI+Math.toRadians(1.55)));
 
         public static final boolean TAKE_SNAPSHOTS = true;
         public static final double SNAPSHOT_PERIOD_SECS = 1;
