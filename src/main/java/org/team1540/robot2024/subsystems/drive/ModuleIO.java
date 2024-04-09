@@ -10,12 +10,14 @@ public interface ModuleIO {
         public double driveVelocityRadPerSec = 0.0;
         public double driveAppliedVolts = 0.0;
         public double driveCurrentAmps = 0.0;
+        public double driveTempCelsius = 0.0;
 
         public Rotation2d turnAbsolutePosition = new Rotation2d();
         public Rotation2d turnPosition = new Rotation2d();
         public double turnVelocityRadPerSec = 0.0;
         public double turnAppliedVolts = 0.0;
         public double turnCurrentAmps = 0.0;
+        public double turnTempCelsius = 0.0;
     }
 
     /**

@@ -37,12 +37,14 @@ public class ModuleIOTalonFX implements ModuleIO {
     private final StatusSignal<Double> driveVelocity;
     private final StatusSignal<Double> driveAppliedVolts;
     private final StatusSignal<Double> driveCurrent;
+    private final StatusSignal<Double> driveTempCelsius;
 
     private final StatusSignal<Double> turnAbsolutePosition;
     private final StatusSignal<Double> turnPosition;
     private final StatusSignal<Double> turnVelocity;
     private final StatusSignal<Double> turnAppliedVolts;
     private final StatusSignal<Double> turnCurrent;
+    private final StatusSignal<Double> turnTempCelsius;
 
     private final PhoenixTimeSyncSignalRefresher odometrySignalRefresher;
 
@@ -58,12 +60,14 @@ public class ModuleIOTalonFX implements ModuleIO {
         driveVelocity = driveTalon.getVelocity();
         driveAppliedVolts = driveTalon.getMotorVoltage();
         driveCurrent = driveTalon.getSupplyCurrent();
+        driveTempCelsius = driveTalon.getDeviceTemp();
 
         turnAbsolutePosition = cancoder.getAbsolutePosition();
         turnPosition = turnTalon.getPosition();
         turnVelocity = turnTalon.getVelocity();
         turnAppliedVolts = turnTalon.getMotorVoltage();
         turnCurrent = turnTalon.getSupplyCurrent();
+        turnTempCelsius = turnTalon.getDeviceTemp();
 
         BaseStatusSignal.setUpdateFrequencyForAll(CAN_UPDATE_FREQUENCY_HZ, drivePosition, turnPosition); // Required for odometry, use faster rate
         BaseStatusSignal.setUpdateFrequencyForAll(
@@ -71,10 +75,12 @@ public class ModuleIOTalonFX implements ModuleIO {
                 driveVelocity,
                 driveAppliedVolts,
                 driveCurrent,
+                driveTempCelsius,
                 turnAbsolutePosition,
                 turnVelocity,
                 turnAppliedVolts,
-                turnCurrent);
+                turnCurrent,
+                turnTempCelsius);
         driveTalon.optimizeBusUtilization();
         turnTalon.optimizeBusUtilization();
 
@@ -90,21 +96,25 @@ public class ModuleIOTalonFX implements ModuleIO {
                 driveVelocity,
                 driveAppliedVolts,
                 driveCurrent,
+                driveTempCelsius,
                 turnAbsolutePosition,
                 turnVelocity,
                 turnAppliedVolts,
-                turnCurrent);
+                turnCurrent,
+                turnTempCelsius);
 
         inputs.drivePositionRad = Units.rotationsToRadians(drivePosition.getValueAsDouble()) / DRIVE_GEAR_RATIO;
         inputs.driveVelocityRadPerSec = Units.rotationsToRadians(driveVelocity.getValueAsDouble()) / DRIVE_GEAR_RATIO;
         inputs.driveAppliedVolts = driveAppliedVolts.getValueAsDouble();
         inputs.driveCurrentAmps = driveCurrent.getValueAsDouble();
+        inputs.driveTempCelsius = driveTempCelsius.getValueAsDouble();
 
         inputs.turnAbsolutePosition = Rotation2d.fromRotations(turnAbsolutePosition.getValueAsDouble());
         inputs.turnPosition = Rotation2d.fromRotations(turnPosition.getValueAsDouble());
         inputs.turnVelocityRadPerSec = Units.rotationsToRadians(turnVelocity.getValueAsDouble());
         inputs.turnAppliedVolts = turnAppliedVolts.getValueAsDouble();
         inputs.turnCurrentAmps = turnCurrent.getValueAsDouble();
+        inputs.turnTempCelsius = turnTempCelsius.getValueAsDouble();
     }
 
     @Override

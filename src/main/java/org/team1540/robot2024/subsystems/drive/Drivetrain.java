@@ -1,11 +1,14 @@
 package org.team1540.robot2024.subsystems.drive;
 
 import com.pathplanner.lib.auto.AutoBuilder;
+import com.pathplanner.lib.commands.FollowPathHolonomic;
+import com.pathplanner.lib.controllers.PPHolonomicDriveController;
 import com.pathplanner.lib.pathfinding.Pathfinding;
 import com.pathplanner.lib.util.HolonomicPathFollowerConfig;
 import com.pathplanner.lib.util.PIDConstants;
 import com.pathplanner.lib.util.PathPlannerLogging;
 import com.pathplanner.lib.util.ReplanningConfig;
+import edu.wpi.first.math.Matrix;
 import edu.wpi.first.math.VecBuilder;
 import edu.wpi.first.math.estimator.SwerveDrivePoseEstimator;
 import edu.wpi.first.math.geometry.Pose2d;
@@ -16,8 +19,10 @@ import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
+import edu.wpi.first.math.numbers.N1;
+import edu.wpi.first.math.numbers.N3;
 import edu.wpi.first.wpilibj.DriverStation;
-import edu.wpi.first.wpilibj.RobotController;
+import edu.wpi.first.wpilibj.RobotState;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
@@ -27,9 +32,12 @@ import org.team1540.robot2024.util.auto.LocalADStarAK;
 import org.team1540.robot2024.Constants;
 import org.team1540.robot2024.util.PhoenixTimeSyncSignalRefresher;
 import org.team1540.robot2024.util.swerve.SwerveFactory;
-import org.team1540.robot2024.util.vision.TimestampedVisionPose;
+import org.team1540.robot2024.util.vision.AprilTagsCrescendo;
+import org.team1540.robot2024.util.vision.EstimatedVisionPose;
 import org.team1540.robot2024.util.vision.VisionPoseAcceptor;
 
+import java.util.Arrays;
+import java.util.Optional;
 import java.util.function.Supplier;
 
 import static org.team1540.robot2024.Constants.Drivetrain.*;
@@ -50,6 +58,11 @@ public class Drivetrain extends SubsystemBase {
 
     private static boolean hasInstance = false;
     private boolean blockTags = false;
+    private boolean overrideTargetRot = false;
+    private boolean isCharacterizingWheels = false;
+    private double characterizationInput = 0.0;
+
+    private Pose2d targetPose = new Pose2d();
 
     private Drivetrain(
             GyroIO gyroIO,
@@ -72,7 +85,6 @@ public class Drivetrain extends SubsystemBase {
                 rawGyroRotation,
                 getModulePositions(),
                 new Pose2d(),
-                // TODO: tune std devs (scale vision by distance?)
                 VecBuilder.fill(0.1, 0.1, 0.1),
                 VecBuilder.fill(0.5, 0.5, 5.0)); // Trust the gyro more than the AprilTags
 
@@ -81,7 +93,6 @@ public class Drivetrain extends SubsystemBase {
                 rawGyroRotation,
                 getModulePositions(),
                 new Pose2d(),
-                // TODO: tune std devs (scale vision by distance?)
                 VecBuilder.fill(0.1, 0.1, 0.1),
                 VecBuilder.fill(0.5, 0.5, 5.0)); // Trust the gyro more than the AprilTags
 
@@ -96,6 +107,7 @@ public class Drivetrain extends SubsystemBase {
                 new HolonomicPathFollowerConfig(new PIDConstants(5.0, 0.0, 0.0),new PIDConstants(7.0, 0.0, 0.0),MAX_LINEAR_SPEED, DRIVE_BASE_RADIUS, new ReplanningConfig()),
                 () -> DriverStation.getAlliance().isPresent() && DriverStation.getAlliance().get() == DriverStation.Alliance.Red,
                 this);
+        PPHolonomicDriveController.setRotationTargetOverride(this::getOverrideTargetRotationToSpeaker);
         Pathfinding.setPathfinder(new LocalADStarAK());
         PathPlannerLogging.setLogActivePathCallback(
                 (activePath) -> Logger.recordOutput("Pathplanner/ActivePath", activePath.toArray(new Pose2d[activePath.size()])));
@@ -147,6 +159,7 @@ public class Drivetrain extends SubsystemBase {
     @Override
     public void periodic() {
         gyroIO.updateInputs(gyroInputs);
+        Logger.processInputs("Drivetrain/Gyro", gyroInputs);
 
         for (Module module : modules) {
             module.periodic();
@@ -159,6 +172,10 @@ public class Drivetrain extends SubsystemBase {
             // Log empty setpoint states when disabled
             Logger.recordOutput("SwerveStates/Setpoints", new SwerveModuleState[]{});
             Logger.recordOutput("SwerveStates/SetpointsOptimized", new SwerveModuleState[]{});
+        }
+
+        if (isCharacterizingWheels) {
+            runVelocity(new ChassisSpeeds(0, 0, characterizationInput));
         }
 
 
@@ -200,9 +217,7 @@ public class Drivetrain extends SubsystemBase {
         Logger.recordOutput("SwerveStates/SetpointsOptimized", optimizedSetpointStates);
     }
 
-    public void drivePercent(double xPercent, double yPercent, double rotPercent, boolean fieldRelative) {
-        Rotation2d linearDirection = new Rotation2d(xPercent, yPercent);
-        double linearMagnitude = Math.hypot(xPercent, yPercent);
+    public void drivePercent(double linearMagnitude, Rotation2d linearDirection, double rotPercent, boolean fieldRelative) {
 
         Translation2d linearVelocity =
                 new Pose2d(new Translation2d(), linearDirection)
@@ -235,7 +250,6 @@ public class Drivetrain extends SubsystemBase {
             module.setBrakeMode(enabled);
         }
     }
-
 
     /**
      * Stops the drive and turns the modules to an X arrangement to resist movement. The modules will
@@ -271,9 +285,14 @@ public class Drivetrain extends SubsystemBase {
         }
         return driveVelocityAverage / 4.0;
     }
-
+    @AutoLogOutput(key = "Odometry/ChassisSpeeds")
     public ChassisSpeeds getChassisSpeeds() {
         return kinematics.toChassisSpeeds(getModuleStates());
+    }
+
+    @AutoLogOutput(key = "Odometry/ChassisSpeedMagnitude")
+    public double ChassisSpeedMagnitude(){
+        return Math.hypot(getChassisSpeeds().vxMetersPerSecond, getChassisSpeeds().vyMetersPerSecond);
     }
 
     /**
@@ -297,7 +316,7 @@ public class Drivetrain extends SubsystemBase {
     }
 
     @AutoLogOutput(key = "Odometry/RobotVision")
-    private Pose2d getPoseVision() {
+    public Pose2d getVisionPose() {
         return visionPoseEstimator.getEstimatedPosition();
     }
 
@@ -306,6 +325,10 @@ public class Drivetrain extends SubsystemBase {
      */
     public Rotation2d getRotation() {
         return getPose().getRotation();
+    }
+    
+    public Rotation2d getRawGyroRotation() {
+        return rawGyroRotation;
     }
 
     public void zeroFieldOrientationManual() {
@@ -326,12 +349,15 @@ public class Drivetrain extends SubsystemBase {
         visionPoseEstimator.resetPosition(rawGyroRotation, getModulePositions(), pose);
     }
 
-    public void addVisionMeasurement(TimestampedVisionPose visionPose) {
+    public void addVisionMeasurement(EstimatedVisionPose visionPose) {
         boolean shouldAccept = poseAcceptor.shouldAcceptVision(visionPose);
         if (shouldAccept) {
-            visionPoseEstimator.addVisionMeasurement(visionPose.poseMeters, visionPose.timestampSecs);
-            if (!blockTags) {
-                poseEstimator.addVisionMeasurement(visionPose.poseMeters, visionPose.timestampSecs);
+            Matrix<N3, N1> stdDevs = visionPose.getStdDevs();
+            visionPoseEstimator.setVisionMeasurementStdDevs(stdDevs);
+            visionPoseEstimator.addVisionMeasurement(visionPose.poseMeters.toPose2d(), visionPose.timestampSecs);
+            if (!blockTags && (!RobotState.isAutonomous() || getSpeakerDistanceMeters() < 4.5)) {
+                poseEstimator.setVisionMeasurementStdDevs(stdDevs);
+                poseEstimator.addVisionMeasurement(visionPose.poseMeters.toPose2d(), visionPose.timestampSecs);
             }
         }
     }
@@ -359,6 +385,20 @@ public class Drivetrain extends SubsystemBase {
                 modules[2].getPosition(),
                 modules[3].getPosition(),
         };
+    }
+
+    public void setPathRotationOverride(boolean shouldOverride) {
+        overrideTargetRot = shouldOverride;
+    }
+
+    private Optional<Rotation2d> getOverrideTargetRotationToSpeaker() {
+        if (overrideTargetRot)
+            return Optional.of(getPose()
+                    .minus(Constants.Targeting.getSpeakerPose()).getTranslation().getAngle()
+                    .rotateBy(DriverStation.getAlliance().orElse(null) == DriverStation.Alliance.Red
+                            ? Rotation2d.fromDegrees(180)
+                            : Rotation2d.fromDegrees(0)));
+        else return Optional.empty();
     }
 
     /**
@@ -389,5 +429,32 @@ public class Drivetrain extends SubsystemBase {
 
     public Command commandStop() {
         return Commands.runOnce(this::stop);
+    }
+
+    public double[] getWheelRadiusCharacterizationPosition() {
+        return Arrays.stream(modules).mapToDouble(Module::getPositionRads).toArray();
+    }
+
+    public void runWheelRadiusCharacterization(double omegaSpeed) {
+        isCharacterizingWheels = true;
+        characterizationInput = omegaSpeed;
+    }
+
+    public void stopCharacterization() {
+        isCharacterizingWheels = false;
+    }
+
+    @AutoLogOutput(key = "Targeting/SpeakerDistance")
+    public double getSpeakerDistanceMeters(){
+        return getPose().getTranslation().getDistance(AprilTagsCrescendo.getInstance().getTag(AprilTagsCrescendo.Tags.SPEAKER_CENTER).toPose2d().getTranslation());
+    }
+
+    public void setTargetPose(Pose2d pose){
+        this.targetPose = pose;
+    }
+
+    @AutoLogOutput(key = "Targeting/TargetPose")
+    public Pose2d getTargetPose() {
+        return targetPose;
     }
 }

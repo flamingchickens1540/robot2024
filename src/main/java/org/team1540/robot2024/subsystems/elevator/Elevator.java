@@ -66,6 +66,9 @@ public class Elevator extends SubsystemBase {
         if (kP.hasChanged(hashCode()) || kI.hasChanged(hashCode()) || kD.hasChanged(hashCode())) {
             io.configPID(kP.get(), kI.get(), kD.get());
         }
+        if(getPosition() > 0.31){
+            setFlipper(false);
+        }
     }
 
     public void setElevatorPosition(double positionMeters) {
@@ -76,8 +79,13 @@ public class Elevator extends SubsystemBase {
         positionFilter.clear();
     }
 
+    public void setFlipper(boolean flipped){
+        io.setFlipper(flipped);
+    }
+
+    @AutoLogOutput(key = "Elevator/isAtSetpoint")
     public boolean isAtSetpoint() {
-        return MathUtil.isNear(setpointMeters, positionFilter.getAverage(), POS_ERR_TOLERANCE_METERS);
+        return MathUtil.isNear(setpointMeters, positionFilter.getAverage(), POS_ERR_TOLERANCE_METERS) || (inputs.atLowerLimit && setpointMeters <= 0);
     }
 
     public void setVoltage(double voltage) {
@@ -88,7 +96,7 @@ public class Elevator extends SubsystemBase {
         io.setVoltage(0.0);
     }
 
-    @AutoLogOutput
+    @AutoLogOutput(key = "Elevator/setpoint")
     public double getSetpoint() {
         return setpointMeters;
     }

@@ -7,12 +7,19 @@ public class LedPatternWave extends LedPattern {
     private static final double degradation = 0.7;
     private static final int delay = 5;
     private final int hue;
+    private final int saturation;
     private int location = 0;
     private int ticker = 0;
 
-    public LedPatternWave(int hue) {
+    public LedPatternWave(Color color) {
         super(true);
-        this.hue = hue;
+        int[] hsv = getHSV(color);
+        this.hue = hsv[0];
+        this.saturation = hsv[1];
+    }
+
+    public LedPatternWave(String hex) {
+        this(new Color(hex));
     }
 
     @Override
@@ -26,7 +33,7 @@ public class LedPatternWave extends LedPattern {
                     distance = buffer.getLength() - i + location;
                 }
             }
-            buffer.setHSV(i, hue, 255, (int) Math.max(255.0 - distance * distance * degradation, 0));
+            buffer.setHSV(i, hue, saturation, (int) Math.max(255.0 - distance * distance * degradation, 0));
         }
         ticker++;
         if (ticker % delay == 0) {

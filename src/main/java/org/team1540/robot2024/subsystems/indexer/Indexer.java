@@ -6,6 +6,7 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.FunctionalCommand;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import org.littletonrobotics.junction.AutoLogOutput;
 import org.littletonrobotics.junction.Logger;
 import org.team1540.robot2024.Constants;
 import org.team1540.robot2024.util.LoggedTunableNumber;
@@ -21,6 +22,8 @@ public class Indexer extends SubsystemBase {
     private final LoggedTunableNumber kI = new LoggedTunableNumber("Indexer/kI", FEEDER_KI);
     private final LoggedTunableNumber kD = new LoggedTunableNumber("Indexer/kD", FEEDER_KD);
 
+    private double feederSetpointRPM = 0.0;
+
     private static boolean hasInstance = false;
 
     private Indexer(IndexerIO io) {
@@ -33,7 +36,7 @@ public class Indexer extends SubsystemBase {
         if (Constants.currentMode != Constants.Mode.REAL) {
             DriverStation.reportWarning("Using real indexer on simulated robot", false);
         }
-        return new Indexer(new IndexerIOSparkMax());
+        return new Indexer(new IndexerIOTalonFX());
     }
 
     public static Indexer createSim() {
@@ -58,12 +61,6 @@ public class Indexer extends SubsystemBase {
         if (RobotState.isDisabled()){
             stopAll();
         }
-
-//        if (Constants.isTuningMode()) {
-//            if (kP.hasChanged(hashCode()) || kI.hasChanged(hashCode()) || kD.hasChanged(hashCode())) {
-//                io.configureFeederPID(kP.get(), kI.get(), kD.get());
-//            }
-//        }
     }
 
     public void setIntakePercent(double percent) {
@@ -75,11 +72,39 @@ public class Indexer extends SubsystemBase {
     }
 
     public void setFeederVelocity(double setpointRPM) {
+        feederSetpointRPM = setpointRPM;
         io.setFeederVelocity(setpointRPM);
     }
 
     public void setFeederPercent(double percent) {
         io.setFeederVoltage(12.0 * percent);
+    }
+
+    public boolean isFeederAtSetpoint() {
+        return Math.abs(getFeederVelocityError()) < VELOCITY_ERR_TOLERANCE_RPM;
+    }
+
+    public void stopFeeder() {
+        io.setFeederVoltage(0);
+    }
+
+    public void stopIntake() {
+        io.setIntakeVoltage(0);
+    }
+
+    public void stopAll() {
+        io.setIntakeVoltage(0);
+        io.setFeederVoltage(0);
+    }
+
+    @AutoLogOutput(key = "Intake/Feeder/setpointRPM")
+    public double getFeederVelocitySetpoint() {
+        return feederSetpointRPM;
+    }
+
+    @AutoLogOutput(key = "Intake/Feeder/velocityErrorRPM")
+    public double getFeederVelocityError() {
+        return inputs.feederVelocityRPM - getFeederVelocitySetpoint();
     }
 
     public Command feedToAmp() {
@@ -99,23 +124,6 @@ public class Indexer extends SubsystemBase {
                 this
         );
     }
-    public boolean isFeederAtSetpoint() {
-        return Math.abs(inputs.feederVelocityError) < VELOCITY_ERR_TOLERANCE_RPM;
-//        return MathUtil.isNear(inputs.setpointRPM, inputs.feederVelocityRPM, VELOCITY_ERR_TOLERANCE_RPM);
-    }
-
-    public void stopFeeder() {
-        io.setFeederVoltage(0);
-    }
-
-    public void stopIntake() {
-        io.setIntakeVoltage(0);
-    }
-
-    public void stopAll() {
-        io.setIntakeVoltage(0);
-        io.setFeederVoltage(0);
-    }
 
     public Command commandRunIntake(double percent) {
         return Commands.startEnd(
@@ -125,12 +133,16 @@ public class Indexer extends SubsystemBase {
                 );
     }
 
-    public Command setIntakeAndFeeder(double intakePercent, double feederVelocity) {
-        return Commands.startEnd(
-                () -> {setIntakePercent(intakePercent); setFeederVelocity(feederVelocity);},
-                () -> {setIntakePercent(0); setFeederVelocity(0);},
-                this
-        );
+    public void setIntakeBrakeMode(boolean isBrake) {
+        io.setIntakeBrakeMode(isBrake);
+    }
+
+    public double getIntakeVoltage() {
+        return inputs.intakeVoltage;
+    }
+
+    public double getIntakeCurrent() {
+        return inputs.intakeCurrentAmps;
     }
 
 }

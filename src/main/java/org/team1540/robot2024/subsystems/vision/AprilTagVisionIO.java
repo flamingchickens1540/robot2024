@@ -7,9 +7,8 @@ public interface AprilTagVisionIO {
     @AutoLog
     class AprilTagVisionIOInputs {
         public Pose3d estimatedPoseMeters = new Pose3d();
-        public boolean hasTargets = false;
-        public int primaryTagID = 0;
-        public Pose3d primaryTagPoseMeters = new Pose3d();
+        public int numTagsSeen = 0;
+        public double avgTagDistance = Double.POSITIVE_INFINITY;
         public double lastMeasurementTimestampSecs = 0.0;
     }
 
@@ -17,6 +16,8 @@ public interface AprilTagVisionIO {
 
     /** Sets the robot-space pose of the camera */
     default void setPoseOffset(Pose3d newPose) {}
+
+    default void takeSnapshot(String snapshotName) {}
 
     default String getName() {
         return "";

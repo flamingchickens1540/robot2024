@@ -2,13 +2,13 @@ package org.team1540.robot2024.subsystems.vision;
 
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Pose3d;
-import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj.RobotState;
+import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import org.littletonrobotics.junction.Logger;
 import org.team1540.robot2024.Constants;
-import org.team1540.robot2024.util.vision.TimestampedVisionPose;
-import org.team1540.robot2024.util.vision.VisionPoseAcceptor;
+import org.team1540.robot2024.util.vision.EstimatedVisionPose;
 
 import java.util.function.Consumer;
 import java.util.function.Supplier;
@@ -22,18 +22,18 @@ public class AprilTagVision extends SubsystemBase {
     private final AprilTagVisionIO rearCameraIO;
     private final AprilTagVisionIOInputsAutoLogged rearCameraInputs = new AprilTagVisionIOInputsAutoLogged();
 
-    private final Consumer<TimestampedVisionPose> visionPoseConsumer;
+    private final Consumer<EstimatedVisionPose> visionPoseConsumer;
     private final Supplier<Double> elevatorHeightSupplierMeters;
 
-    private final TimestampedVisionPose frontPose = new TimestampedVisionPose();
-    private final TimestampedVisionPose rearPose = new TimestampedVisionPose();
+    private final EstimatedVisionPose frontPose = new EstimatedVisionPose();
+    private final EstimatedVisionPose rearPose = new EstimatedVisionPose();
 
     private static boolean hasInstance = false;
 
     private AprilTagVision(
             AprilTagVisionIO frontCameraIO,
             AprilTagVisionIO rearCameraIO,
-            Consumer<TimestampedVisionPose> visionPoseConsumer,
+            Consumer<EstimatedVisionPose> visionPoseConsumer,
             Supplier<Double> elevatorHeightSupplierMeters) {
         if (hasInstance) throw new IllegalStateException("Instance of vision already exists");
         hasInstance = true;
@@ -44,19 +44,19 @@ public class AprilTagVision extends SubsystemBase {
         this.elevatorHeightSupplierMeters = elevatorHeightSupplierMeters;
     }
 
-    public static AprilTagVision createReal(Consumer<TimestampedVisionPose> visionPoseConsumer,
+    public static AprilTagVision createReal(Consumer<EstimatedVisionPose> visionPoseConsumer,
                                             Supplier<Double> elevatorHeightSupplierMeters) {
         if (Constants.currentMode != Constants.Mode.REAL) {
             DriverStation.reportWarning("Using real vision on simulated robot", false);
         }
         return new AprilTagVision(
                 new AprilTagVisionIOPhoton(FRONT_CAMERA_NAME, FRONT_CAMERA_POSE),
-                new AprilTagVisionIOPhoton(REAR_CAMERA_NAME, REAR_CAMERA_POSE),
+                new AprilTagVisionIOLimelight(REAR_CAMERA_NAME, REAR_CAMERA_POSE),
                 visionPoseConsumer,
                 elevatorHeightSupplierMeters);
     }
 
-    public static AprilTagVision createSim(Consumer<TimestampedVisionPose> visionPoseConsumer,
+    public static AprilTagVision createSim(Consumer<EstimatedVisionPose> visionPoseConsumer,
                                            Supplier<Pose2d> drivetrainPoseSupplier,
                                            Supplier<Double> elevatorHeightSupplierMeters) {
         if (Constants.currentMode == Constants.Mode.REAL) {
@@ -104,15 +104,29 @@ public class AprilTagVision extends SubsystemBase {
 
         updateAndAcceptPose(frontCameraInputs, frontPose);
         updateAndAcceptPose(rearCameraInputs, rearPose);
+
+        if (TAKE_SNAPSHOTS && /*DriverStation.isFMSAttached() &&*/ RobotState.isEnabled()) {
+            Logger.runEveryN((int) (SNAPSHOT_PERIOD_SECS / Constants.LOOP_PERIOD_SECS),
+                    () -> takeSnapshot(
+                            String.format("%s_%s%d_%d",
+                                    DriverStation.getEventName(),
+                                    DriverStation.getMatchType().toString(),
+                                    DriverStation.getMatchNumber(),
+                                    (int) Timer.getFPGATimestamp())));
+        }
     }
 
-    private void updateAndAcceptPose(AprilTagVisionIOInputsAutoLogged cameraInputs, TimestampedVisionPose pose) {
+    public void takeSnapshot(String snapshotName) {
+        frontCameraIO.takeSnapshot(snapshotName);
+        rearCameraIO.takeSnapshot(snapshotName);
+    }
+
+    private void updateAndAcceptPose(AprilTagVisionIOInputsAutoLogged cameraInputs, EstimatedVisionPose pose) {
         if (cameraInputs.lastMeasurementTimestampSecs > pose.timestampSecs) {
             pose.timestampSecs = cameraInputs.lastMeasurementTimestampSecs;
-            pose.poseMeters = cameraInputs.estimatedPoseMeters.toPose2d();
-            pose.hasTargets = cameraInputs.hasTargets;
-            pose.primaryTagID = cameraInputs.primaryTagID;
-            pose.primaryTagPose = cameraInputs.primaryTagPoseMeters.toPose2d();
+            pose.poseMeters = cameraInputs.estimatedPoseMeters;
+            pose.numTags = cameraInputs.numTagsSeen;
+            pose.avgDistance = cameraInputs.avgTagDistance;
             visionPoseConsumer.accept(pose);
         }
     }

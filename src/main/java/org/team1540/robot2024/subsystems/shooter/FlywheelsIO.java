@@ -8,11 +8,12 @@ public interface FlywheelsIO {
         public double leftAppliedVolts = 0.0;
         public double leftCurrentAmps = 0.0;
         public double leftVelocityRPM = 0.0;
+        public double leftTempCelsius = 0.0;
 
         public double rightAppliedVolts = 0.0;
         public double rightCurrentAmps = 0.0;
         public double rightVelocityRPM = 0.0;
-
+        public double rightTempCelsius = 0.0;
     }
 
     /**
@@ -34,5 +35,5 @@ public interface FlywheelsIO {
     /**
      * Configures the PID controller
      */
-    default void configPID(double kP, double kI, double kD) {}
+    default void configPID(double kP, double kI, double kD, double kV) {}
 }

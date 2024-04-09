@@ -13,6 +13,7 @@ public class IntakeAndFeed extends Command {
     public static Command withDefaults(Indexer indexer) {
         return new IntakeAndFeed(indexer, () -> 1, () -> 1);
     }
+
     public IntakeAndFeed(Indexer indexer, DoubleSupplier intakePercent, DoubleSupplier feederPercent) {
         this.indexer = indexer;
         this.intakePercent = intakePercent;

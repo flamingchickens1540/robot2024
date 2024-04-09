@@ -70,7 +70,7 @@ public class ShooterPivotIOSim implements ShooterPivotIO {
     }
 
     @Override
-    public void configPID(double kP, double kI, double kD) {
+    public void configPID(double kP, double kI, double kD, double kG) {
         controller.setPID(kP, kI, kD);
     }
 }

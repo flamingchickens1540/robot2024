@@ -31,6 +31,8 @@ public class ElevatorIOSim implements ElevatorIO {
     private boolean isClosedLoop;
     private TrapezoidProfile.State setpoint;
 
+    private double servo;
+
     @Override
     public void updateInputs(ElevatorIOInputs inputs) {
         if (isClosedLoop) {
@@ -46,9 +48,10 @@ public class ElevatorIOSim implements ElevatorIO {
         inputs.positionMeters = elevatorSim.getPositionMeters();
         inputs.velocityMPS = elevatorSim.getVelocityMetersPerSecond();
         inputs.voltage = elevatorAppliedVolts;
-        inputs.current = new double[]{elevatorSim.getCurrentDrawAmps()};
+        inputs.currentAmps = new double[]{elevatorSim.getCurrentDrawAmps()};
         inputs.atUpperLimit = elevatorSim.hasHitUpperLimit();
         inputs.atLowerLimit = elevatorSim.hasHitLowerLimit();
+        inputs.flipperAngleDegrees = servo;
     }
 
     @Override
@@ -61,6 +64,11 @@ public class ElevatorIOSim implements ElevatorIO {
     public void setSetpointMeters(double position) {
         isClosedLoop = true;
         setpoint = new TrapezoidProfile.State(position, 0.0);
+    }
+
+    @Override
+    public void setFlipper(boolean flipped) {
+        servo = flipped ? 90 : 0;
     }
 
     @Override

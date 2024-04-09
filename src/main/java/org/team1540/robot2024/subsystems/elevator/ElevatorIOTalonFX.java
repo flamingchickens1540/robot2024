@@ -9,6 +9,7 @@ import com.ctre.phoenix6.controls.Follower;
 import com.ctre.phoenix6.controls.MotionMagicVoltage;
 import com.ctre.phoenix6.hardware.TalonFX;
 import com.ctre.phoenix6.signals.*;
+import edu.wpi.first.wpilibj.Servo;
 import org.team1540.robot2024.Constants;
 
 public class ElevatorIOTalonFX implements ElevatorIO {
@@ -16,12 +17,15 @@ public class ElevatorIOTalonFX implements ElevatorIO {
     private final MotionMagicVoltage motionMagicOut = new MotionMagicVoltage(0).withEnableFOC(true);
     private final TalonFX leader = new TalonFX(Constants.Elevator.LEADER_ID);
     private final TalonFX follower = new TalonFX(Constants.Elevator.FOLLOWER_ID);
-
+    private final Servo leftFlipper = new Servo(Constants.Elevator.LEFT_FLIPPER_ID);
+    private final Servo rightFlipper = new Servo(Constants.Elevator.RIGHT_FLIPPER_ID);
     private final StatusSignal<Double> leaderPosition = leader.getPosition();
     private final StatusSignal<Double> leaderVelocity = leader.getVelocity();
     private final StatusSignal<Double> leaderAppliedVolts = leader.getMotorVoltage();
     private final StatusSignal<Double> leaderCurrent = leader.getStatorCurrent();
     private final StatusSignal<Double> followerCurrent = follower.getStatorCurrent();
+    private final StatusSignal<Double> leaderTemp = leader.getDeviceTemp();
+    private final StatusSignal<Double> followerTemp = follower.getDeviceTemp();
     private final StatusSignal<ForwardLimitValue> topLimitStatus = leader.getForwardLimit();
     private final StatusSignal<ReverseLimitValue> bottomLimitStatus = leader.getReverseLimit();
     TalonFXConfiguration config;
@@ -43,6 +47,8 @@ public class ElevatorIOTalonFX implements ElevatorIO {
                 leaderAppliedVolts,
                 leaderCurrent,
                 followerCurrent,
+                leaderTemp,
+                followerTemp,
                 topLimitStatus,
                 bottomLimitStatus);
         leader.optimizeBusUtilization();
@@ -68,7 +74,7 @@ public class ElevatorIOTalonFX implements ElevatorIO {
         config.HardwareLimitSwitch.ForwardLimitEnable = true;
         config.HardwareLimitSwitch.ReverseLimitEnable = true;
         config.HardwareLimitSwitch.ReverseLimitAutosetPositionEnable = true;
-        config.HardwareLimitSwitch.ReverseLimitAutosetPositionValue = Constants.Elevator.MINIMUM_HEIGHT;
+        config.HardwareLimitSwitch.ReverseLimitAutosetPositionValue = 0;
         leader.getConfigurator().apply(config);
         config.MotorOutput.Inverted = InvertedValue.CounterClockwise_Positive;
         follower.getConfigurator().apply(config);
@@ -83,15 +89,19 @@ public class ElevatorIOTalonFX implements ElevatorIO {
                 leaderAppliedVolts,
                 leaderCurrent,
                 followerCurrent,
+                leaderTemp,
+                followerTemp,
                 topLimitStatus,
                 bottomLimitStatus);
 
-        inputs.positionMeters = leaderPosition.getValue();
-        inputs.velocityMPS = leaderVelocity.getValue();
-        inputs.voltage = leaderAppliedVolts.getValue();
-        inputs.current = new double[]{leaderCurrent.getValue(), followerCurrent.getValue()};
+        inputs.positionMeters = leaderPosition.getValueAsDouble();
+        inputs.velocityMPS = leaderVelocity.getValueAsDouble();
+        inputs.voltage = leaderAppliedVolts.getValueAsDouble();
+        inputs.currentAmps = new double[]{leaderCurrent.getValueAsDouble(), followerCurrent.getValueAsDouble()};
+        inputs.tempCelsius = new double[]{leaderTemp.getValueAsDouble(), followerCurrent.getValueAsDouble()};
         inputs.atUpperLimit = topLimitStatus.getValue() == ForwardLimitValue.ClosedToGround;
         inputs.atLowerLimit = bottomLimitStatus.getValue() == ReverseLimitValue.ClosedToGround;
+        inputs.flipperAngleDegrees = leftFlipper.getAngle();
     }
 
     @Override
@@ -108,6 +118,12 @@ public class ElevatorIOTalonFX implements ElevatorIO {
     public void setBrakeMode(boolean isBrakeMode) {
         leader.setNeutralMode(isBrakeMode ? NeutralModeValue.Brake : NeutralModeValue.Coast);
         follower.setNeutralMode(isBrakeMode ? NeutralModeValue.Brake : NeutralModeValue.Coast);
+    }
+
+    @Override
+    public void setFlipper(boolean flipped) {
+        leftFlipper.set(flipped ? 0.63 : 1);
+        rightFlipper.set(flipped ? 1 : 0);
     }
 
     @Override

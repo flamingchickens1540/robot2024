@@ -1,13 +1,7 @@
 package org.team1540.robot2024.subsystems.indexer;
 
-import com.revrobotics.CANSparkBase;
-import com.revrobotics.CANSparkLowLevel;
-import com.revrobotics.CANSparkMax;
-import com.revrobotics.SparkPIDController;
-import edu.wpi.first.math.filter.Debouncer;
-import edu.wpi.first.wpilibj.AnalogPotentiometer;
+import com.revrobotics.*;
 import edu.wpi.first.wpilibj.DigitalInput;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 import static org.team1540.robot2024.Constants.Indexer.*;
 
@@ -16,10 +10,11 @@ public class IndexerIOSparkMax implements IndexerIO {
     private final CANSparkMax intakeMotor = new CANSparkMax(INTAKE_ID, CANSparkLowLevel.MotorType.kBrushless);
     private final CANSparkMax feederMotor = new CANSparkMax(FEEDER_ID, CANSparkLowLevel.MotorType.kBrushless);
     private final DigitalInput indexerBeamBreak = new DigitalInput(7);
-//    private final Debouncer beamBreakDebouncer = new Debouncer(0.2, Debouncer.DebounceType.kRising);
-//    private final AnalogPotentiometer ultrasonic = new AnalogPotentiometer(0,1,0);
-    private final SparkPIDController feederPID;
-    private double setpointRPM;
+
+    private final RelativeEncoder intakeEncoder = intakeMotor.getEncoder();
+    private final RelativeEncoder feederEncoder = feederMotor.getEncoder();
+
+    private final SparkPIDController feederPID = feederMotor.getPIDController();
 
 
     public IndexerIOSparkMax() {
@@ -32,7 +27,6 @@ public class IndexerIOSparkMax implements IndexerIO {
         feederMotor.enableVoltageCompensation(12.0);
         feederMotor.setSmartCurrentLimit(60);
 
-        feederPID = feederMotor.getPIDController();
         feederPID.setP(FEEDER_KP, 0);
         feederPID.setI(FEEDER_KI, 0);
         feederPID.setD(FEEDER_KD, 0);
@@ -43,16 +37,13 @@ public class IndexerIOSparkMax implements IndexerIO {
     public void updateInputs(IndexerIOInputs inputs) {
         inputs.intakeCurrentAmps = intakeMotor.getOutputCurrent();
         inputs.intakeVoltage = intakeMotor.getBusVoltage() * intakeMotor.getAppliedOutput();
-        inputs.intakeVelocityRPM = intakeMotor.getEncoder().getVelocity();
+        inputs.intakeVelocityRPM = intakeEncoder.getVelocity();
+        inputs.intakeTempCelsius = intakeMotor.getMotorTemperature();
         inputs.feederCurrentAmps = feederMotor.getOutputCurrent();
         inputs.feederVoltage = feederMotor.getBusVoltage() * feederMotor.getAppliedOutput();
-        inputs.feederVelocityRPM = feederMotor.getEncoder().getVelocity();
+        inputs.feederVelocityRPM = feederEncoder.getVelocity();
+        inputs.feederTempCelsius = feederMotor.getMotorTemperature();
         inputs.noteInIntake = !indexerBeamBreak.get();
-//        SmartDashboard.putNumber("ultrasonic", ultrasonic.get());
-//        inputs.noteInIntake = ultrasonic.get() < 0.02;
-        inputs.setpointRPM = setpointRPM;
-        inputs.feederVelocityError = setpointRPM - feederMotor.getEncoder().getVelocity();
-
     }
 
     @Override
@@ -66,10 +57,9 @@ public class IndexerIOSparkMax implements IndexerIO {
     }
 
     @Override
-    public void setFeederVelocity(double velocity) {
-        setpointRPM = velocity;
+    public void setFeederVelocity(double velocityRPM) {
         feederPID.setReference(
-                velocity * FEEDER_GEAR_RATIO,
+                velocityRPM * FEEDER_GEAR_RATIO,
                 CANSparkBase.ControlType.kVelocity,
                 0,
                 FEEDER_KS,
@@ -83,4 +73,9 @@ public class IndexerIOSparkMax implements IndexerIO {
         feederPID.setI(i);
         feederPID.setD(d);
     }
+
+    public void setIntakeBrakeMode(boolean isBrakeMode) {
+        intakeMotor.setIdleMode(isBrakeMode ? CANSparkBase.IdleMode.kBrake : CANSparkBase.IdleMode.kCoast);
+    }
 }
+

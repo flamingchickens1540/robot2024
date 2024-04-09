@@ -6,7 +6,6 @@ import com.ctre.phoenix6.configs.CANcoderConfiguration;
 import com.ctre.phoenix6.configs.Slot0Configs;
 import com.ctre.phoenix6.configs.TalonFXConfiguration;
 import com.ctre.phoenix6.controls.MotionMagicVoltage;
-import com.ctre.phoenix6.controls.PositionVoltage;
 import com.ctre.phoenix6.controls.VoltageOut;
 import com.ctre.phoenix6.hardware.CANcoder;
 import com.ctre.phoenix6.hardware.TalonFX;
@@ -25,6 +24,7 @@ public class ShooterPivotIOTalonFX implements ShooterPivotIO {
     private final StatusSignal<Double> velocity = motor.getVelocity();
     private final StatusSignal<Double> appliedVoltage = motor.getMotorVoltage();
     private final StatusSignal<Double> current = motor.getSupplyCurrent();
+    private final StatusSignal<Double> temp = motor.getDeviceTemp();
     private final StatusSignal<ForwardLimitValue> forwardLimit = motor.getForwardLimit();
     private final StatusSignal<ReverseLimitValue> reverseLimit = motor.getReverseLimit();
 
@@ -74,7 +74,7 @@ public class ShooterPivotIOTalonFX implements ShooterPivotIO {
 
         cancoder.getConfigurator().apply(cancoderConfig);
         motor.getConfigurator().apply(motorConfig);
-        motor.setPosition(absolutePosition.getValue()*MOTOR_TO_CANCODER);
+//        motor.setPosition(absolutePosition.getValue()*MOTOR_TO_CANCODER);
         BaseStatusSignal.setUpdateFrequencyForAll(
                 50,
                 position,
@@ -82,24 +82,26 @@ public class ShooterPivotIOTalonFX implements ShooterPivotIO {
                 velocity,
                 appliedVoltage,
                 current,
+                temp,
                 forwardLimit,
                 reverseLimit);
 
         motor.optimizeBusUtilization();
         cancoder.optimizeBusUtilization();
-        motor.setPosition(0);
+        motor.setPosition(absolutePosition.getValueAsDouble() / CANCODER_TO_PIVOT * CHAIN_FACTOR);
     }
 
     @Override
     public void updateInputs(ShooterPivotIOInputs inputs) {
-        BaseStatusSignal.refreshAll(position, absolutePosition, velocity, appliedVoltage, current, forwardLimit, reverseLimit);
+        BaseStatusSignal.refreshAll(position, absolutePosition, velocity, appliedVoltage, current, temp, forwardLimit, reverseLimit);
         inputs.isAtForwardLimit = forwardLimit.getValue() == ForwardLimitValue.ClosedToGround;
         inputs.isAtReverseLimit = reverseLimit.getValue() == ReverseLimitValue.ClosedToGround;
         inputs.position = Rotation2d.fromRotations(position.getValueAsDouble());
-        inputs.absolutePosition = Rotation2d.fromRotations(absolutePosition.getValueAsDouble() / CANCODER_TO_PIVOT);
+        inputs.absolutePosition = Rotation2d.fromRotations(absolutePosition.getValueAsDouble() / CANCODER_TO_PIVOT * CHAIN_FACTOR);
         inputs.velocityRPS = velocity.getValueAsDouble();
         inputs.appliedVolts = appliedVoltage.getValueAsDouble();
         inputs.currentAmps = current.getValueAsDouble();
+        inputs.tempCelsius = temp.getValueAsDouble();
 
     }
 
@@ -119,12 +121,13 @@ public class ShooterPivotIOTalonFX implements ShooterPivotIO {
     }
 
     @Override
-    public void configPID(double kP, double kI, double kD) {
+    public void configPID(double kP, double kI, double kD, double kG) {
         Slot0Configs pidConfigs = new Slot0Configs();
         motor.getConfigurator().refresh(pidConfigs);
         pidConfigs.kP = kP;
         pidConfigs.kI = kI;
         pidConfigs.kD = kD;
+        pidConfigs.kG = kG;
         motor.getConfigurator().apply(pidConfigs);
     }
     @Override

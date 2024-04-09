@@ -10,6 +10,7 @@ import org.photonvision.targeting.PhotonTrackedTarget;
 import org.team1540.robot2024.Constants;
 import org.team1540.robot2024.util.vision.AprilTagsCrescendo;
 
+import java.util.List;
 import java.util.Optional;
 
 public class AprilTagVisionIOPhoton implements AprilTagVisionIO {
@@ -34,10 +35,11 @@ public class AprilTagVisionIOPhoton implements AprilTagVisionIO {
     @Override
     public void updateInputs(AprilTagVisionIOInputs inputs) {
         PhotonPipelineResult latestResult = camera.getLatestResult();
+        List<PhotonTrackedTarget> targets = latestResult.getTargets();
         Optional<EstimatedRobotPose> estimatedPose = photonEstimator.update(latestResult);
 
         double maxAmbiguityRatio = 0;
-        for (PhotonTrackedTarget target : latestResult.getTargets())
+        for (PhotonTrackedTarget target : targets)
             if (target.getPoseAmbiguity() > maxAmbiguityRatio) maxAmbiguityRatio = target.getPoseAmbiguity();
 
         if (estimatedPose.isPresent() && maxAmbiguityRatio < Constants.Vision.MAX_AMBIGUITY_RATIO) {
@@ -46,13 +48,13 @@ public class AprilTagVisionIOPhoton implements AprilTagVisionIO {
             inputs.lastMeasurementTimestampSecs = estimatedPose.get().timestampSeconds;
         }
 
-        inputs.hasTargets = latestResult.hasTargets();
-        inputs.primaryTagID = inputs.hasTargets ? latestResult.getBestTarget().getFiducialId() : -1;
-        inputs.primaryTagPoseMeters =
-                inputs.hasTargets
-                        ? new Pose3d().plus(
-                        latestResult.getBestTarget().getBestCameraToTarget().plus(cameraTransform.inverse()))
-                        : new Pose3d();
+        inputs.numTagsSeen = targets.size();
+        if (inputs.numTagsSeen > 0) {
+            inputs.avgTagDistance = 0;
+            for (PhotonTrackedTarget target : targets)
+                inputs.avgTagDistance += new Pose3d().plus(target.getBestCameraToTarget()).getTranslation().getNorm();
+            inputs.avgTagDistance /= inputs.numTagsSeen;
+        }
     }
 
     @Override
@@ -64,5 +66,10 @@ public class AprilTagVisionIOPhoton implements AprilTagVisionIO {
     @Override
     public String getName() {
         return camera.getName();
+    }
+
+    @Override
+    public void takeSnapshot(String snapshotName) {
+        camera.takeOutputSnapshot();
     }
 }

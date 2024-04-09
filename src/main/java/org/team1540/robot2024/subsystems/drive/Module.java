@@ -32,7 +32,8 @@ public class Module {
         switch (Constants.currentMode) {
             case REAL:
             case REPLAY:
-                driveFeedforward = new SimpleMotorFeedforward(0.206, 0.117);
+                driveFeedforward = new SimpleMotorFeedforward(0.258, 0.128);
+//                driveFeedforward = new SimpleMotorFeedforward(0.206, 0.117);
                 driveFeedback = new PIDController(0.05, 0.0, 0.0);
                 turnFeedback = new PIDController(7.0, 0.0, 0.0);
                 break;
@@ -143,6 +144,10 @@ public class Module {
      */
     public double getPositionMeters() {
         return inputs.drivePositionRad * WHEEL_RADIUS;
+    }
+
+    public double getPositionRads() {
+        return inputs.drivePositionRad;
     }
 
     /**
