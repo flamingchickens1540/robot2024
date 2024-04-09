@@ -7,7 +7,7 @@ import org.team1540.robot2024.util.auto.PathHelper;
 
 public class SourceLanehgfedChaos extends AutoCommand {
     public SourceLanehgfedChaos(Indexer indexer) {
-        super("SourceLanephgfedChaos2");
+        super("SourceLanephgfedChaos");
         addPath(
                 PathHelper.fromChoreoPath("SourceLanehgfedChaos.1", true, true)
         );
