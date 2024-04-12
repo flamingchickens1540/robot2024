@@ -78,7 +78,7 @@ public class IndexerIOTalonFX implements IndexerIO {
                 feederVoltage,
                 feederCurrent,
                 feederVelocity,
-                intakeTemp);
+                feederTemp);
         inputs.intakeVoltage = intakeVoltage.getValueAsDouble();
         inputs.intakeCurrentAmps = intakeCurrent.getValueAsDouble();
         inputs.intakeVelocityRPM = intakeVelocity.getValueAsDouble() * 60;
