@@ -6,6 +6,7 @@ import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
+import org.team1540.robot2024.Constants;
 import org.team1540.robot2024.subsystems.drive.Drivetrain;
 import org.team1540.robot2024.subsystems.indexer.Indexer;
 import org.team1540.robot2024.subsystems.shooter.Shooter;
@@ -29,7 +30,7 @@ public class DefaultShooterCommand extends SequentialCommandGroup {
                 Commands.runOnce(()->hasNote = indexer.isNoteStaged()),
                 Commands.either(
                         Commands.either(
-                                new LeadingShootPrepare(drivetrain, shooter, 7000*0.75, 3000*0.75).alongWith(Commands.runOnce(()->hasNote = true)),
+                                new LeadingShootPrepare(drivetrain, shooter, Constants.Shooter.Flywheels.LEFT_RPM*0.75, Constants.Shooter.Flywheels.RIGHT_RPM*0.75).alongWith(Commands.runOnce(()->hasNote = true)),
                                 new LeadingShootPrepare(drivetrain, shooter, 0, 0).alongWith(Commands.runOnce(()->hasNote = true)),
                                 indexer::isNoteStaged
                         ).alongWith(Commands.runOnce(()-> shouldShootPrepare = true)),

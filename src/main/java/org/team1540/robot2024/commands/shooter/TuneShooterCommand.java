@@ -5,6 +5,7 @@ import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import org.littletonrobotics.junction.networktables.LoggedDashboardNumber;
+import org.team1540.robot2024.Constants;
 import org.team1540.robot2024.commands.indexer.IntakeAndFeed;
 import org.team1540.robot2024.subsystems.indexer.Indexer;
 import org.team1540.robot2024.subsystems.shooter.Shooter;
@@ -15,8 +16,8 @@ import java.util.function.DoubleSupplier;
 import java.util.function.Supplier;
 
 public class TuneShooterCommand extends ParallelCommandGroup {
-    private final LoggedDashboardNumber leftFlywheelSetpoint = new LoggedDashboardNumber("Shooter/Flywheels/leftSetpoint", 7000);
-    private final LoggedDashboardNumber rightFlywheelSetpoint = new LoggedDashboardNumber("Shooter/Flywheels/rightSetpoint", 3000);
+    private final LoggedDashboardNumber leftFlywheelSetpoint = new LoggedDashboardNumber("Shooter/Flywheels/leftSetpoint", Constants.Shooter.Flywheels.LEFT_RPM);
+    private final LoggedDashboardNumber rightFlywheelSetpoint = new LoggedDashboardNumber("Shooter/Flywheels/rightSetpoint", Constants.Shooter.Flywheels.RIGHT_RPM);
     private final LoggedDashboardNumber angleSetpoint = new LoggedDashboardNumber("Shooter/Pivot/angleSetpoint", 15);
 
     private final DoubleSupplier shooterLeftSupplier;

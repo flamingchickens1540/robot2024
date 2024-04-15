@@ -2,7 +2,11 @@ package org.team1540.robot2024.commands.shooter;
 
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.Commands;
+import edu.wpi.first.wpilibj2.command.ProxyCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
+import org.team1540.robot2024.Constants;
 import org.team1540.robot2024.subsystems.drive.Drivetrain;
 import org.team1540.robot2024.subsystems.shooter.Shooter;
 import org.team1540.robot2024.util.shooter.ShooterSetpoint;
@@ -11,13 +15,14 @@ import org.team1540.robot2024.util.vision.AprilTagsCrescendo;
 import java.util.function.Supplier;
 
 public class AutoShootPrepare extends SequentialCommandGroup {
-    public AutoShootPrepare(Drivetrain drivetrain, Shooter shooter) {
+    public
+    AutoShootPrepare(Drivetrain drivetrain, Shooter shooter) {
         this(drivetrain::getPose, shooter);
     }
-    double A = -0.6953;
-    double B = 0.8702;
-    double C = -0.4942;
-    double D = 1.491;
+    double A = -100.0;
+    double B = 53.4984;
+    double C = 46.8837;
+    double D = 157.311;
 
     public AutoShootPrepare(Supplier<Pose2d> positionSupplier, Shooter shooter, double leftSetpoint, double rightSetpoint) {
         addCommands(
@@ -29,11 +34,16 @@ public class AutoShootPrepare extends SequentialCommandGroup {
                             leftSetpoint,
                             rightSetpoint
                     )
+//                    shooter.lerp.get(positionSupplier.get().getTranslation().getDistance(AprilTagsCrescendo.getInstance().getTag(AprilTagsCrescendo.Tags.SPEAKER_CENTER).toPose2d().getTranslation()))
             )
+//                    .alongWith(
+//                    new ProxyCommand(Commands.runOnce(()->positionSupplier.get().getTranslation().getDistance(AprilTagsCrescendo.getInstance().getTag(AprilTagsCrescendo.Tags.SPEAKER_CENTER).toPose2d().getTranslation())))
+//                    Commands.deferredProxy(Commands.runOnce(()->positionSupplier.get().getTranslation().getDistance(AprilTagsCrescendo.getInstance().getTag(AprilTagsCrescendo.Tags.SPEAKER_CENTER).toPose2d().getTranslation())))
+//            )
         );
     }
 
     public AutoShootPrepare(Supplier<Pose2d> positionSupplier, Shooter shooter){
-        this(positionSupplier, shooter, 7000, 3000);
+        this(positionSupplier, shooter, Constants.Shooter.Flywheels.LEFT_RPM, Constants.Shooter.Flywheels.RIGHT_RPM);
     }
 }

@@ -52,19 +52,20 @@ public class Shooter extends SubsystemBase {
     private final Rotation2d angleOffset = new Rotation2d();
 
     public final ShooterLerp lerp = new ShooterLerp().put(
-            new Pair<>(1.386, new ShooterSetpoint(Rotation2d.fromRadians(1.06184))),
-            new Pair<>(1.673, new ShooterSetpoint(Rotation2d.fromRadians(0.9563528))),
-            new Pair<>(2.0398, new ShooterSetpoint(Rotation2d.fromRadians(0.8606))),
-            new Pair<>(2.35254, new ShooterSetpoint(Rotation2d.fromRadians(0.79248))),
-            new Pair<>(2.36, new ShooterSetpoint(Rotation2d.fromRadians(0.79976))),
-            new Pair<>(2.632, new ShooterSetpoint(Rotation2d.fromRadians(0.758056))),
-            new Pair<>(2.9345, new ShooterSetpoint(Rotation2d.fromRadians(0.7332))),
-            new Pair<>(3.222, new ShooterSetpoint(Rotation2d.fromRadians(0.699088))),
-            new Pair<>(3.5768, new ShooterSetpoint(Rotation2d.fromRadians(0.67704))),
-            new Pair<>(3.883, new ShooterSetpoint(Rotation2d.fromRadians(0.64688))),
-            new Pair<>(4.22, new ShooterSetpoint(Rotation2d.fromRadians(0.603304))),
-            new Pair<>(4.54, new ShooterSetpoint(Rotation2d.fromRadians(0.59904))),
-            new Pair<>(4.794, new ShooterSetpoint(Rotation2d.fromRadians(0.59384)))
+            new Pair<>(1.33, new ShooterSetpoint(Rotation2d.fromRadians(1.0854))),
+            new Pair<>(1.607, new ShooterSetpoint(Rotation2d.fromRadians(0.971))),
+            new Pair<>(1.913, new ShooterSetpoint(Rotation2d.fromRadians(0.905))),
+            new Pair<>(2.29, new ShooterSetpoint(Rotation2d.fromRadians(0.82))),
+            new Pair<>(2.54, new ShooterSetpoint(Rotation2d.fromRadians(0.7768))),
+            new Pair<>(2.82, new ShooterSetpoint(Rotation2d.fromRadians(0.74))),
+            new Pair<>(3.148, new ShooterSetpoint(Rotation2d.fromRadians(0.695))),
+            new Pair<>(3.453, new ShooterSetpoint(Rotation2d.fromRadians(0.6783))),
+            new Pair<>(3.76, new ShooterSetpoint(Rotation2d.fromRadians(0.6418))),
+            new Pair<>(4.055, new ShooterSetpoint(Rotation2d.fromRadians(0.604))),
+            new Pair<>(4.37, new ShooterSetpoint(Rotation2d.fromRadians(0.5717))),
+            new Pair<>(4.66, new ShooterSetpoint(Rotation2d.fromRadians(0.559))),
+            new Pair<>(4.97, new ShooterSetpoint(Rotation2d.fromRadians(0.56))),
+            new Pair<>(5.265, new ShooterSetpoint(Rotation2d.fromRadians(0.54)))
             );
 
     private static boolean hasInstance = false;
