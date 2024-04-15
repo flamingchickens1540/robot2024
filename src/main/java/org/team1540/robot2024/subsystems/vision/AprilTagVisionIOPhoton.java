@@ -49,6 +49,7 @@ public class AprilTagVisionIOPhoton implements AprilTagVisionIO {
         }
 
         inputs.numTagsSeen = targets.size();
+        inputs.seenTagIDs = targets.stream().mapToInt(PhotonTrackedTarget::getFiducialId).toArray();
         if (inputs.numTagsSeen > 0) {
             inputs.avgTagDistance = 0;
             for (PhotonTrackedTarget target : targets)

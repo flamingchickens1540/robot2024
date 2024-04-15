@@ -120,7 +120,6 @@ public final class Constants {
         public static final double ROT_STD_DEV_COEFF = 0.5;
 
         public static final double MAX_AMBIGUITY_RATIO = 0.3;
-        public static final double MAX_VISION_DELAY_SECS = 0.08;
         public static final double MAX_ACCEPTED_ROT_SPEED_RAD_PER_SEC = 1.0;
         public static final double MAX_ACCEPTED_LINEAR_SPEED_MPS = 4.0;
         public static final double MIN_ACCEPTED_NUM_TAGS = 1;

@@ -107,7 +107,7 @@ public class AprilTagVision extends SubsystemBase {
         updateAndAcceptPose(frontCameraInputs, frontPose);
         updateAndAcceptPose(rearCameraInputs, rearPose);
 
-        if (TAKE_SNAPSHOTS && /*DriverStation.isFMSAttached() &&*/ RobotState.isEnabled()) {
+        if (TAKE_SNAPSHOTS && RobotState.isEnabled()) {
             Logger.runEveryN((int) (SNAPSHOT_PERIOD_SECS / Constants.LOOP_PERIOD_SECS),
                     () -> takeSnapshot(
                             String.format("%s_%s%d_%d",

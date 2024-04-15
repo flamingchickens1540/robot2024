@@ -3,6 +3,8 @@ package org.team1540.robot2024.subsystems.vision;
 import edu.wpi.first.math.geometry.Pose3d;
 import org.team1540.robot2024.util.vision.LimelightHelpers;
 
+import java.util.Arrays;
+
 public class AprilTagVisionIOLimelight implements AprilTagVisionIO {
     private final String name;
 
@@ -26,6 +28,9 @@ public class AprilTagVisionIOLimelight implements AprilTagVisionIO {
             inputs.lastMeasurementTimestampSecs = measurement.timestampSeconds;
         }
         inputs.numTagsSeen = measurement.tagCount;
+        inputs.seenTagIDs = Arrays.stream(measurement.rawFiducials).mapToInt(fiducial -> fiducial.id).toArray();
+        for (int i = 0; i < inputs.seenTagIDs.length; i++)
+            inputs.seenTagIDs[i] = measurement.rawFiducials[i].id;
         inputs.avgTagDistance = measurement.avgTagDist;
     }
 
