@@ -8,6 +8,7 @@ import edu.wpi.first.wpilibj.Timer;
 public class GyroIONavx implements GyroIO {
     private final AHRS navx = new AHRS(SPI.Port.kMXP);
     private Rotation2d lastAngle;
+    private double lastTime;
 
     public GyroIONavx() {
         lastAngle = navx.getRotation2d();
@@ -15,12 +16,13 @@ public class GyroIONavx implements GyroIO {
 
     @Override
     public void updateInputs(GyroIOInputs inputs) {
-        double lastTime = inputs.time;
         Rotation2d angle = navx.getRotation2d();
-        inputs.time = Timer.getFPGATimestamp();
         inputs.connected = navx.isConnected();
         inputs.yawPosition = angle;
-        inputs.yawVelocityRadPerSec = (angle.minus(lastAngle).getRadians()) / (inputs.time - lastTime);
+
+        double time = Timer.getFPGATimestamp();
+        inputs.yawVelocityRadPerSec = (angle.minus(lastAngle).getRadians()) / (time - lastTime);
+        lastTime = time;
         lastAngle = angle;
     }
 }
