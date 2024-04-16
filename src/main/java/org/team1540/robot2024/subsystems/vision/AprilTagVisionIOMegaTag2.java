@@ -23,33 +23,19 @@ public class AprilTagVisionIOMegaTag2 implements AprilTagVisionIO {
     @Override
     public void updateInputs(AprilTagVisionIOInputs inputs) {
         LimelightHelpers.SetRobotOrientation(name, heading.get().getDegrees(), 0, 0, 0, 0, 0);
-        LimelightHelpers.PoseEstimate measurement;
-        if (DriverStation.isDisabled()) {
-            measurement = LimelightHelpers.getBotPoseEstimate_wpiBlue(name);
-            if (measurement.tagCount > 1) {
-                Pose3d limelightPose = LimelightHelpers.getBotPose3d_wpiBlue(name);
-                inputs.estimatedPoseMeters = new Pose3d(
-                        limelightPose.getX(),
-                        limelightPose.getY() + 0.105,
-                        limelightPose.getZ(),
-                        limelightPose.getRotation());
-                inputs.lastMeasurementTimestampSecs = measurement.timestampSeconds;
-            }
-        } else {
-            measurement = LimelightHelpers.getBotPoseEstimate_wpiBlue_MegaTag2(name);
-            Pose3d limelightPose = new Pose3d(measurement.pose);
-            inputs.estimatedPoseMeters = new Pose3d(
-                    limelightPose.getX(),
-                    limelightPose.getY() + 0.105,
-                    limelightPose.getZ(),
-                    limelightPose.getRotation());
-            inputs.lastMeasurementTimestampSecs = measurement.timestampSeconds;
-        }
-
+        LimelightHelpers.PoseEstimate measurement =
+                DriverStation.isDisabled()
+                        ? LimelightHelpers.getBotPoseEstimate_wpiBlue(name)
+                        : LimelightHelpers.getBotPoseEstimate_wpiBlue_MegaTag2(name);
+        Pose3d limelightPose = new Pose3d(measurement.pose);
+        inputs.estimatedPoseMeters = new Pose3d(
+                limelightPose.getX(),
+                limelightPose.getY() + 0.105,
+                limelightPose.getZ(),
+                limelightPose.getRotation());
+        inputs.lastMeasurementTimestampSecs = measurement.timestampSeconds;
         inputs.numTagsSeen = measurement.tagCount;
         inputs.seenTagIDs = Arrays.stream(measurement.rawFiducials).mapToInt(fiducial -> fiducial.id).toArray();
-        for (int i = 0; i < inputs.seenTagIDs.length; i++)
-            inputs.seenTagIDs[i] = measurement.rawFiducials[i].id;
         inputs.avgTagDistance = measurement.avgTagDist;
     }
 
