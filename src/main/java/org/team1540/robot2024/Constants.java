@@ -277,6 +277,8 @@ public final class Constants {
                 new Pose2d(Units.inchesToMeters(8.861), Units.inchesToMeters(218), new Rotation2d());
         private static final Pose2d SHUFFLE_POSE =
                 new Pose2d(SPEAKER_POSE.getX(), SPEAKER_POSE.getY() + 2, new Rotation2d());
+        private static final Pose2d COUNTER_SHUFFLE_POSE =
+                new Pose2d(SPEAKER_POSE.getX() + 8.27, SPEAKER_POSE.getY() + 2, new Rotation2d());
 
         public static Pose2d getSpeakerPose() {
             return DriverStation.getAlliance().orElse(null) == DriverStation.Alliance.Red
@@ -288,6 +290,12 @@ public final class Constants {
             return DriverStation.getAlliance().orElse(null) == DriverStation.Alliance.Red
                     ? GeometryUtil.flipFieldPose(SHUFFLE_POSE)
                     : SHUFFLE_POSE;
+        }
+
+        public static Pose2d getCounterShufflePose() {
+            return DriverStation.getAlliance().orElse(null) == DriverStation.Alliance.Red
+                    ? GeometryUtil.flipFieldPose(COUNTER_SHUFFLE_POSE)
+                    : COUNTER_SHUFFLE_POSE;
         }
     }
 

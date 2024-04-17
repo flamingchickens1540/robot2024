@@ -143,7 +143,7 @@ public class RobotContainer {
                 .alongWith(leds.commandShowPattern(
                         new LedPatternProgressBar(shooter::getSpinUpPercent, "#f700ff", 33),
                         Leds.PatternLevel.DRIVER_LOCK));
-        Command autoShooterCommand = new AutoShootPrepare(drivetrain, shooter)
+        Command counterShuffleDrive = new CounterShufflePrepareWithTargeting(driver.getHID(), drivetrain, shooter)
                 .alongWith(leds.commandShowPattern(
                         new LedPatternProgressBar(shooter::getSpinUpPercent, "#00ffbc", 33),
                         Leds.PatternLevel.DRIVER_LOCK));
@@ -153,6 +153,7 @@ public class RobotContainer {
             targetDrive.cancel();
             overstageTargetDrive.cancel();
             ampLock.cancel();
+            counterShuffleDrive.cancel();
         });
         driver.x()
                 .whileTrue(IntakeAndFeed.withDefaults(indexer))
@@ -169,7 +170,7 @@ public class RobotContainer {
 
         driver.povDown().and(() -> !DriverStation.isFMSAttached()).onTrue(Commands.runOnce(() -> drivetrain.setPose(new Pose2d(Units.inchesToMeters(260), Units.inchesToMeters(161.62), Rotation2d.fromRadians(0)))).ignoringDisable(true));
 
-        driver.rightTrigger(0.95).toggleOnTrue(autoShooterCommand);
+        driver.rightTrigger(0.95).toggleOnTrue(counterShuffleDrive);
 
         driver.rightStick().onTrue(cancelAlignment);
 
@@ -196,7 +197,7 @@ public class RobotContainer {
                 .and(shooter::areFlywheelsSpunUp)
                 .and(() -> targetDrive.isScheduled()
                         || overstageTargetDrive.isScheduled()
-                        || autoShooterCommand.isScheduled())
+                        || counterShuffleDrive.isScheduled())
                 .whileTrue(IntakeAndFeed.withDefaults(indexer))
                 .onFalse(cancelAlignment);
         copilot.y().whileTrue(new StageTrampCommand(tramp, indexer));
