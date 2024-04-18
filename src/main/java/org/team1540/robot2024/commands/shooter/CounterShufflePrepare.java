@@ -6,6 +6,8 @@ import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj2.command.InstantCommand;
+import edu.wpi.first.wpilibj2.command.ProxyCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import org.team1540.robot2024.Constants;
 import org.team1540.robot2024.subsystems.drive.Drivetrain;
@@ -15,6 +17,7 @@ import org.team1540.robot2024.util.vision.AprilTagsCrescendo;
 import org.team1540.robot2024.util.vision.FlipUtil;
 
 import java.util.function.Supplier;
+import java.util.logging.Logger;
 
 public class CounterShufflePrepare extends SequentialCommandGroup {
     public CounterShufflePrepare(Drivetrain drivetrain, Shooter shooter) {
@@ -27,7 +30,7 @@ public class CounterShufflePrepare extends SequentialCommandGroup {
                         Rotation2d.fromRadians(
                                 Math.atan2(Constants.Targeting.STAGE_MAX_HEIGHT + 1.5 - Constants.Shooter.Pivot.PIVOT_HEIGHT,
                                         positionSupplier.get().getTranslation().getDistance(
-                                        AprilTagsCrescendo.getInstance().getTag(AprilTagsCrescendo.Tags.CLIMB_FAR, DriverStation.Alliance.Blue).toPose2d().getTranslation().plus(new Translation2d(FlipUtil.flipIfRed(-2.277226), 0))
+                                        AprilTagsCrescendo.getInstance().getTag(AprilTagsCrescendo.Tags.CLIMB_FAR).toPose2d().getTranslation().plus(new Translation2d(FlipUtil.flipIfRed(-2.277226), 0))
                                         )
                                 )
                         ).minus(Constants.Shooter.Pivot.REAL_ZEROED_ANGLE),

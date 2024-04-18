@@ -278,7 +278,7 @@ public final class Constants {
         private static final Pose2d SHUFFLE_POSE =
                 new Pose2d(SPEAKER_POSE.getX(), SPEAKER_POSE.getY() + 2, new Rotation2d());
         private static final Pose2d COUNTER_SHUFFLE_POSE =
-                new Pose2d(SPEAKER_POSE.getX() + 8.27, SPEAKER_POSE.getY() + 2, new Rotation2d());
+                new Pose2d(SPEAKER_POSE.getX() + 8.27, SPEAKER_POSE.getY(), new Rotation2d());
 
         public static Pose2d getSpeakerPose() {
             return DriverStation.getAlliance().orElse(null) == DriverStation.Alliance.Red

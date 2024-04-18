@@ -22,7 +22,7 @@ public class FlipUtil {
 
     public static double flipIfRed(double num){
         return DriverStation.getAlliance().orElse(null) == DriverStation.Alliance.Red
-                ? num *= 1
+                ? num *= -1
                 : num;
     }
 }
