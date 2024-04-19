@@ -278,6 +278,8 @@ public class RobotContainer {
         autos.add(new CenterLanePCBAFG(drivetrain, shooter, indexer));
         autos.add(new CenterLanePCBAEF(drivetrain, shooter, indexer));
         autos.add(new CenterLanePCBAGF(drivetrain, shooter, indexer));
+        autos.add(new CenterLanePCBADE(drivetrain, shooter, indexer));
+        autos.add(new CenterLanePCBAED(drivetrain, shooter, indexer));
         autos.add(new CenterLanePCBA(drivetrain, shooter, indexer));
 //        autos.add(new CenterLanePCBA(drivetrain, shooter, indexer));
 //        autos.add(new CenterLanePBDA(drivetrain, shooter, indexer));

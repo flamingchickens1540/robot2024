@@ -30,7 +30,8 @@ public class CounterShufflePrepare extends SequentialCommandGroup {
                         Rotation2d.fromRadians(
                                 Math.atan2(Constants.Targeting.STAGE_MAX_HEIGHT + 1.5 - Constants.Shooter.Pivot.PIVOT_HEIGHT,
                                         positionSupplier.get().getTranslation().getDistance(
-                                        AprilTagsCrescendo.getInstance().getTag(AprilTagsCrescendo.Tags.CLIMB_FAR).toPose2d().getTranslation().plus(new Translation2d(FlipUtil.flipIfRed(-2.277226), 0))
+                                        AprilTagsCrescendo.getInstance().getTag(AprilTagsCrescendo.Tags.CLIMB_FAR, DriverStation.getAlliance().orElse(null) == DriverStation.Alliance.Red ? DriverStation.Alliance.Blue : DriverStation.Alliance.Red
+                                                ).toPose2d().getTranslation().plus(new Translation2d(FlipUtil.flipIfRed(2.277226), 0))
                                         )
                                 )
                         ).minus(Constants.Shooter.Pivot.REAL_ZEROED_ANGLE),
