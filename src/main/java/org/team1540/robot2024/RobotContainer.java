@@ -31,12 +31,15 @@ import org.team1540.robot2024.subsystems.shooter.Shooter;
 import org.team1540.robot2024.subsystems.tramp.Tramp;
 import org.team1540.robot2024.subsystems.vision.AprilTagVision;
 import org.team1540.robot2024.util.CommandUtils;
+import org.team1540.robot2024.util.LoggedTunableNumber;
 import org.team1540.robot2024.util.PhoenixTimeSyncSignalRefresher;
 import org.team1540.robot2024.util.auto.AutoCommand;
 import org.team1540.robot2024.util.auto.AutoManager;
+import org.team1540.robot2024.util.shooter.ShooterSetpoint;
 
 import java.util.function.BooleanSupplier;
 
+import static org.team1540.robot2024.Constants.Shooter.Pivot.HUB_SHOOT;
 import static org.team1540.robot2024.Constants.SwerveConfig;
 import static org.team1540.robot2024.Constants.isTuningMode;
 
@@ -164,7 +167,12 @@ public class RobotContainer {
         driver.leftBumper().toggleOnTrue(overstageTargetDrive);
 
         kidPilot.leftBumper().or(kidPilot.leftTrigger()).whileTrue(new ContinuousIntakeCommand(indexer, leds, 1));
-        kidPilot.rightBumper().or(kidPilot.rightTrigger()).whileTrue(new ShootSequence(shooter, indexer));
+
+        LoggedTunableNumber kidAngleSetpoint = new LoggedTunableNumber("kidMode/shooter/angle", HUB_SHOOT.pivot.getDegrees());
+        LoggedTunableNumber kidLeftSetpoint = new LoggedTunableNumber("kidMode/shooter/left", 2000);
+        LoggedTunableNumber kidRightSetpoint = new LoggedTunableNumber("kidMode/shooter/right", 2000);
+        kidPilot.rightBumper().or(kidPilot.rightTrigger()).whileTrue(new ShootSequence(shooter, indexer, () -> new ShooterSetpoint(Rotation2d.fromDegrees(kidAngleSetpoint.get()), kidLeftSetpoint.get(), kidRightSetpoint.get())));
+        kidPilot.start().and(kidPilot.back()).onTrue(Commands.runOnce(drivetrain::zeroFieldOrientationManual));
 
         // TODO remove this
         if (isTuningMode()) {

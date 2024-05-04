@@ -12,24 +12,24 @@ import org.team1540.robot2024.util.math.JoystickUtils;
 public class KidModeSwerveDriveCommand extends Command {
     private final Drivetrain drivetrain;
     private final CommandXboxController controller;
-    private double maxSpeedPercentage;
-    private double maxRotsPercentage;
-    LoggedTunableNumber kidModeSpeedPercent = new LoggedTunableNumber("kidMode/maxSpeedPercentage", 0.3);
-    LoggedTunableNumber kidModeRotsPercent = new LoggedTunableNumber("kidMode/maxRotsPercentage", 0.5);
+    private final LoggedTunableNumber kidModeSpeedPercent = new LoggedTunableNumber("kidMode/maxSpeedPercentage", 0.2);
+    private final LoggedTunableNumber kidModeRotsPercent = new LoggedTunableNumber("kidMode/maxRotsPercentage", 0.4);
+    private final LoggedTunableNumber deadbandLinear = new LoggedTunableNumber("kidMode/deadband/linear", 0.1);
+    private final LoggedTunableNumber deadbandRotational = new LoggedTunableNumber("kidMode/deadband/rotational", 0.1);
 
 
     public KidModeSwerveDriveCommand(Drivetrain drivetrain, CommandXboxController controller){
         this.drivetrain = drivetrain;
         this.controller = controller;
+        addRequirements(drivetrain);
     }
 
     public void execute() {
-        //TODO: check deadbands bc of diff controllers
-        double xPercent = MathUtil.applyDeadband((-controller.getLeftY()), 0);
-        double yPercent = MathUtil.applyDeadband((-controller.getLeftX()), 0);
-        double rotPercent = MathUtil.applyDeadband((-controller.getRightX()), 0.1);
+        double xPercent = -controller.getLeftY();
+        double yPercent = -controller.getLeftX();
+        double rotPercent = MathUtil.applyDeadband((-controller.getRightX()), deadbandRotational.get());
 
-        double linearMagnitude = JoystickUtils.smartDeadzone(Math.hypot(xPercent, yPercent), 0.2);
+        double linearMagnitude = JoystickUtils.smartDeadzone(Math.hypot(xPercent, yPercent), deadbandLinear.get());
         Rotation2d linearDirection = new Rotation2d(xPercent, yPercent);
 
         drivetrain.drivePercent(linearMagnitude * kidModeSpeedPercent.get(), linearDirection, rotPercent * kidModeRotsPercent.get(), true);

@@ -72,6 +72,9 @@ public class SwerveFactory {
             driveConfig.CurrentLimits.SupplyCurrentThreshold = 60.0;
             driveConfig.CurrentLimits.SupplyTimeThreshold = 0.1;
             driveConfig.CurrentLimits.SupplyCurrentLimitEnable = true;
+            driveConfig.CurrentLimits
+                    .withStatorCurrentLimit(20)
+                    .withStatorCurrentLimitEnable(true);
             driveConfig.MotorOutput.Inverted = InvertedValue.CounterClockwise_Positive;
 
             turnConfig.CurrentLimits.SupplyCurrentLimit = 30.0;
