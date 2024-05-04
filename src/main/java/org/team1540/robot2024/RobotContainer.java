@@ -1,6 +1,5 @@
 package org.team1540.robot2024;
 
-import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.RobotController;
 import edu.wpi.first.wpilibj.util.Color;
 import edu.wpi.first.wpilibj2.command.*;
@@ -9,7 +8,6 @@ import edu.wpi.first.wpilibj2.command.button.Trigger;
 
 import org.team1540.robot2024.commands.FeedForwardCharacterization;
 import org.team1540.robot2024.commands.climb.ClimbSequence;
-import org.team1540.robot2024.commands.climb.ScoreInTrap;
 import org.team1540.robot2024.commands.climb.TrapAndClimbSequence;
 import org.team1540.robot2024.commands.drivetrain.DriveWithSpeakerTargetingCommand;
 import org.team1540.robot2024.commands.drivetrain.SwerveDriveCommand;
@@ -25,7 +23,6 @@ import org.team1540.robot2024.subsystems.drive.*;
 import org.team1540.robot2024.subsystems.elevator.Elevator;
 import org.team1540.robot2024.subsystems.indexer.Indexer;
 import org.team1540.robot2024.subsystems.led.Leds;
-import org.team1540.robot2024.subsystems.led.patterns.LedPatternFlame;
 import org.team1540.robot2024.subsystems.led.patterns.LedPatternRSLState;
 import org.team1540.robot2024.subsystems.shooter.*;
 import org.team1540.robot2024.subsystems.tramp.Tramp;
@@ -52,6 +49,7 @@ public class RobotContainer {
     // Controller
     public final CommandXboxController driver = new CommandXboxController(0);
     public final CommandXboxController copilot = new CommandXboxController(1);
+    public final CommandXboxController kidPilot = new CommandXboxController(2);
 
     public final PhoenixTimeSyncSignalRefresher odometrySignalRefresher = new PhoenixTimeSyncSignalRefresher(SwerveConfig.CAN_BUS);
 
@@ -144,7 +142,6 @@ public class RobotContainer {
 
         driver.a().whileTrue(new DriveWithSpeakerTargetingCommand(drivetrain, driver));
 
-
         copilot.rightBumper().whileTrue(new IntakeCommand(indexer, tramp::isNoteStaged, 1));
         copilot.povDown().onTrue(indexer.commandRunIntake(-1));
         copilot.povUp().whileTrue(new ClimbSequence(drivetrain, elevator, null));
@@ -162,6 +159,9 @@ public class RobotContainer {
 //        copilot.leftTrigger(0.5).whileTrue(new ElevatorSetpointCommand(elevator, ElevatorState.CLIMB));
         copilot.leftBumper().whileTrue(new TrampScoreSequence(tramp, indexer, elevator));
 
+        kidPilot.leftBumper().or(kidPilot.leftTrigger()).whileTrue(new IntakeCommand(indexer, tramp::isNoteStaged, 1));
+        kidPilot.rightBumper().or(kidPilot.rightTrigger()).whileTrue(new ShootSequence(shooter, indexer));
+
         new Trigger(RobotController::getUserButton).toggleOnTrue(Commands.startEnd(
                 () -> {
                     elevator.setBrakeMode(false);
@@ -176,8 +176,6 @@ public class RobotContainer {
                     leds.clearPatternAll(Leds.PatternCriticality.EXTREME);
                 }
         ));
-
-
 
     }
 

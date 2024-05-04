@@ -1,7 +1,6 @@
 package org.team1540.robot2024;
 
 import edu.wpi.first.wpilibj.DriverStation;
-import edu.wpi.first.wpilibj.util.Color;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import org.littletonrobotics.junction.LogFileUtil;
@@ -10,9 +9,10 @@ import org.littletonrobotics.junction.Logger;
 import org.littletonrobotics.junction.networktables.NT4Publisher;
 import org.littletonrobotics.junction.wpilog.WPILOGReader;
 import org.littletonrobotics.junction.wpilog.WPILOGWriter;
+import org.team1540.robot2024.commands.drivetrain.KidModeSwerveDriveCommand;
 import org.team1540.robot2024.subsystems.led.*;
 import org.team1540.robot2024.subsystems.led.patterns.*;
-import org.team1540.robot2024.util.LoggedTunableNumber;
+
 import org.team1540.robot2024.util.MechanismVisualiser;
 
 /**
@@ -168,7 +168,8 @@ public class Robot extends LoggedRobot {
      */
     @Override
     public void testInit() {
-        robotContainer.leds.setPattern(Leds.Zone.ELEVATOR_BACK,new LedPatternTuneColor());
+        robotContainer.leds.setPattern(Leds.Zone.ELEVATOR_BACK, new LedPatternRainbow(10));
+        robotContainer.drivetrain.setDefaultCommand(new KidModeSwerveDriveCommand(robotContainer.drivetrain, robotContainer.kidPilot));
         // Cancels all running commands at the start of test mode.
         CommandScheduler.getInstance().cancelAll();
     }
