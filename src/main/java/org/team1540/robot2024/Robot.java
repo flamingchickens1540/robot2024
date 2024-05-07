@@ -14,7 +14,6 @@ import org.littletonrobotics.junction.networktables.NT4Publisher;
 import org.littletonrobotics.junction.wpilog.WPILOGReader;
 import org.littletonrobotics.junction.wpilog.WPILOGWriter;
 import org.littletonrobotics.urcl.URCL;
-import org.team1540.robot2024.commands.drivetrain.KidModeSwerveDriveCommand;
 import org.team1540.robot2024.subsystems.led.Leds;
 import org.team1540.robot2024.subsystems.led.patterns.*;
 import org.team1540.robot2024.util.MechanismVisualiser;
@@ -209,8 +208,6 @@ public class Robot extends LoggedRobot {
      */
     @Override
     public void testInit() {
-        robotContainer.leds.setPattern(Leds.Zone.MAIN, new LedPatternRainbow(10));
-        robotContainer.drivetrain.setDefaultCommand(new KidModeSwerveDriveCommand(robotContainer.drivetrain, robotContainer.kidPilot));
     }
 
     /**
