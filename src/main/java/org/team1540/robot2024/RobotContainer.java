@@ -53,7 +53,6 @@ public class RobotContainer {
     // Controller
     public final CommandXboxController driver = new CommandXboxController(0);
     public final CommandXboxController copilot = new CommandXboxController(1);
-    public final CommandXboxController kidPilot = new CommandXboxController(2);
 
     public final PhoenixTimeSyncSignalRefresher odometrySignalRefresher = new PhoenixTimeSyncSignalRefresher(SwerveConfig.CAN_BUS);
 
@@ -162,9 +161,6 @@ public class RobotContainer {
 
         driver.rightBumper().toggleOnTrue(targetDrive);
         driver.leftBumper().toggleOnTrue(overstageTargetDrive);
-
-        kidPilot.leftBumper().or(kidPilot.leftTrigger()).whileTrue(new ContinuousIntakeCommand(indexer, leds, 1));
-        kidPilot.rightBumper().or(kidPilot.rightTrigger()).whileTrue(new ShootSequence(shooter, indexer));
 
         // TODO remove this
         if (isTuningMode()) {
