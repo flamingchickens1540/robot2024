@@ -89,7 +89,7 @@ public class ShooterPivotIOTalonFX implements ShooterPivotIO {
         motor.optimizeBusUtilization();
         cancoder.optimizeBusUtilization();
         motor.setPosition(
-                Rotation2d.fromRotations(absolutePosition.getValueAsDouble() / CANCODER_TO_PIVOT * CHAIN_FACTOR).plus(Rotation2d.fromRadians(0.03856 - 0.02649405)).getRotations()
+                Rotation2d.fromRotations(absolutePosition.getValueAsDouble() / CANCODER_TO_PIVOT * CHAIN_FACTOR).plus(ENCODER_OFFSET).getRotations()
         );
     }
 
@@ -99,12 +99,11 @@ public class ShooterPivotIOTalonFX implements ShooterPivotIO {
         inputs.isAtForwardLimit = forwardLimit.getValue() == ForwardLimitValue.ClosedToGround;
         inputs.isAtReverseLimit = reverseLimit.getValue() == ReverseLimitValue.ClosedToGround;
         inputs.position = Rotation2d.fromRotations(position.getValueAsDouble());
-        inputs.absolutePosition = Rotation2d.fromRotations(absolutePosition.getValueAsDouble() / CANCODER_TO_PIVOT * CHAIN_FACTOR).plus(Rotation2d.fromRadians(0.03865 - 0.02649405));
+        inputs.absolutePosition = Rotation2d.fromRotations(absolutePosition.getValueAsDouble() / CANCODER_TO_PIVOT * CHAIN_FACTOR).plus(ENCODER_OFFSET);
         inputs.velocityRPS = velocity.getValueAsDouble();
         inputs.appliedVolts = appliedVoltage.getValueAsDouble();
         inputs.currentAmps = current.getValueAsDouble();
         inputs.tempCelsius = temp.getValueAsDouble();
-
     }
 
     @Override

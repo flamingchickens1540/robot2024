@@ -157,10 +157,10 @@ public final class Constants {
             public static final int MOTOR_ID = 9;
             public static final int CANCODER_ID = 10;
 
-
             // TODO: determine ratios
             public static final double CANCODER_TO_PIVOT = 28.0 / 15.0;
             public static final double MOTOR_TO_CANCODER = 56.0;
+            public static final Rotation2d ENCODER_OFFSET = Rotation2d.fromRadians(0.01215595);
 
             public static final double CHAIN_FACTOR = 1.04;
             public static final double TOTAL_GEAR_RATIO = MOTOR_TO_CANCODER * CANCODER_TO_PIVOT;
@@ -191,7 +191,6 @@ public final class Constants {
             public static final double CRUISE_VELOCITY_RPS = 1.0;
             public static final double MAX_ACCEL_RPS2 = 2;
             public static final double JERK_RPS3 = 2000;
-
 
             public static final ShooterSetpoint HUB_SHOOT = new ShooterSetpoint(Rotation2d.fromRadians(1.06184));
             public static final ShooterSetpoint PODIUM_SHOOT = new ShooterSetpoint(0.07, 6000,5000);
