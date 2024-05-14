@@ -74,7 +74,8 @@ public class RobotContainer {
                     indexer = Indexer.createReal();
                     aprilTagVision = AprilTagVision.createReal(
                             drivetrain::addVisionMeasurement,
-                            elevator::getPosition);
+                            elevator::getPosition,
+                            drivetrain::getRotation);
                 } else {
                     elevator = Elevator.createDummy();
                     drivetrain = Drivetrain.createReal(odometrySignalRefresher, () -> 0.0);
@@ -142,7 +143,7 @@ public class RobotContainer {
                 .alongWith(leds.commandShowPattern(
                         new LedPatternProgressBar(shooter::getSpinUpPercent, "#f700ff", 33),
                         Leds.PatternLevel.DRIVER_LOCK));
-        Command autoShooterCommand = new AutoShootPrepare(drivetrain, shooter)
+        Command counterShuffleDrive = new CounterShufflePrepareWithTargeting(driver.getHID(), drivetrain, shooter)
                 .alongWith(leds.commandShowPattern(
                         new LedPatternProgressBar(shooter::getSpinUpPercent, "#00ffbc", 33),
                         Leds.PatternLevel.DRIVER_LOCK));
@@ -152,6 +153,7 @@ public class RobotContainer {
             targetDrive.cancel();
             overstageTargetDrive.cancel();
             ampLock.cancel();
+            counterShuffleDrive.cancel();
         });
         driver.x()
                 .whileTrue(IntakeAndFeed.withDefaults(indexer))
@@ -168,7 +170,7 @@ public class RobotContainer {
 
         driver.povDown().and(() -> !DriverStation.isFMSAttached()).onTrue(Commands.runOnce(() -> drivetrain.setPose(new Pose2d(Units.inchesToMeters(260), Units.inchesToMeters(161.62), Rotation2d.fromRadians(0)))).ignoringDisable(true));
 
-        driver.rightTrigger(0.95).toggleOnTrue(autoShooterCommand);
+        driver.rightTrigger(0.95).toggleOnTrue(counterShuffleDrive);
 
         driver.rightStick().onTrue(cancelAlignment);
 
@@ -195,7 +197,7 @@ public class RobotContainer {
                 .and(shooter::areFlywheelsSpunUp)
                 .and(() -> targetDrive.isScheduled()
                         || overstageTargetDrive.isScheduled()
-                        || autoShooterCommand.isScheduled())
+                        || counterShuffleDrive.isScheduled())
                 .whileTrue(IntakeAndFeed.withDefaults(indexer))
                 .onFalse(cancelAlignment);
         copilot.y().whileTrue(new StageTrampCommand(tramp, indexer));
@@ -276,6 +278,8 @@ public class RobotContainer {
         autos.add(new CenterLanePCBAFG(drivetrain, shooter, indexer));
         autos.add(new CenterLanePCBAEF(drivetrain, shooter, indexer));
         autos.add(new CenterLanePCBAGF(drivetrain, shooter, indexer));
+        autos.add(new CenterLanePCBADE(drivetrain, shooter, indexer));
+        autos.add(new CenterLanePCBAED(drivetrain, shooter, indexer));
         autos.add(new CenterLanePCBA(drivetrain, shooter, indexer));
 //        autos.add(new CenterLanePCBA(drivetrain, shooter, indexer));
 //        autos.add(new CenterLanePBDA(drivetrain, shooter, indexer));

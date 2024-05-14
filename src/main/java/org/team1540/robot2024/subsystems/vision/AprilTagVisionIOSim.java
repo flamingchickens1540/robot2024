@@ -83,6 +83,7 @@ public class AprilTagVisionIOSim implements AprilTagVisionIO {
             inputs.lastMeasurementTimestampSecs = estimatedPose.get().timestampSeconds;
 
             inputs.numTagsSeen = targets.size();
+            inputs.seenTagIDs = targets.stream().mapToInt(PhotonTrackedTarget::getFiducialId).toArray();
             if (inputs.numTagsSeen > 0) {
                 inputs.avgTagDistance = 0;
                 for (PhotonTrackedTarget target : targets)

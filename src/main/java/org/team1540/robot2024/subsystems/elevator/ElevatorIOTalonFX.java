@@ -98,7 +98,7 @@ public class ElevatorIOTalonFX implements ElevatorIO {
         inputs.velocityMPS = leaderVelocity.getValueAsDouble();
         inputs.voltage = leaderAppliedVolts.getValueAsDouble();
         inputs.currentAmps = new double[]{leaderCurrent.getValueAsDouble(), followerCurrent.getValueAsDouble()};
-        inputs.tempCelsius = new double[]{leaderTemp.getValueAsDouble(), followerCurrent.getValueAsDouble()};
+        inputs.tempCelsius = new double[]{leaderTemp.getValueAsDouble(), followerTemp.getValueAsDouble()};
         inputs.atUpperLimit = topLimitStatus.getValue() == ForwardLimitValue.ClosedToGround;
         inputs.atLowerLimit = bottomLimitStatus.getValue() == ReverseLimitValue.ClosedToGround;
         inputs.flipperAngleDegrees = leftFlipper.getAngle();

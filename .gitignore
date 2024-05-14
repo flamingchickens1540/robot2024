@@ -177,3 +177,4 @@ src/main/java/org/team1540/robot2024/BuildConstants.java
 ctre_sim/
 *.wpilog
 networktables.json
+/logs/

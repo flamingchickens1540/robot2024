@@ -41,6 +41,6 @@ public class LeadingShootPrepare extends SequentialCommandGroup {
     }
     
     public LeadingShootPrepare(Drivetrain drivetrain, Shooter shooter){
-        this(drivetrain, shooter, 7000, 3000);
+        this(drivetrain, shooter, Constants.Shooter.Flywheels.LEFT_RPM, Constants.Shooter.Flywheels.RIGHT_RPM);
     }
 }

@@ -21,7 +21,7 @@ import org.team1540.robot2024.util.shooter.ShooterSetpoint;
 public final class Constants {
     public static final boolean IS_COMPETITION_ROBOT = true;
     // Whether to pull PID constants from SmartDashboard
-    private static final boolean tuningMode = false; // TODO: DO NOT SET TO TRUE FOR COMP
+    private static final boolean tuningMode = true; // TODO: DO NOT SET TO TRUE FOR COMP
     private static final Mode simMode = Mode.SIM; // Can also be Mode.REPLAY
 
     public static final Mode currentMode = Robot.isReal() ? Mode.REAL : simMode;
@@ -111,7 +111,7 @@ public final class Constants {
         public static final String REAR_CAMERA_NAME = "limelight-rear";
 
         public static final Pose3d FRONT_CAMERA_POSE = new Pose3d(0.086018, 0, 0.627079, new Rotation3d(0, Math.toRadians(-40.843), 0));
-        public static final Pose3d REAR_CAMERA_POSE = new Pose3d(0.046049, 0, 0.540510, new Rotation3d(0, Math.toRadians(10), Math.PI+Math.toRadians(1.55)));
+        public static final Pose3d REAR_CAMERA_POSE = new Pose3d(0.046049, 0, 0.540510, new Rotation3d(Math.PI, Math.toRadians(10), Math.PI+Math.toRadians(1.55)));
 
         public static final boolean TAKE_SNAPSHOTS = true;
         public static final double SNAPSHOT_PERIOD_SECS = 1;
@@ -120,7 +120,6 @@ public final class Constants {
         public static final double ROT_STD_DEV_COEFF = 0.5;
 
         public static final double MAX_AMBIGUITY_RATIO = 0.3;
-        public static final double MAX_VISION_DELAY_SECS = 0.08;
         public static final double MAX_ACCEPTED_ROT_SPEED_RAD_PER_SEC = 1.0;
         public static final double MAX_ACCEPTED_LINEAR_SPEED_MPS = 4.0;
         public static final double MIN_ACCEPTED_NUM_TAGS = 1;
@@ -150,16 +149,18 @@ public final class Constants {
             public static final double KV = 0.07485;
 
             public static final double ERROR_TOLERANCE_RPM = 2000;
+            public static final double LEFT_RPM = 6750.0;
+            public static final double RIGHT_RPM = 4500.0;
         }
 
         public static class Pivot {
             public static final int MOTOR_ID = 9;
             public static final int CANCODER_ID = 10;
 
-
             // TODO: determine ratios
             public static final double CANCODER_TO_PIVOT = 28.0 / 15.0;
             public static final double MOTOR_TO_CANCODER = 56.0;
+            public static final Rotation2d ENCODER_OFFSET = Rotation2d.fromRadians(0.01215595);
 
             public static final double CHAIN_FACTOR = 1.04;
             public static final double TOTAL_GEAR_RATIO = MOTOR_TO_CANCODER * CANCODER_TO_PIVOT;
@@ -190,7 +191,6 @@ public final class Constants {
             public static final double CRUISE_VELOCITY_RPS = 1.0;
             public static final double MAX_ACCEL_RPS2 = 2;
             public static final double JERK_RPS3 = 2000;
-
 
             public static final ShooterSetpoint HUB_SHOOT = new ShooterSetpoint(Rotation2d.fromRadians(1.06184));
             public static final ShooterSetpoint PODIUM_SHOOT = new ShooterSetpoint(0.07, 6000,5000);
@@ -276,6 +276,8 @@ public final class Constants {
                 new Pose2d(Units.inchesToMeters(8.861), Units.inchesToMeters(218), new Rotation2d());
         private static final Pose2d SHUFFLE_POSE =
                 new Pose2d(SPEAKER_POSE.getX(), SPEAKER_POSE.getY() + 2, new Rotation2d());
+        private static final Pose2d COUNTER_SHUFFLE_POSE =
+                new Pose2d(SPEAKER_POSE.getX() + 8.27, SPEAKER_POSE.getY(), new Rotation2d());
 
         public static Pose2d getSpeakerPose() {
             return DriverStation.getAlliance().orElse(null) == DriverStation.Alliance.Red
@@ -287,6 +289,12 @@ public final class Constants {
             return DriverStation.getAlliance().orElse(null) == DriverStation.Alliance.Red
                     ? GeometryUtil.flipFieldPose(SHUFFLE_POSE)
                     : SHUFFLE_POSE;
+        }
+
+        public static Pose2d getCounterShufflePose() {
+            return DriverStation.getAlliance().orElse(null) == DriverStation.Alliance.Red
+                    ? GeometryUtil.flipFieldPose(COUNTER_SHUFFLE_POSE)
+                    : COUNTER_SHUFFLE_POSE;
         }
     }
 
