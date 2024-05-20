@@ -56,6 +56,8 @@ public class AprilTagVisionIOPhoton implements AprilTagVisionIO {
                 inputs.avgTagDistance += new Pose3d().plus(target.getBestCameraToTarget()).getTranslation().getNorm();
             inputs.avgTagDistance /= inputs.numTagsSeen;
         }
+
+        inputs.connected = camera.isConnected();
     }
 
     @Override

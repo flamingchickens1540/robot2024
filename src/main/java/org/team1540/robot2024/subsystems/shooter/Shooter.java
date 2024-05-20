@@ -11,6 +11,7 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import org.littletonrobotics.junction.AutoLogOutput;
 import org.littletonrobotics.junction.Logger;
 import org.team1540.robot2024.Constants;
+import org.team1540.robot2024.util.Alert;
 import org.team1540.robot2024.util.LoggedTunableNumber;
 import org.team1540.robot2024.util.MechanismVisualiser;
 import org.team1540.robot2024.util.math.AverageFilter;
@@ -32,6 +33,11 @@ public class Shooter extends SubsystemBase {
     private final AverageFilter leftSpeedFilter = new AverageFilter(20); // Units: RPM
     private final AverageFilter rightSpeedFilter = new AverageFilter(20); // Units: RPM
     private final AverageFilter pivotPositionFilter = new AverageFilter(10); // Units: rotations
+
+    private final Alert leftFlywheelDisconnected = new Alert("Left flywheel disconnected!", Alert.AlertType.WARNING);
+    private final Alert rightFlywheelDisconnected = new Alert("Right flywheel disconnected!", Alert.AlertType.WARNING);
+    private final Alert pivotMotorDisconnected = new Alert("Pivot motor disconnected!", Alert.AlertType.WARNING);
+    private final Alert pivotEncoderDisconnected = new Alert("Pivot encoder disconnected!", Alert.AlertType.WARNING);
 
     private double leftFlywheelSetpointRPM;
     private double rightFlywheelSetpointRPM;
@@ -126,6 +132,11 @@ public class Shooter extends SubsystemBase {
         pivotPositionFilter.add(getPivotPosition().getRotations());
         Logger.recordOutput("Shooter/Pivot/Error", pivotSetpoint.getDegrees() - pivotInputs.position.getDegrees());
         Logger.recordOutput("Shooter/Pivot/ResettingToCancoder", flipper);
+
+        leftFlywheelDisconnected.set(!flywheelInputs.leftMotorConnected);
+        rightFlywheelDisconnected.set(!flywheelInputs.rightMotorConnected);
+        pivotMotorDisconnected.set(!pivotInputs.motorConnected);
+        pivotEncoderDisconnected.set(!pivotInputs.encoderConnected);
     }
 
     /**

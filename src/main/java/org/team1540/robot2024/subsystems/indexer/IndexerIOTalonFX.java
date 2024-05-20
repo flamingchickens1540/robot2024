@@ -70,15 +70,16 @@ public class IndexerIOTalonFX implements IndexerIO {
 
     @Override
     public void updateInputs(IndexerIOInputs inputs) {
-        BaseStatusSignal.refreshAll(
+        inputs.intakeMotorConnected = BaseStatusSignal.refreshAll(
                 intakeVoltage,
                 intakeCurrent,
                 intakeVelocity,
-                intakeTemp,
+                intakeTemp).isOK();
+        inputs.feederMotorConnected = BaseStatusSignal.refreshAll(
                 feederVoltage,
                 feederCurrent,
                 feederVelocity,
-                feederTemp);
+                feederTemp).isOK();
         inputs.intakeVoltage = intakeVoltage.getValueAsDouble();
         inputs.intakeCurrentAmps = intakeCurrent.getValueAsDouble();
         inputs.intakeVelocityRPM = intakeVelocity.getValueAsDouble() * 60;

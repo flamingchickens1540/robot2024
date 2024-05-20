@@ -92,16 +92,17 @@ public class ModuleIOTalonFX implements ModuleIO {
     @Override
     public void updateInputs(ModuleIOInputs inputs) {
         odometrySignalRefresher.refreshSignals();
-        BaseStatusSignal.refreshAll(
+        inputs.driveMotorConnected = BaseStatusSignal.refreshAll(
                 driveVelocity,
                 driveAppliedVolts,
                 driveCurrent,
-                driveTempCelsius,
-                turnAbsolutePosition,
+                driveTempCelsius).isOK();
+        inputs.turnMotorConnected = BaseStatusSignal.refreshAll(
                 turnVelocity,
                 turnAppliedVolts,
                 turnCurrent,
-                turnTempCelsius);
+                turnTempCelsius).isOK();
+        inputs.turnEncoderConnected = BaseStatusSignal.refreshAll(turnAbsolutePosition).isOK();
 
         inputs.drivePositionRad = Units.rotationsToRadians(drivePosition.getValueAsDouble()) / DRIVE_GEAR_RATIO;
         inputs.driveVelocityRadPerSec = Units.rotationsToRadians(driveVelocity.getValueAsDouble()) / DRIVE_GEAR_RATIO;
