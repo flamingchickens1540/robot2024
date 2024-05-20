@@ -30,6 +30,7 @@ import org.team1540.robot2024.subsystems.led.patterns.*;
 import org.team1540.robot2024.subsystems.shooter.Shooter;
 import org.team1540.robot2024.subsystems.tramp.Tramp;
 import org.team1540.robot2024.subsystems.vision.AprilTagVision;
+import org.team1540.robot2024.util.Alert;
 import org.team1540.robot2024.util.CommandUtils;
 import org.team1540.robot2024.util.PhoenixTimeSyncSignalRefresher;
 import org.team1540.robot2024.util.auto.AutoCommand;
@@ -242,26 +243,25 @@ public class RobotContainer {
         AutoManager autos = AutoManager.getInstance();
         // Set up FF characterization routines
         if (isTuningMode()) {
-            AutoManager.getInstance().add(
-                    new AutoCommand(
-                            "Drive FF Characterization",
-                            new FeedForwardCharacterization(
-                                    drivetrain, drivetrain::runCharacterizationVolts, drivetrain::getCharacterizationVelocity
-                            )
-                    )
-            );
-
-            AutoManager.getInstance().add(
-                    new AutoCommand(
-                            "Flywheels FF Characterization",
-                            new FeedForwardCharacterization(
-                                    shooter, volts -> shooter.setFlywheelVolts(volts, volts), () -> shooter.getLeftFlywheelSpeed() / 60
-                            )
-                    )
-            );
-
+            new Alert("Tuning mode enabled", Alert.AlertType.INFO).set(true);
+            autos.add(new AutoCommand(
+                    "Drive FF Characterization",
+                    new FeedForwardCharacterization(
+                            drivetrain,
+                            drivetrain::runCharacterizationVolts,
+                            drivetrain::getCharacterizationVelocity)));
+            autos.add(new AutoCommand(
+                    "Flywheels FF Characterization",
+                    new FeedForwardCharacterization(
+                            shooter,
+                            volts -> shooter.setFlywheelVolts(volts, volts),
+                            () -> shooter.getLeftFlywheelSpeed() / 60)));
+            autos.add(new AutoCommand(
+                    "WheelRadiusChar",
+                    new WheelRadiusCharacterization(
+                            drivetrain, WheelRadiusCharacterization.Direction.COUNTER_CLOCKWISE)));
         }
-        autos.add(new AutoCommand("WheelRadiusChar", new WheelRadiusCharacterization(drivetrain, WheelRadiusCharacterization.Direction.COUNTER_CLOCKWISE)));
+
         autos.addDefault(new AutoCommand("Dwayne :skull:"));
         autos.add(new AmpLanePADEF(drivetrain, shooter, indexer));
         autos.add(new AmpLanePAEDF(drivetrain, shooter, indexer));
