@@ -57,8 +57,6 @@ public class RobotContainer {
 
     public final PhoenixTimeSyncSignalRefresher odometrySignalRefresher = new PhoenixTimeSyncSignalRefresher(SwerveConfig.CAN_BUS);
 
-
-
     public boolean isBrakeMode;
     /**
      * The container for the robot. Contains subsystems, IO devices, and commands.
