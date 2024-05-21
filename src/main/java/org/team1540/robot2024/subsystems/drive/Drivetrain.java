@@ -27,6 +27,7 @@ import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import org.littletonrobotics.junction.AutoLogOutput;
 import org.littletonrobotics.junction.Logger;
+import org.team1540.robot2024.Robot;
 import org.team1540.robot2024.util.Alert;
 import org.team1540.robot2024.util.auto.LocalADStarAK;
 import org.team1540.robot2024.Constants;
@@ -195,7 +196,7 @@ public class Drivetrain extends SubsystemBase {
         poseEstimator.update(rawGyroRotation, getModulePositions());
         visionPoseEstimator.update(rawGyroRotation, getModulePositions());
 
-        gyroDisconnected.set(!gyroInputs.connected);
+        gyroDisconnected.set(!gyroInputs.connected && Robot.isReal());
     }
 
     /**
