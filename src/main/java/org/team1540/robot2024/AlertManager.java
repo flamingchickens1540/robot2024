@@ -34,11 +34,11 @@ public class AlertManager {
     private int lastCanivoreREC = 0;
 
     private final Alert canErrorAlert =
-            new Alert("RIO CAN bus error, robot functionality may be severely limited", Alert.AlertType.ERROR);
+            new Alert("RIO CAN bus error", Alert.AlertType.ERROR);
     private final Alert canivoreErrorAlert =
-            new Alert("Swerve CAN bus error, drive functionality may be severely limited", Alert.AlertType.ERROR);
+            new Alert("Swerve CAN bus error", Alert.AlertType.ERROR);
     private final Alert lowBatteryAlert =
-            new Alert("Battery voltage is low, consider replacing it", Alert.AlertType.WARNING);
+            new Alert("Battery voltage is low", Alert.AlertType.WARNING);
 
     public void start() {
         disabledTimer.restart();
@@ -73,6 +73,7 @@ public class AlertManager {
         canivoreErrorAlert.set(
                 !canivoreErrorTimer.hasElapsed(canErrorTimeThreshold)
                         && canInitialErrorTimer.hasElapsed(canErrorTimeThreshold));
+        lowBatteryAlert.setText("Battery voltage is low (" + RobotController.getBatteryVoltage() + "V)");
         lowBatteryAlert.set(
                 RobotController.getBatteryVoltage() < lowBatteryVoltageThreshold
                         && disabledTimer.hasElapsed(lowBatteryDisableTime));
