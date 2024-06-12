@@ -11,6 +11,8 @@ public interface AprilTagVisionIO {
         public int[] seenTagIDs = new int[0];
         public double avgTagDistance = Double.POSITIVE_INFINITY;
         public double lastMeasurementTimestampSecs = 0.0;
+
+        public boolean connected = true;
     }
 
     default void updateInputs(AprilTagVisionIOInputs inputs) {}

@@ -1,7 +1,6 @@
 package org.team1540.robot2024.subsystems.drive;
 
 import com.pathplanner.lib.auto.AutoBuilder;
-import com.pathplanner.lib.commands.FollowPathHolonomic;
 import com.pathplanner.lib.controllers.PPHolonomicDriveController;
 import com.pathplanner.lib.pathfinding.Pathfinding;
 import com.pathplanner.lib.util.HolonomicPathFollowerConfig;
@@ -28,6 +27,8 @@ import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import org.littletonrobotics.junction.AutoLogOutput;
 import org.littletonrobotics.junction.Logger;
+import org.team1540.robot2024.Robot;
+import org.team1540.robot2024.util.Alert;
 import org.team1540.robot2024.util.auto.LocalADStarAK;
 import org.team1540.robot2024.Constants;
 import org.team1540.robot2024.util.PhoenixTimeSyncSignalRefresher;
@@ -63,6 +64,8 @@ public class Drivetrain extends SubsystemBase {
     private double characterizationInput = 0.0;
 
     private Pose2d targetPose = new Pose2d();
+
+    private final Alert gyroDisconnected = new Alert("Gyro disconnected!", Alert.AlertType.WARNING);
 
     private Drivetrain(
             GyroIO gyroIO,
@@ -193,6 +196,7 @@ public class Drivetrain extends SubsystemBase {
         poseEstimator.update(rawGyroRotation, getModulePositions());
         visionPoseEstimator.update(rawGyroRotation, getModulePositions());
 
+        gyroDisconnected.set(!gyroInputs.connected && Robot.isReal());
     }
 
     /**

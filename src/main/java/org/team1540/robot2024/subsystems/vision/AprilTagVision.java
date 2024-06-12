@@ -9,6 +9,7 @@ import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import org.littletonrobotics.junction.Logger;
 import org.team1540.robot2024.Constants;
+import org.team1540.robot2024.util.Alert;
 import org.team1540.robot2024.util.vision.EstimatedVisionPose;
 
 import java.util.function.Consumer;
@@ -28,6 +29,11 @@ public class AprilTagVision extends SubsystemBase {
 
     private final EstimatedVisionPose frontPose = new EstimatedVisionPose();
     private final EstimatedVisionPose rearPose = new EstimatedVisionPose();
+
+    private final Alert frontCameraDisconnected =
+            new Alert("Front (tramp) camera disconnected!", Alert.AlertType.WARNING);
+    private final Alert rearCameraDisconnected =
+            new Alert("Rear (shooter) camera disconnected!", Alert.AlertType.WARNING);
 
     private static boolean hasInstance = false;
 
@@ -116,6 +122,9 @@ public class AprilTagVision extends SubsystemBase {
                                     DriverStation.getMatchNumber(),
                                     (int) Timer.getFPGATimestamp())));
         }
+
+        frontCameraDisconnected.set(!frontCameraInputs.connected);
+        rearCameraDisconnected.set(!rearCameraInputs.connected);
     }
 
     public void takeSnapshot(String snapshotName) {

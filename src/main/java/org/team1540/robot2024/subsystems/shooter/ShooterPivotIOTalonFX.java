@@ -95,7 +95,15 @@ public class ShooterPivotIOTalonFX implements ShooterPivotIO {
 
     @Override
     public void updateInputs(ShooterPivotIOInputs inputs) {
-        BaseStatusSignal.refreshAll(position, absolutePosition, velocity, appliedVoltage, current, temp, forwardLimit, reverseLimit);
+        inputs.motorConnected = BaseStatusSignal.refreshAll(
+                position,
+                velocity,
+                appliedVoltage,
+                current,
+                temp,
+                forwardLimit,
+                reverseLimit).isOK();
+        inputs.encoderConnected = BaseStatusSignal.refreshAll(absolutePosition).isOK();
         inputs.isAtForwardLimit = forwardLimit.getValue() == ForwardLimitValue.ClosedToGround;
         inputs.isAtReverseLimit = reverseLimit.getValue() == ReverseLimitValue.ClosedToGround;
         inputs.position = Rotation2d.fromRotations(position.getValueAsDouble());

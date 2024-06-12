@@ -7,11 +7,14 @@ import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
 import org.littletonrobotics.junction.Logger;
 import org.team1540.robot2024.Constants;
+import org.team1540.robot2024.util.Alert;
 
 import static org.team1540.robot2024.Constants.Drivetrain.MAX_LINEAR_SPEED;
 import static org.team1540.robot2024.Constants.Drivetrain.WHEEL_RADIUS;
 
 public class Module {
+    private static final String[] moduleNames = new String[]{"FL", "FR", "BL", "BR"};
+
     private final ModuleIO io;
     private final ModuleIOInputsAutoLogged inputs = new ModuleIOInputsAutoLogged();
     private final int index;
@@ -23,6 +26,10 @@ public class Module {
     private Double speedSetpoint = null; // Setpoint for closed loop control, null for open loop
     private double lastPositionMeters = 0.0; // Used for delta calculation
 
+    private final Alert driveMotorDisconnected;
+    private final Alert turnMotorDisconnected;
+    private final Alert turnEncoderDisconnected;
+
     public Module(ModuleIO io, int index) {
         this.io = io;
         this.index = index;
@@ -33,7 +40,6 @@ public class Module {
             case REAL:
             case REPLAY:
                 driveFeedforward = new SimpleMotorFeedforward(0.258, 0.128);
-//                driveFeedforward = new SimpleMotorFeedforward(0.206, 0.117);
                 driveFeedback = new PIDController(0.05, 0.0, 0.0);
                 turnFeedback = new PIDController(7.0, 0.0, 0.0);
                 break;
@@ -51,6 +57,14 @@ public class Module {
 
         turnFeedback.enableContinuousInput(-Math.PI, Math.PI);
         setBrakeMode(true);
+
+        driveMotorDisconnected =
+                new Alert(moduleNames[index] + " drive motor disconnected!", Alert.AlertType.WARNING);
+        turnMotorDisconnected =
+                new Alert(moduleNames[index] + " turn motor disconnected!", Alert.AlertType.WARNING);
+        turnEncoderDisconnected =
+                new Alert(moduleNames[index] + " turn encoder disconnected!", Alert.AlertType.WARNING);
+
     }
 
     public void periodic() {
@@ -79,6 +93,10 @@ public class Module {
                                 + driveFeedback.calculate(inputs.driveVelocityRadPerSec, velocityRadPerSec));
             }
         }
+
+        driveMotorDisconnected.set(!inputs.driveMotorConnected);
+        turnMotorDisconnected.set(!inputs.turnMotorConnected);
+        turnEncoderDisconnected.set(!inputs.turnEncoderConnected);
     }
 
     public SwerveModuleState runSetpoint(SwerveModuleState state) {

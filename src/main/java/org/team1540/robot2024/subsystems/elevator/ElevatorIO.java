@@ -13,6 +13,9 @@ public interface ElevatorIO {
         public boolean atUpperLimit = false;
         public boolean atLowerLimit = false;
         public double flipperAngleDegrees = 0.0;
+
+        public boolean leadMotorConnected = true;
+        public boolean followMotorConnected = true;
     }
 
     default void updateInputs(ElevatorIOInputs inputs) {}

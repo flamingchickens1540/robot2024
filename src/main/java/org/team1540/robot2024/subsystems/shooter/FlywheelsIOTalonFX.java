@@ -78,15 +78,16 @@ public class FlywheelsIOTalonFX implements FlywheelsIO {
 
     @Override
     public void updateInputs(FlywheelsIOInputs inputs) {
-        BaseStatusSignal.refreshAll(
+        inputs.leftMotorConnected = BaseStatusSignal.refreshAll(
                 leftVelocity,
                 leftAppliedVolts,
                 leftCurrent,
-                leftTempCelsius,
+                leftTempCelsius).isOK();
+        inputs.rightMotorConnected = BaseStatusSignal.refreshAll(
                 rightVelocity,
                 rightAppliedVolts,
                 rightCurrent,
-                rightTempCelsius);
+                rightTempCelsius).isOK();
 
         inputs.leftVelocityRPM = leftVelocity.getValueAsDouble() * 60;
         inputs.leftAppliedVolts = leftAppliedVolts.getValueAsDouble();

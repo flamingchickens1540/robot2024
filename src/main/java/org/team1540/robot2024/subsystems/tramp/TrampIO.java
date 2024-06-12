@@ -12,6 +12,7 @@ public interface TrampIO {
         public double currentAmps = 0.0;
         public double positionRots = 0.0;
         public double tempCelsius = 0.0;
+        public boolean motorConnected = true;
     }
 
     default void setVoltage(double volts) {}

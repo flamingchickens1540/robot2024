@@ -7,6 +7,7 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import org.littletonrobotics.junction.AutoLogOutput;
 import org.littletonrobotics.junction.Logger;
 import org.team1540.robot2024.Constants;
+import org.team1540.robot2024.util.Alert;
 import org.team1540.robot2024.util.LoggedTunableNumber;
 import org.team1540.robot2024.util.MechanismVisualiser;
 import org.team1540.robot2024.util.math.AverageFilter;
@@ -23,6 +24,11 @@ public class Elevator extends SubsystemBase {
     private final LoggedTunableNumber kP = new LoggedTunableNumber("Elevator/kP", KP);
     private final LoggedTunableNumber kI = new LoggedTunableNumber("Elevator/kI", KI);
     private final LoggedTunableNumber kD = new LoggedTunableNumber("Elevator/kD", KD);
+
+    private final Alert leadMotorDisconnected =
+            new Alert("Elevator lead motor disconnected!", Alert.AlertType.WARNING);
+    private final Alert followMotorDisconnected =
+            new Alert("Elevator follower motor disconnected!", Alert.AlertType.WARNING);
 
     private static boolean hasInstance = false;
 
@@ -69,6 +75,9 @@ public class Elevator extends SubsystemBase {
         if(getPosition() > 0.31){
             setFlipper(false);
         }
+
+        leadMotorDisconnected.set(!inputs.leadMotorConnected);
+        followMotorDisconnected.set(!inputs.followMotorConnected);
     }
 
     public void setElevatorPosition(double positionMeters) {
