@@ -35,7 +35,7 @@ public class ContinuousIntakeCommand extends Command {
 
     @Override
     public void execute() {
-        if (indexer.isNoteStaged()) {
+        if (indexer.isNoteStagedBack()) {
             indexer.stopIntake();
             if (leds != null) {
                 leds.clearPatternAll(Leds.PatternLevel.INTAKE_PREREADY);

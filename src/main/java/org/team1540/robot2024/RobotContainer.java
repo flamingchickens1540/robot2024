@@ -208,14 +208,14 @@ public class RobotContainer {
         new Trigger(() -> elevator.getPosition() > 0.1).debounce(0.1)
                 .whileTrue(PrepareShooterCommand.lowerPivot(shooter));
 
-        new Trigger(indexer::isNoteStaged).debounce(0.05)
+        new Trigger(indexer::isNoteStagedBack).debounce(0.05)
                 .onTrue(CommandUtils.rumbleCommandTimed(driver.getHID(), 1, 1))
                 .whileTrue(leds.commandShowIntakePattern(SimpleLedPattern.solid("#ff0000")));
 
         new Trigger(tramp::isNoteStaged).debounce(0.1)
                 .whileTrue(leds.commandShowTrampPattern(SimpleLedPattern.solid("#ff9900")));
 
-        new Trigger(indexer::isNoteStaged).and(intakeCommand::isScheduled).onTrue(CommandUtils.rumbleCommandTimed(driver.getHID(), 0.8, 0.4));
+        new Trigger(indexer::isNoteStagedBack).and(intakeCommand::isScheduled).onTrue(CommandUtils.rumbleCommandTimed(driver.getHID(), 0.8, 0.4));
 
 
         BooleanSupplier isPreMatch = () -> (!DriverStation.isDSAttached() || !DriverStation.isFMSAttached() || DriverStation.isAutonomous()) && DriverStation.isDisabled();

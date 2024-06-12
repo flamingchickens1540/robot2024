@@ -31,7 +31,7 @@ public class IntakeCommand extends Command {
 
     @Override
     public boolean isFinished() {
-        return shouldUseBeambreak && (indexer.isNoteStaged());
+        return shouldUseBeambreak && (indexer.isNoteStagedBack());
     }
 
     @Override

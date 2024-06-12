@@ -28,7 +28,7 @@ public class CenterLanePDEABC extends AutoCommand {
                         Commands.sequence(
                                 Commands.deadline(
                                         Commands.sequence(
-                                                Commands.waitUntil(()->!indexer.isNoteStaged()),
+                                                Commands.waitUntil(()->!indexer.isNoteStagedBack()),
                                                 Commands.waitSeconds(0.1)
                                         ).withTimeout(1.1),
                                         IntakeAndFeed.withDefaults(indexer)

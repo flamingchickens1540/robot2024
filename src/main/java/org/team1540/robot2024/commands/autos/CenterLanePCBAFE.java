@@ -31,7 +31,7 @@ public class CenterLanePCBAFE extends AutoCommand {
                                 Commands.deadline(
                                         Commands.sequence(
                                                 Commands.waitSeconds(0.1),
-                                                Commands.waitUntil(()->!indexer.isNoteStaged()),
+                                                Commands.waitUntil(()->!indexer.isNoteStagedBack()),
                                                 Commands.waitSeconds(0.1)
                                         ).withTimeout(1.1),
                                         Commands.waitSeconds(0.2).andThen(IntakeAndFeed.withDefaults(indexer))

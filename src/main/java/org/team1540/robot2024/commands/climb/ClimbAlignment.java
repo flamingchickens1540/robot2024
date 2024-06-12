@@ -28,7 +28,7 @@ public class ClimbAlignment extends ParallelRaceGroup {
                     new ParallelCommandGroup(
                             new SequentialCommandGroup(
                                     new ElevatorSetpointCommand(elevator, Constants.Elevator.ElevatorState.BOTTOM),
-                                    new StageTrampCommand(tramp, indexer).onlyIf(indexer::isNoteStaged)
+                                    new StageTrampCommand(tramp, indexer).onlyIf(indexer::isNoteStagedBack)
                             ),
                             new ProxyCommand(() -> climbPath(drivetrain::getPose, 1))
                     ),

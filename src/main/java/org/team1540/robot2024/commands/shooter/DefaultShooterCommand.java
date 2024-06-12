@@ -27,16 +27,16 @@ public class DefaultShooterCommand extends SequentialCommandGroup {
         };
         addCommands(
                 Commands.runOnce(()->shouldShootPrepare = shootPrepareSupplier.getAsBoolean()),
-                Commands.runOnce(()->hasNote = indexer.isNoteStaged()),
+                Commands.runOnce(()->hasNote = indexer.isNoteStagedBack()),
                 Commands.either(
                         Commands.either(
                                 new LeadingShootPrepare(drivetrain, shooter, Constants.Shooter.Flywheels.LEFT_RPM*0.75, Constants.Shooter.Flywheels.RIGHT_RPM*0.75).alongWith(Commands.runOnce(()->hasNote = true)),
                                 new LeadingShootPrepare(drivetrain, shooter, 0, 0).alongWith(Commands.runOnce(()->hasNote = true)),
-                                indexer::isNoteStaged
+                                indexer::isNoteStagedBack
                         ).alongWith(Commands.runOnce(()-> shouldShootPrepare = true)),
                         new OverStageShootPrepare(drivetrain::getPose, shooter, 0, 0).alongWith(Commands.runOnce(()-> shouldShootPrepare = false)),
                         shootPrepareSupplier
-                ).until(()-> shootPrepareSupplier.getAsBoolean() != shouldShootPrepare || indexer.isNoteStaged() != hasNote).repeatedly()
+                ).until(()-> shootPrepareSupplier.getAsBoolean() != shouldShootPrepare || indexer.isNoteStagedBack() != hasNote).repeatedly()
         );
     }
 }

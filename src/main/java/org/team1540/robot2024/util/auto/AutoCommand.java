@@ -103,15 +103,15 @@ public class AutoCommand extends SequentialCommandGroup {
 //                                Commands.waitUntil(()->drivetrain.getPose().getRotation().minus(drivetrain.getTargetPose().getRotation()).getDegrees()<10).onlyIf(()->shouldRealignYaw),
                                 new ParallelDeadlineGroup(
                                         Commands.sequence(
-                                                Commands.waitUntil(indexer::isNoteStaged),
+                                                Commands.waitUntil(indexer::isNoteStagedBack),
                                                 Commands.waitSeconds(extraPreShotWait),
-                                                Commands.waitUntil(()->!indexer.isNoteStaged()),
+                                                Commands.waitUntil(()->!indexer.isNoteStagedBack()),
                                                 Commands.waitSeconds(0.2 - postShotWaitReduction)
                                         ).withTimeout(1+extraPreShotWait),
                                         IntakeAndFeed.withDefaults(indexer)
                                 )
                         )
-                ).unless(() -> shouldSkipIfEmpty && !indexer.isNoteStaged())
+                ).unless(() -> shouldSkipIfEmpty && !indexer.isNoteStagedBack())
         );
     }
 

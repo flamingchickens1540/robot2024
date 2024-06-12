@@ -37,8 +37,8 @@ public class TuneShooterCommand extends ParallelCommandGroup {
                                 Rotation2d.fromDegrees(angleSetpoint.get()), leftFlywheelSetpoint.get(), rightFlywheelSetpoint.get()
                         )),
                 Commands.sequence(
-                        Commands.waitUntil(indexer::isNoteStaged),
-                        Commands.waitUntil(()->!indexer.isNoteStaged()),
+                        Commands.waitUntil(indexer::isNoteStagedBack),
+                        Commands.waitUntil(()->!indexer.isNoteStagedBack()),
                         Commands.waitSeconds(1),
                         Commands.runOnce(()->shotNum += 1),
                         Commands.print("Shot Number: " + shotNum + " Angle Degrees Setpoint: " + pivotRotationSupplier.get() + " Left RPM Setpoint: " + shooterLeftSupplier.getAsDouble() + " Right RPM Setpoint: " + shooterRightSupplier.getAsDouble() +
