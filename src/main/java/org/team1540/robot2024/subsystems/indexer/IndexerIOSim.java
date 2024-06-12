@@ -15,7 +15,9 @@ public class IndexerIOSim implements IndexerIO {
     private final DCMotorSim intakeSim = new DCMotorSim(DCMotor.getNEO(1), INTAKE_GEAR_RATIO, INTAKE_MOI);
     private final DCMotorSim feederSim = new DCMotorSim(DCMotor.getNEO(1), FEEDER_GEAR_RATIO, FEEDER_MOI);
     //    private final SimDeviceSim beamBreakSim = new SimDeviceSim("Indexer Beam Break");
-    private final DigitalInput indexerBeamBreak = new DigitalInput(BEAM_BREAK_ID);
+    private final DigitalInput indexerBeamBreakFront = new DigitalInput(BEAM_BREAK_FRONT_ID);
+    private final DigitalInput indexerBeamBreakBack = new DigitalInput(BEAM_BREAK_BACK_ID);
+    private final DigitalInput indexerBeamBreakShooter = new DigitalInput(BEAM_BREAK_SHOOTER_ID);
     private final PIDController feederSimPID = new PIDController(FEEDER_KP, FEEDER_KI, FEEDER_KD);
     private boolean isClosedLoop = true;
     private double intakeVoltage = 0.0;
@@ -39,7 +41,9 @@ public class IndexerIOSim implements IndexerIO {
         inputs.feederCurrentAmps = feederSim.getCurrentDrawAmps();
         inputs.feederVoltage = feederVoltage;
         inputs.feederVelocityRPM = feederSim.getAngularVelocityRPM();
-        inputs.noteInIntake = indexerBeamBreak.get();
+        inputs.noteInIntakeFront = indexerBeamBreakFront.get();
+        inputs.noteInIntakeBack = indexerBeamBreakBack.get();
+        inputs.noteInIntakeShooter = indexerBeamBreakShooter.get();
     }
 
     @Override

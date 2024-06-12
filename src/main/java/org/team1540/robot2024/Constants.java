@@ -89,7 +89,9 @@ public final class Constants {
     }
 
     public static class Indexer {
-        public static final int BEAM_BREAK_ID = IS_COMPETITION_ROBOT ? 7 : 8;
+        public static final int BEAM_BREAK_BACK_ID = IS_COMPETITION_ROBOT ? 7 : 8;
+        public static final int BEAM_BREAK_FRONT_ID = 0; // TODO: update id
+        public static final int BEAM_BREAK_SHOOTER_ID = 0; // TODO: update id
         public static final int INTAKE_ID = 13;
         public static final int FEEDER_ID = 15;
 

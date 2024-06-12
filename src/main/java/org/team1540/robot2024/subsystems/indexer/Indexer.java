@@ -67,8 +67,16 @@ public class Indexer extends SubsystemBase {
         io.setIntakeVoltage(percent * 12.0);
     }
 
-    public boolean isNoteStaged() {
-        return inputs.noteInIntake;
+    public boolean isNoteStagedBack() {
+        return inputs.noteInIntakeBack;
+    }
+
+    public boolean isNoteStagedFront() {
+        return inputs.noteInIntakeFront;
+    }
+
+    public boolean isNoteStagedShooter() {
+        return inputs.noteInIntakeShooter;
     }
 
     public void setFeederVelocity(double setpointRPM) {
@@ -120,7 +128,7 @@ public class Indexer extends SubsystemBase {
                 () -> setIntakePercent(-1),
                 () -> {},
                 (interrupted) -> stopIntake(),
-                () -> !isNoteStaged(),
+                () -> !isNoteStagedBack(),
                 this
         );
     }

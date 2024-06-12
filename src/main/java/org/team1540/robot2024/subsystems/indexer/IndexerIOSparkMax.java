@@ -9,7 +9,9 @@ import static org.team1540.robot2024.Constants.Indexer.*;
 public class IndexerIOSparkMax implements IndexerIO {
     private final CANSparkMax intakeMotor = new CANSparkMax(INTAKE_ID, CANSparkLowLevel.MotorType.kBrushless);
     private final CANSparkMax feederMotor = new CANSparkMax(FEEDER_ID, CANSparkLowLevel.MotorType.kBrushless);
-    private final DigitalInput indexerBeamBreak = new DigitalInput(7);
+    private final DigitalInput indexerBeamBreakFront = new DigitalInput(0); // TODO: update id
+    private final DigitalInput indexerBeamBreakBack = new DigitalInput(7);
+    private final DigitalInput indexerBeamBreakShooter = new DigitalInput(0); // TODO: update id
 
     private final RelativeEncoder intakeEncoder = intakeMotor.getEncoder();
     private final RelativeEncoder feederEncoder = feederMotor.getEncoder();
@@ -43,7 +45,10 @@ public class IndexerIOSparkMax implements IndexerIO {
         inputs.feederVoltage = feederMotor.getBusVoltage() * feederMotor.getAppliedOutput();
         inputs.feederVelocityRPM = feederEncoder.getVelocity();
         inputs.feederTempCelsius = feederMotor.getMotorTemperature();
-        inputs.noteInIntake = !indexerBeamBreak.get();
+        inputs.noteInIntakeFront = !indexerBeamBreakFront.get();
+        inputs.noteInIntakeBack = !indexerBeamBreakBack.get();
+        inputs.noteInIntakeShooter = !indexerBeamBreakShooter.get();
+
     }
 
     @Override
