@@ -47,13 +47,33 @@ public class SwerveFactory {
         public final TalonFX driveMotor;
         public final TalonFX turnMotor;
         public final CANcoder cancoder;
-
         private SwerveModuleHW(int id, SwerveCorner corner, String canbus) {
             if (id < 1 || id > 9) {
                 throw new IllegalArgumentException("Swerve module id must be between 1 and 9");
             }
             if (canbus == null) {
                 canbus = "";
+            }
+
+            boolean invertTurn = true;
+            boolean invertDrive = true;
+            switch (corner) {
+                case FRONT_LEFT:
+                    invertTurn = false;
+                    invertDrive = false;
+                    break;
+                case FRONT_RIGHT:
+                    invertTurn = true;
+                    invertDrive = false;
+                    break;
+                case BACK_LEFT:
+                    invertTurn = true;
+                    invertDrive = false;
+                    break;
+                case BACK_RIGHT:
+                    invertTurn = false;
+                    invertDrive = true;
+                    break;
             }
 
             int driveID = 30 + id;
@@ -72,11 +92,11 @@ public class SwerveFactory {
             driveConfig.CurrentLimits.SupplyCurrentThreshold = 60.0;
             driveConfig.CurrentLimits.SupplyTimeThreshold = 0.1;
             driveConfig.CurrentLimits.SupplyCurrentLimitEnable = true;
-            driveConfig.MotorOutput.Inverted = InvertedValue.CounterClockwise_Positive;
+            driveConfig.MotorOutput.Inverted = invertDrive ? InvertedValue.CounterClockwise_Positive: InvertedValue.Clockwise_Positive;
 
             turnConfig.CurrentLimits.SupplyCurrentLimit = 30.0;
             turnConfig.CurrentLimits.SupplyCurrentLimitEnable = true;
-            turnConfig.MotorOutput.Inverted = InvertedValue.Clockwise_Positive;
+            turnConfig.MotorOutput.Inverted = invertTurn ? InvertedValue.Clockwise_Positive : InvertedValue.CounterClockwise_Positive;
             turnConfig.Feedback.FeedbackRemoteSensorID = canCoderID;
             turnConfig.Feedback.FeedbackSensorSource = FeedbackSensorSourceValue.FusedCANcoder;
             turnConfig.Feedback.SensorToMechanismRatio = 1.0;

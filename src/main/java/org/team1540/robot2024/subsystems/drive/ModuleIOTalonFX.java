@@ -6,7 +6,6 @@ import com.ctre.phoenix6.configs.MotorOutputConfigs;
 import com.ctre.phoenix6.controls.VoltageOut;
 import com.ctre.phoenix6.hardware.CANcoder;
 import com.ctre.phoenix6.hardware.TalonFX;
-import com.ctre.phoenix6.signals.InvertedValue;
 import com.ctre.phoenix6.signals.NeutralModeValue;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.util.Units;
@@ -130,7 +129,7 @@ public class ModuleIOTalonFX implements ModuleIO {
     @Override
     public void setDriveBrakeMode(boolean enable) {
         MotorOutputConfigs config = new MotorOutputConfigs();
-        config.Inverted = InvertedValue.CounterClockwise_Positive;
+        driveTalon.getConfigurator().refresh(config);
         config.NeutralMode = enable ? NeutralModeValue.Brake : NeutralModeValue.Coast;
         driveTalon.getConfigurator().apply(config);
     }
@@ -138,7 +137,7 @@ public class ModuleIOTalonFX implements ModuleIO {
     @Override
     public void setTurnBrakeMode(boolean enable) {
         MotorOutputConfigs config = new MotorOutputConfigs();
-        config.Inverted = IS_TURN_MOTOR_INVERTED ? InvertedValue.Clockwise_Positive : InvertedValue.CounterClockwise_Positive;
+        turnTalon.getConfigurator().refresh(config);
         config.NeutralMode = enable ? NeutralModeValue.Brake : NeutralModeValue.Coast;
         turnTalon.getConfigurator().apply(config);
     }
