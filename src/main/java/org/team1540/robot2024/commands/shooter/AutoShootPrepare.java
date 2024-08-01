@@ -12,14 +12,14 @@ import org.team1540.robot2024.util.vision.AprilTagsCrescendo;
 import java.util.function.Supplier;
 
 public class AutoShootPrepare extends SequentialCommandGroup {
-    public
-    AutoShootPrepare(Drivetrain drivetrain, Shooter shooter) {
+    private static final double A = -100.0;
+    private static final double B = 53.4984;
+    private static final double C = 46.8837;
+    private static final double D = 157.311;
+
+    public AutoShootPrepare(Drivetrain drivetrain, Shooter shooter) {
         this(drivetrain::getPose, shooter);
     }
-    double A = -100.0;
-    double B = 53.4984;
-    double C = 46.8837;
-    double D = 157.311;
 
     public AutoShootPrepare(Supplier<Pose2d> positionSupplier, Shooter shooter, double leftSetpoint, double rightSetpoint) {
         addCommands(
@@ -31,7 +31,6 @@ public class AutoShootPrepare extends SequentialCommandGroup {
                             leftSetpoint,
                             rightSetpoint
                     )
-//                    shooter.lerp.get(positionSupplier.get().getTranslation().getDistance(AprilTagsCrescendo.getInstance().getTag(AprilTagsCrescendo.Tags.SPEAKER_CENTER).toPose2d().getTranslation()))
             )
         );
     }
