@@ -52,10 +52,10 @@ public final class Constants {
         public static final String CAN_BUS  = "swerve";
         public static final double CAN_UPDATE_FREQUENCY_HZ = 200.0;
 
-        public static final int FRONT_LEFT  = IS_COMPETITION_ROBOT ? 1 : 9;
-        public static final int FRONT_RIGHT = IS_COMPETITION_ROBOT ? 7 : 2;
-        public static final int BACK_LEFT   = IS_COMPETITION_ROBOT ? 4 : 6;
-        public static final int BACK_RIGHT  = IS_COMPETITION_ROBOT ? 3 : 5;
+        public static final int FRONT_LEFT  = 4;
+        public static final int FRONT_RIGHT = 3;
+        public static final int BACK_LEFT   = 1;
+        public static final int BACK_RIGHT  = 7;
 
         public static final int PIGEON_ID = 9;
     }
@@ -208,8 +208,8 @@ public final class Constants {
         public static final double CLIMBING_HOOKS_MAX_HEIGHT = CLIMBING_HOOKS_MINIMUM_HEIGHT + MAX_HEIGHT - MINIMUM_HEIGHT;
 
         public static final double GEAR_RATIO = 11.571;
-        public static final int LEADER_ID = 7;
-        public static final int FOLLOWER_ID = 8;
+        public static final int LEADER_ID = 7; // RIGHT
+        public static final int FOLLOWER_ID = 8; // LEFT
 
         public static final int LEFT_FLIPPER_ID = 1;
 
