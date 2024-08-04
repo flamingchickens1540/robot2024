@@ -167,11 +167,13 @@ public class RobotContainer {
         driver.leftBumper().toggleOnTrue(overstageTargetDrive);
 
         kidPilot.leftBumper().or(kidPilot.leftTrigger()).whileTrue(new ContinuousIntakeCommand(indexer, leds, 1));
+        kidPilot.rightBumper().or(kidPilot.rightTrigger()).whileTrue(new ContinuousIntakeCommand(indexer, leds, -1));
 
         LoggedTunableNumber kidAngleSetpoint = new LoggedTunableNumber("kidMode/shooter/angle", HUB_SHOOT.pivot.getDegrees());
-        LoggedTunableNumber kidLeftSetpoint = new LoggedTunableNumber("kidMode/shooter/left", 2000);
-        LoggedTunableNumber kidRightSetpoint = new LoggedTunableNumber("kidMode/shooter/right", 2000);
-        kidPilot.rightBumper().or(kidPilot.rightTrigger()).whileTrue(new ShootSequence(shooter, indexer, () -> new ShooterSetpoint(Rotation2d.fromDegrees(kidAngleSetpoint.get()), kidLeftSetpoint.get(), kidRightSetpoint.get())));
+        LoggedTunableNumber kidLeftSetpoint = new LoggedTunableNumber("kidMode/shooter/left", 1500);
+        LoggedTunableNumber kidRightSetpoint = new LoggedTunableNumber("kidMode/shooter/right", 1500);
+        kidPilot.x().whileTrue(new ShootSequence(shooter, indexer, () -> new ShooterSetpoint(Rotation2d.fromDegrees(kidAngleSetpoint.get()), kidLeftSetpoint.get(), kidRightSetpoint.get()), 0.5, true));
+        kidPilot.a().whileTrue(new AmpScoreSequence(tramp, indexer, elevator));
         kidPilot.start().and(kidPilot.back()).onTrue(Commands.runOnce(drivetrain::zeroFieldOrientationManual));
 
         // TODO remove this
