@@ -1,5 +1,6 @@
 package org.team1540.robot2024;
 
+import com.pathplanner.lib.auto.NamedCommands;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.util.Units;
@@ -63,6 +64,7 @@ public class RobotContainer {
      * The container for the robot. Contains subsystems, IO devices, and commands.
      */
     public RobotContainer() {
+        NamedCommands.registerCommand("",Commands.none()); //THIS IS IMPORTANT
         switch (Constants.currentMode) {
             case REAL -> {
                 // Real robot, instantiate hardware IO implementations
@@ -263,35 +265,37 @@ public class RobotContainer {
         }
         autos.add(new AutoCommand("WheelRadiusChar", new WheelRadiusCharacterization(drivetrain, WheelRadiusCharacterization.Direction.COUNTER_CLOCKWISE)));
         autos.addDefault(new AutoCommand("Dwayne :skull:"));
-        autos.add(new AmpLanePADEF(drivetrain, shooter, indexer));
-        autos.add(new AmpLanePAEDF(drivetrain, shooter, indexer));
-//        autos.add(new AutoCommand("SubwooferShot", new ShootSequence(shooter, indexer)));
-//        autos.add(new DriveSinglePath("Taxi", drivetrain));
-//        autos.add(new DriveSinglePath("Sprint", drivetrain));
-//        autos.add(new DriveSinglePath("CenterLaneSprint", drivetrain, true, true));
-//        autos.add(new AmpLanePADESprint(drivetrain, shooter, indexer));
-//        autos.add(new CenterLanePSubSprint(drivetrain, shooter, indexer));
-//        autos.add(new CenterLanePCBADSprint(drivetrain, shooter, indexer));
-        autos.add(new CenterLanePCBAFSprint(drivetrain, shooter, indexer));
-        autos.add(new CenterLanePCBAFE(drivetrain, shooter, indexer));
-        autos.add(new CenterLanePDEABC(drivetrain, shooter, indexer));
-        autos.add(new CenterLanePCBAFG(drivetrain, shooter, indexer));
-        autos.add(new CenterLanePCBAEF(drivetrain, shooter, indexer));
-        autos.add(new CenterLanePCBAGF(drivetrain, shooter, indexer));
-        autos.add(new CenterLanePCBADE(drivetrain, shooter, indexer));
-        autos.add(new CenterLanePCBAED(drivetrain, shooter, indexer));
-        autos.add(new CenterLanePCBA(drivetrain, shooter, indexer));
+        autos.addDefault(new ATestAuto(drivetrain, shooter, indexer));
+//        autos.add(new AmpLanePADEF(drivetrain, shooter, indexer));
+//        autos.add(new AmpLanePAEDF(drivetrain, shooter, indexer));
+//        autos.add(new AmpLanePAEDSprint(drivetrain, shooter, indexer));
+////        autos.add(new AutoCommand("SubwooferShot", new ShootSequence(shooter, indexer)));
+////        autos.add(new DriveSinglePath("Taxi", drivetrain));
+////        autos.add(new DriveSinglePath("Sprint", drivetrain));
+////        autos.add(new DriveSinglePath("CenterLaneSprint", drivetrain, true, true));
+////        autos.add(new AmpLanePADESprint(drivetrain, shooter, indexer));
+////        autos.add(new CenterLanePSubSprint(drivetrain, shooter, indexer));
+////        autos.add(new CenterLanePCBADSprint(drivetrain, shooter, indexer));
+//        autos.add(new CenterLanePCBAFSprint(drivetrain, shooter, indexer));
+//        autos.add(new CenterLanePCBAFE(drivetrain, shooter, indexer));
+//        autos.add(new CenterLanePDEABC(drivetrain, shooter, indexer));
+//        autos.add(new CenterLanePCBAFG(drivetrain, shooter, indexer));
+//        autos.add(new CenterLanePCBAEF(drivetrain, shooter, indexer));
+//        autos.add(new CenterLanePCBAGF(drivetrain, shooter, indexer));
+//        autos.add(new CenterLanePCBADE(drivetrain, shooter, indexer));
+//        autos.add(new CenterLanePCBAED(drivetrain, shooter, indexer));
 //        autos.add(new CenterLanePCBA(drivetrain, shooter, indexer));
-//        autos.add(new CenterLanePBDA(drivetrain, shooter, indexer));
-//        autos.add(new CenterLanePSubCSubBSubASubFSub(drivetrain, shooter, indexer));
-////        autos.add(new CenterLanePSubCSubBSubFSub(drivetrain, shooter, indexer));
-//        autos.add(new CenterLanePSubCSubBSubASub(drivetrain, shooter, indexer));
-        autos.add(new SourceLanePHGF(drivetrain, shooter, indexer));
-        autos.add(new SourceLanePGHSprint(drivetrain, shooter, indexer));
-        autos.add(new SourceLanePGFE(drivetrain, shooter, indexer));
-        autos.add(new SourceLanePGFH(drivetrain, shooter, indexer));
-//        autos.addDefault(new ATestAuto(drivetrain, shooter, indexer));
-        autos.add(new AutoCommand("Subwoofer Shot", ShootSequence.forAutoSubwoofer(shooter, indexer)));
+////        autos.add(new CenterLanePCBA(drivetrain, shooter, indexer));
+////        autos.add(new CenterLanePBDA(drivetrain, shooter, indexer));
+////        autos.add(new CenterLanePSubCSubBSubASubFSub(drivetrain, shooter, indexer));
+//////        autos.add(new CenterLanePSubCSubBSubFSub(drivetrain, shooter, indexer));
+////        autos.add(new CenterLanePSubCSubBSubASub(drivetrain, shooter, indexer));
+//        autos.add(new SourceLanePHGF(drivetrain, shooter, indexer));
+//        autos.add(new SourceLanePGHSprint(drivetrain, shooter, indexer));
+//        autos.add(new SourceLanePGFE(drivetrain, shooter, indexer));
+//        autos.add(new SourceLanePGFH(drivetrain, shooter, indexer));
+////        autos.addDefault(new ATestAuto(drivetrain, shooter, indexer));
+//        autos.add(new AutoCommand("Subwoofer Shot", ShootSequence.forAutoSubwoofer(shooter, indexer)));
     }
 
 
