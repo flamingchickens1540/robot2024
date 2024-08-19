@@ -103,9 +103,8 @@ public class PathHelper {
                                     Commands.idle(),
                                     (BooleanSupplier) term.getSecond()
                             )
-
                     )
-            ).andThen((Command)term.getThird()).onlyIf((BooleanSupplier) term.getSecond());
+            ).andThen(((Command)term.getThird()).onlyIf((BooleanSupplier) term.getSecond()));
         }
         return cmd;
     }
