@@ -91,58 +91,21 @@ public class PathHelper {
 
     public Command withInterrupt(Drivetrain drivetrain, boolean shouldRealign, Triplet<Integer, BooleanSupplier, Command>... terms){
         Command cmd = getCommand(drivetrain, shouldRealign);
-//        for (EventMarker marker :eventMarkers
-//             ) {
-//            System.out.println("Event marker time: " + marker.getWaypointRelativePos());
-//        }
-//        Comparator comparator = new Comparator() {
-//            @Override
-//            public int compare(Object o1, Object o2) {
-//                Triplet<Integer, BooleanSupplier, Command> t1 = (Triplet<Integer, BooleanSupplier, Command> )o1;
-//                Triplet<Integer, BooleanSupplier, Command> t2 = (Triplet<Integer, BooleanSupplier, Command> )o2;
-//                return -1* compare(eventMarkers.get(t1.getFirst()), eventMarkers.get(t2.getFirst()));
-//            }
-//        };
-//
-//        List list = (Arrays.stream(terms).toList());
-//        list.sort(comparator);
-        Arrays.sort(terms, new Comparator<Triplet<Integer, BooleanSupplier, Command>>() {
-            @Override
-            public int compare(Triplet<Integer, BooleanSupplier, Command> o1, Triplet<Integer, BooleanSupplier, Command> o2) {
-                return -1* Double.compare(eventMarkers.get(o1.getFirst()).getWaypointRelativePos(), eventMarkers.get(o2.getFirst()).getWaypointRelativePos());
-            }
-        });
-
+        Arrays.sort(terms, (o1, o2) -> -1* Double.compare(eventMarkers.get(o1.getFirst()).getWaypointRelativePos(), eventMarkers.get(o2.getFirst()).getWaypointRelativePos()));
         for(int i = 0; i < terms.length; i += 1){
             Triplet term = terms[i];
             cmd = Commands.race(
-                    cmd
-//                            .asProxy()
-//                            .withInterruptBehavior(Command.InterruptionBehavior.kCancelSelf)
-//                            .handleInterrupt(()->((Command)term.getThird()).finallyDo(()->System.out.println("Ending the interrupt")).schedule())
-                    ,
+                    cmd,
                     Commands.sequence(
                             Commands.waitSeconds(eventMarkers.get((int)term.getFirst()).getWaypointRelativePos()),
                             new ConditionalCommand(
-//                                    Commands.runOnce(()->{((Command)term.getThird()).schedule();}),
-//                                    ((Command) term.getThird()).asProxy(),
-//                                    Commands.runOnce(()-> interrupt.set(true)),
                                     Commands.none(),
-//                                    Commands.defer(()->(Command) term.getThird(), Set.of()),
-//                                    new DeferredCommand(()->(Command)term.getThird(), Set.of()),
-//                                    Commands.deferredProxy(()->(Command) term.getThird()),
                                     Commands.idle(),
-//                                    ()->(((BooleanSupplier) term.getSecond()).getAsBoolean()&&!interrupt.get()))
                                     (BooleanSupplier) term.getSecond()
                             )
 
                     )
-            )
-                    .andThen((Command)term.getThird()).onlyIf((BooleanSupplier) term.getSecond()) //Current best working version
-//                    .andThen(Commands.waitUntil(()->(!((Command)term.getThird()).isScheduled())).withTimeout(5))
-//                    .andThen((Command)term.getThird()).onlyIf(()-> (((BooleanSupplier) term.getSecond()).getAsBoolean() && !interrupt.get()))
-//                    .andThen(Commands.waitUntil(()->!((Command)term.getThird()).isScheduled()))
-            ;
+            ).andThen((Command)term.getThird()).onlyIf((BooleanSupplier) term.getSecond());
         }
         return cmd;
     }
