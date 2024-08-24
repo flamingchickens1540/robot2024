@@ -20,18 +20,71 @@ public class ATestAuto extends AutoCommand {
     public ATestAuto(Drivetrain drivetrain, Shooter shooter, Indexer indexer) {
         super("!ATestAuto");
         addPath(
-                PathHelper.fromChoreoPath("TestPath.1", true, true),
-                PathHelper.fromChoreoPath("TestPath.2", false, true),
-                PathHelper.fromChoreoPath("TestPath.3", false, true)
+                PathHelper.fromChoreoPath("New Path.1", true, true),
+                PathHelper.fromChoreoPath("New Path.2", false, true),
+                PathHelper.fromChoreoPath("New Path.3", false, true),
+                PathHelper.fromChoreoPath("New Path Switch 1.1", false, true),
+                PathHelper.fromChoreoPath("New Path Switch 2.1", false, true)
         );
         addCommands(
-                getPath(0).withInterrupt(drivetrain, false,
-                        new Triplet<>(0, ()->true, getPath(1).getCommand(drivetrain, false).andThen(Commands.print(("message 1")))),
-                        new Triplet<>(1, ()->true, getPath(2).getCommand(drivetrain,false).andThen(Commands.print("message 2")))
-                ),
+//                getPath(0).getCommand(drivetrain),
 
+                getPath(0).withInterrupt(
+                        Commands.sequence(
+                                getPath(0).getCommand(drivetrain),
+                                Commands.waitSeconds(1),
+                                getPath(1).withInterrupt(
+                                        Commands.sequence(
+                                                getPath(1).getCommand(drivetrain),
+                                                Commands.waitSeconds(1),
+                                                getPath(2).getCommand(drivetrain)
+                                        ),
+                                        getPath(4).getCommand(drivetrain, false),
+                                        new Triplet<>(0, ()->true, Commands.none()),
+                                        new Triplet<>(1, ()->false, Commands.none())
+                                )
+                        ),
+                        Commands.sequence(
+                                getPath(3).getCommand(drivetrain, false),
+                                Commands.waitSeconds(1),
+                                getPath(2).getCommand(drivetrain)
+                        ),
+                        new Triplet<>(0, ()->true, Commands.none()),
+                        new Triplet<>(1, ()->false, Commands.none())
+                ),
                 Commands.print("HALLELUJAH")
+
+                //,
+//
+//                getPath(0).withInterrupt(drivetrain, false,
+//                        new Triplet<>(0, ()->false, getPath(3).getCommand(drivetrain, false)),
+//                        new Triplet<>(1, ()->false, getPath(3).getCommand(drivetrain,false))
+//                ),
+//                Commands.waitSeconds(1),
+//                getPath(1).getCommand(drivetrain),
+//                getPath(1).withInterrupt(drivetrain, false,
+//                        new Triplet<>(0, ()->false, getPath(4).getCommand(drivetrain, false)),
+//                        new Triplet<>(1, ()->false, getPath(4).getCommand(drivetrain,false))
+//                ),
+//                Commands.waitSeconds(1),
+//                getPath(2).getCommand(drivetrain)
         );
         addRequirements(drivetrain, shooter, indexer);
+
+
+
+//        addPath(
+//                PathHelper.fromChoreoPath("TestPath.1", true, true),
+//                PathHelper.fromChoreoPath("TestPath.2", false, true),
+//                PathHelper.fromChoreoPath("TestPath.3", false, true)
+//        );
+//        addCommands(
+//                getPath(0).withInterrupt(drivetrain, false,
+//                        new Triplet<>(0, ()->false, getPath(3).getCommand(drivetrain, false)),
+//                        new Triplet<>(1, ()->false, getPath(3).getCommand(drivetrain,false))
+//                ),
+//
+//        );
     }
 }
+

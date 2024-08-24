@@ -90,21 +90,42 @@ public class PathHelper {
     }
 
     public Command withInterrupt(Drivetrain drivetrain, boolean shouldRealign, Triplet<Integer, BooleanSupplier, Command>... terms){
-        Command cmd = getCommand(drivetrain, shouldRealign);
+        return withInterrupt(getCommand(drivetrain, shouldRealign), Commands.none(), terms);
+    }
+    
+    public Command withInterrupt(Command cmd, Command afterInterrupt, Triplet<Integer, BooleanSupplier, Command>... terms){
+        //FIXME MAJOR ISSUE MAYBE Command always causes crash on second auto run but theoretically it should be fine because we only run once
         Arrays.sort(terms, (o1, o2) -> -1* Double.compare(eventMarkers.get(o1.getFirst()).getWaypointRelativePos(), eventMarkers.get(o2.getFirst()).getWaypointRelativePos()));
         for(int i = 0; i < terms.length; i += 1){
             Triplet term = terms[i];
+            final boolean[] cancel = {false};
             cmd = Commands.race(
                     cmd,
                     Commands.sequence(
                             Commands.waitSeconds(eventMarkers.get((int)term.getFirst()).getWaypointRelativePos()),
                             new ConditionalCommand(
-                                    Commands.none(),
+                                    Commands.runOnce(()-> cancel[0] = true),
                                     Commands.idle(),
                                     (BooleanSupplier) term.getSecond()
                             )
                     )
-            ).andThen(((Command)term.getThird()).onlyIf((BooleanSupplier) term.getSecond()));
+            ).andThen(
+//                    Commands.runOnce(()->System.out.println(cancel[0].getAsBoolean())),
+                    Commands.sequence(
+//                            Commands.runOnce(()->System.out.println(cancel[0].getAsBoolean())),
+                            Commands.defer(()-> (Command)term.getThird(), ((Command)term.getThird()).getRequirements()),
+                            Commands.defer(()->afterInterrupt, afterInterrupt.getRequirements())
+//                            Commands.none()
+//                            ,after
+//                            ,afterInterrupt
+                    ).onlyIf(()->cancel[0])
+//                    (((Command)term.getThird()).andThen(after)).onlyIf(cancel[0])
+//                    Commands.either(
+//                            (Command)term.getThird(),
+//                            after,
+//                            (BooleanSupplier) term.getSecond() // Only if its a single trip suppliergoddamnit
+//                    )
+            );
         }
         return cmd;
     }
