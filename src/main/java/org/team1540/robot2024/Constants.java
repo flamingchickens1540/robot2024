@@ -19,6 +19,12 @@ import org.team1540.robot2024.util.shooter.ShooterSetpoint;
  * constants are needed, to reduce verbosity.
  */
 public final class Constants {
+    public static final class DIO {
+        public static final int INTAKE_BEAM_BREAK = 6;
+        public static final int SHOOTER_BEAM_BREAK = 4;
+        public static final int INDEXER_BEAM_BREAK = 5;
+        public static final int TRAMP_BEAM_BREAK = 9;
+    }
     public static final boolean IS_COMPETITION_ROBOT = true;
     // Whether to pull PID constants from SmartDashboard
     private static final boolean tuningMode = true; // TODO: DO NOT SET TO TRUE FOR COMP
@@ -89,7 +95,6 @@ public final class Constants {
     }
 
     public static class Indexer {
-        public static final int BEAM_BREAK_ID = IS_COMPETITION_ROBOT ? 7 : 8;
         public static final int INTAKE_ID = 13;
         public static final int FEEDER_ID = 15;
 
@@ -257,7 +262,6 @@ public final class Constants {
     }
 
     public static class Tramp {
-        public static final int BEAM_BREAK_CHANNEL = 9;
         public static final double GEAR_RATIO = 9.0;
         public static final int MOTOR_ID = 17;
     }

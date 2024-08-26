@@ -4,6 +4,7 @@ import com.ctre.phoenix6.SignalLogger;
 import com.pathplanner.lib.commands.FollowPathCommand;
 import com.pathplanner.lib.commands.PathfindingCommand;
 import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
@@ -30,6 +31,8 @@ import org.team1540.robot2024.util.vision.LimelightHelpers;
 public class Robot extends LoggedRobot {
     private Command autonomousCommand;
     private RobotContainer robotContainer;
+    private DigitalInput intakeBeamBreak = new DigitalInput(Constants.DIO.INTAKE_BEAM_BREAK);
+    private DigitalInput shooterBeamBreak = new DigitalInput(Constants.DIO.SHOOTER_BEAM_BREAK);
 
     /**
      * This function is run when the robot is first started up and should be used for any
@@ -122,7 +125,8 @@ public class Robot extends LoggedRobot {
         // the Command-based framework to work.
         CommandScheduler.getInstance().run();
         if (Constants.currentMode == Constants.Mode.REAL) robotContainer.odometrySignalRefresher.periodic();
-
+        Logger.recordOutput("beambreak/shooter", shooterBeamBreak.get());
+        Logger.recordOutput("beambreak/intake", intakeBeamBreak.get());
         // Update mechanism visualiser in sim
         if (Robot.isSimulation()) MechanismVisualiser.periodic();
 //        robotContainer.leds.setPattern(Leds.Zone.ZONE1, SimpleLedPattern.alternating(Color.kBlueViolet, Color.kGreen));
