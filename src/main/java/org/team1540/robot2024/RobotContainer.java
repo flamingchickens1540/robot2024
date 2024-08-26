@@ -13,9 +13,7 @@ import org.littletonrobotics.junction.Logger;
 import org.team1540.robot2024.commands.FeedForwardCharacterization;
 import org.team1540.robot2024.commands.autos.*;
 import org.team1540.robot2024.commands.climb.ClimbAlignment;
-import org.team1540.robot2024.commands.drivetrain.DriveWithAmpSideLock;
-import org.team1540.robot2024.commands.drivetrain.SwerveDriveCommand;
-import org.team1540.robot2024.commands.drivetrain.WheelRadiusCharacterization;
+import org.team1540.robot2024.commands.drivetrain.*;
 import org.team1540.robot2024.commands.elevator.ElevatorManualCommand;
 import org.team1540.robot2024.commands.indexer.ContinuousIntakeCommand;
 import org.team1540.robot2024.commands.indexer.IntakeAndFeed;
@@ -166,8 +164,16 @@ public class RobotContainer {
 
         // TODO remove this
         if (isTuningMode()) {
-            driver.leftTrigger().whileTrue(new AutoShootPrepareWhileMoving(driver.getHID(), drivetrain, shooter).alongWith(leds.commandShowPattern(new LedPatternWave("#00ff00"), Leds.PatternLevel.DRIVER_LOCK)));
+//            driver.leftTrigger().whileTrue(new AutoShootPrepareWhileMoving(driver.getHID(), drivetrain, shooter).alongWith(leds.commandShowPattern(new LedPatternWave("#00ff00"), Leds.PatternLevel.DRIVER_LOCK)));
             driver.a().whileTrue(new TuneShooterCommand(shooter, indexer, drivetrain::getPose));
+//            driver.leftTrigger().whileTrue(new DriveWithCorrectionCommand(drivetrain, driver, ()->drivetrain.getPose()
+//                    .minus(Constants.Targeting.getSpeakerPose()).getTranslation().getAngle()
+//                    .rotateBy(DriverStation.getAlliance().orElse(null) == DriverStation.Alliance.Red ? Rotation2d.fromDegrees(180) : Rotation2d.fromDegrees(0))
+//                    .minus(drivetrain.getRotation()).getDegrees()
+//                    )
+//            );
+//            drivetrain.getRotation();
+            driver.leftTrigger().whileTrue(new DriveWithCorrectionCommand(drivetrain, driver, ()-> 10.0));
         }
 
         driver.povDown().and(() -> !DriverStation.isFMSAttached()).onTrue(Commands.runOnce(() -> drivetrain.setPose(new Pose2d(Units.inchesToMeters(260), Units.inchesToMeters(161.62), Rotation2d.fromRadians(0)))).ignoringDisable(true));

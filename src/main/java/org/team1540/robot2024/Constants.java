@@ -279,20 +279,24 @@ public final class Constants {
         private static final Pose2d COUNTER_SHUFFLE_POSE =
                 new Pose2d(SPEAKER_POSE.getX() + 8.27, SPEAKER_POSE.getY(), new Rotation2d());
 
+        public static boolean getFlipped(){
+            return DriverStation.getAlliance().orElse(null) == DriverStation.Alliance.Red;
+        }
+
         public static Pose2d getSpeakerPose() {
-            return DriverStation.getAlliance().orElse(null) == DriverStation.Alliance.Red
+            return getFlipped()
                     ? GeometryUtil.flipFieldPose(SPEAKER_POSE)
                     : SPEAKER_POSE;
         }
 
         public static Pose2d getShufflePose() {
-            return DriverStation.getAlliance().orElse(null) == DriverStation.Alliance.Red
+            return getFlipped()
                     ? GeometryUtil.flipFieldPose(SHUFFLE_POSE)
                     : SHUFFLE_POSE;
         }
 
         public static Pose2d getCounterShufflePose() {
-            return DriverStation.getAlliance().orElse(null) == DriverStation.Alliance.Red
+            return getFlipped()
                     ? GeometryUtil.flipFieldPose(COUNTER_SHUFFLE_POSE)
                     : COUNTER_SHUFFLE_POSE;
         }
