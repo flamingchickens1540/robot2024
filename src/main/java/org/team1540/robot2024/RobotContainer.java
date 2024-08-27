@@ -33,6 +33,7 @@ import org.team1540.robot2024.util.CommandUtils;
 import org.team1540.robot2024.util.PhoenixTimeSyncSignalRefresher;
 import org.team1540.robot2024.util.auto.AutoCommand;
 import org.team1540.robot2024.util.auto.AutoManager;
+import org.team1540.robot2024.util.vision.LimelightHelpers;
 
 import java.util.function.BooleanSupplier;
 
@@ -166,14 +167,9 @@ public class RobotContainer {
         if (isTuningMode()) {
 //            driver.leftTrigger().whileTrue(new AutoShootPrepareWhileMoving(driver.getHID(), drivetrain, shooter).alongWith(leds.commandShowPattern(new LedPatternWave("#00ff00"), Leds.PatternLevel.DRIVER_LOCK)));
             driver.a().whileTrue(new TuneShooterCommand(shooter, indexer, drivetrain::getPose));
-//            driver.leftTrigger().whileTrue(new DriveWithCorrectionCommand(drivetrain, driver, ()->drivetrain.getPose()
-//                    .minus(Constants.Targeting.getSpeakerPose()).getTranslation().getAngle()
-//                    .rotateBy(DriverStation.getAlliance().orElse(null) == DriverStation.Alliance.Red ? Rotation2d.fromDegrees(180) : Rotation2d.fromDegrees(0))
-//                    .minus(drivetrain.getRotation()).getDegrees()
-//                    )
-//            );
 //            drivetrain.getRotation();
-            driver.leftTrigger().whileTrue(new DriveWithCorrectionCommand(drivetrain, driver, ()-> 10.0));
+//            driver.leftTrigger().whileTrue(new DriveWithCorrectionCommand(drivetrain, driver, ()-> LimelightHelpers.getTX(Constants.Vision.VISION_CAMERA_NAME)));
+            driver.leftTrigger().whileTrue(new SpitShoot(shooter, indexer));
         }
 
         driver.povDown().and(() -> !DriverStation.isFMSAttached()).onTrue(Commands.runOnce(() -> drivetrain.setPose(new Pose2d(Units.inchesToMeters(260), Units.inchesToMeters(161.62), Rotation2d.fromRadians(0)))).ignoringDisable(true));

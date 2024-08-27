@@ -30,27 +30,28 @@ public class ATestAuto extends AutoCommand {
 //                getPath(0).getCommand(drivetrain),
 
                 getPath(0).withInterrupt(
-                        Commands.sequence(
+                        ()->Commands.sequence(
                                 getPath(0).getCommand(drivetrain),
                                 Commands.waitSeconds(1),
                                 getPath(1).withInterrupt(
+                                        ()->
                                         Commands.sequence(
                                                 getPath(1).getCommand(drivetrain),
                                                 Commands.waitSeconds(1),
                                                 getPath(2).getCommand(drivetrain)
                                         ),
-                                        getPath(4).getCommand(drivetrain, false),
-                                        new Triplet<>(0, ()->true, Commands.none()),
-                                        new Triplet<>(1, ()->false, Commands.none())
+                                        ()->getPath(4).getCommand(drivetrain, false),
+                                        new Triplet<>(0, ()->true, Commands::none),
+                                        new Triplet<>(1, ()->false, Commands::none)
                                 )
                         ),
-                        Commands.sequence(
+                        ()->Commands.sequence(
                                 getPath(3).getCommand(drivetrain, false),
                                 Commands.waitSeconds(1),
                                 getPath(2).getCommand(drivetrain)
                         ),
-                        new Triplet<>(0, ()->true, Commands.none()),
-                        new Triplet<>(1, ()->false, Commands.none())
+                        new Triplet<>(0, ()->true, Commands::none),
+                        new Triplet<>(1, ()->false, Commands::none)
                 ),
                 Commands.print("HALLELUJAH")
 

@@ -89,18 +89,19 @@ public class PathHelper {
         return (isResetting ? resetCommand.andThen(command) : command);
     }
 
-    public Command withInterrupt(Drivetrain drivetrain, boolean shouldRealign, Triplet<Integer, BooleanSupplier, Command>... terms){
-        return withInterrupt(getCommand(drivetrain, shouldRealign), Commands.none(), terms);
-    }
+//    public Command withInterrupt(Drivetrain drivetrain, boolean shouldRealign, Triplet<Integer, BooleanSupplier, Command>... terms){
+//        return withInterrupt(getCommand(drivetrain, shouldRealign), Commands.none(), terms);
+//    }
     
-    public Command withInterrupt(Command cmd, Command afterInterrupt, Triplet<Integer, BooleanSupplier, Command>... terms){
+    public Command withInterrupt(Supplier<Command> cmd, Supplier<Command> afterInterrupt, Triplet<Integer, BooleanSupplier, Supplier<Command>>... terms){
         //FIXME MAJOR ISSUE MAYBE Command always causes crash on second auto run but theoretically it should be fine because we only run once
         Arrays.sort(terms, (o1, o2) -> -1* Double.compare(eventMarkers.get(o1.getFirst()).getWaypointRelativePos(), eventMarkers.get(o2.getFirst()).getWaypointRelativePos()));
+        Command tempCommand = cmd.get();
         for(int i = 0; i < terms.length; i += 1){
             Triplet term = terms[i];
             final boolean[] cancel = {false};
-            cmd = Commands.race(
-                    cmd,
+            tempCommand = Commands.race(
+                    tempCommand,
                     Commands.sequence(
                             Commands.waitSeconds(eventMarkers.get((int)term.getFirst()).getWaypointRelativePos()),
                             new ConditionalCommand(
@@ -113,8 +114,10 @@ public class PathHelper {
 //                    Commands.runOnce(()->System.out.println(cancel[0].getAsBoolean())),
                     Commands.sequence(
 //                            Commands.runOnce(()->System.out.println(cancel[0].getAsBoolean())),
-                            Commands.defer(()-> (Command)term.getThird(), ((Command)term.getThird()).getRequirements()),
-                            Commands.defer(()->afterInterrupt, afterInterrupt.getRequirements())
+                            ((Supplier<Command>) term.getThird()).get(),
+//                            Commands.defer(()-> (Command)term.getThird(), ((Command)term.getThird()).getRequirements()),
+                            afterInterrupt.get()
+//                            Commands.defer(()->afterInterrupt.get(), afterInterrupt.get().getRequirements())
 //                            Commands.none()
 //                            ,after
 //                            ,afterInterrupt
@@ -127,7 +130,7 @@ public class PathHelper {
 //                    )
             );
         }
-        return cmd;
+        return tempCommand;
     }
 
     public Command resetToInitialPose(Drivetrain drivetrain){
