@@ -169,7 +169,9 @@ public class RobotContainer {
             driver.a().whileTrue(new TuneShooterCommand(shooter, indexer, drivetrain::getPose));
 //            drivetrain.getRotation();
 //            driver.leftTrigger().whileTrue(new DriveWithCorrectionCommand(drivetrain, driver, ()-> LimelightHelpers.getTX(Constants.Vision.VISION_CAMERA_NAME)));
-            driver.leftTrigger().whileTrue(new SpitShoot(shooter, indexer));
+//            driver.leftTrigger().whileTrue(new SpitShoot(shooter, indexer));
+            driver.leftTrigger().whileTrue(new DriveWithCorrectionCommand2(drivetrain, driver,
+        ()-> Constants.Targeting.getSpeakerPose().getTranslation().minus(drivetrain.getPose().getTranslation()).getAngle().getDegrees()));
         }
 
         driver.povDown().and(() -> !DriverStation.isFMSAttached()).onTrue(Commands.runOnce(() -> drivetrain.setPose(new Pose2d(Units.inchesToMeters(260), Units.inchesToMeters(161.62), Rotation2d.fromRadians(0)))).ignoringDisable(true));
