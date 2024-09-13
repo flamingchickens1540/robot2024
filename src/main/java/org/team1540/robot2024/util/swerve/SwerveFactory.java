@@ -47,7 +47,6 @@ public class SwerveFactory {
         public final TalonFX driveMotor;
         public final TalonFX turnMotor;
         public final CANcoder cancoder;
-
         private SwerveModuleHW(int id, SwerveCorner corner, String canbus) {
             if (id < 1 || id > 9) {
                 throw new IllegalArgumentException("Swerve module id must be between 1 and 9");
