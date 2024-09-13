@@ -16,7 +16,8 @@ public class NoteVisionIOLimelight implements NoteVisionIO {
 
     @Override
     public void updateInputs(NoteVisionIOInputs inputs) {
-        if (LimelightHelpers.getTV(name)) {
+        inputs.hasDetection = LimelightHelpers.getTV(name);
+        if (inputs.hasDetection) {
             inputs.lastDetectionTimestampSecs =
                     (LimelightHelpers.getLimelightNTTableEntry(name, "tv").getLastChange() / 1000000.0)
                             - ((LimelightHelpers.getLatency_Capture(name) + LimelightHelpers.getLatency_Pipeline(name))

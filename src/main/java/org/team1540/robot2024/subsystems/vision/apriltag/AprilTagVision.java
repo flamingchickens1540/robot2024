@@ -9,7 +9,6 @@ import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import org.littletonrobotics.junction.Logger;
 import org.team1540.robot2024.Constants;
-import org.team1540.robot2024.subsystems.vision.AprilTagVisionIOInputsAutoLogged;
 import org.team1540.robot2024.util.vision.EstimatedVisionPose;
 
 import java.util.function.Consumer;
@@ -37,7 +36,7 @@ public class AprilTagVision extends SubsystemBase {
             AprilTagVisionIO rearCameraIO,
             Consumer<EstimatedVisionPose> visionPoseConsumer,
             Supplier<Double> elevatorHeightSupplierMeters) {
-        if (hasInstance) throw new IllegalStateException("Instance of vision already exists");
+        if (hasInstance) throw new IllegalStateException("Instance of AprilTagVision already exists");
         hasInstance = true;
 
         this.frontCameraIO = frontCameraIO;

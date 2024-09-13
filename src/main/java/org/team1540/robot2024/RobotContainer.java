@@ -29,6 +29,7 @@ import org.team1540.robot2024.subsystems.led.patterns.*;
 import org.team1540.robot2024.subsystems.shooter.Shooter;
 import org.team1540.robot2024.subsystems.tramp.Tramp;
 import org.team1540.robot2024.subsystems.vision.apriltag.AprilTagVision;
+import org.team1540.robot2024.subsystems.vision.gamepiece.NoteVision;
 import org.team1540.robot2024.util.CommandUtils;
 import org.team1540.robot2024.util.PhoenixTimeSyncSignalRefresher;
 import org.team1540.robot2024.util.auto.AutoCommand;
@@ -47,6 +48,7 @@ public class RobotContainer {
     public final Elevator elevator;
     public final Indexer indexer;
     public final AprilTagVision aprilTagVision;
+    public final NoteVision noteVision;
     public final Leds leds = new Leds();
 
     // Controller
@@ -54,8 +56,6 @@ public class RobotContainer {
     public final CommandXboxController copilot = new CommandXboxController(1);
 
     public final PhoenixTimeSyncSignalRefresher odometrySignalRefresher = new PhoenixTimeSyncSignalRefresher(SwerveConfig.CAN_BUS);
-
-
 
     public boolean isBrakeMode;
     /**
@@ -76,6 +76,7 @@ public class RobotContainer {
                             drivetrain::addVisionMeasurement,
                             elevator::getPosition,
                             drivetrain::getRotation);
+                    noteVision = NoteVision.createReal();
                 } else {
                     elevator = Elevator.createDummy();
                     drivetrain = Drivetrain.createReal(odometrySignalRefresher, () -> 0.0);
@@ -83,6 +84,7 @@ public class RobotContainer {
                     shooter = Shooter.createDummy();
                     indexer = Indexer.createDummy();
                     aprilTagVision = AprilTagVision.createDummy();
+                    noteVision = NoteVision.createDummy();
                 }
             }
             case SIM -> {
@@ -96,6 +98,7 @@ public class RobotContainer {
                         drivetrain::addVisionMeasurement,
                         drivetrain::getPose,
                         elevator::getPosition);
+                noteVision = NoteVision.createSim();
             }
             default -> {
                 // Replayed robot, disable IO implementations
@@ -105,6 +108,7 @@ public class RobotContainer {
                 shooter = Shooter.createDummy();
                 indexer = Indexer.createDummy();
                 aprilTagVision = AprilTagVision.createDummy();
+                noteVision = NoteVision.createDummy();
             }
         }
 
