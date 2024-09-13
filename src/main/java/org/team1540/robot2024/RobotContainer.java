@@ -28,12 +28,11 @@ import org.team1540.robot2024.subsystems.led.Leds;
 import org.team1540.robot2024.subsystems.led.patterns.*;
 import org.team1540.robot2024.subsystems.shooter.Shooter;
 import org.team1540.robot2024.subsystems.tramp.Tramp;
-import org.team1540.robot2024.subsystems.vision.AprilTagVision;
+import org.team1540.robot2024.subsystems.vision.apriltag.AprilTagVision;
 import org.team1540.robot2024.util.CommandUtils;
 import org.team1540.robot2024.util.PhoenixTimeSyncSignalRefresher;
 import org.team1540.robot2024.util.auto.AutoCommand;
 import org.team1540.robot2024.util.auto.AutoManager;
-import org.team1540.robot2024.util.vision.LimelightHelpers;
 
 import java.util.function.BooleanSupplier;
 
