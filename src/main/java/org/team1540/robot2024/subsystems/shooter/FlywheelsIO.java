@@ -9,11 +9,13 @@ public interface FlywheelsIO {
         public double leftCurrentAmps = 0.0;
         public double leftVelocityRPM = 0.0;
         public double leftTempCelsius = 0.0;
+        public boolean leftMotorConnected = true;
 
         public double rightAppliedVolts = 0.0;
         public double rightCurrentAmps = 0.0;
         public double rightVelocityRPM = 0.0;
         public double rightTempCelsius = 0.0;
+        public boolean rightMotorConnected = true;
     }
 
     /**

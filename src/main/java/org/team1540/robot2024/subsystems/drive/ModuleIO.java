@@ -11,6 +11,7 @@ public interface ModuleIO {
         public double driveAppliedVolts = 0.0;
         public double driveCurrentAmps = 0.0;
         public double driveTempCelsius = 0.0;
+        public boolean driveMotorConnected = true;
 
         public Rotation2d turnAbsolutePosition = new Rotation2d();
         public Rotation2d turnPosition = new Rotation2d();
@@ -18,6 +19,8 @@ public interface ModuleIO {
         public double turnAppliedVolts = 0.0;
         public double turnCurrentAmps = 0.0;
         public double turnTempCelsius = 0.0;
+        public boolean turnMotorConnected = true;
+        public boolean turnEncoderConnected = true;
     }
 
     /**

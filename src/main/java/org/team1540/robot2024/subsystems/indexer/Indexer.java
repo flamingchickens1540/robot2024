@@ -9,6 +9,7 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import org.littletonrobotics.junction.AutoLogOutput;
 import org.littletonrobotics.junction.Logger;
 import org.team1540.robot2024.Constants;
+import org.team1540.robot2024.util.Alert;
 import org.team1540.robot2024.util.LoggedTunableNumber;
 
 import static org.team1540.robot2024.Constants.Indexer.*;
@@ -21,6 +22,9 @@ public class Indexer extends SubsystemBase {
     private final LoggedTunableNumber kP = new LoggedTunableNumber("Indexer/kP", FEEDER_KP);
     private final LoggedTunableNumber kI = new LoggedTunableNumber("Indexer/kI", FEEDER_KI);
     private final LoggedTunableNumber kD = new LoggedTunableNumber("Indexer/kD", FEEDER_KD);
+
+    private final Alert intakeMotorDisconnected = new Alert("Intake motor disconnected!", Alert.AlertType.WARNING);
+    private final Alert feederMotorDisconnected = new Alert("Feeder motor disconnected!", Alert.AlertType.WARNING);
 
     private double feederSetpointRPM = 0.0;
 
@@ -58,9 +62,12 @@ public class Indexer extends SubsystemBase {
         io.updateInputs(inputs);
         Logger.processInputs("Indexer", inputs);
 
-        if (RobotState.isDisabled()){
+        if (RobotState.isDisabled()) {
             stopAll();
         }
+
+        intakeMotorDisconnected.set(!inputs.intakeMotorConnected);
+        feederMotorDisconnected.set(!inputs.feederMotorConnected);
     }
 
     public void setIntakePercent(double percent) {

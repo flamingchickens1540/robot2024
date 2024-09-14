@@ -92,6 +92,8 @@ public class Robot extends LoggedRobot {
         // Start AdvantageKit logger
         Logger.start();
 
+        AlertManager.getInstance().start();
+
         DriverStation.silenceJoystickConnectionWarning(true);
 
         // Instantiate our RobotContainer. This will perform all our button bindings,
@@ -122,6 +124,7 @@ public class Robot extends LoggedRobot {
         // the Command-based framework to work.
         CommandScheduler.getInstance().run();
         if (Constants.currentMode == Constants.Mode.REAL) robotContainer.odometrySignalRefresher.periodic();
+        AlertManager.getInstance().update();
 
         // Update mechanism visualiser in sim
         if (Robot.isSimulation()) MechanismVisualiser.periodic();
