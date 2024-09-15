@@ -24,7 +24,7 @@ public class NoteVisionIOLimelight implements NoteVisionIO {
                             / 1000.0);
             inputs.targetPitchRads = Math.toRadians(LimelightHelpers.getTY(name));
             inputs.targetYawRads = Math.toRadians(LimelightHelpers.getTX(name));
-            inputs.targetAreaRads = LimelightHelpers.getTA(name);
+            inputs.targetArea = LimelightHelpers.getTA(name);
             inputs.targetClass = LimelightHelpers.getNeuralClassID(name);
         }
     }

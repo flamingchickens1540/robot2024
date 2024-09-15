@@ -9,7 +9,7 @@ public interface NoteVisionIO {
         public double lastDetectionTimestampSecs = 0.0;
         public double targetPitchRads = 0.0;
         public double targetYawRads = 0.0;
-        public double targetAreaRads = 0.0;
+        public double targetArea = 0.0;
         public String targetClass = "";
     }
 
