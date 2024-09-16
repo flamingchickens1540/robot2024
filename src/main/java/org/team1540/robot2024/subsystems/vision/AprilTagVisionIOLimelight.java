@@ -10,7 +10,6 @@ public class AprilTagVisionIOLimelight implements AprilTagVisionIO {
 
     public AprilTagVisionIOLimelight(String name, Pose3d cameraOffsetMeters) {
         this.name = name;
-        LimelightHelpers.setCameraMode_Processor(name);
         LimelightHelpers.setLEDMode_PipelineControl(name);
         setPoseOffset(cameraOffsetMeters);
     }

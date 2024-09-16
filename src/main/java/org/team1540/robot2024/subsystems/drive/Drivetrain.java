@@ -192,7 +192,6 @@ public class Drivetrain extends SubsystemBase {
         // Update odometry
         poseEstimator.update(rawGyroRotation, getModulePositions());
         visionPoseEstimator.update(rawGyroRotation, getModulePositions());
-
     }
 
     /**
@@ -285,9 +284,12 @@ public class Drivetrain extends SubsystemBase {
         }
         return driveVelocityAverage / 4.0;
     }
+
     @AutoLogOutput(key = "Odometry/ChassisSpeeds")
     public ChassisSpeeds getChassisSpeeds() {
-        return kinematics.toChassisSpeeds(getModuleStates());
+        ChassisSpeeds speeds = kinematics.toChassisSpeeds(getModuleStates());
+        if (gyroInputs.connected) speeds.omegaRadiansPerSecond = gyroInputs.yawVelocityRadPerSec;
+        return speeds;
     }
 
     @AutoLogOutput(key = "Odometry/ChassisSpeedMagnitude")

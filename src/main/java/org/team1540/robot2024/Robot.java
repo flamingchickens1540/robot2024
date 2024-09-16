@@ -105,9 +105,6 @@ public class Robot extends LoggedRobot {
         PathfindingCommand.warmupCommand().schedule();
 
         AprilTagsCrescendo.getInstance().getTag(1);
-
-        // Init driver cam
-        LimelightHelpers.setCameraMode_Driver("limelight-driver");
     }
 
     /**
