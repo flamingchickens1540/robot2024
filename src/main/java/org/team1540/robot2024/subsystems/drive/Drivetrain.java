@@ -288,6 +288,7 @@ public class Drivetrain extends SubsystemBase {
     @AutoLogOutput(key = "Odometry/ChassisSpeeds")
     public ChassisSpeeds getChassisSpeeds() {
         ChassisSpeeds speeds = kinematics.toChassisSpeeds(getModuleStates());
+        //FIXME: check to see if this does anything sus with autos
         if (gyroInputs.connected) speeds.omegaRadiansPerSecond = gyroInputs.yawVelocityRadPerSec;
         return speeds;
     }
