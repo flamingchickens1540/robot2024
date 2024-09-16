@@ -25,8 +25,7 @@ public class NoteVision extends SubsystemBase {
     public GamepieceDetection getLatestDetection() {
         return new GamepieceDetection(
                 inputs.lastDetectionTimestampSecs,
-                inputs.targetPitchRads,
-                inputs.targetYawRads,
+                inputs.targetRotation.rotateBy(CAMERA_POSE.getRotation().unaryMinus()),
                 inputs.targetArea,
                 inputs.targetClass);
     }

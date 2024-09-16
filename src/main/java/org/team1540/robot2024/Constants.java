@@ -110,10 +110,8 @@ public final class Constants {
         public static class AprilTag {
             public static final String FRONT_CAMERA_NAME = "limelight-front";
             public static final String REAR_CAMERA_NAME = "limelight-rear";
-            public static final String VISION_CAMERA_NAME = "limelight-vision";
             public static final Pose3d FRONT_CAMERA_POSE = new Pose3d(0.086018, 0, 0.627079, new Rotation3d(0, Math.toRadians(-40.843), 0));
             public static final Pose3d REAR_CAMERA_POSE = new Pose3d(0.046049, 0, 0.540510, new Rotation3d(Math.PI, Math.toRadians(10), Math.PI+Math.toRadians(1.55)));
-            public static final Pose3d VISION_CAMERA_POSE = new Pose3d(0, 0, 0, new Rotation3d(0, 0, 0)); //TODO FIND THIS POSE
             public static final boolean TAKE_SNAPSHOTS = true;
             public static final double SNAPSHOT_PERIOD_SECS = 1;
             public static final double XY_STD_DEV_COEFF = 0.1;
@@ -134,6 +132,7 @@ public final class Constants {
         public static class Gamepiece {
             public static final String CAMERA_NAME = "limelight-notevision";
             public static final int PIPELINE_INDEX = 0;
+            public static final Pose3d CAMERA_POSE = new Pose3d(0, 0, 0, new Rotation3d(0, 0, 0)); //TODO FIND THIS POSE
         }
     }
 

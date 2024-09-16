@@ -1,8 +1,9 @@
 package org.team1540.robot2024.util.vision;
 
+import edu.wpi.first.math.geometry.Rotation3d;
+
 public record GamepieceDetection(
         double timestampSecs,
-        double yawRads,
-        double pitchRads,
-        double areaRads,
+        Rotation3d rotation, // Robot relative gamepiece rotation
+        double area,
         String targetClass) {}
