@@ -130,7 +130,7 @@ public final class Constants {
         }
 
         public static class Gamepiece {
-            public static final String CAMERA_NAME = "limelight-notevision";
+            public static final String CAMERA_NAME = "limelight-note";
             public static final int PIPELINE_INDEX = 0;
             public static final Pose3d CAMERA_POSE = new Pose3d(0, 0, 0, new Rotation3d(0, 0, 0)); //TODO FIND THIS POSE
         }
