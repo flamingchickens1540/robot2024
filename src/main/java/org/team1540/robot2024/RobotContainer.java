@@ -147,6 +147,7 @@ public class RobotContainer {
                 .alongWith(leds.commandShowPattern(
                         new LedPatternProgressBar(shooter::getSpinUpPercent, "#00ffbc", 33),
                         Leds.PatternLevel.DRIVER_LOCK));
+
         Command ampLock = new DriveWithAmpSideLock(drivetrain, driver.getHID())
                 .alongWith(leds.commandShowPattern(new LedPatternWave("#ffffff"), Leds.PatternLevel.DRIVER_LOCK));
         Command cancelAlignment = Commands.runOnce(() -> {

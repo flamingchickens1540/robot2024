@@ -39,7 +39,7 @@ public class IndexerIOSim implements IndexerIO {
         inputs.feederCurrentAmps = feederSim.getCurrentDrawAmps();
         inputs.feederVoltage = feederVoltage;
         inputs.feederVelocityRPM = feederSim.getAngularVelocityRPM();
-        inputs.noteInIntake = indexerBeamBreak.get();
+        inputs.noteInIndexer = indexerBeamBreak.get();
     }
 
     @Override
