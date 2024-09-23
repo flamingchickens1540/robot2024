@@ -5,6 +5,7 @@ import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import java.util.function.Supplier;
 
 import static org.team1540.robot2024.Constants.Vision.*;
+import static org.team1540.robot2024.Constants.Vision.AprilTag.*;
 
 public class VisionPoseAcceptor {
     private final Supplier<ChassisSpeeds> robotVelocitySupplier;

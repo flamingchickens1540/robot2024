@@ -112,31 +112,33 @@ public final class Constants {
 
 
     public static class Vision {
-        public static final String FRONT_CAMERA_NAME = "limelight-front";
-        public static final String REAR_CAMERA_NAME = "limelight-rear";
-        public static final String VISION_CAMERA_NAME = "limelight-vision";
-        public static final Pose3d FRONT_CAMERA_POSE = new Pose3d(0.086018, 0, 0.627079, new Rotation3d(0, Math.toRadians(-40.843), 0));
-        public static final Pose3d REAR_CAMERA_POSE = new Pose3d(0.046049, 0, 0.540510, new Rotation3d(Math.PI, Math.toRadians(10), Math.PI+Math.toRadians(1.55)));
-        public static final Pose3d VISION_CAMERA_POSE = new Pose3d(0, 0, 0, new Rotation3d(0, 0, 0)); //TODO FIND THIS POSE
+        public static class AprilTag {
+            public static final String FRONT_CAMERA_NAME = "limelight-front";
+            public static final String REAR_CAMERA_NAME = "limelight-rear";
+            public static final Pose3d FRONT_CAMERA_POSE = new Pose3d(0.086018, 0, 0.627079, new Rotation3d(0, Math.toRadians(-40.843), 0));
+            public static final Pose3d REAR_CAMERA_POSE = new Pose3d(0.046049, 0, 0.540510, new Rotation3d(Math.PI, Math.toRadians(10), Math.PI+Math.toRadians(1.55)));
+            public static final boolean TAKE_SNAPSHOTS = true;
+            public static final double SNAPSHOT_PERIOD_SECS = 1;
+            public static final double XY_STD_DEV_COEFF = 0.1;
+            public static final double ROT_STD_DEV_COEFF = 0.5;
+            public static final double MAX_AMBIGUITY_RATIO = 0.3;
+            public static final double MAX_ACCEPTED_ROT_SPEED_RAD_PER_SEC = 1.0;
+            public static final double MAX_ACCEPTED_LINEAR_SPEED_MPS = 4.0;
+            public static final double MIN_ACCEPTED_NUM_TAGS = 1;
+            public static final double MAX_ACCEPTED_AVG_TAG_DIST_METERS = 8.0;
+            public static final double MAX_ACCEPTED_ELEVATOR_SPEED_MPS = 0.05;
+            public static final int SIM_RES_WIDTH = 1280;
+            public static final int SIM_RES_HEIGHT = 960;
+            public static final Rotation2d SIM_DIAGONAL_FOV = Rotation2d.fromDegrees(70);
+            public static final double SIM_FPS = 14.5;
+            public static final double SIM_AVG_LATENCY_MS = 100;
+        }
 
-        public static final boolean TAKE_SNAPSHOTS = true;
-        public static final double SNAPSHOT_PERIOD_SECS = 1;
-
-        public static final double XY_STD_DEV_COEFF = 0.1;
-        public static final double ROT_STD_DEV_COEFF = 0.5;
-
-        public static final double MAX_AMBIGUITY_RATIO = 0.3;
-        public static final double MAX_ACCEPTED_ROT_SPEED_RAD_PER_SEC = 1.0;
-        public static final double MAX_ACCEPTED_LINEAR_SPEED_MPS = 4.0;
-        public static final double MIN_ACCEPTED_NUM_TAGS = 1;
-        public static final double MAX_ACCEPTED_AVG_TAG_DIST_METERS = 8.0;
-        public static final double MAX_ACCEPTED_ELEVATOR_SPEED_MPS = 0.05;
-
-        public static final int SIM_RES_WIDTH = 1280;
-        public static final int SIM_RES_HEIGHT = 960;
-        public static final Rotation2d SIM_DIAGONAL_FOV = Rotation2d.fromDegrees(70);
-        public static final double SIM_FPS = 14.5;
-        public static final double SIM_AVG_LATENCY_MS = 100;
+        public static class Gamepiece {
+            public static final String CAMERA_NAME = "limelight-note";
+            public static final int PIPELINE_INDEX = 0;
+            public static final Pose3d CAMERA_POSE = new Pose3d(0, 0, 0, new Rotation3d(0, 0, 0)); //TODO FIND THIS POSE
+        }
     }
 
 
