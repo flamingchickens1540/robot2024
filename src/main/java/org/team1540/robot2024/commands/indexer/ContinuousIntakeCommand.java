@@ -35,17 +35,14 @@ public class ContinuousIntakeCommand extends Command {
 
     @Override
     public void execute() {
-        if (indexer.isNoteStaged()) {
+        if (indexer.getNoteState() == Indexer.NotePosition.INDEXER) {
             indexer.stopIntake();
             if (leds != null) {
                 leds.clearPatternAll(Leds.PatternLevel.INTAKE_PREREADY);
             }
         } else {
             if (leds != null) {
-                if (indexer.getIntakeVoltage() == 0) {
-                    timer.restart();
-                }
-                if (timer.hasElapsed(0.3) && indexer.getIntakeCurrent() > 30) {
+                if (indexer.getNoteState() == Indexer.NotePosition.INTAKE) {
                     leds.setPatternAll(detected, Leds.PatternLevel.INTAKE_PREREADY);
                 }
             }

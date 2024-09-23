@@ -19,6 +19,12 @@ import org.team1540.robot2024.util.shooter.ShooterSetpoint;
  * constants are needed, to reduce verbosity.
  */
 public final class Constants {
+    public static final class DIO {
+        public static final int INTAKE_BEAM_BREAK = 6;
+        public static final int SHOOTER_BEAM_BREAK = 4;
+        public static final int INDEXER_BEAM_BREAK = 5;
+        public static final int TRAMP_BEAM_BREAK = 9;
+    }
     public static final boolean IS_COMPETITION_ROBOT = true;
     // Whether to pull PID constants from SmartDashboard
     private static final boolean tuningMode = true; // TODO: DO NOT SET TO TRUE FOR COMP
@@ -61,11 +67,11 @@ public final class Constants {
     }
 
     public static class Drivetrain {
-        public static final boolean IS_L3 = !IS_COMPETITION_ROBOT;
+        public static final boolean IS_L3 = true;
         public static final double DRIVE_GEAR_RATIO = (50.0 / 14.0) * (IS_L3 ? 16.0 / 28.0 : 17.0 / 27.0) * (45.0 / 15.0);
         public static final double TURN_GEAR_RATIO = 150.0 / 7.0;
         public static final boolean IS_TURN_MOTOR_INVERTED = true;
-        public static final double WHEEL_RADIUS = Units.inchesToMeters(1.9448479168443666);
+        public static final double WHEEL_RADIUS = Units.inchesToMeters(1.9836954390238841);
 
         public static final double MAX_LINEAR_SPEED = Units.feetToMeters(IS_L3 ? 16.0 : 15.7);
         public static final double TRACK_WIDTH_X = Units.inchesToMeters(18.75);
@@ -89,7 +95,6 @@ public final class Constants {
     }
 
     public static class Indexer {
-        public static final int BEAM_BREAK_ID = IS_COMPETITION_ROBOT ? 7 : 8;
         public static final int INTAKE_ID = 13;
         public static final int FEEDER_ID = 15;
 
@@ -258,7 +263,6 @@ public final class Constants {
     }
 
     public static class Tramp {
-        public static final int BEAM_BREAK_CHANNEL = 9;
         public static final double GEAR_RATIO = 9.0;
         public static final int MOTOR_ID = 17;
     }

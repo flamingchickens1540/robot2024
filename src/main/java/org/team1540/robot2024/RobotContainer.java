@@ -15,6 +15,7 @@ import org.team1540.robot2024.commands.autos.*;
 import org.team1540.robot2024.commands.climb.ClimbAlignment;
 import org.team1540.robot2024.commands.drivetrain.*;
 import org.team1540.robot2024.commands.elevator.ElevatorManualCommand;
+import org.team1540.robot2024.commands.elevator.ElevatorSetpointCommand;
 import org.team1540.robot2024.commands.indexer.ContinuousIntakeCommand;
 import org.team1540.robot2024.commands.indexer.IntakeAndFeed;
 import org.team1540.robot2024.commands.indexer.StageTrampCommand;
@@ -148,6 +149,7 @@ public class RobotContainer {
                 .alongWith(leds.commandShowPattern(
                         new LedPatternProgressBar(shooter::getSpinUpPercent, "#00ffbc", 33),
                         Leds.PatternLevel.DRIVER_LOCK));
+
         Command ampLock = new DriveWithAmpSideLock(drivetrain, driver.getHID())
                 .alongWith(leds.commandShowPattern(new LedPatternWave("#ffffff"), Leds.PatternLevel.DRIVER_LOCK));
         Command cancelAlignment = Commands.runOnce(() -> {
@@ -191,6 +193,10 @@ public class RobotContainer {
         copilot.povUp().whileTrue(indexer.commandRunIntake(1));
         copilot.povRight().whileTrue(IntakeAndFeed.withDefaults(indexer)).onFalse(cancelAlignment);
         copilot.povLeft().onTrue(Commands.runOnce(()->elevator.setFlipper(true))).onFalse(Commands.runOnce(()->elevator.setFlipper(false)));
+//        copilot.povDown().whileTrue(new ElevatorSetpointCommand(elevator, Constants.Elevator.ElevatorState.BOTTOM));
+//        copilot.povUp().whileTrue(new ElevatorSetpointCommand(elevator, Constants.Elevator.ElevatorState.TOP));
+//        copilot.povRight().whileTrue(new ElevatorSetpointCommand(elevator, Constants.Elevator.ElevatorState.CLIMB));
+//        copilot.povLeft().whileTrue(new ElevatorSetpointCommand(elevator, Constants.Elevator.ElevatorState.AMP));
 
 
         copilot.rightTrigger(0.95).whileTrue(tramp.commandRun(1));

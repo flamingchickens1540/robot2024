@@ -7,12 +7,12 @@ import com.ctre.phoenix6.hardware.TalonFX;
 import com.ctre.phoenix6.signals.InvertedValue;
 import com.ctre.phoenix6.signals.NeutralModeValue;
 import edu.wpi.first.wpilibj.DigitalInput;
+import org.team1540.robot2024.Constants;
 
-import static org.team1540.robot2024.Constants.Tramp.BEAM_BREAK_CHANNEL;
 import static org.team1540.robot2024.Constants.Tramp.MOTOR_ID;
 
 public class TrampIOTalonFX implements TrampIO {
-    private final DigitalInput beamBreak = new DigitalInput(BEAM_BREAK_CHANNEL);
+    private final DigitalInput beamBreak = new DigitalInput(Constants.DIO.TRAMP_BEAM_BREAK);
     private final TalonFX motor = new TalonFX(MOTOR_ID);
     private final StatusSignal<Double> velocity = motor.getVelocity();
     private final StatusSignal<Double> position = motor.getPosition();
