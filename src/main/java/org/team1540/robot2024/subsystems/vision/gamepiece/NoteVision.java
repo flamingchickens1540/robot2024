@@ -1,6 +1,7 @@
 package org.team1540.robot2024.subsystems.vision.gamepiece;
 
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import org.littletonrobotics.junction.Logger;
 import org.team1540.robot2024.util.vision.GamepieceDetection;
 
 import static org.team1540.robot2024.Constants.Vision.Gamepiece.*;
@@ -20,6 +21,7 @@ public class NoteVision extends SubsystemBase {
     @Override
     public void periodic() {
         io.updateInputs(inputs);
+        Logger.processInputs("NoteVision", inputs);
     }
 
     public GamepieceDetection getLatestDetection() {
