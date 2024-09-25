@@ -10,6 +10,7 @@ import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import org.littletonrobotics.junction.Logger;
+import org.team1540.robot2024.Constants.SwerveConfig;
 import org.team1540.robot2024.commands.FeedForwardCharacterization;
 import org.team1540.robot2024.commands.autos.*;
 import org.team1540.robot2024.commands.climb.ClimbAlignment;
@@ -26,6 +27,7 @@ import org.team1540.robot2024.subsystems.drive.Drivetrain;
 import org.team1540.robot2024.subsystems.elevator.Elevator;
 import org.team1540.robot2024.subsystems.indexer.Indexer;
 import org.team1540.robot2024.subsystems.led.Leds;
+import org.team1540.robot2024.subsystems.led.Leds.PatternLevel;
 import org.team1540.robot2024.subsystems.led.patterns.*;
 import org.team1540.robot2024.subsystems.shooter.Shooter;
 import org.team1540.robot2024.subsystems.tramp.Tramp;
@@ -193,7 +195,7 @@ public class RobotContainer {
         copilot.back().onTrue(Commands.runOnce(shooter::zeroPivotToCancoder).andThen(Commands.print("BACK IS PRESSED")));
 
         copilot.leftBumper().whileTrue(new AmpScoreSequence(tramp, indexer, elevator));
-        Command intakeCommand = new ContinuousIntakeCommand(indexer, leds, 1)
+        Command intakeCommand = new ContinuousIntakeCommand(indexer, 1)
                 .deadlineWith(CommandUtils.rumbleCommand(driver, 0.5), CommandUtils.rumbleCommand(copilot, 0.5));
         copilot.rightBumper().whileTrue(intakeCommand);
 
@@ -230,7 +232,10 @@ public class RobotContainer {
 
         new Trigger(indexer::isNoteStaged).debounce(0.05)
                 .onTrue(CommandUtils.rumbleCommandTimed(driver.getHID(), 1, 1))
-                .whileTrue(leds.commandShowIntakePattern(SimpleLedPattern.solid("#ff0000")));
+                .whileTrue(leds.commandShowFullPattern(SimpleLedPattern.solid("#ff0000"), PatternLevel.INTAKE_STATE));
+
+        new Trigger(() -> indexer.getNoteState() == Indexer.NotePosition.INTAKE).debounce(0.05)
+                .whileTrue(leds.commandShowFullPattern(SimpleLedPattern.solid("#ffff00"), PatternLevel.INTAKE_PREREADY));
 
         new Trigger(tramp::isNoteStaged).debounce(0.1)
                 .whileTrue(leds.commandShowTrampPattern(SimpleLedPattern.solid("#ff9900")));
