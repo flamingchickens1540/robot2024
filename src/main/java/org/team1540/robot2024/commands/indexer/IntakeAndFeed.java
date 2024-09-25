@@ -11,7 +11,7 @@ public class IntakeAndFeed extends Command {
     private final DoubleSupplier feederPercent;
 
     public static Command withDefaults(Indexer indexer) {
-        return new IntakeAndFeed(indexer, () -> 0.8, () -> 1);
+        return new IntakeAndFeed(indexer, () -> 0.9, () -> 1);
     }
 
     public IntakeAndFeed(Indexer indexer, DoubleSupplier intakePercent, DoubleSupplier feederPercent) {
