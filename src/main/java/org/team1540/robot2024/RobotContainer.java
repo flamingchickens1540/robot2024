@@ -333,7 +333,7 @@ public class RobotContainer {
         }
         autos.add(new AutoCommand("WheelRadiusChar", new WheelRadiusCharacterization(drivetrain, WheelRadiusCharacterization.Direction.COUNTER_CLOCKWISE)));
         autos.addDefault(new AutoCommand("Dwayne :skull:"));
-        autos.addDefault(new ATestAuto(drivetrain, shooter, indexer));
+//        autos.addDefault(new ATestAuto(drivetrain, shooter, indexer));
 //        autos.add(new AmpLanePADEF(drivetrain, shooter, indexer));
 //        autos.add(new AmpLanePAEDF(drivetrain, shooter, indexer));
 //        autos.add(new AmpLanePAEDSprint(drivetrain, shooter, indexer));

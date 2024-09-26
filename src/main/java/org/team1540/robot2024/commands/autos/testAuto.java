@@ -1,9 +1,6 @@
 package org.team1540.robot2024.commands.autos;
 
-import com.pathplanner.lib.auto.AutoBuilder;
 import edu.wpi.first.wpilibj2.command.*;
-import org.team1540.robot2024.commands.shooter.AutoShootPrepare;
-import org.team1540.robot2024.commands.shooter.ShootSequence;
 import org.team1540.robot2024.subsystems.drive.Drivetrain;
 import org.team1540.robot2024.subsystems.indexer.Indexer;
 import org.team1540.robot2024.subsystems.shooter.Shooter;
@@ -11,13 +8,9 @@ import org.team1540.robot2024.util.auto.AutoCommand;
 import org.team1540.robot2024.util.auto.PathHelper;
 import org.team1540.robot2024.util.math.Triplet;
 
-import java.util.Set;
-import java.util.function.BooleanSupplier;
-import java.util.function.Supplier;
+public class testAuto extends AutoCommand {
 
-public class ATestAuto extends AutoCommand {
-
-    public ATestAuto(Drivetrain drivetrain, Shooter shooter, Indexer indexer) {
+    public testAuto(Drivetrain drivetrain, Shooter shooter, Indexer indexer) {
         super("!ATestAuto");
         addPath(
                 PathHelper.fromChoreoPath("New Path.1", true, true),
