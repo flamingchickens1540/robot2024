@@ -30,7 +30,7 @@ public class AprilTagVisionIOMegaTag2 implements AprilTagVisionIO {
         LimelightHelpers.SetRobotOrientation(
                 name,
                 heading.get().getDegrees(),
-                headingVelocityRadPerSec.getAsDouble(),
+                Math.toDegrees(headingVelocityRadPerSec.getAsDouble()),
                 0, 0, 0, 0);
         LimelightHelpers.PoseEstimate measurement =
                 DriverStation.isDisabled()
