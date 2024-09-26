@@ -42,7 +42,6 @@ import org.team1540.robot2024.util.vision.FlipUtil;
 
 import java.util.function.BooleanSupplier;
 
-import static org.team1540.robot2024.Constants.SwerveConfig;
 import static org.team1540.robot2024.Constants.isTuningMode;
 
 public class RobotContainer {
@@ -83,7 +82,7 @@ public class RobotContainer {
                             drivetrain::addVisionMeasurement,
                             elevator::getPosition,
                             drivetrain::getRotation,
-                            () -> drivetrain.getChassisSpeeds().omegaRadiansPerSecond);
+                            drivetrain::getAngularVelocityRadPerSec);
                     noteVision = NoteVision.createReal();
                 } else {
                     elevator = Elevator.createDummy();

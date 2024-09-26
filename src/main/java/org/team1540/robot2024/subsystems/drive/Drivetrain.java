@@ -1,7 +1,6 @@
 package org.team1540.robot2024.subsystems.drive;
 
 import com.pathplanner.lib.auto.AutoBuilder;
-import com.pathplanner.lib.commands.FollowPathHolonomic;
 import com.pathplanner.lib.controllers.PPHolonomicDriveController;
 import com.pathplanner.lib.pathfinding.Pathfinding;
 import com.pathplanner.lib.util.HolonomicPathFollowerConfig;
@@ -287,10 +286,7 @@ public class Drivetrain extends SubsystemBase {
 
     @AutoLogOutput(key = "Odometry/ChassisSpeeds")
     public ChassisSpeeds getChassisSpeeds() {
-        ChassisSpeeds speeds = kinematics.toChassisSpeeds(getModuleStates());
-        //FIXME: check to see if this does anything sus with autos
-        if (gyroInputs.connected) speeds.omegaRadiansPerSecond = gyroInputs.yawVelocityRadPerSec;
-        return speeds;
+        return kinematics.toChassisSpeeds(getModuleStates());
     }
 
     @AutoLogOutput(key = "Odometry/ChassisSpeedMagnitude")
@@ -332,6 +328,10 @@ public class Drivetrain extends SubsystemBase {
     
     public Rotation2d getRawGyroRotation() {
         return rawGyroRotation;
+    }
+
+    public double getAngularVelocityRadPerSec() {
+        return gyroInputs.yawVelocityRadPerSec;
     }
 
     public void zeroFieldOrientationManual() {

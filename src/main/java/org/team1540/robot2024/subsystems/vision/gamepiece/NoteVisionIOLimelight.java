@@ -10,7 +10,6 @@ public class NoteVisionIOLimelight implements NoteVisionIO {
 
     public NoteVisionIOLimelight(String name) {
         this.name = name;
-        LimelightHelpers.setCameraMode_Processor(name);
         LimelightHelpers.setLEDMode_PipelineControl(name);
         LimelightHelpers.setPipelineIndex(name, PIPELINE_INDEX);
     }
