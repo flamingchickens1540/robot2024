@@ -1,4 +1,4 @@
-package org.team1540.robot2024.subsystems.vision;
+package org.team1540.robot2024.subsystems.vision.apriltag;
 
 import edu.wpi.first.math.geometry.Pose3d;
 import org.team1540.robot2024.util.vision.LimelightHelpers;

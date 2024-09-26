@@ -1,4 +1,4 @@
-package org.team1540.robot2024.subsystems.vision;
+package org.team1540.robot2024.subsystems.vision.apriltag;
 
 import edu.wpi.first.apriltag.AprilTagFieldLayout;
 import edu.wpi.first.apriltag.AprilTagFields;
@@ -13,14 +13,13 @@ import org.photonvision.simulation.SimCameraProperties;
 import org.photonvision.simulation.VisionSystemSim;
 import org.photonvision.targeting.PhotonPipelineResult;
 import org.photonvision.targeting.PhotonTrackedTarget;
-import org.team1540.robot2024.Constants;
 
 import java.io.IOException;
 import java.util.List;
 import java.util.Optional;
 import java.util.function.Supplier;
 
-import static org.team1540.robot2024.Constants.Vision.*;
+import static org.team1540.robot2024.Constants.Vision.AprilTag.*;
 
 public class AprilTagVisionIOSim implements AprilTagVisionIO {
     private final VisionSystemSim visionSystemSim;
@@ -77,7 +76,7 @@ public class AprilTagVisionIOSim implements AprilTagVisionIO {
         for (PhotonTrackedTarget target : targets)
             if (target.getPoseAmbiguity() > maxAmbiguityRatio) maxAmbiguityRatio = target.getPoseAmbiguity();
 
-        if (estimatedPose.isPresent() && maxAmbiguityRatio < Constants.Vision.MAX_AMBIGUITY_RATIO) {
+        if (estimatedPose.isPresent() && maxAmbiguityRatio < MAX_AMBIGUITY_RATIO) {
             lastEstimatedPose = estimatedPose.get().estimatedPose;
             inputs.estimatedPoseMeters = lastEstimatedPose;
             inputs.lastMeasurementTimestampSecs = estimatedPose.get().timestampSeconds;

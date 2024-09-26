@@ -4,12 +4,12 @@ import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.RobotState;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
-import edu.wpi.first.wpilibj2.command.FunctionalCommand;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import org.littletonrobotics.junction.AutoLogOutput;
 import org.littletonrobotics.junction.Logger;
 import org.team1540.robot2024.Constants;
-import org.team1540.robot2024.util.LoggedTunableNumber;
+
+import java.util.function.BooleanSupplier;
 
 import static org.team1540.robot2024.Constants.Indexer.*;
 
@@ -17,10 +17,6 @@ import static org.team1540.robot2024.Constants.Indexer.*;
 public class Indexer extends SubsystemBase {
     private final IndexerIO io;
     private final IndexerIOInputsAutoLogged inputs = new IndexerIOInputsAutoLogged();
-
-    private final LoggedTunableNumber kP = new LoggedTunableNumber("Indexer/kP", FEEDER_KP);
-    private final LoggedTunableNumber kI = new LoggedTunableNumber("Indexer/kI", FEEDER_KI);
-    private final LoggedTunableNumber kD = new LoggedTunableNumber("Indexer/kD", FEEDER_KD);
 
     private double feederSetpointRPM = 0.0;
 
@@ -68,7 +64,23 @@ public class Indexer extends SubsystemBase {
     }
 
     public boolean isNoteStaged() {
-        return inputs.noteInIntake;
+        return inputs.noteInIndexer;
+    }
+
+    public BooleanSupplier checkNoteReached(NotePosition position) {
+        return () -> getNoteState().ordinal() >= position.ordinal();
+    }
+    public NotePosition getNoteState() {
+        if (inputs.noteInShooter) {
+            return NotePosition.SHOOTER;
+        }
+        if (inputs.noteInIndexer) {
+            return NotePosition.INDEXER;
+        }
+        if (inputs.noteInIntake) {
+            return NotePosition.INTAKE;
+        }
+        return NotePosition.NONE;
     }
 
     public void setFeederVelocity(double setpointRPM) {
@@ -114,16 +126,6 @@ public class Indexer extends SubsystemBase {
     public Command feedToShooter() {
         return Commands.runOnce(() -> io.setFeederVelocity(1200), this);
     }
-    
-    public Command moveNoteOut() {
-        return new FunctionalCommand(
-                () -> setIntakePercent(-1),
-                () -> {},
-                (interrupted) -> stopIntake(),
-                () -> !isNoteStaged(),
-                this
-        );
-    }
 
     public Command commandRunIntake(double percent) {
         return Commands.startEnd(
@@ -131,6 +133,13 @@ public class Indexer extends SubsystemBase {
                 () -> this.setIntakePercent(0),
                 this
                 );
+    }
+
+    public Command moveNoteTo(NotePosition position) {
+        return Commands.startEnd(() -> {
+            this.setIntakePercent(1);
+            this.setFeederPercent(1);
+        }, this::stopAll).until(this.checkNoteReached(NotePosition.SHOOTER));
     }
 
     public void setIntakeBrakeMode(boolean isBrake) {
@@ -145,4 +154,10 @@ public class Indexer extends SubsystemBase {
         return inputs.intakeCurrentAmps;
     }
 
+    public enum NotePosition {
+        NONE,
+        INTAKE,
+        INDEXER,
+        SHOOTER;
+    }
 }

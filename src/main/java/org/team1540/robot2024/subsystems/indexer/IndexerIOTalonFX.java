@@ -10,13 +10,16 @@ import com.ctre.phoenix6.hardware.TalonFX;
 import com.ctre.phoenix6.signals.InvertedValue;
 import com.ctre.phoenix6.signals.NeutralModeValue;
 import edu.wpi.first.wpilibj.DigitalInput;
+import org.team1540.robot2024.Constants;
 
 import static org.team1540.robot2024.Constants.Indexer.*;
 
 public class IndexerIOTalonFX implements IndexerIO {
     private final TalonFX intakeMotor = new TalonFX(INTAKE_ID);
     private final TalonFX feederMotor = new TalonFX(FEEDER_ID);
-    private final DigitalInput indexerBeamBreak = new DigitalInput(BEAM_BREAK_ID);
+    private final DigitalInput indexerBeamBreak = new DigitalInput(Constants.DIO.INDEXER_BEAM_BREAK);
+    private final DigitalInput intakeBeamBreak = new DigitalInput(Constants.DIO.INTAKE_BEAM_BREAK);
+    private final DigitalInput shooterBeamBreak = new DigitalInput(Constants.DIO.SHOOTER_BEAM_BREAK);
 
     private final VoltageOut feederVoltageCtrlReq = new VoltageOut(0).withEnableFOC(true);
     private final VelocityVoltage feederVelocityCtrlReq = new VelocityVoltage(0).withEnableFOC(true);
@@ -87,7 +90,9 @@ public class IndexerIOTalonFX implements IndexerIO {
         inputs.feederCurrentAmps = feederCurrent.getValueAsDouble();
         inputs.feederVelocityRPM = feederVelocity.getValueAsDouble() * 60;
         inputs.feederTempCelsius = feederTemp.getValueAsDouble();
-        inputs.noteInIntake = !indexerBeamBreak.get();
+        inputs.noteInIndexer = !indexerBeamBreak.get();
+        inputs.noteInIntake = !intakeBeamBreak.get();
+        inputs.noteInShooter = !shooterBeamBreak.get();
     }
 
     @Override

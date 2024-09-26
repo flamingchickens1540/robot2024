@@ -4,6 +4,7 @@ import com.ctre.phoenix6.SignalLogger;
 import com.pathplanner.lib.commands.FollowPathCommand;
 import com.pathplanner.lib.commands.PathfindingCommand;
 import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
@@ -119,7 +120,6 @@ public class Robot extends LoggedRobot {
         // the Command-based framework to work.
         CommandScheduler.getInstance().run();
         if (Constants.currentMode == Constants.Mode.REAL) robotContainer.odometrySignalRefresher.periodic();
-
         // Update mechanism visualiser in sim
         if (Robot.isSimulation()) MechanismVisualiser.periodic();
 //        robotContainer.leds.setPattern(Leds.Zone.ZONE1, SimpleLedPattern.alternating(Color.kBlueViolet, Color.kGreen));

@@ -1,4 +1,4 @@
-package org.team1540.robot2024.subsystems.vision;
+package org.team1540.robot2024.subsystems.vision.apriltag;
 
 import edu.wpi.first.math.geometry.Pose3d;
 import edu.wpi.first.math.geometry.Rotation2d;

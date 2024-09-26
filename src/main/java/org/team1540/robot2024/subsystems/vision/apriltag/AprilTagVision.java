@@ -1,4 +1,4 @@
-package org.team1540.robot2024.subsystems.vision;
+package org.team1540.robot2024.subsystems.vision.apriltag;
 
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Pose3d;
@@ -15,7 +15,7 @@ import java.util.function.Consumer;
 import java.util.function.DoubleSupplier;
 import java.util.function.Supplier;
 
-import static org.team1540.robot2024.Constants.Vision.*;
+import static org.team1540.robot2024.Constants.Vision.AprilTag.*;
 
 public class AprilTagVision extends SubsystemBase {
     private final AprilTagVisionIO frontCameraIO;
@@ -37,7 +37,7 @@ public class AprilTagVision extends SubsystemBase {
             AprilTagVisionIO rearCameraIO,
             Consumer<EstimatedVisionPose> visionPoseConsumer,
             Supplier<Double> elevatorHeightSupplierMeters) {
-        if (hasInstance) throw new IllegalStateException("Instance of vision already exists");
+        if (hasInstance) throw new IllegalStateException("Instance of AprilTagVision already exists");
         hasInstance = true;
 
         this.frontCameraIO = frontCameraIO;

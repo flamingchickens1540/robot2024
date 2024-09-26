@@ -86,17 +86,21 @@ public class Leds extends SubsystemBase {
         ).ignoringDisable(true);
     }
 
-    public Command commandShowIntakePattern(LedPattern pattern) {
+    public Command commandShowFullPattern(LedPattern pattern, PatternLevel priority) {
         return Commands.startEnd(
                 () -> {
-                    this.setPattern(Zone.MAIN, pattern, PatternLevel.INTAKE_STATE);
-                    this.setPattern(Zone.TOP, pattern, PatternLevel.INTAKE_STATE);
+                    this.setPattern(Zone.MAIN, pattern, priority);
+                    this.setPattern(Zone.TOP, pattern, priority);
                 },
                 () -> {
-                    this.clearPattern(Zone.MAIN,  PatternLevel.INTAKE_STATE);
-                    this.clearPattern(Zone.TOP,  PatternLevel.INTAKE_STATE);
+                    this.clearPattern(Zone.MAIN, priority);
+                    this.clearPattern(Zone.TOP, priority);
                 }
         ).ignoringDisable(true);
+    }
+
+    public Command commandShowIntakePattern(LedPattern pattern) {
+        return commandShowFullPattern(pattern, PatternLevel.INTAKE_STATE);
     }
 
     public Command commandShowTrampPattern(LedPattern pattern) {
