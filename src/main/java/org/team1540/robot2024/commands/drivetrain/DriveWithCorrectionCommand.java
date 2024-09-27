@@ -61,7 +61,9 @@ public class DriveWithCorrectionCommand extends Command {
             Logger.recordOutput("Targeting/target", target.get());
         }
 
+
         double xPercent   = -controller.getLeftY() * (Constants.IS_COMPETITION_ROBOT ? 1 : -1);
+
 
         Rotation2d linearDirection = drivetrain.getRotation().rotateBy(Rotation2d.fromDegrees(angleDegrees.get()));
 
@@ -69,6 +71,7 @@ public class DriveWithCorrectionCommand extends Command {
                 drivetrain.getPose().getTranslation(),
                 linearDirection
         ));
+//        System.out.println("I am driving woth correxction 1");
 
         double rotPercent = target == null
                 ? JoystickUtils.smartDeadzone(-controller.getRightX(), deadzone) * (Constants.IS_COMPETITION_ROBOT ? 1 : -1)

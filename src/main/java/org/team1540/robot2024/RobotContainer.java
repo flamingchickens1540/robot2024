@@ -1,8 +1,8 @@
 package org.team1540.robot2024;
 
+import com.ctre.phoenix6.Utils;
 import com.pathplanner.lib.auto.NamedCommands;
-import edu.wpi.first.math.geometry.Pose2d;
-import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.geometry.*;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -37,6 +37,8 @@ import org.team1540.robot2024.util.CommandUtils;
 import org.team1540.robot2024.util.PhoenixTimeSyncSignalRefresher;
 import org.team1540.robot2024.util.auto.AutoCommand;
 import org.team1540.robot2024.util.auto.AutoManager;
+import org.team1540.robot2024.util.vision.AprilTagsCrescendo;
+import org.team1540.robot2024.util.vision.FlipUtil;
 
 import java.util.function.BooleanSupplier;
 
@@ -174,6 +176,9 @@ public class RobotContainer {
         if (isTuningMode()) {
 //            driver.leftTrigger().whileTrue(new AutoShootPrepareWhileMoving(driver.getHID(), drivetrain, shooter).alongWith(leds.commandShowPattern(new LedPatternWave("#00ff00"), Leds.PatternLevel.DRIVER_LOCK)));
             driver.a().whileTrue(new TuneShooterCommand(shooter, indexer, drivetrain::getPose));
+//            driver.leftTrigger().whileTrue(new DriveWithChainAlignment(drivetrain, driver.getHID()));
+
+
 //            drivetrain.getRotation();
 //            driver.leftTrigger().whileTrue(new DriveWithCorrectionCommand(drivetrain, driver, ()-> LimelightHelpers.getTX(Constants.Vision.VISION_CAMERA_NAME)));
 //            driver.leftTrigger().whileTrue(new SpitShoot(shooter, indexer));
@@ -181,16 +186,60 @@ public class RobotContainer {
 //        ()-> Constants.Targeting.getSpeakerPose().getTranslation().minus(drivetrain.getPose().getTranslation()).getAngle().getDegrees()));
 
 //            driver.leftTrigger().whileTrue(
-//                    new DriveWithCorrectionCommand(drivetrain, driver, ()->noteVision.getLatestDetection().rotation().toRotation2d().getDegrees())
+//                    new DriveWithCorrectionCommand(drivetrain, driver, ()->-noteVision.getLatestDetection().rotation().toRotation2d().getDegrees())
 //            );
+            driver.leftTrigger().whileTrue(
+                    new DriveWithCorrectionCommand2(drivetrain, driver, ()->-noteVision.getLatestDetection().rotation().toRotation2d().getDegrees())
+            );
         }
 
 
-        driver.povDown().and(() -> !DriverStation.isFMSAttached()).onTrue(Commands.runOnce(() -> drivetrain.setPose(new Pose2d(Units.inchesToMeters(260), Units.inchesToMeters(161.62), Rotation2d.fromRadians(0)))).ignoringDisable(true));
+//        driver.povDown().and(() -> !DriverStation.isFMSAttached()).onTrue(Commands.runOnce(() -> drivetrain.setPose(new Pose2d(Units.inchesToMeters(260), Units.inchesToMeters(161.62), Rotation2d.fromRadians(0)))).ignoringDisable(true));
 
         driver.rightTrigger(0.95).toggleOnTrue(counterShuffleDrive);
 
         driver.rightStick().onTrue(cancelAlignment);
+
+
+        driver.povLeft().whileTrue(
+                new DriveWithTargetingCommand(drivetrain, driver.getHID(),
+                        ()->drivetrain.getPose().plus(
+                                new Transform2d(
+                                        new Translation2d( 1,
+                                                ((DriverStation.getAlliance().orElse(null) == DriverStation.Alliance.Blue)
+                                                        ? AprilTagsCrescendo.getInstance().getTag(AprilTagsCrescendo.Tags.CLIMB_AMP)
+                                                        : AprilTagsCrescendo.getInstance().getTag(AprilTagsCrescendo.Tags.CLIMB_SOURCE).rotateBy(new Rotation3d(0, 0, Math.PI)))
+                                                        .getRotation().toRotation2d()
+                                        ), new Rotation2d()
+                                )
+                        )
+                )
+        );
+        driver.povRight().whileTrue(
+                new DriveWithTargetingCommand(drivetrain, driver.getHID(),
+                        ()->drivetrain.getPose().plus(
+                                new Transform2d(
+                                        new Translation2d( 1,
+                                                ((DriverStation.getAlliance().orElse(null) == DriverStation.Alliance.Blue)
+                                                        ? AprilTagsCrescendo.getInstance().getTag(AprilTagsCrescendo.Tags.CLIMB_SOURCE)
+                                                        : AprilTagsCrescendo.getInstance().getTag(AprilTagsCrescendo.Tags.CLIMB_AMP).rotateBy(new Rotation3d(0, 0, Math.PI)))
+                                                        .getRotation().toRotation2d()
+                                        ), new Rotation2d()
+                                )
+                        )
+                )
+        );
+        driver.povUp().whileTrue(
+                new DriveWithTargetingCommand(drivetrain, driver.getHID(),
+                        ()->drivetrain.getPose().plus(
+                                new Transform2d(
+                                        new Translation2d(1,
+                                                FlipUtil.flipIfRed(AprilTagsCrescendo.getInstance().getTag(AprilTagsCrescendo.Tags.CLIMB_FAR).getRotation().toRotation2d())
+                                        ), new Rotation2d()
+                                )
+                        )
+                )
+        );
 
         copilot.back().onTrue(Commands.runOnce(shooter::zeroPivotToCancoder).andThen(Commands.print("BACK IS PRESSED")));
 
@@ -288,7 +337,7 @@ public class RobotContainer {
         }
         autos.add(new AutoCommand("WheelRadiusChar", new WheelRadiusCharacterization(drivetrain, WheelRadiusCharacterization.Direction.COUNTER_CLOCKWISE)));
         autos.addDefault(new AutoCommand("Dwayne :skull:"));
-        autos.addDefault(new ATestAuto(drivetrain, shooter, indexer));
+//        autos.addDefault(new ATestAuto(drivetrain, shooter, indexer));
 //        autos.add(new AmpLanePADEF(drivetrain, shooter, indexer));
 //        autos.add(new AmpLanePAEDF(drivetrain, shooter, indexer));
 //        autos.add(new AmpLanePAEDSprint(drivetrain, shooter, indexer));
