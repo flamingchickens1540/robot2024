@@ -6,23 +6,32 @@ import edu.wpi.first.wpilibj.DriverStation;
 import org.team1540.robot2024.util.vision.LimelightHelpers;
 
 import java.util.Arrays;
+import java.util.function.DoubleSupplier;
 import java.util.function.Supplier;
 
 public class AprilTagVisionIOMegaTag2 implements AprilTagVisionIO {
     private final String name;
     private final Supplier<Rotation2d> heading;
+    private final DoubleSupplier headingVelocityRadPerSec;
 
-    public AprilTagVisionIOMegaTag2(String name, Pose3d cameraOffsetMeters, Supplier<Rotation2d> heading) {
+    public AprilTagVisionIOMegaTag2(String name,
+                                    Pose3d cameraOffsetMeters,
+                                    Supplier<Rotation2d> heading,
+                                    DoubleSupplier headingVelocityRadPerSec) {
         this.name = name;
         this.heading = heading;
-        LimelightHelpers.setCameraMode_Processor(name);
+        this.headingVelocityRadPerSec = headingVelocityRadPerSec;
         LimelightHelpers.setLEDMode_PipelineControl(name);
         setPoseOffset(cameraOffsetMeters);
     }
 
     @Override
     public void updateInputs(AprilTagVisionIOInputs inputs) {
-        LimelightHelpers.SetRobotOrientation(name, heading.get().getDegrees(), 0, 0, 0, 0, 0);
+        LimelightHelpers.SetRobotOrientation(
+                name,
+                heading.get().getDegrees(),
+                Math.toDegrees(headingVelocityRadPerSec.getAsDouble()),
+                0, 0, 0, 0);
         LimelightHelpers.PoseEstimate measurement =
                 DriverStation.isDisabled()
                         ? LimelightHelpers.getBotPoseEstimate_wpiBlue(name)

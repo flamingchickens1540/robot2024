@@ -42,7 +42,6 @@ import org.team1540.robot2024.util.vision.FlipUtil;
 
 import java.util.function.BooleanSupplier;
 
-import static org.team1540.robot2024.Constants.SwerveConfig;
 import static org.team1540.robot2024.Constants.isTuningMode;
 
 public class RobotContainer {
@@ -62,6 +61,8 @@ public class RobotContainer {
 
     public final PhoenixTimeSyncSignalRefresher odometrySignalRefresher = new PhoenixTimeSyncSignalRefresher(SwerveConfig.CAN_BUS);
 
+
+
     public boolean isBrakeMode;
     /**
      * The container for the robot. Contains subsystems, IO devices, and commands.
@@ -80,7 +81,8 @@ public class RobotContainer {
                     aprilTagVision = AprilTagVision.createReal(
                             drivetrain::addVisionMeasurement,
                             elevator::getPosition,
-                            drivetrain::getRotation);
+                            drivetrain::getRotation,
+                            drivetrain::getAngularVelocityRadPerSec);
                     noteVision = NoteVision.createReal();
                 } else {
                     elevator = Elevator.createDummy();

@@ -12,6 +12,7 @@ import org.team1540.robot2024.Constants;
 import org.team1540.robot2024.util.vision.EstimatedVisionPose;
 
 import java.util.function.Consumer;
+import java.util.function.DoubleSupplier;
 import java.util.function.Supplier;
 
 import static org.team1540.robot2024.Constants.Vision.AprilTag.*;
@@ -47,13 +48,15 @@ public class AprilTagVision extends SubsystemBase {
 
     public static AprilTagVision createReal(Consumer<EstimatedVisionPose> visionPoseConsumer,
                                             Supplier<Double> elevatorHeightSupplierMeters,
-                                            Supplier<Rotation2d> headingSupplier) {
+                                            Supplier<Rotation2d> headingSupplier,
+                                            DoubleSupplier headingVelocitySupplierRadPerSec) {
         if (Constants.currentMode != Constants.Mode.REAL) {
             DriverStation.reportWarning("Using real vision on simulated robot", false);
         }
         return new AprilTagVision(
                 new AprilTagVisionIOPhoton(FRONT_CAMERA_NAME, FRONT_CAMERA_POSE),
-                new AprilTagVisionIOMegaTag2(REAR_CAMERA_NAME, REAR_CAMERA_POSE, headingSupplier),
+                new AprilTagVisionIOMegaTag2(
+                        REAR_CAMERA_NAME, REAR_CAMERA_POSE, headingSupplier, headingVelocitySupplierRadPerSec),
                 visionPoseConsumer,
                 elevatorHeightSupplierMeters);
     }
