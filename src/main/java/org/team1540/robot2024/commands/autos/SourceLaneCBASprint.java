@@ -27,7 +27,7 @@ public class SourceLaneCBASprint extends AutoCommand {
                                 createSegmentSequence(drivetrain, shooter, indexer, 1),
                                 createSegmentSequence(drivetrain, shooter, indexer, 2),
                                 createSegmentSequence(drivetrain, shooter, indexer, 3),
-                                createSegmentSequence(drivetrain, shooter, indexer, 4)
+                                getPath(4).getCommand(drivetrain)
                         )
                 )
         );

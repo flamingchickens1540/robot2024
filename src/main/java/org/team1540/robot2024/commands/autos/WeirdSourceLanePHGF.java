@@ -1,5 +1,8 @@
 package org.team1540.robot2024.commands.autos;
 
+import org.team1540.robot2024.Constants;
+import org.team1540.robot2024.commands.shooter.DefaultShooterCommand;
+import org.team1540.robot2024.commands.shooter.SpitShoot;
 import org.team1540.robot2024.util.auto.AutoCommand;
 import org.team1540.robot2024.subsystems.drive.Drivetrain;
 import org.team1540.robot2024.subsystems.shooter.Shooter;
@@ -18,6 +21,7 @@ public class WeirdSourceLanePHGF extends AutoCommand {
                 PathHelper.fromChoreoPath("WeirdSourceLanePHGF.3")
         );
         addCommands(
+                new SpitShoot(shooter, indexer, Constants.Shooter.Flywheels.LEFT_RPM, Constants.Shooter.Flywheels.RIGHT_RPM, 1, 1, 0.25),
                 Commands.parallel(
                         new LeadingShootPrepare(drivetrain, shooter),
                         Commands.sequence(

@@ -1,5 +1,6 @@
 package org.team1540.robot2024.commands.autos;
 
+import org.team1540.robot2024.commands.shooter.ShootSequence;
 import org.team1540.robot2024.util.auto.AutoCommand;
 import org.team1540.robot2024.subsystems.drive.Drivetrain;
 import org.team1540.robot2024.subsystems.shooter.Shooter;
@@ -19,6 +20,7 @@ public class CenterLanePBFCA extends AutoCommand {
                 PathHelper.fromChoreoPath("CenterLanePBFCA.4")
         );
         addCommands(
+                ShootSequence.forAutoSubwoofer(shooter, indexer),
                 Commands.parallel(
                         new LeadingShootPrepare(drivetrain, shooter),
                         Commands.sequence(
