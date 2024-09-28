@@ -90,7 +90,7 @@ public class RobotContainer {
                     tramp = Tramp.createDummy();
                     shooter = Shooter.createDummy();
                     indexer = Indexer.createDummy();
-                    aprilTagVision = AprilTagVision.createDummy();
+                    aprilTagVision = AprilTagVision.createDummy(drivetrain::addVisionMeasurement);
                     noteVision = NoteVision.createDummy();
                 }
             }
@@ -114,7 +114,7 @@ public class RobotContainer {
                 tramp = Tramp.createDummy();
                 shooter = Shooter.createDummy();
                 indexer = Indexer.createDummy();
-                aprilTagVision = AprilTagVision.createDummy();
+                aprilTagVision = AprilTagVision.createDummy(drivetrain::addVisionMeasurement);
                 noteVision = NoteVision.createDummy();
             }
         }
@@ -145,6 +145,9 @@ public class RobotContainer {
             drivetrain.zeroFieldOrientationManual();
             enableBrakeMode(false);
         }).ignoringDisable(true));
+
+        //TODO remove
+//        driver.back().and(driver.start()).onTrue(Commands.runOnce(() -> drivetrain.setPose(new Pose2d())));
 
         Command targetDrive = new AutoShootPrepareWithTargeting(driver.getHID(), drivetrain, shooter)
                 .alongWith(leds.commandShowPattern(
@@ -339,6 +342,7 @@ public class RobotContainer {
 
             autos.add(new AutoCommand("WheelRadiusChar", new WheelRadiusCharacterization(drivetrain, WheelRadiusCharacterization.Direction.COUNTER_CLOCKWISE)));
 
+            autos.add(new PathTesting(drivetrain));
         }
         autos.addDefault(new AutoCommand("Dwayne :skull:"));
         autos.add(new AutoCommand("Subwoofer Shot", ShootSequence.forAutoSubwoofer(shooter, indexer)));
@@ -347,6 +351,7 @@ public class RobotContainer {
         autos.add(new AmpLanePAEDSprint(drivetrain, shooter, indexer));
         autos.add(new AmpLanePADEF(drivetrain, shooter, indexer));
         autos.add(new AmpLanePAEDF(drivetrain, shooter, indexer));
+        autos.add(new AmpLanePABCSprint(drivetrain, shooter, indexer));
 ////        autos.add(new AutoCommand("SubwooferShot", new ShootSequence(shooter, indexer)));
 ////        autos.add(new DriveSinglePath("Taxi", drivetrain));
 ////        autos.add(new DriveSinglePath("Sprint", drivetrain));

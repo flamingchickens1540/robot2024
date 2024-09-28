@@ -36,16 +36,18 @@ public class AprilTagVisionIOMegaTag2 implements AprilTagVisionIO {
                 DriverStation.isDisabled()
                         ? LimelightHelpers.getBotPoseEstimate_wpiBlue(name)
                         : LimelightHelpers.getBotPoseEstimate_wpiBlue_MegaTag2(name);
-        Pose3d limelightPose = new Pose3d(measurement.pose);
-        inputs.estimatedPoseMeters = new Pose3d(
-                limelightPose.getX(),
-                limelightPose.getY() + 0.105,
-                limelightPose.getZ(),
-                limelightPose.getRotation());
-        inputs.lastMeasurementTimestampSecs = measurement.timestampSeconds;
-        inputs.numTagsSeen = measurement.tagCount;
-        inputs.seenTagIDs = Arrays.stream(measurement.rawFiducials).mapToInt(fiducial -> fiducial.id).toArray();
-        inputs.avgTagDistance = measurement.avgTagDist;
+        if (measurement.pose != null) {
+            Pose3d limelightPose = new Pose3d(measurement.pose);
+            inputs.estimatedPoseMeters = new Pose3d(
+                    limelightPose.getX(),
+                    limelightPose.getY() + 0.105,
+                    limelightPose.getZ(),
+                    limelightPose.getRotation());
+            inputs.lastMeasurementTimestampSecs = measurement.timestampSeconds;
+            inputs.numTagsSeen = measurement.tagCount;
+            inputs.seenTagIDs = Arrays.stream(measurement.rawFiducials).mapToInt(fiducial -> fiducial.id).toArray();
+            inputs.avgTagDistance = measurement.avgTagDist;
+        }
     }
 
     @Override

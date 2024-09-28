@@ -71,7 +71,7 @@ public final class Constants {
         public static final double DRIVE_GEAR_RATIO = (50.0 / 14.0) * (IS_L3 ? 16.0 / 28.0 : 17.0 / 27.0) * (45.0 / 15.0);
         public static final double TURN_GEAR_RATIO = 150.0 / 7.0;
         public static final boolean IS_TURN_MOTOR_INVERTED = true;
-        public static final double WHEEL_RADIUS = Units.inchesToMeters(1.9836954390238841);
+        public static final double WHEEL_RADIUS = Units.inchesToMeters(1.9639138572591197);
 
         public static final double MAX_LINEAR_SPEED = Units.feetToMeters(IS_L3 ? 16.0 : 15.7);
         public static final double TRACK_WIDTH_X = Units.inchesToMeters(18.75);
@@ -168,7 +168,7 @@ public final class Constants {
             // TODO: determine ratios
             public static final double CANCODER_TO_PIVOT = 28.0 / 15.0;
             public static final double MOTOR_TO_CANCODER = 56.0;
-            public static final Rotation2d ENCODER_OFFSET = Rotation2d.fromRadians(0.01215595);
+            public static final Rotation2d ENCODER_OFFSET = Rotation2d.fromRadians(0.01215595 - 0.00548239159444);
 
             public static final double CHAIN_FACTOR = 1.04;
             public static final double TOTAL_GEAR_RATIO = MOTOR_TO_CANCODER * CANCODER_TO_PIVOT;
@@ -270,10 +270,9 @@ public final class Constants {
     }
 
     public static class Targeting {
-        // TODO: tune these
-        public static final double ROT_KP = 0.4;
+        public static final double ROT_KP = 0.3;
         public static final double ROT_KI = 0.0;
-        public static final double ROT_KD = 0.0;
+        public static final double ROT_KD = 0.002;
 
 
         public static final double SPEAKER_CENTER_HEIGHT = Units.inchesToMeters(80.4375);
@@ -282,7 +281,7 @@ public final class Constants {
         private static final Pose2d SPEAKER_POSE =
                 new Pose2d(Units.inchesToMeters(8.861), Units.inchesToMeters(218), new Rotation2d());
         private static final Pose2d SHUFFLE_POSE =
-                new Pose2d(SPEAKER_POSE.getX(), SPEAKER_POSE.getY() + 2, new Rotation2d());
+                new Pose2d(SPEAKER_POSE.getX() + 2, SPEAKER_POSE.getY() + 2, new Rotation2d());
         private static final Pose2d COUNTER_SHUFFLE_POSE =
                 new Pose2d(SPEAKER_POSE.getX() + 8.27, SPEAKER_POSE.getY(), new Rotation2d());
 

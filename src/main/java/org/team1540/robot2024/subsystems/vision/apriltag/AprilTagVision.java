@@ -74,14 +74,14 @@ public class AprilTagVision extends SubsystemBase {
                 elevatorHeightSupplierMeters);
     }
 
-    public static AprilTagVision createDummy() {
+    public static AprilTagVision createDummy(Consumer<EstimatedVisionPose> visionPoseConsumer) {
         if (Constants.currentMode == Constants.Mode.REAL) {
             DriverStation.reportWarning("Using dummy vision on real robot", false);
         }
         return new AprilTagVision(
                 new AprilTagVisionIO() {},
                 new AprilTagVisionIO() {},
-                (pose) -> {},
+                visionPoseConsumer,
                 () -> 0.0);
     }
 

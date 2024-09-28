@@ -26,9 +26,9 @@ public class CenterLanePCBA extends AutoCommand {
                         new AutoShootPrepare(drivetrain, shooter),
                         Commands.sequence(
                                 drivetrain.commandCopyVisionPose(),
-                                createSegmentSequence(drivetrain, shooter, indexer, 0, false, false, false),
-                                createSegmentSequence(drivetrain, shooter, indexer, 1, false, false, true),
-                                createSegmentSequence(drivetrain, shooter, indexer, 2, false, false, true)
+                                createSegmentSequence(drivetrain, shooter, indexer, 0, false, true, false),
+                                createSegmentSequence(drivetrain, shooter, indexer, 1, false, true, true),
+                                createSegmentSequence(drivetrain, shooter, indexer, 2, false, true, true)
                         )
                 )
         );
