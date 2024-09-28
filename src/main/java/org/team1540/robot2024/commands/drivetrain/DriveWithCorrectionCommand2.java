@@ -55,15 +55,15 @@ public class DriveWithCorrectionCommand2 extends Command {
 
     @Override
     public void execute() {
-        if(kP.hasChanged(hashCode())){
-            correctionController.setD(kP.get());
-        }
-        if(kI.hasChanged(hashCode())){
-            correctionController.setD(kI.get());
-        }
-        if(kD.hasChanged(hashCode())){
-            correctionController.setD(kD.get());
-        }
+//        if(kP.hasChanged(hashCode())){
+//            correctionController.setD(kP.get());
+//        }
+//        if(kI.hasChanged(hashCode())){
+//            correctionController.setD(kI.get());
+//        }
+//        if(kD.hasChanged(hashCode())){
+//            correctionController.setD(kD.get());
+//        }
 
 
 

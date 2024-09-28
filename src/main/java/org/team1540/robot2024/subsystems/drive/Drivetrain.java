@@ -27,6 +27,7 @@ import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import org.littletonrobotics.junction.AutoLogOutput;
 import org.littletonrobotics.junction.Logger;
+import org.team1540.robot2024.util.LoggedTunableNumber;
 import org.team1540.robot2024.util.auto.LocalADStarAK;
 import org.team1540.robot2024.Constants;
 import org.team1540.robot2024.util.PhoenixTimeSyncSignalRefresher;
@@ -62,6 +63,13 @@ public class Drivetrain extends SubsystemBase {
     private double characterizationInput = 0.0;
 
     private Pose2d targetPose = new Pose2d();
+
+    private final LoggedTunableNumber mkP = new LoggedTunableNumber("Drivetrain/M_KP", 5.0);
+    private final LoggedTunableNumber mkI = new LoggedTunableNumber("Drivetrain/M_KI", 0.0);
+    private final LoggedTunableNumber mkD = new LoggedTunableNumber("Drivetrain/M_KD", 0.0);
+    private final LoggedTunableNumber rkP = new LoggedTunableNumber("Drivetrain/R_KP", 7.0);
+    private final LoggedTunableNumber rkI = new LoggedTunableNumber("Drivetrain/R_KI", 0.0);
+    private final LoggedTunableNumber rkD = new LoggedTunableNumber("Drivetrain/R_KD", 0.0);
 
     private Drivetrain(
             GyroIO gyroIO,
@@ -191,6 +199,27 @@ public class Drivetrain extends SubsystemBase {
         // Update odometry
         poseEstimator.update(rawGyroRotation, getModulePositions());
         visionPoseEstimator.update(rawGyroRotation, getModulePositions());
+
+
+
+        //FIXME: Could be a bad idea
+//        if(mkP.hasChanged(hashCode()) || mkI.hasChanged(hashCode()) || mkD.hasChanged(hashCode())
+//        || rkP.hasChanged(hashCode()) || rkI.hasChanged(hashCode()) || rkD.hasChanged(hashCode())){
+//            AutoBuilder.configureHolonomic(
+//                    this::getPose,
+//                    this::setPose,
+//                    () -> kinematics.toChassisSpeeds(getModuleStates()),
+//                    this::runVelocity,
+//                    new HolonomicPathFollowerConfig(new PIDConstants(mkP.get(), mkI.get(), mkD.get()),new PIDConstants(rkP.get(), rkI.get(), rkD.get()),MAX_LINEAR_SPEED, DRIVE_BASE_RADIUS, new ReplanningConfig()),
+//                    () -> DriverStation.getAlliance().isPresent() && DriverStation.getAlliance().get() == DriverStation.Alliance.Red,
+//                    this);
+//        }
+
+
+
+
+
+
     }
 
     /**
