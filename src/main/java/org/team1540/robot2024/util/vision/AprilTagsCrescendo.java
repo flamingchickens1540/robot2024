@@ -20,7 +20,7 @@ public class AprilTagsCrescendo {
 
         final int blue;
         final int red;
-        private Tags(int red, int blue){
+        Tags(int red, int blue){
             this.red = red;
             this.blue = blue;
         }
@@ -33,7 +33,7 @@ public class AprilTagsCrescendo {
         return instance;
     }
 
-    private AprilTagsCrescendo(){
+    private AprilTagsCrescendo() {
         tags = AprilTagFields.k2024Crescendo.loadAprilTagLayoutField();
     }
 
@@ -41,13 +41,14 @@ public class AprilTagsCrescendo {
         return tags;
     }
 
-    public Pose3d getTag(int tagID){
+    public Pose3d getTag(int tagID) {
         return tags.getTagPose(tagID).get();
     }
-    public Pose3d getTag(Tags tag){
+    public Pose3d getTag(Tags tag) {
         return getTag(tag, DriverStation.getAlliance().orElse(null));
     }
-    public Pose3d getTag(Tags tag, DriverStation.Alliance alliance){
+
+    public Pose3d getTag(Tags tag, DriverStation.Alliance alliance) {
         return getTag(alliance == DriverStation.Alliance.Red ? tag.red : tag.blue);
     }
 }

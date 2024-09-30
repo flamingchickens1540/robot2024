@@ -45,8 +45,7 @@ public class testAuto extends AutoCommand {
                         ),
                         new Triplet<>(0, ()->true, Commands::none),
                         new Triplet<>(1, ()->false, Commands::none)
-                ),
-                Commands.print("HALLELUJAH")
+                )
 
                 //,
 //

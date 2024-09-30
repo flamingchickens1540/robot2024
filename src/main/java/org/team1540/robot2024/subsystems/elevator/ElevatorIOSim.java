@@ -55,9 +55,9 @@ public class ElevatorIOSim implements ElevatorIO {
     }
 
     @Override
-    public void setVoltage(double volts) {
+    public void setDutyCycle(double dutyCycle) {
         isClosedLoop = false;
-        elevatorAppliedVolts = MathUtil.clamp(volts, -12.0, 12.0);
+        elevatorAppliedVolts = MathUtil.clamp(dutyCycle * 12, -12.0, 12.0);
     }
 
     @Override

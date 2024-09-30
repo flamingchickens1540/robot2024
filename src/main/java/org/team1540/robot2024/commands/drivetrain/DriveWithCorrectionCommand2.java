@@ -25,7 +25,6 @@ public class DriveWithCorrectionCommand2 extends Command {
 
     private boolean isFlipped;
 
-
     private final LoggedTunableNumber kP = new LoggedTunableNumber("Targeting/COR_KP", 0.9);
     private final LoggedTunableNumber kI = new LoggedTunableNumber("Targeting/COR_KI", 0);
     private final LoggedTunableNumber kD = new LoggedTunableNumber("Targeting/COR_KD", 0);
@@ -84,18 +83,15 @@ public class DriveWithCorrectionCommand2 extends Command {
         Rotation2d linearDirection = new Rotation2d(xPercent, yPercent);
 
 //        if(drivetrain.getRotation().rotateBy(Rotation2d.fromDegrees(angleDegrees.get())).getCos() * xPercent > 0){
-            linearDirection = linearDirection.minus(Rotation2d.fromDegrees(correctionController.calculate(angleDegrees.get(), 0)));
+        linearDirection = linearDirection.minus(Rotation2d.fromDegrees(correctionController.calculate(angleDegrees.get(), 0)));
 //        }
 
-        System.out.println("I am correctiong 1");
         Logger.recordOutput("Targeting/targetDirection", new Pose2d(
                 drivetrain.getPose().getTranslation(),
                 linearDirection.rotateBy(Rotation2d.fromDegrees(180))
         ));
         Logger.recordOutput("Targeting/angle", angleDegrees.get());
         Logger.recordOutput("Targeting/target", Constants.Targeting.getSpeakerPose());
-
-        System.out.println();
 
         double rotPercent = target == null
                 ? JoystickUtils.smartDeadzone(-controller.getRightX(), deadzone) * (Constants.IS_COMPETITION_ROBOT ? 1 : -1)

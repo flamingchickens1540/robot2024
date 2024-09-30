@@ -13,14 +13,13 @@ public class FlipUtil {
                 : pose;
     }
 
-    public static Rotation2d flipIfRed(Rotation2d rotation){
+    public static Rotation2d flipIfRed(Rotation2d rotation) {
         return DriverStation.getAlliance().orElse(null) == DriverStation.Alliance.Red
                 ? GeometryUtil.flipFieldRotation(rotation)
                 : rotation;
-
     }
 
-    public static double flipIfRed(double num){
+    public static double flipIfRed(double num) {
         return DriverStation.getAlliance().orElse(null) == DriverStation.Alliance.Red
                 ? num *= -1
                 : num;

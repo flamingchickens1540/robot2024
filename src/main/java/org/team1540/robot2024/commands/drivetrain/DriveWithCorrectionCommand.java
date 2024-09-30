@@ -71,7 +71,6 @@ public class DriveWithCorrectionCommand extends Command {
                 drivetrain.getPose().getTranslation(),
                 linearDirection
         ));
-//        System.out.println("I am driving woth correxction 1");
 
         double rotPercent = target == null
                 ? JoystickUtils.smartDeadzone(-controller.getRightX(), deadzone) * (Constants.IS_COMPETITION_ROBOT ? 1 : -1)

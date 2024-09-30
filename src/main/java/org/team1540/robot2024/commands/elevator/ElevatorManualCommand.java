@@ -2,7 +2,6 @@ package org.team1540.robot2024.commands.elevator;
 
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
-import org.team1540.robot2024.Constants;
 import org.team1540.robot2024.subsystems.elevator.Elevator;
 
 public class ElevatorManualCommand extends Command {
@@ -25,7 +24,7 @@ public class ElevatorManualCommand extends Command {
             } else {
                 val -= DEADZONE;
             }
-            elevator.setVoltage(-val * 12 * 0.18);
+            elevator.setPercent(-val * 2.16);
         } else {
             elevator.holdPosition();
         }

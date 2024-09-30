@@ -63,7 +63,6 @@ public class PathHelper {
 
     public Pose2d getInitialPose() {
         BooleanSupplier shouldFlip = () -> DriverStation.getAlliance().orElse(null) == DriverStation.Alliance.Red;
-//        System.out.println(DriverStation.getAlliance().orElse(null) + " " + shouldFlip.getAsBoolean());
         return shouldFlip.getAsBoolean() ? GeometryUtil.flipFieldPose(initialPose) : initialPose;
     }
 
@@ -111,7 +110,6 @@ public class PathHelper {
                             )
                     )
             ).andThen(
-//                    Commands.runOnce(()->System.out.println(cancel[0].getAsBoolean())),
                     Commands.sequence(
 //                            Commands.runOnce(()->System.out.println(cancel[0].getAsBoolean())),
                             ((Supplier<Command>) term.getThird()).get(),

@@ -119,8 +119,8 @@ public class ElevatorIOTalonFX implements ElevatorIO {
     }
 
     @Override
-    public void setVoltage(double voltage) {
-        leader.set(voltage);
+    public void setDutyCycle(double dutyCycle) {
+        leader.set(dutyCycle);
     }
 
     @Override

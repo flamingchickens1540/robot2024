@@ -1,9 +1,7 @@
 package org.team1540.robot2024;
 
-import com.ctre.phoenix6.Utils;
 import com.pathplanner.lib.auto.NamedCommands;
 import edu.wpi.first.math.geometry.*;
-import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
@@ -16,7 +14,6 @@ import org.team1540.robot2024.commands.autos.*;
 import org.team1540.robot2024.commands.climb.ClimbAlignment;
 import org.team1540.robot2024.commands.drivetrain.*;
 import org.team1540.robot2024.commands.elevator.ElevatorManualCommand;
-import org.team1540.robot2024.commands.elevator.ElevatorSetpointCommand;
 import org.team1540.robot2024.commands.indexer.ContinuousIntakeCommand;
 import org.team1540.robot2024.commands.indexer.IntakeAndFeed;
 import org.team1540.robot2024.commands.indexer.StageTrampCommand;
@@ -123,16 +120,6 @@ public class RobotContainer {
         configureAutoRoutines();
         // Configure the button bindings
         configureButtonBindings();
-        configureLedBindings();
-    }
-
-    private void configureLedBindings() {
-//        Runnable onDisconnect = () -> leds.setPatternAll(LedPatternFlame::new, Leds.PatternCriticality.HIGH);
-//        onDisconnect.run();
-//        new Trigger(DriverStation::isDSAttached)
-//                .onTrue(Commands.runOnce(() -> leds.clearPatternAll(Leds.PatternCriticality.HIGH))
-//                            .ignoringDisable(true))
-//                .onFalse(Commands.runOnce(onDisconnect).ignoringDisable(true));
     }
 
     private void configureButtonBindings() {
@@ -145,9 +132,6 @@ public class RobotContainer {
             drivetrain.zeroFieldOrientationManual();
             enableBrakeMode(false);
         }).ignoringDisable(true));
-
-        //TODO remove
-//        driver.back().and(driver.start()).onTrue(Commands.runOnce(() -> drivetrain.setPose(new Pose2d())));
 
         Command targetDrive = new AutoShootPrepareWithTargeting(driver.getHID(), drivetrain, shooter)
                 .alongWith(leds.commandShowPattern(
@@ -247,7 +231,7 @@ public class RobotContainer {
                 )
         );
 
-        copilot.back().onTrue(Commands.runOnce(shooter::zeroPivotToCancoder).andThen(Commands.print("BACK IS PRESSED")));
+        copilot.back().onTrue(Commands.runOnce(shooter::zeroPivotToCancoder));
 
         copilot.leftBumper().whileTrue(new AmpScoreSequence(tramp, indexer, elevator));
         Command intakeCommand = new ContinuousIntakeCommand(indexer, 1)

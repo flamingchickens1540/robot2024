@@ -8,7 +8,6 @@ import org.team1540.robot2024.commands.elevator.ElevatorSetpointCommand;
 import org.team1540.robot2024.subsystems.drive.Drivetrain;
 import org.team1540.robot2024.subsystems.elevator.Elevator;
 import org.team1540.robot2024.subsystems.indexer.Indexer;
-import org.team1540.robot2024.subsystems.shooter.Shooter;
 import org.team1540.robot2024.subsystems.tramp.Tramp;
 
 public class ClimbSequence extends ParallelRaceGroup {
@@ -21,7 +20,7 @@ public class ClimbSequence extends ParallelRaceGroup {
                         Commands.waitUntil(controller.a()),
                         new ElevatorSetpointCommand(elevator, ElevatorState.TOP),
                         Commands.waitSeconds(5), // Confirm that nothing will break. Also might need to be tuned if chain does weird things
-                        Commands.startEnd(()->elevator.setVoltage(-10), elevator::holdPosition, elevator).until(elevator::getLowerLimit)
+                        Commands.startEnd(()->elevator.setPercent(-0.8), elevator::holdPosition, elevator).until(elevator::getLowerLimit)
                 )
         );
     }

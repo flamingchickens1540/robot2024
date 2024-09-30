@@ -88,12 +88,12 @@ public class Elevator extends SubsystemBase {
         return MathUtil.isNear(setpointMeters, positionFilter.getAverage(), POS_ERR_TOLERANCE_METERS) || (inputs.atLowerLimit && setpointMeters <= 0);
     }
 
-    public void setVoltage(double voltage) {
-        io.setVoltage(voltage);
+    public void setPercent(double percent) {
+        io.setDutyCycle(percent);
     }
 
     public void stop() {
-        io.setVoltage(0.0);
+        io.setDutyCycle(0.0);
     }
 
     @AutoLogOutput(key = "Elevator/setpoint")
