@@ -31,7 +31,7 @@ public class SwerveDriveCommand extends Command {
         Rotation2d linearDirection = new Rotation2d(xPercent, yPercent);
         double rotPercent = JoystickUtils.smartDeadzone(-controller.getRightX(), deadzone) * (Constants.IS_COMPETITION_ROBOT ? 1 : -1);
 
-        drivetrain.drivePercent(linearMagnitude, linearDirection, rotPercent, true);
+        drivetrain.drivePercent(linearMagnitude*linearMagnitude, linearDirection, rotPercent, true);
     }
 
     @Override
