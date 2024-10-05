@@ -36,7 +36,7 @@ public class AprilTagVisionIOMegaTag2 implements AprilTagVisionIO {
                 DriverStation.isDisabled()
                         ? LimelightHelpers.getBotPoseEstimate_wpiBlue(name)
                         : LimelightHelpers.getBotPoseEstimate_wpiBlue_MegaTag2(name);
-        if (measurement.pose != null) {
+        if (measurement != null) {
             Pose3d limelightPose = new Pose3d(measurement.pose);
             inputs.estimatedPoseMeters = new Pose3d(
                     limelightPose.getX(),

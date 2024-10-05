@@ -17,18 +17,20 @@ public class AprilTagVisionIOLimelight implements AprilTagVisionIO {
     @Override
     public void updateInputs(AprilTagVisionIOInputs inputs) {
         LimelightHelpers.PoseEstimate measurement = LimelightHelpers.getBotPoseEstimate_wpiBlue(name);
-        if (measurement.tagCount > 1) {
-            Pose3d limelightPose = LimelightHelpers.getBotPose3d_wpiBlue(name);
-            inputs.estimatedPoseMeters = new Pose3d(
-                    limelightPose.getX(),
-                    limelightPose.getY() + 0.105,
-                    limelightPose.getZ(),
-                    limelightPose.getRotation());
-            inputs.lastMeasurementTimestampSecs = measurement.timestampSeconds;
+        if (measurement != null) {
+            if (measurement.tagCount > 1) {
+                Pose3d limelightPose = LimelightHelpers.getBotPose3d_wpiBlue(name);
+                inputs.estimatedPoseMeters = new Pose3d(
+                        limelightPose.getX(),
+                        limelightPose.getY() + 0.105,
+                        limelightPose.getZ(),
+                        limelightPose.getRotation());
+                inputs.lastMeasurementTimestampSecs = measurement.timestampSeconds;
+            }
+            inputs.numTagsSeen = measurement.tagCount;
+            inputs.seenTagIDs = Arrays.stream(measurement.rawFiducials).mapToInt(fiducial -> fiducial.id).toArray();
+            inputs.avgTagDistance = measurement.avgTagDist;
         }
-        inputs.numTagsSeen = measurement.tagCount;
-        inputs.seenTagIDs = Arrays.stream(measurement.rawFiducials).mapToInt(fiducial -> fiducial.id).toArray();
-        inputs.avgTagDistance = measurement.avgTagDist;
     }
 
     @Override
