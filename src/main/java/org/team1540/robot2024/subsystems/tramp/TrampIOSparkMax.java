@@ -4,11 +4,12 @@ import com.revrobotics.CANSparkLowLevel.MotorType;
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.RelativeEncoder;
 import edu.wpi.first.wpilibj.DigitalInput;
+import org.team1540.robot2024.Constants;
 
 import static org.team1540.robot2024.Constants.Tramp.*;
 
 public class TrampIOSparkMax implements TrampIO {
-    private final DigitalInput beamBreak = new DigitalInput(BEAM_BREAK_CHANNEL);
+    private final DigitalInput beamBreak = new DigitalInput(Constants.DIO.TRAMP_BEAM_BREAK);
     private final CANSparkMax motor = new CANSparkMax(MOTOR_ID, MotorType.kBrushless);
     private final RelativeEncoder motorEncoder = motor.getEncoder();
 

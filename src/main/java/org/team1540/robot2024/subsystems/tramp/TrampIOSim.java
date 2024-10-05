@@ -6,12 +6,11 @@ import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.simulation.DCMotorSim;
 import org.team1540.robot2024.Constants;
 
-import static org.team1540.robot2024.Constants.Tramp.BEAM_BREAK_CHANNEL;
 import static org.team1540.robot2024.Constants.Tramp.GEAR_RATIO;
 
 public class TrampIOSim implements TrampIO {
     private final DCMotorSim sim = new DCMotorSim(DCMotor.getNEO(1), GEAR_RATIO, 0.025); //TODO: Fix MOI its probably wrong :D
-    private final DigitalInput beamBreak = new DigitalInput(BEAM_BREAK_CHANNEL);
+    private final DigitalInput beamBreak = new DigitalInput(Constants.DIO.TRAMP_BEAM_BREAK);
     private double appliedVolts = 0.0;
 
 

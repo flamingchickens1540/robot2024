@@ -50,6 +50,10 @@ public class DriveWithTargetingCommand extends Command {
 
     @Override
     public void execute() {
+        if (Constants.isTuningMode()) {
+            rotController.setPID(kP.get(), kI.get(), kD.get());
+        }
+
         Rotation2d targetRot =
                 drivetrain.getPose()
                         .minus(target.get()).getTranslation().getAngle()

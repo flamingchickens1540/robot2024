@@ -5,7 +5,9 @@ import edu.wpi.first.math.VecBuilder;
 import edu.wpi.first.math.geometry.Pose3d;
 import edu.wpi.first.math.numbers.N1;
 import edu.wpi.first.math.numbers.N3;
-import org.team1540.robot2024.Constants;
+import edu.wpi.first.wpilibj.RobotState;
+
+import static org.team1540.robot2024.Constants.Vision.AprilTag.*;
 
 public class EstimatedVisionPose {
     public double timestampSecs = -1;
@@ -16,13 +18,14 @@ public class EstimatedVisionPose {
     public Matrix<N3, N1> getStdDevs() {
 
         double xyStdDev =
-                Constants.Vision.XY_STD_DEV_COEFF
+                XY_STD_DEV_COEFF
                     * Math.pow(avgDistance, 2.0)
                     / numTags;
         double rotStdDev =
-                Constants.Vision.ROT_STD_DEV_COEFF
+                ROT_STD_DEV_COEFF
                     * Math.pow(avgDistance, 2.0)
                     / numTags;
-        return VecBuilder.fill(xyStdDev, xyStdDev, numTags > 1 ? rotStdDev : Double.POSITIVE_INFINITY);
+        boolean acceptYaw = numTags > 1 || (numTags > 0 && RobotState.isDisabled());
+        return VecBuilder.fill(xyStdDev, xyStdDev, acceptYaw ? rotStdDev : Double.POSITIVE_INFINITY);
     }
 }

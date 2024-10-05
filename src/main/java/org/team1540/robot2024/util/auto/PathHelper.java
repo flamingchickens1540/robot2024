@@ -1,17 +1,22 @@
 package org.team1540.robot2024.util.auto;
 
 import com.pathplanner.lib.auto.AutoBuilder;
+import com.pathplanner.lib.path.EventMarker;
 import com.pathplanner.lib.path.PathPlannerPath;
 import com.pathplanner.lib.util.GeometryUtil;
 import edu.wpi.first.math.geometry.Pose2d;
-import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.DriverStation;
-import edu.wpi.first.wpilibj2.command.Command;
-import edu.wpi.first.wpilibj2.command.ConditionalCommand;
-import edu.wpi.first.wpilibj2.command.InstantCommand;
+import edu.wpi.first.wpilibj2.command.*;
+import org.ejml.ops.QuickSort_S32;
 import org.team1540.robot2024.Constants;
 import org.team1540.robot2024.subsystems.drive.Drivetrain;
+import org.team1540.robot2024.util.math.Triplet;
 
+import java.util.Arrays;
+import java.util.Comparator;
+import java.util.List;
+import java.util.Set;
+import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.function.BooleanSupplier;
 import java.util.function.Supplier;
 
@@ -22,6 +27,8 @@ public class PathHelper {
     final boolean isChoreo;
     final boolean canFlip;
     final PathPlannerPath path;
+    final List<EventMarker> eventMarkers;
+
 
     public static PathHelper fromChoreoPath(String pathname) {
         return new PathHelper(pathname, true, false, true);
@@ -47,6 +54,7 @@ public class PathHelper {
         this.canFlip = canFlip;
         this.path = isChoreo ? PathPlannerPath.fromChoreoTrajectory(pathname) : PathPlannerPath.fromPathFile(pathname);
         this.initialPose = path.getPreviewStartingHolonomicPose();
+        this.eventMarkers = path.getEventMarkers();
     }
 
     public boolean getIsResetting() {
@@ -55,7 +63,6 @@ public class PathHelper {
 
     public Pose2d getInitialPose() {
         BooleanSupplier shouldFlip = () -> DriverStation.getAlliance().orElse(null) == DriverStation.Alliance.Red;
-//        System.out.println(DriverStation.getAlliance().orElse(null) + " " + shouldFlip.getAsBoolean());
         return shouldFlip.getAsBoolean() ? GeometryUtil.flipFieldPose(initialPose) : initialPose;
     }
 
@@ -79,6 +86,49 @@ public class PathHelper {
         command.addRequirements(drivetrain); //FIXME COuld cause problems if we did things wrong but it shouldnt.
         Command resetCommand = new InstantCommand(() -> drivetrain.setPose(startingPose.get()));
         return (isResetting ? resetCommand.andThen(command) : command);
+    }
+
+//    public Command withInterrupt(Drivetrain drivetrain, boolean shouldRealign, Triplet<Integer, BooleanSupplier, Command>... terms){
+//        return withInterrupt(getCommand(drivetrain, shouldRealign), Commands.none(), terms);
+//    }
+    
+    public Command withInterrupt(Supplier<Command> cmd, Supplier<Command> afterInterrupt, Triplet<Integer, BooleanSupplier, Supplier<Command>>... terms){
+        //FIXME MAJOR ISSUE MAYBE Command always causes crash on second auto run but theoretically it should be fine because we only run once
+        Arrays.sort(terms, (o1, o2) -> -1* Double.compare(eventMarkers.get(o1.getFirst()).getWaypointRelativePos(), eventMarkers.get(o2.getFirst()).getWaypointRelativePos()));
+        Command tempCommand = cmd.get();
+        for(int i = 0; i < terms.length; i += 1){
+            Triplet term = terms[i];
+            final boolean[] cancel = {false};
+            tempCommand = Commands.race(
+                    tempCommand,
+                    Commands.sequence(
+                            Commands.waitSeconds(eventMarkers.get((int)term.getFirst()).getWaypointRelativePos()),
+                            new ConditionalCommand(
+                                    Commands.runOnce(()-> cancel[0] = true),
+                                    Commands.idle(),
+                                    (BooleanSupplier) term.getSecond()
+                            )
+                    )
+            ).andThen(
+                    Commands.sequence(
+//                            Commands.runOnce(()->System.out.println(cancel[0].getAsBoolean())),
+                            ((Supplier<Command>) term.getThird()).get(),
+//                            Commands.defer(()-> (Command)term.getThird(), ((Command)term.getThird()).getRequirements()),
+                            afterInterrupt.get()
+//                            Commands.defer(()->afterInterrupt.get(), afterInterrupt.get().getRequirements())
+//                            Commands.none()
+//                            ,after
+//                            ,afterInterrupt
+                    ).onlyIf(()->cancel[0])
+//                    (((Command)term.getThird()).andThen(after)).onlyIf(cancel[0])
+//                    Commands.either(
+//                            (Command)term.getThird(),
+//                            after,
+//                            (BooleanSupplier) term.getSecond() // Only if its a single trip suppliergoddamnit
+//                    )
+            );
+        }
+        return tempCommand;
     }
 
     public Command resetToInitialPose(Drivetrain drivetrain){

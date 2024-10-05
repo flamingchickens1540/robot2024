@@ -7,7 +7,7 @@ public interface ElevatorIO {
     class ElevatorIOInputs {
         public double positionMeters = 0.0;
         public double velocityMPS = 0.0;
-        public double voltage = 0.0;
+        public double[] voltage = new double[]{};
         public double[] currentAmps = new double[]{};
         public double[] tempCelsius = new double[]{};
         public boolean atUpperLimit = false;
@@ -19,7 +19,7 @@ public interface ElevatorIO {
 
     default void setSetpointMeters(double position) {}
 
-    default void setVoltage(double voltage) {}
+    default void setDutyCycle(double dutyCycle) {}
 
     default void setBrakeMode(boolean isBrakeMode) {}
 

@@ -19,7 +19,6 @@ import org.team1540.robot2024.subsystems.led.patterns.*;
 import org.team1540.robot2024.util.MechanismVisualiser;
 import org.team1540.robot2024.util.auto.AutoManager;
 import org.team1540.robot2024.util.vision.AprilTagsCrescendo;
-import org.team1540.robot2024.util.vision.LimelightHelpers;
 
 /**
  * The VM is configured to automatically run this class, and to call the functions corresponding to
@@ -105,9 +104,6 @@ public class Robot extends LoggedRobot {
         PathfindingCommand.warmupCommand().schedule();
 
         AprilTagsCrescendo.getInstance().getTag(1);
-
-        // Init driver cam
-        LimelightHelpers.setCameraMode_Driver("limelight-driver");
     }
 
     /**
@@ -122,7 +118,6 @@ public class Robot extends LoggedRobot {
         // the Command-based framework to work.
         CommandScheduler.getInstance().run();
         if (Constants.currentMode == Constants.Mode.REAL) robotContainer.odometrySignalRefresher.periodic();
-
         // Update mechanism visualiser in sim
         if (Robot.isSimulation()) MechanismVisualiser.periodic();
 //        robotContainer.leds.setPattern(Leds.Zone.ZONE1, SimpleLedPattern.alternating(Color.kBlueViolet, Color.kGreen));

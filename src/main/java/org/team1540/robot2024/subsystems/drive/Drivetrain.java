@@ -1,7 +1,6 @@
 package org.team1540.robot2024.subsystems.drive;
 
 import com.pathplanner.lib.auto.AutoBuilder;
-import com.pathplanner.lib.commands.FollowPathHolonomic;
 import com.pathplanner.lib.controllers.PPHolonomicDriveController;
 import com.pathplanner.lib.pathfinding.Pathfinding;
 import com.pathplanner.lib.util.HolonomicPathFollowerConfig;
@@ -28,6 +27,7 @@ import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import org.littletonrobotics.junction.AutoLogOutput;
 import org.littletonrobotics.junction.Logger;
+import org.team1540.robot2024.util.LoggedTunableNumber;
 import org.team1540.robot2024.util.auto.LocalADStarAK;
 import org.team1540.robot2024.Constants;
 import org.team1540.robot2024.util.PhoenixTimeSyncSignalRefresher;
@@ -104,7 +104,7 @@ public class Drivetrain extends SubsystemBase {
                 this::setPose,
                 () -> kinematics.toChassisSpeeds(getModuleStates()),
                 this::runVelocity,
-                new HolonomicPathFollowerConfig(new PIDConstants(5.0, 0.0, 0.0),new PIDConstants(7.0, 0.0, 0.0),MAX_LINEAR_SPEED, DRIVE_BASE_RADIUS, new ReplanningConfig()),
+                new HolonomicPathFollowerConfig(new PIDConstants(6.0, 0.0, 0.05),new PIDConstants(12.0, 0.0, 0.05),MAX_LINEAR_SPEED, DRIVE_BASE_RADIUS, new ReplanningConfig()),
                 () -> DriverStation.getAlliance().isPresent() && DriverStation.getAlliance().get() == DriverStation.Alliance.Red,
                 this);
         PPHolonomicDriveController.setRotationTargetOverride(this::getOverrideTargetRotationToSpeaker);
@@ -192,7 +192,6 @@ public class Drivetrain extends SubsystemBase {
         // Update odometry
         poseEstimator.update(rawGyroRotation, getModulePositions());
         visionPoseEstimator.update(rawGyroRotation, getModulePositions());
-
     }
 
     /**
@@ -285,6 +284,7 @@ public class Drivetrain extends SubsystemBase {
         }
         return driveVelocityAverage / 4.0;
     }
+
     @AutoLogOutput(key = "Odometry/ChassisSpeeds")
     public ChassisSpeeds getChassisSpeeds() {
         return kinematics.toChassisSpeeds(getModuleStates());
@@ -329,6 +329,10 @@ public class Drivetrain extends SubsystemBase {
     
     public Rotation2d getRawGyroRotation() {
         return rawGyroRotation;
+    }
+
+    public double getAngularVelocityRadPerSec() {
+        return gyroInputs.yawVelocityRadPerSec;
     }
 
     public void zeroFieldOrientationManual() {

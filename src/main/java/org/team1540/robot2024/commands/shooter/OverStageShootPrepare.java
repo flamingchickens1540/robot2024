@@ -20,7 +20,7 @@ public class OverStageShootPrepare extends SequentialCommandGroup {
         addCommands(
                 new PrepareShooterCommand(shooter, () -> new ShooterSetpoint(
                         Rotation2d.fromRadians(
-                                Math.atan2(Constants.Targeting.STAGE_MAX_HEIGHT + 1.5 - Constants.Shooter.Pivot.PIVOT_HEIGHT,
+                                Math.atan2(Constants.Targeting.STAGE_MAX_HEIGHT + 3.5 - Constants.Shooter.Pivot.PIVOT_HEIGHT,
                                         positionSupplier.get().getTranslation().getDistance(
                                         AprilTagsCrescendo.getInstance().getTag(AprilTagsCrescendo.Tags.CLIMB_FAR).toPose2d().getTranslation()
                                         )

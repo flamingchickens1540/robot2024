@@ -47,7 +47,7 @@ public class ElevatorIOSim implements ElevatorIO {
 
         inputs.positionMeters = elevatorSim.getPositionMeters();
         inputs.velocityMPS = elevatorSim.getVelocityMetersPerSecond();
-        inputs.voltage = elevatorAppliedVolts;
+        inputs.voltage = new double[]{elevatorAppliedVolts};
         inputs.currentAmps = new double[]{elevatorSim.getCurrentDrawAmps()};
         inputs.atUpperLimit = elevatorSim.hasHitUpperLimit();
         inputs.atLowerLimit = elevatorSim.hasHitLowerLimit();
@@ -55,9 +55,9 @@ public class ElevatorIOSim implements ElevatorIO {
     }
 
     @Override
-    public void setVoltage(double volts) {
+    public void setDutyCycle(double dutyCycle) {
         isClosedLoop = false;
-        elevatorAppliedVolts = MathUtil.clamp(volts, -12.0, 12.0);
+        elevatorAppliedVolts = MathUtil.clamp(dutyCycle * 12, -12.0, 12.0);
     }
 
     @Override
