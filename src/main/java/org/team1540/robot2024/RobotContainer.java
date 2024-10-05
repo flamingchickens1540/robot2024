@@ -124,10 +124,16 @@ public class RobotContainer {
 
     private void configureButtonBindings() {
         Command manualPivotCommand = new ManualPivotCommand(shooter, copilot);
+        // coop:button(LJoystick,DT Translate,pilot)
+        // coop:button(RJoystick,DT Rotate,pilot)
         drivetrain.setDefaultCommand(new SwerveDriveCommand(drivetrain, driver));
+        // coop:button(RJoystick,Elevator Manual,copilot)
         elevator.setDefaultCommand(new ElevatorManualCommand(elevator, copilot));
         shooter.setDefaultCommand(manualPivotCommand);
+
+        // coop:button(B,X-Lock,pilot)
         driver.b().onTrue(Commands.runOnce(drivetrain::stopWithX, drivetrain));
+        // coop:button(Y,Reorient,pilot)
         driver.y().onTrue(Commands.runOnce(() -> {
             drivetrain.zeroFieldOrientationManual();
             enableBrakeMode(false);
@@ -154,11 +160,14 @@ public class RobotContainer {
             ampLock.cancel();
             counterShuffleDrive.cancel();
         });
+        //coop:button(X,Shoot,pilot)
         driver.x()
                 .whileTrue(IntakeAndFeed.withDefaults(indexer))
                 .onFalse(cancelAlignment);
 
+        // coop:button(RBumper,[TOGGLE] Align Shoot,pilot)
         driver.rightBumper().toggleOnTrue(targetDrive);
+        // coop:button(LBumper,[TOGGLE] Align Shuffle,pilot)
         driver.leftBumper().toggleOnTrue(overstageTargetDrive);
 
         // TODO remove this
@@ -186,74 +195,76 @@ public class RobotContainer {
 
 //        driver.povDown().and(() -> !DriverStation.isFMSAttached()).onTrue(Commands.runOnce(() -> drivetrain.setPose(new Pose2d(Units.inchesToMeters(260), Units.inchesToMeters(161.62), Rotation2d.fromRadians(0)))).ignoringDisable(true));
 
+        // coop:button(RTrigger,Countershuffle,pilot)
         driver.leftTrigger(0.95).toggleOnTrue(counterShuffleDrive);
 
         driver.rightStick().onTrue(cancelAlignment);
 
 
-        driver.povLeft().whileTrue(
-                new DriveWithTargetingCommand(drivetrain, driver.getHID(),
-                        ()->drivetrain.getPose().plus(
-                                new Transform2d(
-                                        new Translation2d( 1,
-                                                ((DriverStation.getAlliance().orElse(null) == DriverStation.Alliance.Blue)
-                                                        ? AprilTagsCrescendo.getInstance().getTag(AprilTagsCrescendo.Tags.CLIMB_AMP)
-                                                        : AprilTagsCrescendo.getInstance().getTag(AprilTagsCrescendo.Tags.CLIMB_SOURCE).rotateBy(new Rotation3d(0, 0, Math.PI)))
-                                                        .getRotation().toRotation2d()
-                                        ), new Rotation2d()
-                                )
-                        )
-                )
-        );
-        driver.povRight().whileTrue(
-                new DriveWithTargetingCommand(drivetrain, driver.getHID(),
-                        ()->drivetrain.getPose().plus(
-                                new Transform2d(
-                                        new Translation2d( 1,
-                                                ((DriverStation.getAlliance().orElse(null) == DriverStation.Alliance.Blue)
-                                                        ? AprilTagsCrescendo.getInstance().getTag(AprilTagsCrescendo.Tags.CLIMB_SOURCE)
-                                                        : AprilTagsCrescendo.getInstance().getTag(AprilTagsCrescendo.Tags.CLIMB_AMP).rotateBy(new Rotation3d(0, 0, Math.PI)))
-                                                        .getRotation().toRotation2d()
-                                        ), new Rotation2d()
-                                )
-                        )
-                )
-        );
-        driver.povUp().whileTrue(
-                new DriveWithTargetingCommand(drivetrain, driver.getHID(),
-                        ()->drivetrain.getPose().plus(
-                                new Transform2d(
-                                        new Translation2d(1,
-                                                FlipUtil.flipIfRed(AprilTagsCrescendo.getInstance().getTag(AprilTagsCrescendo.Tags.CLIMB_FAR).getRotation().toRotation2d())
-                                        ), new Rotation2d()
-                                )
-                        )
-                )
-        );
+//        driver.povLeft().whileTrue(
+//                new DriveWithTargetingCommand(drivetrain, driver.getHID(),
+//                        ()->drivetrain.getPose().plus(
+//                                new Transform2d(
+//                                        new Translation2d( 1,
+//                                                ((DriverStation.getAlliance().orElse(null) == DriverStation.Alliance.Blue)
+//                                                        ? AprilTagsCrescendo.getInstance().getTag(AprilTagsCrescendo.Tags.CLIMB_AMP)
+//                                                        : AprilTagsCrescendo.getInstance().getTag(AprilTagsCrescendo.Tags.CLIMB_SOURCE).rotateBy(new Rotation3d(0, 0, Math.PI)))
+//                                                        .getRotation().toRotation2d()
+//                                        ), new Rotation2d()
+//                                )
+//                        )
+//                )
+//        );
+//        driver.povRight().whileTrue(
+//                new DriveWithTargetingCommand(drivetrain, driver.getHID(),
+//                        ()->drivetrain.getPose().plus(
+//                                new Transform2d(
+//                                        new Translation2d( 1,
+//                                                ((DriverStation.getAlliance().orElse(null) == DriverStation.Alliance.Blue)
+//                                                        ? AprilTagsCrescendo.getInstance().getTag(AprilTagsCrescendo.Tags.CLIMB_SOURCE)
+//                                                        : AprilTagsCrescendo.getInstance().getTag(AprilTagsCrescendo.Tags.CLIMB_AMP).rotateBy(new Rotation3d(0, 0, Math.PI)))
+//                                                        .getRotation().toRotation2d()
+//                                        ), new Rotation2d()
+//                                )
+//                        )
+//                )
+//        );
+//        driver.povUp().whileTrue(
+//                new DriveWithTargetingCommand(drivetrain, driver.getHID(),
+//                        ()->drivetrain.getPose().plus(
+//                                new Transform2d(
+//                                        new Translation2d(1,
+//                                                FlipUtil.flipIfRed(AprilTagsCrescendo.getInstance().getTag(AprilTagsCrescendo.Tags.CLIMB_FAR).getRotation().toRotation2d())
+//                                        ), new Rotation2d()
+//                                )
+//                        )
+//                )
+//        );
 
+        // coop:button(Back,Zero Shooter,copilot)
         copilot.back().onTrue(Commands.runOnce(shooter::zeroPivotToCancoder));
 
+        // coop:button(LBumper,Score Amp,copilot)
         copilot.leftBumper().whileTrue(new AmpScoreSequence(tramp, indexer, elevator));
         Command intakeCommand = new ContinuousIntakeCommand(indexer, 1)
                 .deadlineWith(CommandUtils.rumbleCommand(driver, 0.5), CommandUtils.rumbleCommand(copilot, 0.5));
+        // coop:button(RBumper,Intake,copilot)
         copilot.rightBumper().whileTrue(intakeCommand);
 
         copilot.povDown().whileTrue(indexer.commandRunIntake(-1));
         copilot.povUp().whileTrue(indexer.commandRunIntake(1));
         copilot.povRight().whileTrue(IntakeAndFeed.withDefaults(indexer)).onFalse(cancelAlignment);
         copilot.povLeft().onTrue(Commands.runOnce(()->elevator.setFlipper(true))).onFalse(Commands.runOnce(()->elevator.setFlipper(false)));
-//        copilot.povDown().whileTrue(new ElevatorSetpointCommand(elevator, Constants.Elevator.ElevatorState.BOTTOM));
-//        copilot.povUp().whileTrue(new ElevatorSetpointCommand(elevator, Constants.Elevator.ElevatorState.TOP));
-//        copilot.povRight().whileTrue(new ElevatorSetpointCommand(elevator, Constants.Elevator.ElevatorState.CLIMB));
-//        copilot.povLeft().whileTrue(new ElevatorSetpointCommand(elevator, Constants.Elevator.ElevatorState.AMP));
 
-
+        // coop:button(RTrigger,Run Tramp,copilot)
         copilot.rightTrigger(0.95).whileTrue(tramp.commandRun(1));
-        copilot.leftTrigger(0.95).whileTrue(new ClimbAlignment(drivetrain, elevator, tramp, indexer));
+//        copilot.leftTrigger(0.95).whileTrue(new ClimbAlignment(drivetrain, elevator, tramp, indexer));
 
 
         copilot.x().whileTrue(new ShootSequence(shooter, indexer));
+        // coop:button(A,[HOLD] PreAmp,copilot)
         copilot.a().whileTrue(new AmpScoreStageSequence(indexer, tramp, elevator).alongWith(ampLock));
+        // coop:button(B,[HOLD] SHOOT,copilot)
         copilot.b()
                 .and(shooter::areFlywheelsSpunUp)
                 .and(() -> targetDrive.isScheduled()
@@ -261,6 +272,7 @@ public class RobotContainer {
                         || counterShuffleDrive.isScheduled())
                 .whileTrue(IntakeAndFeed.withDefaults(indexer))
                 .onFalse(cancelAlignment);
+        // coop:button(Y,[HOLD] Stage Tramp,copilot)
         copilot.y().whileTrue(new StageTrampCommand(tramp, indexer));
 
 //        copilot.leftTrigger(0.5).whileTrue(new ElevatorSetpointCommand(elevator, ElevatorState.CLIMB));
@@ -296,6 +308,7 @@ public class RobotContainer {
 
         new Trigger(tramp::isNoteStaged).debounce(0.1)
                 .onTrue(brakeModeCommand);
+
 
         driver.start().onTrue(brakeModeCommand);
         copilot.start().onTrue(brakeModeCommand);
