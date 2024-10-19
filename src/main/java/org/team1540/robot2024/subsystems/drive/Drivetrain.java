@@ -359,7 +359,7 @@ public class Drivetrain extends SubsystemBase {
             Matrix<N3, N1> stdDevs = visionPose.getStdDevs();
             visionPoseEstimator.setVisionMeasurementStdDevs(stdDevs);
             visionPoseEstimator.addVisionMeasurement(visionPose.poseMeters.toPose2d(), visionPose.timestampSecs);
-            if (!blockTags && (!RobotState.isAutonomous() || getSpeakerDistanceMeters() < 4.5)) {
+            if (!blockTags && (!RobotState.isAutonomous() || RobotState.isDisabled() || getSpeakerDistanceMeters() < 4.5)) {
                 poseEstimator.setVisionMeasurementStdDevs(stdDevs);
                 poseEstimator.addVisionMeasurement(visionPose.poseMeters.toPose2d(), visionPose.timestampSecs);
             }
