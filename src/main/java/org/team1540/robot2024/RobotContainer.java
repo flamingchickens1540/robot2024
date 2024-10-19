@@ -263,7 +263,7 @@ public class RobotContainer {
 
         copilot.x().whileTrue(new ShootSequence(shooter, indexer));
         // coop:button(A,[HOLD] PreAmp,copilot)
-        copilot.a().whileTrue(new AmpScoreStageSequence(indexer, tramp, elevator).alongWith(ampLock));
+        copilot.a().whileTrue(new AmpScoreStageSequence(indexer, tramp, elevator));
         // coop:button(B,[HOLD] SHOOT,copilot)
         copilot.b()
                 .and(shooter::areFlywheelsSpunUp)
